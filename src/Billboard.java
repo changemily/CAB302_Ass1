@@ -4,4 +4,5 @@ public class Billboard {
     String bg_colour;
     String image_file;
     //DateTime time_scheduled;
+    //test
 }
