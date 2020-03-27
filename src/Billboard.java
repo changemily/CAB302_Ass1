@@ -11,10 +11,10 @@ import java.time.LocalDate;
 public class Billboard {
     String Billboard_name;
     String Billboard_text;
-    String bg_colour;
-    String image_file;
-    LocalDate time_scheduled;
-    Duration duration;
+    String Bg_colour;
+    String Image_file;
+    LocalDate Time_scheduled;
+    Duration Duration;
 
     /**
      *Constructor that is used to create object Billboard. Billboard has an assigned a name, text
@@ -25,6 +25,9 @@ public class Billboard {
      */
     public void Billboard(String billboard_name, String text, String bg_colour)
     {
+        this.Billboard_name = billboard_name;
+        this.Billboard_text = text;
+        this.Bg_colour = bg_colour;
 
     }
 
@@ -41,7 +44,12 @@ public class Billboard {
     public void Billboard(String billboard_name, String text, String bg_colour, String image_file ,
                           LocalDate time_schedule, Duration duration)
     {
-
+        this.Billboard_name = billboard_name;
+        this.Billboard_text = text;
+        this.Bg_colour = bg_colour;
+        this.Image_file = image_file;
+        this.Time_scheduled = time_schedule;
+        this.Duration = duration;
     }
 
     /**
@@ -50,7 +58,7 @@ public class Billboard {
      */
     public void Set_text(String text)
     {
-
+        this.Billboard_text = text;
     }
 
     /**
@@ -59,7 +67,7 @@ public class Billboard {
      */
     public void Bg_colour(String bg_colour)
     {
-
+        this.Bg_colour = bg_colour;
     }
 
     /**
@@ -68,18 +76,18 @@ public class Billboard {
      */
     public void Add_image(String file_name)
     {
-
+        this.Image_file = file_name;
     }
 
     /**
      *Schedules billboard for given time and duration
-     * @param Billboard_name Billboard's name
      * @param duration Duration (minutes) Billboard is displayed for
      * @param time_schedule Time (date) Billboard is scheduled for showing
      */
-    public void Schedule_billboard(String Billboard_name, Duration duration, LocalDate time_schedule)
+    public void Schedule_billboard(Duration duration, LocalDate time_schedule)
     {
-
+        this.Duration = duration;
+        this.Time_scheduled = time_schedule;
     }
 
 }
