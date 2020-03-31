@@ -26,11 +26,12 @@ public class Billboard {
      */
     public void Billboard(String billboard_name, String text, String bg_colour, String image_file)
     {
+        //set billboard properties
         this.Billboard_name = billboard_name;
         this.Billboard_text = text;
         this.Bg_colour = bg_colour;
 
-        //image is optional on billboard
+        //if there is an image on the billboard
         if (!(image_file == "No Image"))
         {
             this.Image_file = image_file;
@@ -51,10 +52,15 @@ public class Billboard {
     public void Billboard(String billboard_name, String text, String bg_colour, String image_file ,
                           LocalDate time_schedule, Duration duration)
     {
+        //set billboard properties
         this.Billboard_name = billboard_name;
         this.Billboard_text = text;
         this.Bg_colour = bg_colour;
-        this.Image_file = image_file;
+        //if there is an image on the billboard
+        if (!(image_file == "No Image"))
+        {
+            this.Image_file = image_file;
+        }
         this.Time_scheduled = time_schedule;
         this.Duration = duration;
     }
@@ -65,6 +71,7 @@ public class Billboard {
      */
     public void Set_text(String text)
     {
+        //set billboard text
         this.Billboard_text = text;
     }
 
@@ -74,6 +81,7 @@ public class Billboard {
      */
     public void Bg_colour(String bg_colour)
     {
+        //set billboard bg colour
         this.Bg_colour = bg_colour;
     }
 
@@ -93,6 +101,7 @@ public class Billboard {
      */
     public void Schedule_billboard(Duration duration, LocalDate time_schedule)
     {
+        //set billboard time schedule and duration
         this.Duration = duration;
         this.Time_scheduled = time_schedule;
     }
