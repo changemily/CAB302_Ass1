@@ -22,17 +22,24 @@ public class Billboard {
      * @param billboard_name Billboard's name
      * @param text Text set on Billboard
      * @param bg_colour Background colour of Billboard
+     * @param image_file
      */
-    public void Billboard(String billboard_name, String text, String bg_colour)
+    public void Billboard(String billboard_name, String text, String bg_colour, String image_file)
     {
         this.Billboard_name = billboard_name;
         this.Billboard_text = text;
         this.Bg_colour = bg_colour;
 
+        //image is optional on billboard
+        if (!(image_file == "No Image"))
+        {
+            this.Image_file = image_file;
+        }
     }
 
     /**
-     *Constructor that is used to create object Billboard. Billboard has an assigned a name, text,
+     *Overloaded method  - Optional for Billboard  to be scheduled for display
+     * Constructor that is used to create object Billboard. Billboard has an assigned a name, text,
      * background colour, image file, scheduled viewing time, and duration the billboard is displayed for
      * @param billboard_name Billboard's name
      * @param text Text set on Billboard
