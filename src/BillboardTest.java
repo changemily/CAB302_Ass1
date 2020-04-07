@@ -5,6 +5,11 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * This class contains methods that test the functionality of Billboard class methods
+ *  * @author — Emily Chang
+ *  * @version - skeleton
+ */
 public class BillboardTest {
 
     Billboard billboard;
