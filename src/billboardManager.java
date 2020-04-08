@@ -4,7 +4,7 @@ import java.time.LocalDate;
 /**
  * Billboard Manager class
  * Class contains methods for creating and controlling billboards.
- * @author - Jarod Evans
+ * @author - Jarod Evans & Emily Chang
  * @version - skeleton
  */
 
@@ -80,6 +80,34 @@ public class billboardManager {
      * Return type void
      */
     public void Get_billboard_info(String billboard_name){
+
+    }
+
+    /**
+     * List of billboards that have been scheduled
+     */
+    private void View_schedule()
+    {
+        //returns list of Billboard objects from database
+        // billboard's name, creator, time scheduled and duration
+    }
+
+    /**
+     *
+     * @param billboard_name Name of billboard being deleted
+     */
+    private void Delete_billboard(String billboard_name)
+    {
+        //remove billboard object from database
+    }
+
+    /**
+     *
+     * @param billboard_name Name of billboard being removed from schedule
+     */
+    private void Schedule_Remove_billboard(String billboard_name)
+    {
+        //remove scheduled time from billboard object
 
     }
 

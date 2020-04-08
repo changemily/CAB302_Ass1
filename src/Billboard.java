@@ -14,7 +14,7 @@ public class Billboard {
     String Bg_colour;
     String Image_file;
     LocalDate Time_scheduled;
-    Duration Duration;
+    Duration duration;
 
     /**
      *Constructor that is used to create object Billboard. Billboard has an assigned a name, text
@@ -24,7 +24,7 @@ public class Billboard {
      * @param bg_colour Background colour of Billboard
      * @param image_file
      */
-    public void Billboard(String billboard_name, String text, String bg_colour, String image_file)
+    Billboard(String billboard_name, String text, String bg_colour, String image_file)
     {
         //set billboard properties
         this.Billboard_name = billboard_name;
@@ -46,11 +46,11 @@ public class Billboard {
      * @param text Text set on Billboard
      * @param bg_colour Background colour of Billboard
      * @param image_file file name of image on Billboard
-     * @param time_schedule Time (date) Billboard is scheduled for showing
-     * @param duration Duration (minutes) Billboard is displayed for
+     * @param time_scheduled Time (date) Billboard is scheduled for showing
+     * @param Duration_mins Duration (minutes) Billboard is displayed for
      */
-    public void Billboard(String billboard_name, String text, String bg_colour, String image_file ,
-                          LocalDate time_schedule, Duration duration)
+    Billboard(String billboard_name, String text, String bg_colour, String image_file ,
+                          LocalDate time_scheduled, int Duration_mins)
     {
         //set billboard properties
         this.Billboard_name = billboard_name;
@@ -61,8 +61,9 @@ public class Billboard {
         {
             this.Image_file = image_file;
         }
-        this.Time_scheduled = time_schedule;
-        this.Duration = duration;
+        this.Time_scheduled = time_scheduled;
+        //convert int to Duration
+        this.duration = Duration.ofMinutes(Duration_mins);
     }
 
     /**
@@ -79,31 +80,64 @@ public class Billboard {
      *Sets Background colour of given Billboard
      * @param bg_colour Background colour of Billboard
      */
-    public void Bg_colour(String bg_colour)
+    public void Bg_colour(String bg_colour) throws Exception
     {
-        //set billboard bg colour
-        this.Bg_colour = bg_colour;
+        //if bg colour does not exist
+        //if (!(bg_colour == ) )
+        //{
+            //throw exception
+            //throw new Exception("Colour does not exist");
+        //}
+        //else
+        //{
+            //set billboard bg colour
+            this.Bg_colour = bg_colour;
+        //}
     }
 
     /**
      *Adds image to given Billboard
      * @param file_name file name of image to add to Billboard
      */
-    public void Add_image(String file_name)
+    public void Add_image(String file_name) throws Exception
     {
+        //if file name does not exist
+        //throw new exception
         this.Image_file = file_name;
     }
 
     /**
      *Schedules billboard for given time and duration
-     * @param duration Duration (minutes) Billboard is displayed for
-     * @param time_schedule Time (date) Billboard is scheduled for showing
+     * @param Duration_mins Duration (minutes) Billboard is displayed for
+     * @param time_scheduled Time (date) Billboard is scheduled for showing
      */
-    public void Schedule_billboard(Duration duration, LocalDate time_schedule)
+    public void Schedule_billboard(int Duration_mins, LocalDate time_scheduled) throws Exception
     {
-        //set billboard time schedule and duration
-        this.Duration = duration;
-        this.Time_scheduled = time_schedule;
+        //if duration is negative
+        if (Duration_mins <0)
+        {
+            //throw exception
+            throw new Exception("Duration out of range");
+        }
+
+        else
+        {
+            //set duration billboard is displayed for
+            this.duration = Duration.ofMinutes(Duration_mins);
+        }
+
+        //if the time scheduled is in the past
+        if (time_scheduled.compareTo(LocalDate.now())<0)
+        {
+            //throw exception
+            throw new Exception("Time scheduled must be after"+ LocalDate.now());
+        }
+
+        else
+        {
+            ////set time billboard is scheduled for showing
+            this.Time_scheduled = time_scheduled;
+        }
     }
 
 }
