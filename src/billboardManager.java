@@ -9,19 +9,57 @@ import java.time.LocalDate;
  */
 
 public class billboardManager {
+    //Variables
+    String Billboard_Name;
+    String Text;
+    String bg_Colour;
+    String Image;
+    localDate Schedule;
+    Duration Minutes;
+    //Counter for the amount of billboards in circulation.
+    int counter;
+    //An array for storing billboard info.
+    String[][] billboard_info;
+    String[] bb_info;
+
+
+
     /**
      * Method to create and edit billboards
      * Parameters -
-     * @param billboard_name
-     * @param text
-     * @param bg_colour
+     * @param billboard_name Billboards name
+     * @param text Text on the billboard
+     * @param bg_colour Background colour of the billboard
      * @param image (optional)
      * @param schedule time (optional):void
-     * @param durationMinutes
+     * @param durationMinutes The duration in minutes it will be displayed
      */
     public void Create_edit_Billboard (String billboard_name, String text, String bg_colour, String image,
-    localDate schedule time, Duration durationMinutes){
-
+    localDate schedule_time, Duration durationMinutes){
+        //Pass params to variables.
+        bb_info[0] = (this.Billboard_Name = billboard_name);
+        bb_info[1] = (this.Text = text);
+        bb_info[2] = (this.bg_Colour = bg_colour);
+        bb_info[3] = (this.Image = image);
+        bb_info[4] = ToString.((this.Schedule = schedule_time));
+        bb_info[5] = ToString.((this.Minutes = durationMinutes));
+        //Pass Params to array as info.
+        try{
+            //Pass users params to billboard creating class.
+            Billboard ToString.(Billboard_Name) = new Billboard(Billboard_Name, text,
+                    bg_Colour, Image, Schedule, Minutes);
+            //Update counter
+            counter++;
+            //Store billboard information in a 2D array.
+            for(int i = 0; i < counter; i++){
+                for(int j = 0; j < 6; j++){
+                    billboard_info[counter][i] = bb_info[j];
+                }
+            }
+        }catch{
+            //Error Message.
+            System.out.println("The billboard cannot be created.");
+        }
     }
 
 
