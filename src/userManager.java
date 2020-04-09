@@ -1,4 +1,46 @@
 
+/**
+ * User Manager class
+ * Class contains methods for creating and controlling billboards.
+ * @author - Harry Estreich
+ * @version - skeleton
+ */
+
+public class userManager
+{
+    /**
+     * Method for setting user permissions
+     * @param user (object)
+     * @param permissions (hashset)
+     */
+    public void set_user_permissions(){
+
+    }
+
+    /**
+     * Method for setting user password
+     * @param user (object)
+     * @param password (string)
+     */
+    public void set_user_password(){
+
+    }
+
+    /**
+     * Method for deleting user
+     * @param user (object)
+     */
+    public void delete_user(){
+
+    }
+
+    /**
+     * Method for logging out
+     */
+    public void log_out(){
+
+    }
+}
 
 /*      Comments regarding several methods of user manager
 
