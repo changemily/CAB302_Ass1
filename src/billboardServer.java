@@ -1,63 +1,50 @@
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 
 /**
  * Billboard server class
- * Class contains mehtods for connecting to, recieving and sending info to a database
- * @author Jarod
- * @version Skeleton
+ * Class contains methods for connecting to, receiving and sending info to a database
+ * @author Jarod Evans & Emily Chang
+ * @version 1 - Skeleton
  */
 
 public class billboardServer{
+
+    Connection connection;
+
     public static void Setup_port(String properties_file){
+    //setup port used to connect Server with viewer and control panel
+    }
+
+    public void Connect_database(){
+
+        connection = DBconnection.getInstance();
+    }
+
+    public void Start_up(){
+        // creates tables if they are not present
+        //runs add table
 
     }
 
-    public static void Connect_database(String DBproperties_file){
-        private DBconnection(){
-            Properties props = new Properties();
-            FileInputStream in=null;
-            try{
-                in = new FileInputStream("./db.props");
-                props.load(in);
-                in.close();
-
-                //data source, username and password
-                String url = props.getProperty("jdbc.url");
-                String username = props.getProperty("jdbc.username");
-                String password = props.getProperty("jdbc.password");
-                String schema = props.getProperty("jdbc.schema");
-
-                //getting a connection
-                instance = DriveManager.getConnection(url+"/"+schema, username, password);
-            } catch(SQLException sqle){
-                System.err.println(sqle);
-            } catch(FileNotFoundException fnfe){
-                System.err.println(fnfe);
-            } catch (IOException ex){
-                ex.printStackTrace();
-            }
-        }
+    public void Add_table(){
+        //Adds tables to database
     }
 
-    public static void Start_up(){
-
+    public void Server_Connection(){
+        //Connect server to billboard viewer and control panel
     }
 
-    public static void Add_table(){
-
+    public void Close_connection() throws SQLException {
+        //closes connection to DB
+        DBconnection.Close_connection();
     }
 
-    public static void Server_Connection(){
-
+    /*
+    public String Login_request(String username, String password){
+        // Sends back error or valid session token depending on outcome of login request
+        return ;
     }
-
-    public static void Close_connection(){
-        connection.close();
-
-    }
-
-    public static String Login_request(String username. String password){
-
-    }
-
+    */
 }
