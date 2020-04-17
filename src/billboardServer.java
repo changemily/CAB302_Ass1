@@ -18,8 +18,8 @@ public class billboardServer{
     }
 
     public void Connect_database(){
-    // connect to database
 
+        connection = DBconnection.getInstance();
     }
 
     public void Start_up(){
@@ -38,6 +38,7 @@ public class billboardServer{
 
     public void Close_connection() throws SQLException {
         //closes connection to DB
+        DBconnection.Close_connection();
     }
 
     /*
