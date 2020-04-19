@@ -45,7 +45,7 @@ public class billboardManagerTest{
 
     }
 
-    //Test 6: Checks if a billboard can be schduled for a timed removal.
+    //Test 6: Checks if a billboard can be scheduled for a timed removal.
     @Test
     private static void Schedule_Remove_billboard(String billboard_name)
     {
