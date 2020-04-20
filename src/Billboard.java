@@ -1,5 +1,6 @@
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 /**
  * Billboard class
@@ -15,6 +16,7 @@ public class Billboard {
     String Image_file;
     LocalDate Time_scheduled;
     Duration duration;
+    HashMap<LocalDate, Duration> Time_duration;
 
     /**
      *Constructor that is used to create object Billboard. Billboard has an assigned a name, text
@@ -56,14 +58,20 @@ public class Billboard {
         this.Billboard_name = billboard_name;
         this.Billboard_text = text;
         this.Bg_colour = bg_colour;
+
         //if there is an image on the billboard
         if (!(image_file == "No Image"))
         {
             this.Image_file = image_file;
         }
         this.Time_scheduled = time_scheduled;
+
         //convert int to Duration
         this.duration = Duration.ofMinutes(Duration_mins);
+
+        //Create HashMap to store scheduled time and duration of billboard together
+        this. Time_duration = new HashMap<LocalDate, Duration>();
+        this.Time_duration.put(this.Time_scheduled, this.duration);
     }
 
     /**
@@ -125,6 +133,8 @@ public class Billboard {
         {
             //set duration billboard is displayed for
             this.duration = Duration.ofMinutes(Duration_mins);
+            //update Time and duration info
+            this.Time_duration.put(this.Time_scheduled, this.duration);
         }
 
         //if the time scheduled is in the past
@@ -138,6 +148,8 @@ public class Billboard {
         {
             ////set time billboard is scheduled for showing
             this.Time_scheduled = time_scheduled;
+            //update Time and duration info
+            this.Time_duration.put(this.Time_scheduled, this.duration);
         }
     }
 

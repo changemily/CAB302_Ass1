@@ -53,7 +53,9 @@ public class billboardManager {
      * @param text Text set on Billboard
      * @param bg_colour Background colour of Billboard
      * @param image_file file name of image on Billboard
-     */
+     * @param time_scheduled Time (date) Billboard is scheduled for showing
+     * @param Duration_mins Duration (minutes) Billboard is displayed for
+     * */
     public static void Create_edit_Billboard (String billboard_name, String text, String bg_colour, String image_file,
     LocalDate time_scheduled, int Duration_mins){
 
@@ -66,6 +68,10 @@ public class billboardManager {
 
         //if billboard does not exist
             //Store Billboard info in Database.
+
+        //if billboard is not scheduled for this time, add to schedule HashMap
+        //store time_scheduled & Duration_mins in a Time_scheduled HashMap
+        //store Billboard_name & Time_scheduled HashMap in Billboard_schedule HashMap
     }
 
 /**
@@ -113,9 +119,10 @@ public class billboardManager {
      * @param time_scheduled Time (date) Billboard is scheduled for showing
      * @throws Exception if duration is out of range or the time scheduled is in the past
      */
-    public static void Schedule_Billboard(int Duration_mins, LocalDate time_scheduled) throws Exception{
+    public static void scheduleBillboard(Billboard billboard, int Duration_mins, LocalDate time_scheduled) throws Exception{
+
         //edit schedule information of Billboard object
-        Schedule_Billboard(Duration_mins, time_scheduled);
+        billboard.Schedule_billboard(Duration_mins, time_scheduled);
 
         //Add new viewing time and duration to HashMap
     }
