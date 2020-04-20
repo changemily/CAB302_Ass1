@@ -110,6 +110,7 @@ public class Billboard {
      *Schedules billboard for given time and duration
      * @param Duration_mins Duration (minutes) Billboard is displayed for
      * @param time_scheduled Time (date) Billboard is scheduled for showing
+     * @throws Exception if duration is out of range or the time scheduled is in the past
      */
     public void Schedule_billboard(int Duration_mins, LocalDate time_scheduled) throws Exception
     {

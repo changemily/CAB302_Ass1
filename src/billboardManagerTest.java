@@ -3,7 +3,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -40,9 +41,22 @@ public class billboardManagerTest{
         billboardList.put(Billboard_5.Billboard_name, Billboard_5);
     }
 
-    //Test 1: Checks if a billboard can be created and added to list.
+    //Create mock HashMap of billboard schedule
+
+    //Test 1: Checks if a billboard can be created and added to HashMap.
     @Test
     public void Create_Billboard(){
+
+        //Billboard with no scheduled viewing
+        billboardManager.Create_edit_Billboard("Billboard_6","new billboard", "blue", "No Image");
+
+        assertEquals(true, billboardList.containsKey("Billboard_6"));
+
+        //Billboard with scheduled viewing and image
+        billboardManager.Create_edit_Billboard("Billboard_7","new billboard", "blue",
+                "image.jpg", LocalDate.parse("20-04-2020"), 5);
+
+        assertEquals(true, billboardList.containsKey("Billboard_7"));
 
     }
 
@@ -73,16 +87,27 @@ public class billboardManagerTest{
 
     //Test 6: Checks if a specified billboard can be deleted.
     @Test
-    private void Delete_billboard(String billboard_name)
+    private void Delete_billboard()
     {
+        billboardManager.Delete_billboard("Billboard_1");
+
+        assertEquals(false, billboardList.containsKey("Billboard_1"));
 
     }
 
     //Test 6: Schedule billboard in vacant time slot
     //
+    private void Schedule_billboard()
+    {
+
+    }
 
     //Test 6.2: Schedule billboard in non-vacant time slot - should take precedence over existing billboard scheduled
     //
+    private void Schedule_billboard2()
+    {
+
+    }
 
     //Test 7: Checks if a billboard can be removed from schedule.
     @Test
