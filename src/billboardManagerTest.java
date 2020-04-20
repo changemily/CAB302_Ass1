@@ -132,36 +132,67 @@ public class billboardManagerTest{
 
     }
 
-    //Test 6.0: Schedule billboard in vacant time slot
+    //Test 6.0: Schedule billboard that is has not been scheduled
     //
     @Test
     public void Schedule_billboardTest() throws Exception
     {
-        /*
+
         billboardManager.scheduleBillboard(Billboard_1, 5,LocalDate.parse("22-04-2020"));
-        HashMap<LocalDate, Duration> time_duration = new HashMap<LocalDate, Duration>;
+        HashMap<LocalDate, Duration> time_duration = new HashMap<LocalDate, Duration>();
+
+        //store scheduled time and duration of billboard one in temp HashMap
         time_duration = Billboard_schedule.get(Billboard_1.Billboard_name);
 
+        //check if time scheduled and duration pair match for Billboard_1
         assertEquals(5, time_duration.get(LocalDate.parse("22-04-2020")));
 
-        time_duration.g
-        assertEquals(LocalDate.parse("22-04-2020"), time_duration.getKey());
-*/
     }
 
-    //Test 6.1: Schedule billboard that is has not been scheduled
-    //
+    //Test 6.1: Schedule billboard that has previously been scheduled in a vacant time slot
     @Test
-    public void Schedule_billboardTest2()
+    public void Schedule_billboardTest2() throws Exception
     {
+        //Schedule billboard in a vacant time slot
+        billboardManager.scheduleBillboard(Billboard_2, 10,LocalDate.parse("01-05-2020"));
+        HashMap<LocalDate, Duration> time_duration = new HashMap<LocalDate, Duration>();
+
+        //store scheduled time and duration of billboard one in temp HashMap
+        time_duration = Billboard_schedule.get(Billboard_2.Billboard_name);
+
+        //check if time scheduled and duration pair match for Billboard 2
+        assertEquals(10, time_duration.get(LocalDate.parse("01-05-2020")));
 
     }
 
     //Test 6.2: Schedule billboard in non-vacant time slot - should take precedence over existing billboard scheduled
     //
     @Test
-    public void Schedule_billboardTest3()
+    public void Schedule_billboardTest3() throws Exception
     {
+        //Schedule billboard 1 in a vacant time slot
+        billboardManager.scheduleBillboard(Billboard_1, 10,LocalDate.parse("01-05-2020"));
+
+        //Schedule billboard 2 in a non-vacant time slot
+        billboardManager.scheduleBillboard(Billboard_2, 10,LocalDate.parse("01-05-2020"));
+
+
+        HashMap<LocalDate, Duration> time_duration_b2 = new HashMap<LocalDate, Duration>();
+
+        //store scheduled time and duration of billboard one in temp HashMap
+        time_duration_b2 = Billboard_schedule.get(Billboard_2.Billboard_name);
+
+        //check if time scheduled and duration pair match for Billboard 2
+        assertEquals(10, time_duration_b2.get(LocalDate.parse("01-05-2020")));
+
+
+
+        HashMap<LocalDate, Duration> time_duration_b1 = new HashMap<LocalDate, Duration>();
+
+        //store scheduled time and duration of billboard 1 in temp HashMap
+        time_duration_b1 = Billboard_schedule.get(Billboard_1.Billboard_name);
+
+        //check if Billboard 1 is not scheduled for that time
 
     }
 

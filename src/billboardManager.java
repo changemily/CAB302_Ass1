@@ -126,10 +126,18 @@ public class billboardManager {
      */
     public static void scheduleBillboard(Billboard billboard, int Duration_mins, LocalDate time_scheduled) throws Exception{
 
-        //edit schedule information of Billboard object
-        billboard.Schedule_billboard(Duration_mins, time_scheduled);
+        // if scheduled time matches
+            //remove from schedule
+            //edit schedule information of Billboard object
+            billboard.Schedule_billboard(Duration_mins, time_scheduled);
 
-        //Add new viewing time and duration to HashMap
+            //Add new viewing time and duration to HashMap
+
+        //else
+            //edit schedule information of Billboard object
+
+            //Add new viewing time and duration to HashMap
+
     }
 /**
      *
