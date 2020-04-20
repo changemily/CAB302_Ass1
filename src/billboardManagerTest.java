@@ -123,7 +123,7 @@ public class billboardManagerTest{
     @Test
     public void Schedule_billboardTest()
     {
-        billboardManager.scheduleBillboard("",);
+
     }
 
     //Test 6.1: Schedule billboard that is has not been scheduled
