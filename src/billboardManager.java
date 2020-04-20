@@ -1,6 +1,7 @@
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 
 /**
@@ -79,8 +80,11 @@ public class billboardManager {
     * Return type void
     */
 
-    public static void List_Billboards(){
+    public static HashMap<String, HashMap> List_Billboards(){
 
+        HashMap<String, HashMap> test_map = new HashMap<String, HashMap>();
+
+        return test_map;
     }
 
 /**
@@ -110,6 +114,7 @@ public class billboardManager {
 
     public static void Delete_billboard(String billboard_name)
     {
+        //remove schedule information of Billboard object
         //remove billboard object from HashMap
     }
 

@@ -105,7 +105,21 @@ public class billboardManagerTest{
     @Test
     public void View_schedule()
     {
+        //store billboard schedule in temp HashMap
+        HashMap<String,HashMap> temp_list= new HashMap<String,HashMap>();
 
+        temp_list = billboardManager.List_Billboards();
+
+        //compare temp HashMap to Billboard_schedule HashMap to see if they match
+        // for every entry of temp_list
+        for (HashMap.Entry<String, HashMap> temp_listEntry : temp_list.entrySet()) {
+
+            // for every entry of Billboard_schedule HashMap
+            for (HashMap.Entry<String, HashMap> original_entry : temp_list.entrySet()) {
+                //check if the entries are equal
+                assertEquals(original_entry.getKey(),temp_listEntry.getKey());
+            }
+        }
     }
 
     //Test 6: Checks if a specified billboard can be deleted.
@@ -121,9 +135,18 @@ public class billboardManagerTest{
     //Test 6.0: Schedule billboard in vacant time slot
     //
     @Test
-    public void Schedule_billboardTest()
+    public void Schedule_billboardTest() throws Exception
     {
+        /*
+        billboardManager.scheduleBillboard(Billboard_1, 5,LocalDate.parse("22-04-2020"));
+        HashMap<LocalDate, Duration> time_duration = new HashMap<LocalDate, Duration>;
+        time_duration = Billboard_schedule.get(Billboard_1.Billboard_name);
 
+        assertEquals(5, time_duration.get(LocalDate.parse("22-04-2020")));
+
+        time_duration.g
+        assertEquals(LocalDate.parse("22-04-2020"), time_duration.getKey());
+*/
     }
 
     //Test 6.1: Schedule billboard that is has not been scheduled
@@ -147,6 +170,8 @@ public class billboardManagerTest{
     public void Schedule_Remove_billboard(String billboard_name)
     {
 
+        billboardManager.Schedule_Remove_billboard("Billboard_2");
+        assertEquals(false, Billboard_schedule.containsKey("Billboard_2"));
 
     }
 
