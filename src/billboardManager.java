@@ -12,6 +12,12 @@ import java.util.HashMap;
  */
 
 public class billboardManager {
+
+    //Obtain_data - Extract serialized objects from database, deserialize and store in list of objects
+
+    //Store_data - Serialize objects in list and write to DB
+
+    
     //Create a new billboard object
     static Billboard billboardNew;
     //static Billboard billboardNew2;
