@@ -4,10 +4,8 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * This class contains methods that test the functionality of billboardManager class methods
@@ -120,9 +118,17 @@ public class billboardManagerTest {
 
     //Test 4: Checks if all information pertaining to a specified billboard can be obtained.
     @Test
-    public void Get_billboard_info(String billboard_name) {
+    public void Get_billboard_info() {
+        //store billboard info sourced in a temp billboard object
+        Billboard temp_billboard = billboardManager.Get_billboard_info("Billboard_2");
 
-    
+        //Test if retrieved Billboard variables equal the original Billboard 2 info
+        assertEquals(Billboard_2.Billboard_name, temp_billboard.Billboard_name);
+        assertEquals(Billboard_2.Image_file, temp_billboard.Image_file);
+        assertEquals(Billboard_2.Bg_colour, temp_billboard.Bg_colour);
+        assertEquals(Billboard_2.Billboard_text, temp_billboard.Billboard_text);
+        assertEquals(Billboard_2.duration, temp_billboard.duration);
+        assertEquals(Billboard_2.Time_scheduled, temp_billboard.Time_scheduled);
 
     }
 
@@ -201,10 +207,10 @@ public class billboardManagerTest {
         //Schedule billboard 2 in a non-vacant time slot
         billboardManager.scheduleBillboard(Billboard_2, 10,LocalDate.parse("01-05-2020"));
 
-
+        //Hashmap to store time and duration of billboard 2
         HashMap<LocalDate, Duration> time_duration_b2 = new HashMap<LocalDate, Duration>();
 
-        //store scheduled time and duration of billboard one in temp HashMap
+        //store scheduled time and duration of billboard 1 in temp HashMap
         time_duration_b2 = Billboard_schedule.get(Billboard_2.Billboard_name);
 
         //check if time scheduled and duration pair match for Billboard 2
