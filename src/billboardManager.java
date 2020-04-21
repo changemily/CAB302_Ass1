@@ -2,6 +2,7 @@ import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Convert
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 /**
  * Billboard Manager class
@@ -27,7 +28,8 @@ public class billboardManager {
      */
 
     //For creating and editing billboards provided all possible parameters.
-    static void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image, LocalDate schedule_time, Duration durationMinutes) {
+    static void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
+                                      LocalDate schedule_time, Duration durationMinutes) {
         //Create a new billboard object
         //Search for existing billboard
         boolean Truth = billboardManagerTest.billboardList.containsKey("Billboard_1");
@@ -67,50 +69,82 @@ public class billboardManager {
         }
     }
 
+    /**
+     * Method for listing current billboards
+     * Return type void
+     */
 
+    public static HashMap<String, HashMap> List_Billboards(){
 
+        HashMap<String, HashMap> test_map = new HashMap<String, HashMap>();
 
-/*
-
-    public void List_Billboards(){
-
+        return test_map;
     }
 
+    /**
+     * Method for retrieving billboard information from database
+     * @param billboard_name
+     * Return type void
+     */
 
-
-    */
-/*
-
-    public void Get_billboard_info(String billboard_name){
-
+    public static void Get_billboard_info(String billboard_name){
+        //retrieve billboard info from database
     }
-    */
-/*
 
-    private void View_schedule()
+    /**
+     * List of billboards that have been scheduled
+     */
+
+    public static void View_schedule()
     {
         //returns list of Billboard objects from database
         // billboard's name, creator, time scheduled and duration
     }
 
-    */
+    /**
+     *
+     * @param billboard_name Name of billboard being deleted
+     */
 
-
-    static void Delete_billboard(String billboard_name)
+    public static void Delete_billboard(String billboard_name)
     {
-        //remove billboard object from database
+        //remove schedule information of Billboard object
+        //remove billboard object from HashMap
     }
 
+    /**
+     *
+     * @param Duration_mins Duration (minutes) Billboard is displayed for
+     * @param time_scheduled Time (date) Billboard is scheduled for showing
+     * @throws Exception if duration is out of range or the time scheduled is in the past
+     */
+    public static void scheduleBillboard(Billboard billboard, int Duration_mins, LocalDate time_scheduled) throws Exception{
 
-/*
+        // if scheduled time matches
+        //remove from schedule
+        //edit schedule information of Billboard object
+        billboard.Schedule_billboard(Duration_mins, time_scheduled);
 
-    private void Schedule_Remove_billboard(String billboard_name)
+        //Add new viewing time and duration to HashMap
+
+        //else
+        //edit schedule information of Billboard object
+
+        //Add new viewing time and duration to HashMap
+
+    }
+    /**
+     *
+     * @param billboard_name Name of billboard being removed from schedule
+     */
+
+    public static void Schedule_Remove_billboard(String billboard_name)
     {
-        //remove scheduled time from billboard object
+        //remove scheduled time from billboard object in HashMap
+        //remove from schedule HashMap
 
     }
 
-*/
 }
 
 
