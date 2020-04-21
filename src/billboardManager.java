@@ -17,7 +17,7 @@ public class billboardManager {
 
     //Store_data - Serialize objects in list and write to DB
 
-    
+
     //Create a new billboard object
     static Billboard billboardNew;
     //static Billboard billboardNew2;
@@ -80,9 +80,9 @@ public class billboardManager {
      * Return type void
      */
 
-    public static HashMap<String, HashMap> List_Billboards(){
+    public static HashMap<String, Billboard> List_Billboards(){
 
-        HashMap<String, HashMap> test_map = new HashMap<String, HashMap>();
+        HashMap<String, Billboard> test_map = new HashMap<String, Billboard>();
 
         return test_map;
     }
@@ -101,10 +101,13 @@ public class billboardManager {
      * List of billboards that have been scheduled
      */
 
-    public static void View_schedule()
+    public static HashMap<String, HashMap> View_schedule()
     {
         //returns list of Billboard objects from database
         // billboard's name, creator, time scheduled and duration
+        HashMap<String, HashMap> test_map = new HashMap<String, HashMap>();
+
+        return test_map;
     }
 
     /**

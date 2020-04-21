@@ -92,7 +92,21 @@ public class billboardManagerTest {
     //Test 3: Checks if all current billboards can be listed.
     @Test
     public void List_Billboards() {
+        //store billboard schedule in temp HashMap
+        HashMap<String, Billboard> temp_list= new HashMap<String, Billboard>();
 
+        temp_list = billboardManager.List_Billboards();
+
+        //compare temp HashMap to billboardList HashMap to see if they match
+        // for every entry of temp_list
+        for (HashMap.Entry<String, Billboard> temp_listEntry : temp_list.entrySet()) {
+
+            // for every entry of billboardList
+            for (HashMap.Entry<String, Billboard> original_entry : billboardList.entrySet()) {
+                //check if all billboards are listed
+                assertEquals(original_entry.getKey(),temp_listEntry.getKey());
+            }
+        }
     }
 
     //Test 4: Checks if all information pertaining to a specified billboard can be obtained.
@@ -108,15 +122,15 @@ public class billboardManagerTest {
         //store billboard schedule in temp HashMap
         HashMap<String,HashMap> temp_list= new HashMap<String,HashMap>();
 
-        temp_list = billboardManager.List_Billboards();
+        temp_list = billboardManager.View_schedule();
 
         //compare temp HashMap to Billboard_schedule HashMap to see if they match
         // for every entry of temp_list
         for (HashMap.Entry<String, HashMap> temp_listEntry : temp_list.entrySet()) {
 
-            // for every entry of Billboard_schedule HashMap
-            for (HashMap.Entry<String, HashMap> original_entry : temp_list.entrySet()) {
-                //check if the entries are equal
+            // for every entry of Billboard_schedule
+            for (HashMap.Entry<String, HashMap> original_entry : Billboard_schedule.entrySet()) {
+                //check if all billboards are listed
                 assertEquals(original_entry.getKey(),temp_listEntry.getKey());
             }
         }
