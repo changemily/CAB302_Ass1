@@ -87,6 +87,15 @@ public class billboardManagerTest {
     @Test
     public void Edit_Billboard() {
 
+        //edit billboard 1
+        billboardManager.Create_edit_Billboard("Billboard_1", "edited", "edited", "edited");
+
+        //test if all variables have changed
+        assertEquals(Billboard_1.Billboard_name, "Billboard_1");
+        assertEquals(Billboard_1.Billboard_text, "edited");
+        assertEquals(Billboard_1.Bg_colour, "edited");
+        assertEquals(Billboard_1.Image_file, "edited");
+
     }
 
     //Test 3: Checks if all current billboards can be listed.
@@ -112,6 +121,8 @@ public class billboardManagerTest {
     //Test 4: Checks if all information pertaining to a specified billboard can be obtained.
     @Test
     public void Get_billboard_info(String billboard_name) {
+
+    
 
     }
 

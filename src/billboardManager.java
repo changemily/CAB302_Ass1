@@ -13,7 +13,13 @@ import java.util.HashMap;
 
 public class billboardManager {
 
-    //Obtain_data - Extract serialized objects from database, deserialize and store in list of objects
+    //Obtain_data - Extract serialized objects from database, deserialize and store in HashMap of objects
+    // Extract serialized objects from database using sql queries
+    // deserialize objects
+    //store in HashMap
+
+    // needs to be done for schedule and billboard tables in DB
+
 
     //Store_data - Serialize objects in list and write to DB
 
@@ -33,6 +39,7 @@ public class billboardManager {
      * @param durationMinutes The duration in minutes it will be displayed
      */
 
+    // NEEDS TO BE EDITED TO USE HASHMAP RETURNED FROM OBTAIN_DATA METHOD
     //For creating and editing billboards provided all possible parameters.
     static void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
                                       LocalDate schedule_time, Duration durationMinutes) {
@@ -59,20 +66,19 @@ public class billboardManager {
     public static void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image) {
         //Create a new billboard object
         //Search for existing billboard
-        boolean Truth = billboardManagerTest.billboardList.containsKey("Billboard_1");
-        if (Truth){
-            //Create new billboard to the users updated specs
-            billboardNew = new Billboard(billboard_name, text,
-                    bg_colour, image);
-            //Edit the old billboard by replacing it with the new billboard.
-            billboardManagerTest.billboardList.put("Billboard_1", billboardNew);
-        }else
-        {
-            billboardManagerTest.billboardList.containsKey("Billboard_1");
-            //Create a billboard using the parameters provided.
-            billboardNew = new Billboard(billboard_name, text,
-                    bg_colour, image);
+        boolean Contains_billboard = billboardManagerTest.billboardList.containsKey("Billboard_1");
+
+        //Create new billboard to fit users' specs
+        billboardNew = new Billboard(billboard_name, text, bg_colour, image);
+
+        if (Contains_billboard == true){
+
+            //remove existing billboard from HashMap
+
+
         }
+        // Insert billboard with updated specs.
+        billboardManagerTest.billboardList.put("Billboard_1", billboardNew);
     }
 
     /**
@@ -82,6 +88,7 @@ public class billboardManager {
 
     public static HashMap<String, Billboard> List_Billboards(){
 
+        //FOR TESTING PURPOSES
         HashMap<String, Billboard> test_map = new HashMap<String, Billboard>();
 
         return test_map;
@@ -90,11 +97,15 @@ public class billboardManager {
     /**
      * Method for retrieving billboard information from database
      * @param billboard_name
-     * Return type void
+     * Return type Billboard
      */
 
-    public static void Get_billboard_info(String billboard_name){
+    public static Billboard Get_billboard_info(String billboard_name){
         //retrieve billboard info from database
+
+        //FOR TESTING PURPOSES
+        Billboard billboard_test = new Billboard("billboard_test", "hello", "green", "image.jpg");
+        return billboard_test;
     }
 
     /**
@@ -105,6 +116,8 @@ public class billboardManager {
     {
         //returns list of Billboard objects from database
         // billboard's name, creator, time scheduled and duration
+
+        //FOR TESTING PURPOSES
         HashMap<String, HashMap> test_map = new HashMap<String, HashMap>();
 
         return test_map;
