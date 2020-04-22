@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,12 +14,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *  * @version - skeleton
  */
 
-public class billboardManagerTest {
+public class billboardManagerTest<E> {
 
-    static HashMap<String, Billboard> billboardList;
+    static HashMap<String, ArrayList> billboardList;
 
-    HashMap<String, HashMap> Billboard_schedule;
-    Billboard Billboard_1;
+    ArrayList<E> billboardValues;
+
+    ArrayList<E> schedule_info;
+
+    HashMap<String, ArrayList> Billboard_schedule;
+
+    /*Billboard Billboard_1;
     Billboard Billboard_2;
     Billboard Billboard_3;
     Billboard Billboard_4;
@@ -63,21 +69,22 @@ public class billboardManagerTest {
         Billboard_schedule.put(Billboard_8.Billboard_name, Billboard_8.Time_duration);
 
     }
+     */
 
     //Test 1: Checks if a billboard can be created and added to HashMap.
     @Test
-    public void Create_Billboard() {
+    public void add_Billboard() {
 
         //Billboard with no scheduled viewing
-        billboardManager.Create_edit_Billboard("Billboard_6", "new billboard", "blue", "No Image");
+        billboardManager.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image");
 
-        assertEquals(true, billboardList.containsKey("Billboard_6"));
+        assertEquals(true, billboardList.containsKey("Billboard1"));
 
         //Billboard with scheduled viewing and image
-        billboardManager.Create_edit_Billboard("Billboard_7", "new billboard", "blue",
+        billboardManager.Create_edit_Billboard("Billboard2", "new billboard", "blue",
                 "image.jpg", LocalDate.parse("20-04-2020"), Duration.parse("5"));
 
-        assertEquals(true, billboardList.containsKey("Billboard_7"));
+        assertEquals(true, billboardList.containsKey("Billboard2"));
 
     }
 
@@ -85,14 +92,17 @@ public class billboardManagerTest {
     @Test
     public void Edit_Billboard() {
 
+        //Create Billboard1
+        billboardManager.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image");
+
         //edit billboard 1
-        billboardManager.Create_edit_Billboard("Billboard_1", "edited", "edited", "edited");
+        billboardManager.Create_edit_Billboard("Billboard1", "edited", "edited", "edited");
 
         //test if all variables have changed
-        assertEquals(Billboard_1.Billboard_name, "Billboard_1");
-        assertEquals(Billboard_1.Billboard_text, "edited");
-        assertEquals(Billboard_1.Bg_colour, "edited");
-        assertEquals(Billboard_1.Image_file, "edited");
+        assertEquals("Billboard1", "");
+        assertEquals("edited", "");
+        assertEquals("edited", "edited");
+        assertEquals("edited", "edited");
 
     }
 
