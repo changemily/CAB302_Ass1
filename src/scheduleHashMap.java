@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class scheduleHashMap<E> {
+public class scheduleHashMap<E> extends HashMap{
 
     ArrayList<E> schedule_info;
 
@@ -34,7 +34,7 @@ public class scheduleHashMap<E> {
      * @param time_scheduled Time (date) Billboard is scheduled for showing
      * @throws Exception if duration is out of range or the time scheduled is in the past
      */
-    public static void scheduleBillboard(Billboard billboard, int Duration_mins, LocalDate time_scheduled) throws Exception{
+    public static void scheduleBillboard(String billboard_name, int Duration_mins, LocalDate time_scheduled) throws Exception{
 
         // if scheduled time matches
         //remove from schedule
@@ -60,4 +60,13 @@ public class scheduleHashMap<E> {
         //remove from schedule HashMap
 
     }
+
+    public ArrayList<E> getSchedule(String billboard_name)
+    {
+
+
+        return
+
+    }
+
 }
