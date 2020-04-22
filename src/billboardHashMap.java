@@ -1,7 +1,6 @@
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Convert;
-
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -10,10 +9,19 @@ import java.util.HashMap;
  * @author - Jarod Evans & Emily Chang
  * @version - skeleton
  */
+public class billboardHashMap<E> {
 
-public class billboardManager {
+    static HashMap<String, ArrayList> billboardList;
 
-    //Obtain_data - Extract serialized objects from database, deserialize and store in HashMap of objects
+    ArrayList<E> billboardValues;
+
+    //constructor that creates HashMap
+
+    public billboardHashMap() {
+        billboardList = new HashMap<String, ArrayList>(); // use tree map to sort by key
+    }
+
+//Obtain_data - Extract serialized objects from database, deserialize and store in HashMap of objects
     // Extract serialized objects from database using sql queries
     // deserialize objects
     //store in HashMap
@@ -31,6 +39,7 @@ public class billboardManager {
     /**
      * Method to create and edit billboards
      * Parameters -
+     *
      * @param billboard_name  Billboards name
      * @param text            Text on the billboard
      * @param bg_colour       Background colour of the billboard
@@ -46,15 +55,14 @@ public class billboardManager {
         //Create a new billboard object
         //Search for existing billboard
         boolean Truth = billboardManagerTest.billboardList.containsKey("Billboard_1");
-        if (Truth){
+        if (Truth) {
             //billboardManagerTest.billboardList.get("Billboard_1").Bg_colour = bg_colour;
             //Create new billboard to the users updated specs
             billboardNew = new Billboard(billboard_name, text,
                     bg_colour, image, schedule_time, Integer.parseInt(String.valueOf(durationMinutes)));
             //Edit the old billboard by replacing it with the new billboard.
             billboardManagerTest.billboardList.put("Billboard_1", billboardNew);
-        }else
-        {
+        } else {
             billboardManagerTest.billboardList.containsKey("Billboard_1");
             //Create a billboard using the parameters provided.
             billboardNew = new Billboard(billboard_name, text,
@@ -71,7 +79,7 @@ public class billboardManager {
         //Create new billboard to fit users' specs
         billboardNew = new Billboard(billboard_name, text, bg_colour, image);
 
-        if (Contains_billboard == true){
+        if (Contains_billboard == true) {
 
             //remove existing billboard from HashMap
 
@@ -86,7 +94,7 @@ public class billboardManager {
      * Return type void
      */
 
-    public static HashMap<String, Billboard> List_Billboards(){
+    public static HashMap<String, Billboard> List_Billboards() {
 
         //FOR TESTING PURPOSES
         HashMap<String, Billboard> test_map = new HashMap<String, Billboard>();
@@ -96,11 +104,11 @@ public class billboardManager {
 
     /**
      * Method for retrieving billboard information from database
-     * @param billboard_name
-     * Return type Billboard
+     *
+     * @param billboard_name Return type Billboard
      */
 
-    public static Billboard Get_billboard_info(String billboard_name){
+    public static Billboard Get_billboard_info(String billboard_name) {
         //retrieve billboard info from database
 
         //FOR TESTING PURPOSES
@@ -109,65 +117,12 @@ public class billboardManager {
     }
 
     /**
-     * List of billboards that have been scheduled
-     */
-
-    public static HashMap<String, HashMap> View_schedule()
-    {
-        //returns list of Billboard objects from database
-        // billboard's name, creator, time scheduled and duration
-
-        //FOR TESTING PURPOSES
-        HashMap<String, HashMap> test_map = new HashMap<String, HashMap>();
-
-        return test_map;
-    }
-
-    /**
-     *
      * @param billboard_name Name of billboard being deleted
      */
 
-    public static void Delete_billboard(String billboard_name)
-    {
+    public static void Delete_billboard(String billboard_name) {
         //remove schedule information of Billboard object
         //remove billboard object from HashMap
     }
 
-    /**
-     *
-     * @param Duration_mins Duration (minutes) Billboard is displayed for
-     * @param time_scheduled Time (date) Billboard is scheduled for showing
-     * @throws Exception if duration is out of range or the time scheduled is in the past
-     */
-    public static void scheduleBillboard(Billboard billboard, int Duration_mins, LocalDate time_scheduled) throws Exception{
-
-        // if scheduled time matches
-        //remove from schedule
-        //edit schedule information of Billboard object
-        billboard.Schedule_billboard(Duration_mins, time_scheduled);
-
-        //Add new viewing time and duration to HashMap
-
-        //else
-        //edit schedule information of Billboard object
-
-        //Add new viewing time and duration to HashMap
-
-    }
-    /**
-     *
-     * @param billboard_name Name of billboard being removed from schedule
-     */
-
-    public static void Schedule_Remove_billboard(String billboard_name)
-    {
-        //remove scheduled time from billboard object in HashMap
-        //remove from schedule HashMap
-
-    }
-
 }
-
-
-
