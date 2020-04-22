@@ -9,7 +9,7 @@ import java.util.HashMap;
  * @author - Jarod Evans & Emily Chang
  * @version - skeleton
  */
-public class billboardHashMap<E> {
+public class billboardHashMap<E> extends HashMap {
 
     static HashMap<String, ArrayList> billboardList;
 

@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -10,19 +11,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestbillboardHashMap<E> {
 
     ArrayList<E> billboardValues;
-    static HashMap<String, ArrayList> billboardList;
+    billboardHashMap billboardList;
+
+    //Test 1: Creating an object for testing.
+    @BeforeEach
+    @Test public void setupBillboardHashmap() {
+        billboardList = new billboardHashMap();
+    }
+
 
     //Test 1: Checks if a billboard can be created and added to HashMap.
     @Test
     public void add_Billboard() {
 
         //Billboard with no scheduled viewing
-        billboardManager.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image");
+        billboardList.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image");
 
         assertEquals(true, billboardList.containsKey("Billboard1"));
 
         //Billboard with scheduled viewing and image
-        billboardManager.Create_edit_Billboard("Billboard2", "new billboard", "blue",
+        billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
                 "image.jpg", LocalDate.parse("20-04-2020"), Duration.parse("5"));
 
         assertEquals(true, billboardList.containsKey("Billboard2"));
@@ -34,10 +42,10 @@ public class TestbillboardHashMap<E> {
     public void Edit_Billboard() {
 
         //Create Billboard1
-        billboardManager.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image");
+        billboardList.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image");
 
         //edit billboard 1
-        billboardManager.Create_edit_Billboard("Billboard1", "edited", "edited", "edited");
+        billboardList.Create_edit_Billboard("Billboard1", "edited", "edited", "edited");
 
         //test if all variables have changed
         assertEquals("Billboard1", "");
@@ -53,7 +61,7 @@ public class TestbillboardHashMap<E> {
         //store billboard schedule in temp HashMap
         HashMap<String, Billboard> temp_list= new HashMap<String, Billboard>();
 
-        temp_list = billboardManager.List_Billboards();
+        temp_list = billboardList.List_Billboards();
 
         //compare temp HashMap to billboardList HashMap to see if they match
         // for every entry of temp_list
@@ -71,7 +79,7 @@ public class TestbillboardHashMap<E> {
     @Test
     public void Get_billboard_info() {
         //store billboard info sourced in a temp billboard object
-        Billboard temp_billboard = billboardManager.Get_billboard_info("Billboard_2");
+        Billboard temp_billboard = billboardList.Get_billboard_info("Billboard_2");
 
         //Test if retrieved Billboard variables equal the original Billboard 2 info
         assertEquals(Billboard_2.Billboard_name, temp_billboard.Billboard_name);
@@ -87,7 +95,7 @@ public class TestbillboardHashMap<E> {
     @Test
     public void Delete_billboard()
     {
-        billboardManager.Delete_billboard("Billboard_1");
+        billboardList.Delete_billboard("Billboard_1");
 
         assertEquals(false, billboardList.containsKey("Billboard_1"));
 
