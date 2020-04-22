@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -9,45 +10,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestscheduleHashMap<E> {
 
-    ArrayList<E> schedule_info;
+    scheduleHashMap Billboard_schedule;
 
-    HashMap<String, ArrayList> Billboard_schedule;
-
-    //Test 5: Checks if the billboard schedule can be viewed correctly.
-    @Test
-    public void View_schedule()
-    {
-        //store billboard schedule in temp HashMap
-        HashMap<String, HashMap> temp_list= new HashMap<String,HashMap>();
-
-        temp_list = billboardManager.View_schedule();
-
-        //compare temp HashMap to Billboard_schedule HashMap to see if they match
-        // for every entry of temp_list
-        for (HashMap.Entry<String, HashMap> temp_listEntry : temp_list.entrySet()) {
-
-            // for every entry of Billboard_schedule
-            for (HashMap.Entry<String, HashMap> original_entry : Billboard_schedule.entrySet()) {
-                //check if all billboards are listed
-                assertEquals(original_entry.getKey(),temp_listEntry.getKey());
-            }
-        }
+    /* Test 1: Constructing a schedule HashMap object
+     */
+    @BeforeEach
+    @Test public void setUpMovieList() {
+        Billboard_schedule = new scheduleHashMap<E>();
     }
 
-    //Test 6.0: Schedule billboard that has not been scheduled
+    //Test 2.0: Schedule billboard that has not been scheduled
     //
     @Test
     public void Schedule_billboardTest() throws Exception
     {
+        //schedule a billboard
+        Billboard_schedule.scheduleBillboard("Billboard_1", 5, LocalDate.parse("22-04-2020"));
 
-        billboardManager.scheduleBillboard(Billboard_1, 5, LocalDate.parse("22-04-2020"));
-        HashMap<LocalDate, Duration> time_duration = new HashMap<LocalDate, Duration>();
+        //extract schedule info of billboard 1 into array list
+        ArrayList<E> schedule_info = Billboard_schedule.get("Billboard_1");
 
-        //store scheduled time and duration of billboard one in temp HashMap
-        time_duration = Billboard_schedule.get(Billboard_1.Billboard_name);
-
-        //check if time scheduled and duration pair match for Billboard_1
-        assertEquals(5, time_duration.get(LocalDate.parse("22-04-2020")));
+        //Test if schedule information matches info entered
+        assertEquals(5, schedule_info.get(1));
+        assertEquals(LocalDate.parse("22-04-2020"), schedule_info.get(2));
 
     }
 
@@ -55,15 +40,26 @@ public class TestscheduleHashMap<E> {
     @Test
     public void Schedule_billboardTest2() throws Exception
     {
-        //Schedule billboard in a vacant time slot
-        billboardManager.scheduleBillboard(Billboard_2, 10,LocalDate.parse("01-05-2020"));
-        HashMap<LocalDate, Duration> time_duration = new HashMap<LocalDate, Duration>();
 
-        //store scheduled time and duration of billboard one in temp HashMap
-        time_duration = Billboard_schedule.get(Billboard_2.Billboard_name);
+        //schedule a billboard
+        Billboard_schedule.scheduleBillboard("Billboard_1", 5, LocalDate.parse("22-04-2020"));
+        //extract schedule info of billboard 1 into array list
+        ArrayList<E> schedule_info = Billboard_schedule.getSchedule("Billboard_1");
 
-        //check if time scheduled and duration pair match for Billboard 2
-        assertEquals(10, time_duration.get(LocalDate.parse("01-05-2020")));
+        //schedule a billboard
+        Billboard_schedule.scheduleBillboard("Billboard_1", 10, LocalDate.parse("15-04-2020"));
+        //extract schedule info of billboard 1 into array list
+        ArrayList<E> schedule_info2 = Billboard_schedule.getSchedule("Billboard_1");
+
+
+        //Test if both entries have been saved
+        //Test if schedule information matches info entered
+        assertEquals(5, schedule_info.get(1));
+        assertEquals(LocalDate.parse("22-04-2020"), schedule_info.get(2));
+
+        //Test if schedule information matches info entered
+        assertEquals(10, schedule_info2.get(1));
+        assertEquals(LocalDate.parse("15-04-2020"), schedule_info.get(2));
 
     }
 
@@ -107,5 +103,28 @@ public class TestscheduleHashMap<E> {
         assertEquals(false, Billboard_schedule.containsKey("Billboard_2"));
 
     }
+
+    //Test 2: Test if the billboard schedule can be viewed correctly.
+    @Test
+    public void View_schedule()
+    {
+        //store billboard schedule in temp HashMap
+        HashMap<String, HashMap> temp_list= new HashMap<String,HashMap>();
+
+        temp_list = Billboard_schedule.View_schedule();
+
+        //compare temp HashMap to Billboard_schedule HashMap to see if they match
+        // for every entry of temp_list
+        for (HashMap.Entry<String, HashMap> temp_listEntry : temp_list.entrySet()) {
+
+            // for every entry of Billboard_schedule
+            for (HashMap.Entry<String, HashMap> original_entry : Billboard_schedule.entrySet()) {
+                //check if all billboards are listed
+                assertEquals(original_entry.getKey(),temp_listEntry.getKey());
+            }
+        }
+    }
+
+
 
 }
