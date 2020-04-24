@@ -2,16 +2,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class scheduleHashMap<E> extends HashMap{
+public class scheduleHashMap<E> {
 
     ArrayList<E> schedule_info;
 
-    HashMap<String, ArrayList> Billboard_schedule;
+    HashMap<String, ArrayList<E>> Billboard_schedule;
 
 //constructor that creates HashMap
 
     public scheduleHashMap() {
-        Billboard_schedule = new HashMap<String, ArrayList>(); // use tree map to sort by key
+        Billboard_schedule = new HashMap<String, ArrayList<E>>();
     }
     /**
      * List of billboards that have been scheduled
@@ -50,7 +50,7 @@ public class scheduleHashMap<E> extends HashMap{
 
     }
     /**
-     *
+     * Removes billboard from schedule
      * @param billboard_name Name of billboard being removed from schedule
      */
 
@@ -61,6 +61,10 @@ public class scheduleHashMap<E> extends HashMap{
 
     }
 
+    /**
+     * Retrieves scheduled time and duration
+     * @param billboard_name Name of billboard being removed from schedule
+     */
     public ArrayList<E> getSchedule(String billboard_name)
     {
 
