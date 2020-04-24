@@ -25,13 +25,13 @@ public class TestscheduleHashMap<E> {
     public void Schedule_billboardTest() throws Exception
     {
         //schedule a billboard
-        Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDate.parse("22-04-2020"), 5);
+        Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDate.parse("22-04-2021"), 5);
 
         //extract schedule info of billboard 1 into array list
         ArrayList<ArrayList<E>>schedule_info = Billboard_schedule.getSchedule("Billboard_1");
 
         //Test if schedule information matches info entered
-        assertEquals(LocalDate.parse("22-04-2020"), schedule_info.get(1).get(1));
+        assertEquals(LocalDate.parse("22-04-2021"), schedule_info.get(1).get(1));
         assertEquals(5, schedule_info.get(1).get(2));
 
     }
@@ -42,21 +42,20 @@ public class TestscheduleHashMap<E> {
     {
 
         //schedule a billboard
-        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDate.parse("22-04-2020"), 5);
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDate.parse("22-04-2021"), 5);
 
         //schedule the same billboard for a different time
-        Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDate.parse("15-04-2020"),10);
+        Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDate.parse("15-04-2021"),10);
         //extract schedule info of billboard 1 into array list
         ArrayList<ArrayList<E>> schedule_info = Billboard_schedule.getSchedule("Billboard_1");
 
         //Test if both entries have been saved
         //Test if schedule information matches info entered
-        assertEquals(LocalDate.parse("15-04-2020"), schedule_info.get(1).get(1));
+        assertEquals(LocalDate.parse("15-04-2021"), schedule_info.get(1).get(1));
         assertEquals(10, schedule_info.get(1).get(2));
 
-
         //Test if schedule information matches info entered
-        assertEquals(LocalDate.parse("22-04-2020"), schedule_info.get(2).get(1));
+        assertEquals(LocalDate.parse("22-04-2021"), schedule_info.get(2).get(1));
         assertEquals(5, schedule_info.get(2).get(2));
     }
 
@@ -66,10 +65,10 @@ public class TestscheduleHashMap<E> {
     public void Schedule_billboardTest3() throws Exception
     {
         //Schedule billboard 1 in a vacant time slot
-        Billboard_schedule.scheduleBillboard("Billboard_1",LocalDate.parse("01-05-2020"),10);
+        Billboard_schedule.scheduleBillboard("Billboard_1",LocalDate.parse("01-05-2021"),10);
 
         //Schedule billboard 2 in a non-vacant time slot
-        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDate.parse("01-05-2020"), 10);
+        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDate.parse("01-05-2021"), 10);
 
         //ArrayList to store scheduled times and durations of billboard 2
         ArrayList<ArrayList<E>>  time_duration_b2 = new ArrayList<ArrayList<E>> ();
@@ -82,7 +81,7 @@ public class TestscheduleHashMap<E> {
         int durationB2 = (int)time_duration_b2.get(1).get(2);
 
         //check if time scheduled and duration pair match for Billboard 2
-        assertEquals(LocalDate.parse("01-05-2020"), time_scheduledB2);
+        assertEquals(LocalDate.parse("01-05-2021"), time_scheduledB2);
         assertEquals(10, durationB2);
 
         //-------------------------------------------------------------
@@ -98,8 +97,52 @@ public class TestscheduleHashMap<E> {
         int durationB1 = (int)time_duration_b1.get(1).get(2);
 
         //check if Billboard 1 is not scheduled for that time
-        assertNotEquals(LocalDate.parse("01-05-2020"),time_scheduledB1);
+        assertNotEquals(LocalDate.parse("01-05-2021"),time_scheduledB1);
         assertNotEquals(10, durationB1);
+    }
+
+    //Test 6.2: Schedule billboard for an invalid time
+    //
+    @Test
+    public void Schedule_invalidTime() throws Exception
+    {
+        assertThrows(Exception.class,() -> {
+            //schedule billboard for date in the past
+            Billboard_schedule.scheduleBillboard("Billboard_1",LocalDate.parse("01-01-2000"),10);
+        });
+    }
+
+    //Test 6.2: Schedule billboard for an invalid duration
+    //
+    @Test
+    public void Schedule_NegDuration() throws Exception
+    {
+        assertThrows(Exception.class,() -> {
+            //schedule billboard for negative
+            Billboard_schedule.scheduleBillboard("Billboard_1",LocalDate.parse("01-01-2000"),-1);
+        });
+    }
+
+    //Test 6.2: Schedule billboard for an invalid duration
+    //
+    @Test
+    public void Schedule_ZerDuration() throws Exception
+    {
+        assertThrows(Exception.class,() -> {
+            //schedule billboard for negative
+            Billboard_schedule.scheduleBillboard("Billboard_1",LocalDate.parse("01-01-2000"),0);
+        });
+    }
+
+    //Test 6.2: Schedule billboard that does not exist
+    // FIX
+    @Test
+    public void Schedule_invalidBillboard() throws Exception
+    {
+        assertThrows(Exception.class,() -> {
+            //schedule billboard that does not exist
+            Billboard_schedule.scheduleBillboard("nonexistent",LocalDate.parse("01-01-2000"),10);
+        });
     }
 
     //Test 5: Checks if exception is thrown when retrieving information from a billboard that does not exist
@@ -116,9 +159,9 @@ public class TestscheduleHashMap<E> {
     public void Schedule_Remove_billboard(String billboard_name) throws Exception
     {
         //add billboards to schedule
-        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDate.parse("10-05-2020"), 10);
-        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDate.parse("04-05-2020"), 15);
-        Billboard_schedule.scheduleBillboard("Billboard_3", LocalDate.parse("03-05-2020"), 5);
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDate.parse("10-05-2021"), 10);
+        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDate.parse("04-05-2021"), 15);
+        Billboard_schedule.scheduleBillboard("Billboard_3", LocalDate.parse("03-05-2021"), 5);
 
         //remove billboard from schedule
         Billboard_schedule.Schedule_Remove_billboard("Billboard_2");
@@ -128,7 +171,17 @@ public class TestscheduleHashMap<E> {
         assertThrows(Exception.class,() -> {
             Billboard_schedule.getSchedule("Billboard_2");
         });
+    }
 
+    //Test 6.2: Remove schedule of billboard that is not in the schedule
+    //
+    @Test
+    public void RemoveSchedule_invalidBillboard() throws Exception
+    {
+        assertThrows(Exception.class,() -> {
+            //schedule billboard that does not exist
+            Billboard_schedule.Schedule_Remove_billboard("nonexistent");
+        });
     }
 
     //Test 2: Test if the billboard schedule can be viewed correctly.
@@ -136,9 +189,9 @@ public class TestscheduleHashMap<E> {
     public void View_schedule() throws Exception
     {
         //add billboards to schedule
-        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDate.parse("10-05-2020"), 10);
-        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDate.parse("04-05-2020"), 15);
-        Billboard_schedule.scheduleBillboard("Billboard_3", LocalDate.parse("03-05-2020"), 5);
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDate.parse("10-05-2021"), 10);
+        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDate.parse("04-05-2021"), 15);
+        Billboard_schedule.scheduleBillboard("Billboard_3", LocalDate.parse("03-05-2021"), 5);
 
         //store billboard schedule in temp HashMap
         HashMap<String, ArrayList<E>> viewSchedule_list= new HashMap<String, ArrayList<E>>();
@@ -147,14 +200,16 @@ public class TestscheduleHashMap<E> {
         viewSchedule_list = Billboard_schedule.View_schedule();
 
         //check if output matches stored data
-        assertEquals(LocalDate.parse("10-05-2020"),viewSchedule_list.get("Billboard_1").get(1));
+        assertEquals(LocalDate.parse("10-05-2021"),viewSchedule_list.get("Billboard_1").get(1));
         assertEquals(10,viewSchedule_list.get("Billboard_1").get(2));
 
-        assertEquals(LocalDate.parse("04-05-2020"),viewSchedule_list.get("Billboard_2").get(1));
+        assertEquals(LocalDate.parse("04-05-2021"),viewSchedule_list.get("Billboard_2").get(1));
         assertEquals(15,viewSchedule_list.get("Billboard_2").get(2));
 
-        assertEquals(LocalDate.parse("03-05-2020"),viewSchedule_list.get("Billboard_3").get(1));
+        assertEquals(LocalDate.parse("03-05-2021"),viewSchedule_list.get("Billboard_3").get(1));
         assertEquals(5,viewSchedule_list.get("Billboard_3").get(2));
+
+        //check if it is sorted by date - TO DO
     }
 
 }
