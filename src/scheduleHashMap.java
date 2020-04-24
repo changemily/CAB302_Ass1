@@ -17,7 +17,7 @@ public class scheduleHashMap<E> {
      * List of billboards that have been scheduled
      */
 
-    public static HashMap<String, HashMap> View_schedule()
+    public HashMap<String, ArrayList<E>> View_schedule()
     {
         //returns list of Billboard objects from database
         // billboard's name, creator, time scheduled and duration
@@ -34,7 +34,7 @@ public class scheduleHashMap<E> {
      * @param time_scheduled Time (date) Billboard is scheduled for showing
      * @throws Exception if duration is out of range or the time scheduled is in the past
      */
-    public static void scheduleBillboard(String billboard_name, int Duration_mins, LocalDate time_scheduled) throws Exception{
+    public static void scheduleBillboard(String billboard_name, LocalDate time_scheduled, int Duration_mins) throws Exception{
 
         // if scheduled time matches
         //remove from schedule
@@ -62,12 +62,14 @@ public class scheduleHashMap<E> {
     }
 
     /**
-     * Retrieves scheduled time and duration
-     * @param billboard_name Name of billboard being removed from schedule
+     *
+     * @param billboard_name
+     * @return an array list of the times & durations the billboard is scheduled for
      */
-    public ArrayList<E> getSchedule(String billboard_name)
+    public ArrayList<ArrayList<E>> getSchedule(String billboard_name)
     {
-
+        //retrieve
+        //sort list
 
         return
 
