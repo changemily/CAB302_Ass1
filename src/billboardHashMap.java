@@ -54,16 +54,16 @@ public class billboardHashMap<E> extends HashMap {
                                       LocalDate schedule_time, Duration durationMinutes) {
         //Create a new billboard object
         //Search for existing billboard
-        boolean Truth = billboardManagerTest.billboardList.containsKey("Billboard_1");
+        boolean Truth = TestbillboardHashMap.billboardList.containsKey("Billboard_1");
         if (Truth) {
             //billboardManagerTest.billboardList.get("Billboard_1").Bg_colour = bg_colour;
             //Create new billboard to the users updated specs
             billboardNew = new Billboard(billboard_name, text,
                     bg_colour, image, schedule_time, Integer.parseInt(String.valueOf(durationMinutes)));
             //Edit the old billboard by replacing it with the new billboard.
-            billboardManagerTest.billboardList.put("Billboard_1", billboardNew);
+            TestbillboardHashMap.billboardList.put("Billboard_1", billboardNew);
         } else {
-            billboardManagerTest.billboardList.containsKey("Billboard_1");
+            TestbillboardHashMap.billboardList.containsKey("Billboard_1");
             //Create a billboard using the parameters provided.
             billboardNew = new Billboard(billboard_name, text,
                     bg_colour, image, schedule_time, Integer.parseInt(String.valueOf(durationMinutes)));
@@ -74,7 +74,7 @@ public class billboardHashMap<E> extends HashMap {
     public static void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image) {
         //Create a new billboard object
         //Search for existing billboard
-        boolean Contains_billboard = billboardManagerTest.billboardList.containsKey("Billboard_1");
+        boolean Contains_billboard = TestbillboardHashMap.billboardList.containsKey("Billboard_1");
 
         //Create new billboard to fit users' specs
         billboardNew = new Billboard(billboard_name, text, bg_colour, image);
@@ -86,7 +86,7 @@ public class billboardHashMap<E> extends HashMap {
 
         }
         // Insert billboard with updated specs.
-        billboardManagerTest.billboardList.put("Billboard_1", billboardNew);
+        TestbillboardHashMap.billboardList.put("Billboard_1", billboardNew);
     }
 
     /**

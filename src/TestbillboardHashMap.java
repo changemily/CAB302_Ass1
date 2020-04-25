@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestbillboardHashMap<E> {
 
     ArrayList<E> billboardValues;
-    billboardHashMap billboardList;
+    static billboardHashMap billboardList;
 
 
     //Test 1: Creating an object for testing.
