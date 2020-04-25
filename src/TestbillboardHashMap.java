@@ -144,6 +144,13 @@ public class TestbillboardHashMap<E> {
     }
 
     //Test 7: If Get_billboard_info attempts to retrieve information from a billboard that doesn't exist.
+    @Test
+    public void no_info() throws Exception
+    {
+        assertThrows(Exception.class, () -> {
+            billboardHashMap.Get_billboard_info("Billboard_1");
+        });
+    }
 
     //Test 8: Checks if a specified billboard can be deleted.
     @Test
@@ -156,5 +163,12 @@ public class TestbillboardHashMap<E> {
     }
 
     //Test 9: If Delete_billboard attempts to delete a billboard that doesn't exist.
+    @Test
+    public void no_billboard() throws Exception
+    {
+        assertThrows(Exception.class, () -> {
+            billboardHashMap.Delete_billboard("Billboard_1");
+        });
+    }
 
 }
