@@ -51,7 +51,7 @@ public class billboardHashMap<E> extends HashMap {
     // NEEDS TO BE EDITED TO USE HASHMAP RETURNED FROM OBTAIN_DATA METHOD
     //For creating and editing billboards provided all possible parameters.
     static void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
-                                      LocalDate schedule_time, Duration durationMinutes) {
+                                      LocalDate schedule_time, int durationMinutes) {
         //Create a new billboard object
         //Search for existing billboard
         boolean Truth = TestbillboardHashMap.billboardList.containsKey("Billboard_1");
@@ -59,14 +59,14 @@ public class billboardHashMap<E> extends HashMap {
             //billboardManagerTest.billboardList.get("Billboard_1").Bg_colour = bg_colour;
             //Create new billboard to the users updated specs
             billboardNew = new Billboard(billboard_name, text,
-                    bg_colour, image, schedule_time, Integer.parseInt(String.valueOf(durationMinutes)));
+                    bg_colour, image, schedule_time, durationMinutes);
             //Edit the old billboard by replacing it with the new billboard.
             TestbillboardHashMap.billboardList.put("Billboard_1", billboardNew);
         } else {
             TestbillboardHashMap.billboardList.containsKey("Billboard_1");
             //Create a billboard using the parameters provided.
             billboardNew = new Billboard(billboard_name, text,
-                    bg_colour, image, schedule_time, Integer.parseInt(String.valueOf(durationMinutes)));
+                    bg_colour, image, schedule_time, durationMinutes);
         }
     }
 

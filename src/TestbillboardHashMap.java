@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestbillboardHashMap<E> {
 
@@ -21,7 +22,7 @@ public class TestbillboardHashMap<E> {
     }
 
 
-    //Test 1: Checks if a billboard can be created and added to HashMap.
+    //Test 2: Checks if a billboard can be created and added to HashMap.
     @Test
     public void add_Billboard() throws Exception
     {
@@ -33,13 +34,63 @@ public class TestbillboardHashMap<E> {
 
         //Billboard with scheduled viewing and image
         billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                "image.jpg", LocalDate.parse("20-04-2020"), Duration.parse("5"));
+                "image.jpg", LocalDate.parse("20-04-2020"), 5);
 
         assertEquals(true, billboardList.containsKey("Billboard2"));
 
     }
 
-    //Test 2: Checks if a billboard can be edited.
+    //Test 3.1: Check for negative duration.
+    @Test
+    public void neg_duration() throws Exception
+    {
+        assertThrows(Exception.class, () -> {
+            billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
+                    "image.jpg", LocalDate.parse("20-04-2020"), -5);
+        });
+    }
+
+    //Test 3.2: Check for 0 duration.
+    @Test
+    public void no_duration() throws Exception
+    {
+        assertThrows(Exception.class, () -> {
+            billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
+                    "image.jpg", LocalDate.parse("20-04-2020"), 0);
+        });
+    }
+
+    //Test 3.3: Invalid date - date in the past etc.
+    @Test
+    public void invalid_date() throws Exception
+    {
+        assertThrows(Exception.class, () -> {
+            billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
+                    "image.jpg", LocalDate.parse("20-04-202"), 5);
+        });
+    }
+
+    //Test 3.4: Check if img exists.
+    @Test
+    public void img_exists() throws Exception
+    {
+        assertThrows(Exception.class, () -> {
+            billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
+                    "doesn't_exist.jpg", LocalDate.parse("20-04-2020"), 5);
+        });
+    }
+
+    //Test 3.5: Check if bg_colour is valid.
+    @Test
+    public void bg_valid() throws Exception
+    {
+        assertThrows(Exception.class, () -> {
+            billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "lmao",
+                    "image.jpg", LocalDate.parse("20-04-2020"), 5);
+        });
+    }
+
+    //Test 4: Checks if a billboard can be edited.
     @Test
     public void Edit_Billboard() throws Exception
     {
@@ -58,33 +109,21 @@ public class TestbillboardHashMap<E> {
 
     }
 
-    //Test 3: Checks if all current billboards can be listed.
+    //Test 5: Checks if all current billboards can be listed. Check for alphabetical order.
     @Test
     public void List_Billboards(HashMap<String, Billboard> hashMap) throws Exception
     {
         //store billboard schedule in temp HashMap
-
         HashMap<String, Billboard> temp_list = billboardList.List_Billboards();
+
         //Loop checks to see if every billboard in the list is found and correctly.
         //Foreach billboard in billboardList check if it exists in the hashmap provided.
         for(Object Billboard : billboardList.entrySet()) {
             assertEquals(hashMap, Billboard);
         }
-
-
-//        //compare temp HashMap to billboardList HashMap to see if they match
-//        // for every entry of temp_list
-//        for (HashMap.Entry<String, Billboard> temp_listEntry : temp_list.entrySet()) {
-//
-//            // for every entry of billboardList
-//            for (Object original_entry : billboardList.entrySet()) {
-//                //check if all billboards are listed
-//                assertEquals(original_entry.getKey(),temp_listEntry.getKey());
-//            }
-//        }
     }
 
-    //Test 4: Checks if all information pertaining to a specified billboard can be obtained.
+    //Test 6: Checks if all information pertaining to a specified billboard can be obtained.
     @Test
     public void Get_billboard_info(String billboard_name) throws Exception
     {
@@ -104,7 +143,9 @@ public class TestbillboardHashMap<E> {
 
     }
 
-    //Test 5: Checks if a specified billboard can be deleted.
+    //Test 7: If Get_billboard_info attempts to retrieve information from a billboard that doesn't exist.
+
+    //Test 8: Checks if a specified billboard can be deleted.
     @Test
     public void Delete_billboard() throws Exception
     {
@@ -113,5 +154,7 @@ public class TestbillboardHashMap<E> {
         assertEquals(false, billboardList.containsKey("Billboard_1"));
 
     }
+
+    //Test 9: If Delete_billboard attempts to delete a billboard that doesn't exist.
 
 }
