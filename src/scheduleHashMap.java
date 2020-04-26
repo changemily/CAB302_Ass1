@@ -8,24 +8,25 @@ public class scheduleHashMap<E> {
 
     HashMap<String, ArrayList<E>> Billboard_schedule;
 
-//constructor that creates HashMap
+    //constructor that creates a scheduleHashMap object
 
     public scheduleHashMap() {
         Billboard_schedule = new HashMap<String, ArrayList<E>>();
     }
-    /**
-     * List of billboards that have been scheduled
-     */
 
+    //extract schedule data from database and store in Billboard_schedule
+
+
+    /**
+     * Lists billboards that have been scheduled
+     * @return HashMap containing billboard name and an array list storing time scheduled and duration
+     */
     public HashMap<String, ArrayList<E>> View_schedule()
     {
-        //returns list of Billboard objects from database
-        // billboard's name, creator, time scheduled and duration
+        //
 
-        //FOR TESTING PURPOSES
-        HashMap<String, ArrayList<E>> test_map = new HashMap<String, ArrayList<E>>();
 
-        return test_map;
+        return ;
     }
 
     /**
