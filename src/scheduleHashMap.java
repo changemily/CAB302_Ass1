@@ -6,16 +6,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class scheduleHashMap<E> {
+public class scheduleHashMap<Object> {
 
-    ArrayList<E> schedule_info;
+    ArrayList<Object> schedule_info;
 
-    HashMap<String, ArrayList<E>> Billboard_schedule;
+    HashMap<String, ArrayList<Object>> Billboard_schedule;
 
     //constructor that creates a scheduleHashMap object
 
     public scheduleHashMap() {
-        Billboard_schedule = new HashMap<String, ArrayList<E>>();
+        Billboard_schedule = new HashMap<String, ArrayList<Object>>();
     }
 
     /**
@@ -59,6 +59,48 @@ public class scheduleHashMap<E> {
         connection.close();
     }
 
+    public void Write_To_DBschedule() throws SQLException {
+        final String SELECT = "SELECT * FROM schedule ORDER BY time_scheduled";
+
+        //Connect to database
+        Connection connection;
+        connection = DBconnection.getInstance();
+
+        //create statement
+        Statement st = connection.createStatement();
+
+        ResultSet rs = st.executeQuery(SELECT);
+
+        //clear existing database entries
+        while (rs.next()) {
+            rs.deleteRow();
+        }
+
+        //for every item in Billboard_schedule
+        for ( String billboard_name : Billboard_schedule.keySet() ) {
+
+            //store Billboard_schedule info in local variables
+            String billboardName = billboard_name;
+
+            //create temp array list to store time scheduled and duration pair
+            ArrayList<E> schedule_time = Billboard_schedule.get(billboard_name);
+            int Time_scheduled = schedule_time.get(1);
+            int duration = schedule_time.get(2);
+
+            //write to database
+            rs.updateString(1,billboard_name);
+            rs.updateInt(2,Time_scheduled);
+            rs.updateInt(3,duration);
+        }
+
+        //close ResultSet
+        rs.close();
+        //close statement
+        st.close();
+        //close connection
+        connection.close();
+    }
+
     /**
      * Lists billboards that have been scheduled
      * @return HashMap containing billboard name and an array list storing time scheduled and duration
@@ -74,7 +116,7 @@ public class scheduleHashMap<E> {
      * @param time_scheduled Time (date) Billboard is scheduled for showing
      * @throws Exception if duration is out of range or the time scheduled is in the past
      */
-    public static void scheduleBillboard(String billboard_name, LocalDate time_scheduled, int Duration_mins,
+    public void scheduleBillboard(String billboard_name, LocalDate time_scheduled, int Duration_mins,
                                          HashMap<String, ArrayList> billboardList) throws Exception{
 
         // if scheduled time matches
@@ -96,11 +138,10 @@ public class scheduleHashMap<E> {
      * @param billboard_name Name of billboard being removed from schedule
      */
 
-    public static void Schedule_Remove_billboard(String billboard_name)
+    public void Schedule_Remove_billboard(String billboard_name, ArrayList schedule_info)
     {
-        //remove scheduled time from billboard object in HashMap
-        //remove from schedule HashMap
-
+        //remove all instances of scheduled billboard in HashMap
+        Billboard_schedule.remove(billboard_name,schedule_info);
     }
 
     /**
@@ -108,7 +149,7 @@ public class scheduleHashMap<E> {
      * @param billboard_name
      * @return an array list of the times & durations the billboard is scheduled for
      */
-    public ArrayList<ArrayList<E>> getSchedule(String billboard_name)
+    public ArrayList<ArrayList<Object>> getSchedule(String billboard_name)
     {
         //retrieve
         //sort list

@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestscheduleHashMap<E> {
+public class TestscheduleHashMap {
 
     scheduleHashMap Billboard_schedule;
     billboardHashMap billboardList;
@@ -22,7 +22,7 @@ public class TestscheduleHashMap<E> {
      */
     @BeforeEach
     @Test public void setUpBbSchedule() {
-        Billboard_schedule = new scheduleHashMap<E>();
+        Billboard_schedule = new scheduleHashMap<Object>();
     }
 
     //Test 2: Schedule billboard that has not been scheduled
@@ -30,7 +30,7 @@ public class TestscheduleHashMap<E> {
     @Test
     public void Schedule_billboardTest() throws Exception
     {
-        //add billboard being sccheduled to billboardList
+        //add billboard being scheduled to billboardList
         billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
                 "image.jpg");
 
@@ -38,7 +38,7 @@ public class TestscheduleHashMap<E> {
         Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDate.parse("22-04-2021"), 5, billboardList);
 
         //extract schedule info of billboard 1 into array list
-        ArrayList<ArrayList<E>>schedule_info = Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ArrayList<Object>>schedule_info = Billboard_schedule.getSchedule("Billboard_1");
 
         //Test if schedule information matches info entered
         assertEquals(LocalDate.parse("22-04-2021"), schedule_info.get(1).get(1));
@@ -57,7 +57,7 @@ public class TestscheduleHashMap<E> {
         //schedule the same billboard for a different time
         Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDate.parse("15-04-2021"),10, billboardList);
         //extract schedule info of billboard 1 into array list
-        ArrayList<ArrayList<E>> schedule_info = Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ArrayList<Object>> schedule_info = Billboard_schedule.getSchedule("Billboard_1");
 
         //Test if both entries have been saved
         //Test if schedule information matches info entered
@@ -88,7 +88,7 @@ public class TestscheduleHashMap<E> {
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDate.parse("01-05-2021"), 10, billboardList);
 
         //ArrayList to store scheduled times and durations of billboard 2
-        ArrayList<ArrayList<E>>  time_duration_b2 = new ArrayList<ArrayList<E>> ();
+        ArrayList<ArrayList<Object>>  time_duration_b2 = new ArrayList<ArrayList<Object>> ();
 
         //store scheduled time and duration of billboard 2 in an ArrayList
         time_duration_b2 = Billboard_schedule.getSchedule("Billboard_2");
@@ -104,7 +104,7 @@ public class TestscheduleHashMap<E> {
         //-------------------------------------------------------------
         //Test that billboard 1 is NOT scheduled for 01-05-2021 for 10 mins
         //ArrayList to store scheduled times and durations of billboard 1
-        ArrayList<ArrayList<E>>  time_duration_b1 = new ArrayList<ArrayList<E>>();
+        ArrayList<ArrayList<Object>>  time_duration_b1 = new ArrayList<ArrayList<Object>>();
 
         //store scheduled time and duration of billboard 1 in an ArrayList
         time_duration_b1 = Billboard_schedule.getSchedule("Billboard_1");
@@ -198,7 +198,8 @@ public class TestscheduleHashMap<E> {
         Billboard_schedule.scheduleBillboard("Billboard_3", LocalDate.parse("03-05-2021"), 5, billboardList);
 
         //remove billboard from schedule
-        Billboard_schedule.Schedule_Remove_billboard("Billboard_2");
+        Billboard_schedule.Schedule_Remove_billboard("Billboard_2",
+                Billboard_schedule.getSchedule("Billboard_2").get(1));
 
         //check if billboard has been removed
         //exception is thrown when retrieving info of non-existent billboard
@@ -212,9 +213,15 @@ public class TestscheduleHashMap<E> {
     @Test
     public void RemoveSchedule_invalidBillboard() throws Exception
     {
+        ArrayList <Object> schedule_info = new ArrayList<Object>();
+
+        schedule_info.add(LocalDate.parse("03-05-2021"));
+
+        schedule_info.add(5);
+
         assertThrows(Exception.class,() -> {
             //remove billboard from schedule that does not exist
-            Billboard_schedule.Schedule_Remove_billboard("nonexistent");
+            Billboard_schedule.Schedule_Remove_billboard("nonexistent", schedule_info);
         });
     }
 
@@ -236,20 +243,45 @@ public class TestscheduleHashMap<E> {
         Billboard_schedule.scheduleBillboard("Billboard_3", LocalDate.parse("03-05-2021"), 5, billboardList);
 
         //store billboard schedule in temp HashMap
-        HashMap<String, ArrayList<E>> viewSchedule_list= new HashMap<String, ArrayList<E>>();
+        HashMap<String, ArrayList<Object>> viewSchedule_list= new HashMap<String, ArrayList<Object>>();
 
         //store output in viewSchedule_list
         viewSchedule_list = Billboard_schedule.View_schedule();
 
-        //check if output matches stored data
-        assertEquals(LocalDate.parse("10-05-2021"),viewSchedule_list.get("Billboard_1").get(1));
-        assertEquals(10,viewSchedule_list.get("Billboard_1").get(2));
+        //check if output matches stored data and is in alphabetical order
+        HashMap<String, ArrayList<Object>> ExpectedSchedule_list= new HashMap<String, ArrayList<Object>>();
 
-        assertEquals(LocalDate.parse("04-05-2021"),viewSchedule_list.get("Billboard_2").get(1));
-        assertEquals(15,viewSchedule_list.get("Billboard_2").get(2));
 
-        assertEquals(LocalDate.parse("03-05-2021"),viewSchedule_list.get("Billboard_3").get(1));
-        assertEquals(5,viewSchedule_list.get("Billboard_3").get(2));
+        //Create ordered HashMap to compare to
+        ArrayList <Object> schedule_info3 = new ArrayList<Object>();
+        schedule_info3.add(LocalDate.parse("03-05-2021"));
+        schedule_info3.add(5);
+        ExpectedSchedule_list.put("Billboard_3", schedule_info3);
+
+        ArrayList <Object> schedule_info2 = new ArrayList<Object>();
+        schedule_info2.add(LocalDate.parse("04-05-2021"));
+        schedule_info2.add(15);
+        ExpectedSchedule_list.put("Billboard_2", schedule_info2);
+
+        ArrayList <Object> schedule_info1 = new ArrayList<Object>();
+        schedule_info1.add(LocalDate.parse("10-05-2021"));
+        schedule_info1.add(10);
+        ExpectedSchedule_list.put("Billboard_1", schedule_info1);
+
+
+        //compare expected HashMap to Billboard_schedule HashMap to see if they match
+        // for every entry of viewSchedule_list
+        for (HashMap.Entry<String, ArrayList<Object>> view_listEntry : viewSchedule_list.entrySet()) {
+
+            // for every entry of Billboard_schedule
+            for (HashMap.Entry<String, ArrayList<Object>> expected_listEntry : ExpectedSchedule_list.entrySet()) {
+
+                //check if all billboards and info are listed correctly and ordered by date
+                assertEquals(expected_listEntry.getKey(),view_listEntry.getKey());
+                assertEquals(expected_listEntry.getValue(),view_listEntry.getValue());
+            }
+        }
+
     }
 
 }
