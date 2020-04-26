@@ -23,7 +23,7 @@ public class scheduleHashMap<E> {
         // billboard's name, creator, time scheduled and duration
 
         //FOR TESTING PURPOSES
-        HashMap<String, HashMap> test_map = new HashMap<String, HashMap>();
+        HashMap<String, ArrayList<E>> test_map = new HashMap<String, ArrayList<E>>();
 
         return test_map;
     }
@@ -34,12 +34,14 @@ public class scheduleHashMap<E> {
      * @param time_scheduled Time (date) Billboard is scheduled for showing
      * @throws Exception if duration is out of range or the time scheduled is in the past
      */
-    public static void scheduleBillboard(String billboard_name, LocalDate time_scheduled, int Duration_mins) throws Exception{
+    public static void scheduleBillboard(String billboard_name, LocalDate time_scheduled, int Duration_mins,
+                                         HashMap<String, ArrayList> billboardList) throws Exception{
 
         // if scheduled time matches
         //remove from schedule
+
         //edit schedule information of Billboard object
-        billboard.Schedule_billboard(Duration_mins, time_scheduled);
+        Billboard.Schedule_billboard(Duration_mins, time_scheduled);
 
         //Add new viewing time and duration to HashMap
 
