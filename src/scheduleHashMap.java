@@ -1,3 +1,6 @@
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,8 +17,40 @@ public class scheduleHashMap<E> {
         Billboard_schedule = new HashMap<String, ArrayList<E>>();
     }
 
-    //extract schedule data from database and store in Billboard_schedule
+    /**
+     * extracts schedule data from database and stores it in Billboard_schedule
+     * @throws SQLException
+     */
+    public void RetrieveDBschedule() throws SQLException {
 
+        //Connect to database
+        Connection connection;
+        connection = DBconnection.getInstance();
+
+        //create statement
+        Statement st = connection.createStatement();
+
+
+        //for every database entry
+            //store database info in local variables
+            String billboard_name = st.execute();
+            LocalDate Time_scheduled = st.execute();
+            int duration = st.execute();
+
+
+            //store time scheduled and duration pair in array schedule_info
+            schedule_info.add(Time_scheduled);
+            schedule_info.add(duration);
+
+            //store billboard name with corresponding times scheduled and durations
+            Billboard_schedule.put(billboard_name, schedule_info);
+
+
+        //close statement
+        st.close();
+        //close connection
+        connection.close();
+    }
 
     /**
      * Lists billboards that have been scheduled
@@ -23,10 +58,10 @@ public class scheduleHashMap<E> {
      */
     public HashMap<String, ArrayList<E>> View_schedule()
     {
-        //
+        //sort data
 
 
-        return ;
+        return;
     }
 
     /**

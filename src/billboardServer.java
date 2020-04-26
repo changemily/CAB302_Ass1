@@ -11,15 +11,8 @@ import java.sql.SQLException;
 
 public class billboardServer{
 
-    Connection connection;
-
     public static void Setup_port(String properties_file){
     //setup port used to connect Server with viewer and control panel
-    }
-
-    public void Connect_database(){
-
-        //connection = DBconnection.getInstance();
     }
 
     public void Start_up(){
@@ -34,11 +27,6 @@ public class billboardServer{
 
     public void Server_Connection(){
         //Connect server to billboard viewer and control panel
-    }
-
-    public void Close_connection() throws SQLException {
-        //closes connection to DB
-        //DBconnection.Close_connection();
     }
 
     /*

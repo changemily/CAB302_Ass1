@@ -250,8 +250,6 @@ public class TestscheduleHashMap<E> {
 
         assertEquals(LocalDate.parse("03-05-2021"),viewSchedule_list.get("Billboard_3").get(1));
         assertEquals(5,viewSchedule_list.get("Billboard_3").get(2));
-
-        //check if it is sorted by date - TO DO
     }
 
 }
