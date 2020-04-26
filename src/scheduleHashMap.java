@@ -2,18 +2,19 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class scheduleHashMap<Object> {
 
-    HashMap<String, ArrayList<Object>> Billboard_schedule;
+    HashMap<String, Schedule_info> Billboard_schedule;
 
     //constructor that creates a scheduleHashMap object
 
     public scheduleHashMap() {
-        Billboard_schedule = new HashMap<String, ArrayList<Object>>();
+        Billboard_schedule = new HashMap<String, Schedule_info>();
     }
 
     /**
@@ -33,8 +34,6 @@ public class scheduleHashMap<Object> {
 
         ResultSet rs = st.executeQuery(SELECT);
 
-        
-
         //for every database entry
         while (rs.next())
         {
@@ -44,9 +43,7 @@ public class scheduleHashMap<Object> {
             int duration = rs.getInt(3);
 
             //store time scheduled and duration pair in array schedule_info
-            ArrayList<Object> schedule_info = new ArrayList<Object>();
-            schedule_info.add(LocalDate.parse(Time_scheduled));
-            schedule_info.add(duration);
+            Schedule_info schedule_info = new Schedule_info(LocalDate.parse(Time_scheduled), duration);
 
             //store billboard name with corresponding times scheduled and durations
             Billboard_schedule.put(billboard_name, schedule_info);
@@ -84,13 +81,13 @@ public class scheduleHashMap<Object> {
             String billboardName = billboard_name;
 
             //create temp array list to store time scheduled and duration pair
-            ArrayList<Object> schedule_time = Billboard_schedule.get(billboard_name);
-            int Time_scheduled = schedule_time.get(1);
-            int duration = schedule_time.get(2);
+            Schedule_info schedule_info = Billboard_schedule.get(billboard_name);
+            String Time_scheduled = schedule_info.Time_scheduled.toString();
+            int duration = schedule_info.Duration;
 
             //write to database
             rs.updateString(1,billboard_name);
-            rs.updateInt(2,Time_scheduled);
+            rs.updateString(2,Time_scheduled);
             rs.updateInt(3,duration);
         }
 
@@ -106,7 +103,8 @@ public class scheduleHashMap<Object> {
      * Lists billboards that have been scheduled
      * @return HashMap containing billboard name and an array list storing time scheduled and duration
      */
-    public HashMap<String, ArrayList<Object>> View_schedule()
+
+    public HashMap<String, Schedule_info> View_schedule()
     {
         return Billboard_schedule;
     }
@@ -124,7 +122,7 @@ public class scheduleHashMap<Object> {
         //remove from schedule
 
         //edit schedule information of Billboard object
-        Billboard.Schedule_billboard(Duration_mins, time_scheduled);
+        //Billboard.Schedule_billboard(Duration_mins, time_scheduled);
 
         //Add new viewing time and duration to HashMap
 
@@ -139,7 +137,7 @@ public class scheduleHashMap<Object> {
      * @param billboard_name Name of billboard being removed from schedule
      */
 
-    public void Schedule_Remove_billboard(String billboard_name, ArrayList<Object> schedule_info)
+    public void Schedule_Remove_billboard(String billboard_name, Schedule_info schedule_info)
     {
         //remove all instances of scheduled billboard in HashMap
         Billboard_schedule.remove(billboard_name,schedule_info);
@@ -150,12 +148,14 @@ public class scheduleHashMap<Object> {
      * @param billboard_name
      * @return an array list of the times & durations the billboard is scheduled for
      */
-    public ArrayList<ArrayList<Object>> getSchedule(String billboard_name)
+
+    public ArrayList<Schedule_info> getSchedule(String billboard_name)
     {
         //retrieve
         //sort list
-
-        return;
+        //FOR TESTING PURPOSES- REMOVE WHEN WRITING METHOD
+        ArrayList<Schedule_info> singleBBschedule = new ArrayList<Schedule_info>();
+        return singleBBschedule;
 
     }
 
