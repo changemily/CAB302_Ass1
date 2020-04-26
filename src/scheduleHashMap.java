@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -23,6 +24,8 @@ public class scheduleHashMap<E> {
      */
     public void RetrieveDBschedule() throws SQLException {
 
+        final String SELECT = "SELECT * FROM schedule ORDER BY time_scheduled";
+
         //Connect to database
         Connection connection;
         connection = DBconnection.getInstance();
@@ -30,22 +33,26 @@ public class scheduleHashMap<E> {
         //create statement
         Statement st = connection.createStatement();
 
+        ResultSet rs = st.executeQuery(SELECT);
 
         //for every database entry
+        while (rs.next())
+        {
             //store database info in local variables
-            String billboard_name = st.execute();
-            LocalDate Time_scheduled = st.execute();
-            int duration = st.execute();
-
+            String billboard_name = rs.getString(1);
+            int Time_scheduled = rs.getInt(2);
+            int duration = rs.getInt(3);
 
             //store time scheduled and duration pair in array schedule_info
-            schedule_info.add(Time_scheduled);
+            schedule_info.add(LocalDate.parse(Time_scheduled));
             schedule_info.add(duration);
 
             //store billboard name with corresponding times scheduled and durations
             Billboard_schedule.put(billboard_name, schedule_info);
+        }
 
-
+        //close ResultSet
+        rs.close();
         //close statement
         st.close();
         //close connection
@@ -58,10 +65,7 @@ public class scheduleHashMap<E> {
      */
     public HashMap<String, ArrayList<E>> View_schedule()
     {
-        //sort data
-
-
-        return;
+        return Billboard_schedule;
     }
 
     /**
