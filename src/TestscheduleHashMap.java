@@ -199,7 +199,7 @@ public class TestscheduleHashMap {
 
         //remove billboard from schedule
         Billboard_schedule.Schedule_Remove_billboard("Billboard_2",
-                Billboard_schedule.getSchedule("Billboard_2").get(1));
+                Billboard_schedule.getSchedule("Billboard_2"));
 
         //check if billboard has been removed
         //exception is thrown when retrieving info of non-existent billboard

@@ -8,8 +8,6 @@ import java.util.HashMap;
 
 public class scheduleHashMap<Object> {
 
-    ArrayList<Object> schedule_info;
-
     HashMap<String, ArrayList<Object>> Billboard_schedule;
 
     //constructor that creates a scheduleHashMap object
@@ -24,7 +22,7 @@ public class scheduleHashMap<Object> {
      */
     public void RetrieveDBschedule() throws SQLException {
 
-        final String SELECT = "SELECT * FROM schedule ORDER BY time_scheduled";
+        final String SELECT = "SELECT * FROM schedule ORDER BY time_scheduled desc";
 
         //Connect to database
         Connection connection;
@@ -35,15 +33,18 @@ public class scheduleHashMap<Object> {
 
         ResultSet rs = st.executeQuery(SELECT);
 
+        
+
         //for every database entry
         while (rs.next())
         {
             //store database info in local variables
             String billboard_name = rs.getString(1);
-            int Time_scheduled = rs.getInt(2);
+            String Time_scheduled = rs.getString(2);
             int duration = rs.getInt(3);
 
             //store time scheduled and duration pair in array schedule_info
+            ArrayList<Object> schedule_info = new ArrayList<Object>();
             schedule_info.add(LocalDate.parse(Time_scheduled));
             schedule_info.add(duration);
 
@@ -83,7 +84,7 @@ public class scheduleHashMap<Object> {
             String billboardName = billboard_name;
 
             //create temp array list to store time scheduled and duration pair
-            ArrayList<E> schedule_time = Billboard_schedule.get(billboard_name);
+            ArrayList<Object> schedule_time = Billboard_schedule.get(billboard_name);
             int Time_scheduled = schedule_time.get(1);
             int duration = schedule_time.get(2);
 
@@ -105,7 +106,7 @@ public class scheduleHashMap<Object> {
      * Lists billboards that have been scheduled
      * @return HashMap containing billboard name and an array list storing time scheduled and duration
      */
-    public HashMap<String, ArrayList<E>> View_schedule()
+    public HashMap<String, ArrayList<Object>> View_schedule()
     {
         return Billboard_schedule;
     }
@@ -138,7 +139,7 @@ public class scheduleHashMap<Object> {
      * @param billboard_name Name of billboard being removed from schedule
      */
 
-    public void Schedule_Remove_billboard(String billboard_name, ArrayList schedule_info)
+    public void Schedule_Remove_billboard(String billboard_name, ArrayList<Object> schedule_info)
     {
         //remove all instances of scheduled billboard in HashMap
         Billboard_schedule.remove(billboard_name,schedule_info);
@@ -154,7 +155,7 @@ public class scheduleHashMap<Object> {
         //retrieve
         //sort list
 
-        return
+        return;
 
     }
 
