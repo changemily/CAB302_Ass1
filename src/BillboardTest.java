@@ -48,27 +48,4 @@ public class BillboardTest {
             billboard.Add_image("nonexistent");
         });
     }
-
-    // Test 4: Schedule_billboard - invalid time (time in the past)
-    @Test
-    public void Schedule_billboard() throws Exception{
-        assertThrows(Exception.class, () -> {
-            billboard.Schedule_billboard(5, LocalDateTime.parse("2000-11-01T10:00:00.00"));
-        });
-    }
-    // Test 5: Schedule_billboard - Negative duration
-    @Test
-    public void Negative_duration() throws Exception{
-        assertThrows(Exception.class, () -> {
-            billboard.Schedule_billboard(-1, LocalDateTime.parse("2000-11-01T10:00:00.00"));
-        });
-    }
-
-    // Test 5: Schedule_billboard - Zero duration
-    @Test
-    public void Zero_duration() throws Exception{
-        assertThrows(Exception.class, () -> {
-            billboard.Schedule_billboard(0, LocalDateTime.parse("2000-11-01T10:00:00.00"));
-        });
-    }
 }

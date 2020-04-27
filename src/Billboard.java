@@ -16,7 +16,6 @@ public class Billboard {
     String Image_file;
     LocalDateTime Time_scheduled;
     Duration duration;
-    HashMap<LocalDateTime, Duration> Time_duration;
 
     /**
      *Constructor that is used to create object Billboard. Billboard has an assigned a name, text
@@ -68,10 +67,6 @@ public class Billboard {
 
         //convert int to Duration
         this.duration = Duration.ofMinutes(Duration_mins);
-
-        //Create HashMap to store scheduled time and duration of billboard together
-        this. Time_duration = new HashMap<>();
-        this.Time_duration.put(this.Time_scheduled, this.duration);
     }
 
     /**
@@ -112,45 +107,6 @@ public class Billboard {
         //if file name does not exist
         //throw new exception
         this.Image_file = file_name;
-    }
-
-    /**
-     *Schedules billboard for given time and duration
-     * @param Duration_mins Duration (minutes) Billboard is displayed for
-     * @param time_scheduled Time (date) Billboard is scheduled for showing
-     * @throws Exception if duration is out of range or the time scheduled is in the past
-     */
-    public void Schedule_billboard(int Duration_mins, LocalDateTime time_scheduled) throws Exception
-    {
-        //if duration is negative
-        if (Duration_mins <0)
-        {
-            //throw exception
-            throw new Exception("Duration out of range");
-        }
-
-        else
-        {
-            //set duration billboard is displayed for
-            this.duration = Duration.ofMinutes(Duration_mins);
-            //update Time and duration info
-            this.Time_duration.put(this.Time_scheduled, this.duration);
-        }
-
-        //if the time scheduled is in the past
-        if (time_scheduled.compareTo(LocalDateTime.now())<0)
-        {
-            //throw exception
-            throw new Exception("Time scheduled must be after"+ LocalDateTime.now());
-        }
-
-        else
-        {
-            ////set time billboard is scheduled for showing
-            this.Time_scheduled = time_scheduled;
-            //update Time and duration info
-            this.Time_duration.put(this.Time_scheduled, this.duration);
-        }
     }
 
 }
