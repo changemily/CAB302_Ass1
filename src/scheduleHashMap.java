@@ -1,3 +1,5 @@
+import org.mariadb.jdbc.internal.com.read.resultset.SelectResultSet;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -117,53 +119,86 @@ public class scheduleHashMap<Object> {
     public void scheduleBillboard(String billboard_name, LocalDateTime time_scheduled, int Duration_mins,
                                          HashMap<String, ArrayList<Object>> billboardList) throws Exception{
 
-        //if scheduled time matches
-        //remove from overlapped billboard from schedule
-        //schedule new billboard for given time
+        //if in billboard name is in billboard list
+        {
+            //if scheduled time matches
+            //remove existing billboard from schedule
+            //schedule new billboard for given time
+            //Add viewing time and duration to HashMap
 
-        //if scheduled time overlaps
-        //remove from overlapped billboard from schedule
-        //reschedule overlapped billboard for new time
-        //schedule new billboard for given time
+            //if scheduled time overlaps
+            //remove from existing billboard from schedule
+            //reschedule existing billboard for new time
+            //Add new viewing time and duration to HashMap
+            //schedule new billboard for given time
+            //Add viewing time and duration to HashMap
 
+            //else
+            {
+                //create schedule info for billboard
+                Schedule_info schedule_info = new Schedule_info(time_scheduled,Duration_mins);
 
-        //Add new viewing time and duration to HashMap
+                //add billboard to schedule
+                Billboard_schedule.put(billboard_name,schedule_info);
+            }
+        }
 
         //else
-        //edit schedule information of Billboard object
-
-        //Add new viewing time and duration to HashMap
+        {
+            throw new Exception("You cannot schedule a billboard that does not exist");
+        }
 
     }
+
     /**
-     * Removes billboard from schedule
+     *
      * @param billboard_name Name of billboard being removed from schedule
+     * @param schedule_info info of scheduled viewing being removed
+     * @throws Exception throws exception if the billboard does not exist in the schedule & if the
      */
 
     public void Schedule_Remove_billboard(String billboard_name, Schedule_info schedule_info) throws Exception
     {
+        //boolean variable to track whether billboard is in schedule
+        boolean billboard_exists = false;
+
+        //boolean variable to track whether given viewing is in schedule
+        boolean viewing_exists = false;
+
         //For every entry of Billboard_schedule
         for (HashMap.Entry<String, Schedule_info> schedule_Entry : Billboard_schedule.entrySet())
         {
-            //if billboard name is not listed in schedule
-            if(schedule_Entry.getKey() != billboard_name)
+            //if billboard name is listed in schedule
+            if(schedule_Entry.getKey() == billboard_name)
             {
-                //throw exception
-                throw new Exception("The billboard does not exist in the schedule");
+                billboard_exists = true;
             }
 
-            //if combination of billboard name, and schedule info is not in schedule
-            else if(schedule_Entry.getValue() != schedule_info)
+            //if combination of billboard name, and schedule info is listed in schedule
+            else if(schedule_Entry.getValue() == schedule_info)
             {
-                //throw exception
-                throw new Exception("The given schedule information given for" + billboard_name +
-                        "does not exist");
+                viewing_exists = true;
             }
 
             else{
                 //remove scheduled viewing from Billboard_schedule
                 Billboard_schedule.remove(billboard_name,schedule_info);
             }
+        }
+
+        //if billboard name is not listed in schedule
+        if(billboard_exists == false)
+        {
+            //throw exception
+            throw new Exception("The billboard does not exist in the schedule");
+        }
+
+        //if combination of billboard name, and schedule info is not in schedule
+        else if(viewing_exists == false)
+        {
+            //throw exception
+            throw new Exception("The given schedule information given for" + billboard_name +
+                    "does not exist");
         }
     }
 
@@ -173,10 +208,13 @@ public class scheduleHashMap<Object> {
      * @return an array list of the times & durations the billboard is scheduled for
      */
 
-    public ArrayList<Schedule_info> getSchedule(String billboard_name)
+    public ArrayList<Schedule_info> getSchedule(String billboard_name) throws Exception
     {
         //array list to store scheduled times of single billboard
         ArrayList<Schedule_info> singleBBschedule = new ArrayList<>();
+
+        //boolean variable to track whether billboard exists in schedule
+        boolean billboard_exists = false;
 
         //For every entry of Billboard_schedule
         for (HashMap.Entry<String, Schedule_info> schedule_Entry : Billboard_schedule.entrySet())
@@ -186,7 +224,14 @@ public class scheduleHashMap<Object> {
             {
                 //add schedule info to array list
                 singleBBschedule.add(Billboard_schedule.get(billboard_name));
+                billboard_exists = true;
             }
+        }
+
+        //if billboard is not scheduled
+        if (billboard_exists == false)
+        {
+            throw new Exception("The billboard does not exist in the schedule");
         }
 
         //return array list of scheduled times for single billboard
