@@ -1,5 +1,5 @@
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,7 +51,7 @@ public class billboardHashMap<E> extends HashMap {
     // NEEDS TO BE EDITED TO USE HASHMAP RETURNED FROM OBTAIN_DATA METHOD
     //For creating and editing billboards provided all possible parameters.
     static void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
-                                      LocalDate schedule_time, int durationMinutes) {
+                                      LocalDateTime schedule_time, int durationMinutes) {
         //Create a new billboard object
         //Search for existing billboard
         boolean Truth = TestbillboardHashMap.billboardList.containsKey("Billboard_1");

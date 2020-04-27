@@ -2,7 +2,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,7 +34,7 @@ public class TestbillboardHashMap<E> {
 
         //Billboard with scheduled viewing and image
         billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                "image.jpg", LocalDate.parse("20-04-2020"), 5);
+                "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 5);
 
         assertEquals(true, billboardList.containsKey("Billboard2"));
 
@@ -46,7 +46,7 @@ public class TestbillboardHashMap<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDate.parse("20-04-2020"), -5);
+                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), -5);
         });
     }
 
@@ -56,7 +56,7 @@ public class TestbillboardHashMap<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDate.parse("20-04-2020"), 0);
+                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 0);
         });
     }
 
@@ -66,7 +66,7 @@ public class TestbillboardHashMap<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDate.parse("20-04-202"), 5);
+                    "image.jpg", LocalDateTime.parse("20-04-202T10:00:00.00"), 5);
         });
     }
 
@@ -76,7 +76,7 @@ public class TestbillboardHashMap<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "doesn't_exist.jpg", LocalDate.parse("20-04-2020"), 5);
+                    "doesn't_exist.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 5);
         });
     }
 
@@ -86,7 +86,7 @@ public class TestbillboardHashMap<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "lmao",
-                    "image.jpg", LocalDate.parse("20-04-2020"), 5);
+                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 5);
         });
     }
 

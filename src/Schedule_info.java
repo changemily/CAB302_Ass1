@@ -1,11 +1,11 @@
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Schedule_info {
-    LocalDate Time_scheduled;
+    LocalDateTime Time_scheduled;
     int Duration;
 
 
-    public Schedule_info( LocalDate time_scheduled, int duration_mins)
+    public Schedule_info( LocalDateTime time_scheduled, int duration_mins)
     {
         this.Time_scheduled = time_scheduled;
         this.Duration = duration_mins;

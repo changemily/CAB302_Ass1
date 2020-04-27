@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -24,14 +24,14 @@ public class BillboardTest {
     // Test 1.2: Constructing a Billboard object with scheduled time
     public void setUpBillboardTime() {
         Billboard billboard2 = new Billboard("Billboard 2", "Hello World", "red", "image.jpg",
-                LocalDate.parse("2020-04-06"),5);
+                LocalDateTime.parse("2020-04-06T10:00:00.00"),5);
     }
 
     @Test
     // Test 1.3: Constructing a Billboard object without image
     public void setUpBillboard_img() {
         Billboard billboard3 = new Billboard("Billboard 2", "Hello World", "red", "No Image",
-                LocalDate.parse("2020-04-06"),5);
+                LocalDateTime.parse("2020-04-06T10:00:00.00"),5);
     }
 
     @Test
@@ -53,14 +53,14 @@ public class BillboardTest {
     @Test
     public void Schedule_billboard() throws Exception{
         assertThrows(Exception.class, () -> {
-            billboard.Schedule_billboard(5, LocalDate.parse("2000-11-01"));
+            billboard.Schedule_billboard(5, LocalDateTime.parse("2000-11-01T10:00:00.00"));
         });
     }
     // Test 5: Schedule_billboard - Negative duration
     @Test
     public void Negative_duration() throws Exception{
         assertThrows(Exception.class, () -> {
-            billboard.Schedule_billboard(-1, LocalDate.parse("2000-11-01"));
+            billboard.Schedule_billboard(-1, LocalDateTime.parse("2000-11-01T10:00:00.00"));
         });
     }
 
@@ -68,7 +68,7 @@ public class BillboardTest {
     @Test
     public void Zero_duration() throws Exception{
         assertThrows(Exception.class, () -> {
-            billboard.Schedule_billboard(0, LocalDate.parse("2000-11-01"));
+            billboard.Schedule_billboard(0, LocalDateTime.parse("2000-11-01T10:00:00.00"));
         });
     }
 }

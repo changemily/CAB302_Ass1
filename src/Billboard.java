@@ -1,5 +1,5 @@
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 /**
@@ -14,9 +14,9 @@ public class Billboard {
     String Billboard_text;
     String Bg_colour;
     String Image_file;
-    LocalDate Time_scheduled;
+    LocalDateTime Time_scheduled;
     Duration duration;
-    HashMap<LocalDate, Duration> Time_duration;
+    HashMap<LocalDateTime, Duration> Time_duration;
 
     /**
      *Constructor that is used to create object Billboard. Billboard has an assigned a name, text
@@ -24,7 +24,7 @@ public class Billboard {
      * @param billboard_name Billboard's name
      * @param text Text set on Billboard
      * @param bg_colour Background colour of Billboard
-     * @param image_file
+     * @param image_file file name of image on billboard
      */
     Billboard(String billboard_name, String text, String bg_colour, String image_file)
     {
@@ -52,7 +52,7 @@ public class Billboard {
      * @param Duration_mins Duration (minutes) Billboard is displayed for
      */
     Billboard(String billboard_name, String text, String bg_colour, String image_file ,
-                          LocalDate time_scheduled, int Duration_mins)
+                          LocalDateTime time_scheduled, int Duration_mins)
     {
         //set billboard properties
         this.Billboard_name = billboard_name;
@@ -70,7 +70,7 @@ public class Billboard {
         this.duration = Duration.ofMinutes(Duration_mins);
 
         //Create HashMap to store scheduled time and duration of billboard together
-        this. Time_duration = new HashMap<LocalDate, Duration>();
+        this. Time_duration = new HashMap<>();
         this.Time_duration.put(this.Time_scheduled, this.duration);
     }
 
@@ -120,7 +120,7 @@ public class Billboard {
      * @param time_scheduled Time (date) Billboard is scheduled for showing
      * @throws Exception if duration is out of range or the time scheduled is in the past
      */
-    public void Schedule_billboard(int Duration_mins, LocalDate time_scheduled) throws Exception
+    public void Schedule_billboard(int Duration_mins, LocalDateTime time_scheduled) throws Exception
     {
         //if duration is negative
         if (Duration_mins <0)
@@ -138,10 +138,10 @@ public class Billboard {
         }
 
         //if the time scheduled is in the past
-        if (time_scheduled.compareTo(LocalDate.now())<0)
+        if (time_scheduled.compareTo(LocalDateTime.now())<0)
         {
             //throw exception
-            throw new Exception("Time scheduled must be after"+ LocalDate.now());
+            throw new Exception("Time scheduled must be after"+ LocalDateTime.now());
         }
 
         else

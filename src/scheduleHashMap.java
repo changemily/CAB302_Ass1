@@ -3,7 +3,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,12 +14,13 @@ public class scheduleHashMap<Object> {
     //constructor that creates a scheduleHashMap object
 
     public scheduleHashMap() {
-        Billboard_schedule = new HashMap<String, Schedule_info>();
+        Billboard_schedule = new HashMap<>();
     }
 
     /**
      * extracts schedule data from database and stores it in Billboard_schedule
-     * @throws SQLException
+     * @throws SQLException throws exception if billboard does not exist or combination of billboard &
+     * schedule information does not exist
      */
     public void RetrieveDBschedule() throws SQLException {
 
@@ -43,7 +44,7 @@ public class scheduleHashMap<Object> {
             int duration = rs.getInt(3);
 
             //store time scheduled and duration pair in array schedule_info
-            Schedule_info schedule_info = new Schedule_info(LocalDate.parse(Time_scheduled), duration);
+            Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse(Time_scheduled), duration);
 
             //store billboard name with corresponding times scheduled and durations
             Billboard_schedule.put(billboard_name, schedule_info);
@@ -78,8 +79,6 @@ public class scheduleHashMap<Object> {
         for ( String billboard_name : Billboard_schedule.keySet() ) {
 
             //store Billboard_schedule info in local variables
-            String billboardName = billboard_name;
-
             //create temp array list to store time scheduled and duration pair
             Schedule_info schedule_info = Billboard_schedule.get(billboard_name);
             String Time_scheduled = schedule_info.Time_scheduled.toString();
@@ -115,14 +114,18 @@ public class scheduleHashMap<Object> {
      * @param time_scheduled Time (date) Billboard is scheduled for showing
      * @throws Exception if duration is out of range or the time scheduled is in the past
      */
-    public void scheduleBillboard(String billboard_name, LocalDate time_scheduled, int Duration_mins,
-                                         HashMap<String, ArrayList> billboardList) throws Exception{
+    public void scheduleBillboard(String billboard_name, LocalDateTime time_scheduled, int Duration_mins,
+                                         HashMap<String, ArrayList<Object>> billboardList) throws Exception{
 
-        // if scheduled time matches
-        //remove from schedule
+        //if scheduled time matches
+        //remove from overlapped billboard from schedule
+        //schedule new billboard for given time
 
-        //edit schedule information of Billboard object
-        //Billboard.Schedule_billboard(Duration_mins, time_scheduled);
+        //if scheduled time overlaps
+        //remove from overlapped billboard from schedule
+        //reschedule overlapped billboard for new time
+        //schedule new billboard for given time
+
 
         //Add new viewing time and duration to HashMap
 
@@ -166,14 +169,14 @@ public class scheduleHashMap<Object> {
 
     /**
      *
-     * @param billboard_name
+     * @param billboard_name name of the billboard schedule information is being retrieved from
      * @return an array list of the times & durations the billboard is scheduled for
      */
 
     public ArrayList<Schedule_info> getSchedule(String billboard_name)
     {
         //array list to store scheduled times of single billboard
-        ArrayList<Schedule_info> singleBBschedule = new ArrayList<Schedule_info>();
+        ArrayList<Schedule_info> singleBBschedule = new ArrayList<>();
 
         //For every entry of Billboard_schedule
         for (HashMap.Entry<String, Schedule_info> schedule_Entry : Billboard_schedule.entrySet())
