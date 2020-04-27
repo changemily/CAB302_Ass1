@@ -137,10 +137,31 @@ public class scheduleHashMap<Object> {
      * @param billboard_name Name of billboard being removed from schedule
      */
 
-    public void Schedule_Remove_billboard(String billboard_name, Schedule_info schedule_info)
+    public void Schedule_Remove_billboard(String billboard_name, Schedule_info schedule_info) throws Exception
     {
-        //remove all instances of scheduled billboard in HashMap
-        Billboard_schedule.remove(billboard_name,schedule_info);
+        //For every entry of Billboard_schedule
+        for (HashMap.Entry<String, Schedule_info> schedule_Entry : Billboard_schedule.entrySet())
+        {
+            //if billboard name is not listed in schedule
+            if(schedule_Entry.getKey() != billboard_name)
+            {
+                //throw exception
+                throw new Exception("The billboard does not exist in the schedule");
+            }
+
+            //if combination of billboard name, and schedule info is not in schedule
+            else if(schedule_Entry.getValue() != schedule_info)
+            {
+                //throw exception
+                throw new Exception("The given schedule information given for" + billboard_name +
+                        "does not exist");
+            }
+
+            else{
+                //remove scheduled viewing from Billboard_schedule
+                Billboard_schedule.remove(billboard_name,schedule_info);
+            }
+        }
     }
 
     /**
@@ -151,12 +172,21 @@ public class scheduleHashMap<Object> {
 
     public ArrayList<Schedule_info> getSchedule(String billboard_name)
     {
-        //retrieve
-        //sort list
-        //FOR TESTING PURPOSES- REMOVE WHEN WRITING METHOD
+        //array list to store scheduled times of single billboard
         ArrayList<Schedule_info> singleBBschedule = new ArrayList<Schedule_info>();
+
+        //For every entry of Billboard_schedule
+        for (HashMap.Entry<String, Schedule_info> schedule_Entry : Billboard_schedule.entrySet())
+        {
+            //if given billboard name matches billboard name in Billboard_schedule
+            if (schedule_Entry.getKey() == billboard_name)
+            {
+                //add schedule info to array list
+                singleBBschedule.add(Billboard_schedule.get(billboard_name));
+            }
+        }
+
+        //return array list of scheduled times for single billboard
         return singleBBschedule;
-
     }
-
 }

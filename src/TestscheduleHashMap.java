@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -214,6 +213,7 @@ public class TestscheduleHashMap {
     public void RemoveSchedule_invalidBillboardName() throws Exception
     {
         Schedule_info schedule_info = new Schedule_info(LocalDate.parse("04-05-2021"), 15);
+
 
         assertThrows(Exception.class,() -> {
             //remove billboard from schedule that does not exist
