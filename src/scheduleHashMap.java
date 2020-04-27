@@ -45,9 +45,11 @@ public class scheduleHashMap<Object> {
             String billboard_name = rs.getString(1);
             String Time_scheduled = rs.getString(2);
             String duration = rs.getString(3);
+            String recurrence = rs.getString(4);
 
             //store time scheduled and duration pair in array schedule_info
-            Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse(Time_scheduled), Duration.parse(duration));
+            Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse(Time_scheduled),
+                    Duration.parse(duration), recurrence);
 
             //store billboard name with corresponding times scheduled and durations
             Billboard_schedule.put(billboard_name, schedule_info);
@@ -86,11 +88,13 @@ public class scheduleHashMap<Object> {
             Schedule_info schedule_info = Billboard_schedule.get(billboard_name);
             String Time_scheduled = schedule_info.Time_scheduled.toString();
             String duration = schedule_info.duration.toString();
+            String recurrence = schedule_info.Recurrence;
 
             //write to database
             rs.updateString(1,billboard_name);
             rs.updateString(2,Time_scheduled);
             rs.updateString(3,duration);
+            rs.updateString(4, recurrence);
         }
 
         //close ResultSet
@@ -118,7 +122,7 @@ public class scheduleHashMap<Object> {
      * @throws Exception if Billboard does not exist & if duration is out of range or the time scheduled is in the past
      */
     public void scheduleBillboard(String new_billboard, LocalDateTime NewBB_startTime, Duration NewBB_duration,
-                                         HashMap<String, ArrayList<Object>> billboardList) throws Exception{
+                                  String recurrence, HashMap<String, ArrayList<Object>> billboardList) throws Exception{
 
         //boolean variable to track whether billboard is in billboard list
         boolean billboard_exists = false;
@@ -175,7 +179,7 @@ public class scheduleHashMap<Object> {
                     Billboard_schedule.remove(existing_billboard);
 
                     //create new schedule_info object for new billboard
-                    Schedule_info new_schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration);
+                    Schedule_info new_schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration, recurrence);
 
                     //schedule new billboard for given time
                     Billboard_schedule.put(new_billboard, new_schedule_info);
@@ -192,13 +196,13 @@ public class scheduleHashMap<Object> {
                     Duration new_duration = Duration.between(NewBB_startTime, ExistBB_endTime);
 
                     //create new schedule_info object for existing billboard
-                    Schedule_info new_schedule_info = new Schedule_info(NewBB_endTime,new_duration);
+                    Schedule_info new_schedule_info = new Schedule_info(NewBB_endTime,new_duration, recurrence);
 
                     //reschedule existing billboard for new time
                     Billboard_schedule.put(existing_billboard, new_schedule_info);
 
                     //create new schedule_info object for new billboard
-                    Schedule_info newBB_schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration);
+                    Schedule_info newBB_schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration, recurrence);
 
                     //schedule new billboard for given time
                     Billboard_schedule.put(new_billboard, newBB_schedule_info);
@@ -206,17 +210,26 @@ public class scheduleHashMap<Object> {
 
                 //else if recurring billboard && between given times (HH:MM:ss)
                 {
-                    //reschedule existing billboard for next day, hr or min
-                    //Add new viewing time and duration to HashMap
-                    //schedule new billboard for given time
-                    //Add viewing time and duration to HashMap
+                    //if recurring every day
+                    //reschedule existing billboard for next available day
 
+                    //if recurring every hour
+                    //reschedule existing billboard for next available hour
+
+                    //if recurring every minute
+                    //reschedule existing billboard for next available minute
+
+                    //create new schedule_info object for new billboard
+                    Schedule_info newBB_schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration,recurrence);
+
+                    //schedule new billboard for given time
+                    Billboard_schedule.put(new_billboard, newBB_schedule_info);
                 }
 
                 //else
                 {
                     //create schedule info for billboard
-                    Schedule_info schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration);
+                    Schedule_info schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration,recurrence);
 
                     //add billboard to schedule
                     Billboard_schedule.put(new_billboard, schedule_info);
