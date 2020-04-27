@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *  * @author — Emily Chang
  *  * @version - 2
  */
-public class BillboardTest {
+public class TestBillboard {
 
     Billboard billboard;
 

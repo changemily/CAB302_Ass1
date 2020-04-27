@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author - Nickhil Nischal
  * @version - skeleton
  */
-class UserTest {
+class TestUser {
     //Test 1.1: Creating a user with one permission
     @Test
     public void testUser1() {

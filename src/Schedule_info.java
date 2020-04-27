@@ -1,14 +1,15 @@
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Schedule_info {
     LocalDateTime Time_scheduled;
-    int Duration;
+    Duration duration;
 
 
-    public Schedule_info( LocalDateTime time_scheduled, int duration_mins)throws Exception
+    public Schedule_info( LocalDateTime time_scheduled, Duration duration_mins)throws Exception
     {
-        //if duration is negative
-        if (duration_mins <0)
+        //if duration is negative or zero
+        if (duration_mins.isNegative() || duration_mins.isZero())
         {
             //throw exception
             throw new Exception("Duration out of range");
@@ -17,7 +18,7 @@ public class Schedule_info {
         else
         {
             //set duration billboard is displayed for
-            this.Duration = duration_mins;
+            this.duration = duration_mins;
         }
 
         //if the time scheduled is in the past

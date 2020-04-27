@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class scheduleHashMap<Object> {
 
@@ -43,10 +44,10 @@ public class scheduleHashMap<Object> {
             //store database info in local variables
             String billboard_name = rs.getString(1);
             String Time_scheduled = rs.getString(2);
-            int duration = rs.getInt(3);
+            String duration = rs.getString(3);
 
             //store time scheduled and duration pair in array schedule_info
-            Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse(Time_scheduled), duration);
+            Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse(Time_scheduled), Duration.parse(duration));
 
             //store billboard name with corresponding times scheduled and durations
             Billboard_schedule.put(billboard_name, schedule_info);
@@ -84,12 +85,12 @@ public class scheduleHashMap<Object> {
             //create temp array list to store time scheduled and duration pair
             Schedule_info schedule_info = Billboard_schedule.get(billboard_name);
             String Time_scheduled = schedule_info.Time_scheduled.toString();
-            int duration = schedule_info.Duration;
+            String duration = schedule_info.duration.toString();
 
             //write to database
             rs.updateString(1,billboard_name);
             rs.updateString(2,Time_scheduled);
-            rs.updateInt(3,duration);
+            rs.updateString(3,duration);
         }
 
         //close ResultSet
@@ -112,50 +113,116 @@ public class scheduleHashMap<Object> {
 
     /**
      *
-     * @param Duration_mins Duration (minutes) Billboard is displayed for
-     * @param time_scheduled Time (date) Billboard is scheduled for showing
+     * @param NewBB_duration Duration (minutes) Billboard is displayed for
+     * @param NewBB_startTime Time (date) Billboard is scheduled for showing
      * @throws Exception if Billboard does not exist & if duration is out of range or the time scheduled is in the past
      */
-    public void scheduleBillboard(String billboard_name, LocalDateTime time_scheduled, int Duration_mins,
+    public void scheduleBillboard(String new_billboard, LocalDateTime NewBB_startTime, Duration NewBB_duration,
                                          HashMap<String, ArrayList<Object>> billboardList) throws Exception{
 
         //boolean variable to track whether billboard is in billboard list
         boolean billboard_exists = false;
 
-        //For every entry of Billboard_schedule
-        for (HashMap.Entry<String, Schedule_info> schedule_Entry : Billboard_schedule.entrySet()) {
+        //For every billboard on billboardList
+        for (Map.Entry<String, ArrayList<Object>> billboardListEntry : billboardList.entrySet()) {
+
             //if billboard name is in billboard list
-            if(schedule_Entry.getKey() == billboard_name)
+            if(billboardListEntry.getKey() == new_billboard)
             {
-
-            }
-            {
-                //if scheduled time matches
-                //remove existing billboard from schedule
-                //schedule new billboard for given time
-                //Add viewing time and duration to HashMap
-
-                //if scheduled time overlaps
-                //remove from existing billboard from schedule
-                //reschedule existing billboard for new time
-                //Add new viewing time and duration to HashMap
-                //schedule new billboard for given time
-                //Add viewing time and duration to HashMap
-
-                //else
-                {
-                    //create schedule info for billboard
-                    Schedule_info schedule_info = new Schedule_info(time_scheduled, Duration_mins);
-
-                    //add billboard to schedule
-                    Billboard_schedule.put(billboard_name, schedule_info);
-                }
+                billboard_exists = true;
             }
         }
 
         if(billboard_exists == false)
         {
             throw new Exception("You cannot schedule a billboard that does not exist");
+        }
+
+        else {
+            //For every entry of Billboard_schedule
+            for (HashMap.Entry<String, Schedule_info> schedule_Entry : Billboard_schedule.entrySet())
+            {
+                //store existing_billboard in local variable
+                String existing_billboard = schedule_Entry.getKey();
+
+                //variable to store end time of new billboard viewing
+                LocalDateTime NewBB_endTime;
+
+                //calculate end time of new billboard viewing
+                NewBB_endTime = NewBB_startTime.plus(NewBB_duration);
+
+             //---------------------------------------------------------------------------------------
+                //variable to store end time of existing billboard viewing
+                LocalDateTime ExistBB_endTime;
+
+                //store values of existing billboard in local variables
+                Duration ExistBB_duration = schedule_Entry.getValue().duration;
+                LocalDateTime ExistBB_startTime = schedule_Entry.getValue().Time_scheduled;
+
+                //calculate end time of new billboard viewing
+                ExistBB_endTime = ExistBB_startTime.plus(ExistBB_duration);
+
+                //check if new billboard start time is after existing billboard start time
+                boolean isAfter = NewBB_startTime.isAfter(ExistBB_startTime);
+
+                //check if new billboard start time is before existing billboard end time
+                boolean isBefore = NewBB_startTime.isBefore(ExistBB_endTime);
+
+                //if start and end time of new billboard matches start and end time of existing billboard
+                if(NewBB_startTime == ExistBB_startTime && NewBB_endTime == ExistBB_endTime)
+                {
+                    //remove existing billboard from schedule
+                    Billboard_schedule.remove(existing_billboard);
+
+                    //create new schedule_info object for new billboard
+                    Schedule_info new_schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration);
+
+                    //schedule new billboard for given time
+                    Billboard_schedule.put(new_billboard, new_schedule_info);
+
+                }
+
+                //if scheduled time is between start and end time of existing billboard
+                else if((isAfter && isBefore) == true)
+                {
+                    //remove existing billboard from schedule
+                    Billboard_schedule.remove(existing_billboard);
+
+                    //calculate new duration of existing billboard
+                    Duration new_duration = Duration.between(NewBB_startTime, ExistBB_endTime);
+
+                    //create new schedule_info object for existing billboard
+                    Schedule_info new_schedule_info = new Schedule_info(NewBB_endTime,new_duration);
+
+                    //reschedule existing billboard for new time
+                    Billboard_schedule.put(existing_billboard, new_schedule_info);
+
+                    //create new schedule_info object for new billboard
+                    Schedule_info newBB_schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration);
+
+                    //schedule new billboard for given time
+                    Billboard_schedule.put(new_billboard, newBB_schedule_info);
+                }
+
+                //else if recurring billboard && between given times (HH:MM:ss)
+                {
+                    //reschedule existing billboard for next day, hr or min
+                    //Add new viewing time and duration to HashMap
+                    //schedule new billboard for given time
+                    //Add viewing time and duration to HashMap
+
+                }
+
+                //else
+                {
+                    //create schedule info for billboard
+                    Schedule_info schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration);
+
+                    //add billboard to schedule
+                    Billboard_schedule.put(new_billboard, schedule_info);
+                }
+            }
+
         }
     }
 

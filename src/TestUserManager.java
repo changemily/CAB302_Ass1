@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
  *  * @version - skeleton
  */
 
-public class userManagerTest{
+public class TestUserManager {
 
     // Remove one permission
     @Test
