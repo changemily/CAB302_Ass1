@@ -2,6 +2,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Billboard Manager class
@@ -9,16 +11,14 @@ import java.util.HashMap;
  * @author - Jarod Evans & Emily Chang
  * @version - skeleton
  */
-public class billboardHashMap<E> extends HashMap {
+public class billboardHashMap extends HashMap {
 
-    static HashMap<String, ArrayList> billboardList;
-
-    ArrayList<E> billboardValues;
+    HashMap<String, Billboard> billboardList;
 
     //constructor that creates HashMap
 
     public billboardHashMap() {
-        billboardList = new HashMap<String, ArrayList>(); // use tree map to sort by key
+        billboardList = new HashMap<>(); // use tree map to sort by key
     }
 
 //Obtain_data - Extract serialized objects from database, deserialize and store in HashMap of objects
@@ -50,43 +50,48 @@ public class billboardHashMap<E> extends HashMap {
 
     // NEEDS TO BE EDITED TO USE HASHMAP RETURNED FROM OBTAIN_DATA METHOD
     //For creating and editing billboards provided all possible parameters.
-    static void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
-                                      LocalDateTime schedule_time, int durationMinutes) {
+    public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
+                               LocalDateTime schedule_time, int durationMinutes) {
         //Create a new billboard object
         //Search for existing billboard
-        boolean Truth = TestbillboardHashMap.billboardList.containsKey("Billboard_1");
-        if (Truth) {
-            //billboardManagerTest.billboardList.get("Billboard_1").Bg_colour = bg_colour;
+        boolean bb_exists = billboardList.containsKey(billboard_name);
+        if (bb_exists) {
+            //remove billboard from list
             //Create new billboard to the users updated specs
             billboardNew = new Billboard(billboard_name, text,
                     bg_colour, image, schedule_time, durationMinutes);
-            //Edit the old billboard by replacing it with the new billboard.
-            TestbillboardHashMap.billboardList.put("Billboard_1", billboardNew);
+            //put billboard in HashMap
+            billboardList.put(billboard_name, billboardNew);
         } else {
-            TestbillboardHashMap.billboardList.containsKey("Billboard_1");
             //Create a billboard using the parameters provided.
             billboardNew = new Billboard(billboard_name, text,
                     bg_colour, image, schedule_time, durationMinutes);
+
+            //put billboard in HashMap
+            billboardList.put(billboard_name, billboardNew);
         }
     }
 
     //For creating and editing billboards without the optional parameters.
-    public static void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image) {
+    public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image) {
         //Create a new billboard object
         //Search for existing billboard
-        boolean Contains_billboard = TestbillboardHashMap.billboardList.containsKey("Billboard_1");
+        boolean bb_exists = billboardList.containsKey(billboard_name);
+        if (bb_exists) {
+            //remove billboard from list
+            //Create new billboard to the users updated specs
+            billboardNew = new Billboard(billboard_name, text,
+                    bg_colour, image);
+            //put billboard in HashMap
+            billboardList.put(billboard_name, billboardNew);
+        } else {
+            //Create a billboard using the parameters provided.
+            billboardNew = new Billboard(billboard_name, text,
+                    bg_colour, image);
 
-        //Create new billboard to fit users' specs
-        billboardNew = new Billboard(billboard_name, text, bg_colour, image);
-
-        if (Contains_billboard == true) {
-
-            //remove existing billboard from HashMap
-
-
+            //put billboard in HashMap
+            billboardList.put(billboard_name, billboardNew);
         }
-        // Insert billboard with updated specs.
-        TestbillboardHashMap.billboardList.put("Billboard_1", billboardNew);
     }
 
     /**

@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestscheduleHashMap {
 
-    scheduleHashMap <HashMap<String,Schedule_info>> Billboard_schedule;
+    scheduleHashMap Billboard_schedule;
     billboardHashMap billboardList;
 
     @BeforeEach
@@ -18,11 +18,12 @@ public class TestscheduleHashMap {
     {
         billboardList = new billboardHashMap();
     }
+
     /* Test 1: Constructing a schedule HashMap object
      */
     @BeforeEach
     @Test public void setUpBbSchedule() {
-        Billboard_schedule = new scheduleHashMap<>();
+        Billboard_schedule = new scheduleHashMap();
     }
 
     //Test 2: Schedule billboard that has not been scheduled
@@ -35,7 +36,7 @@ public class TestscheduleHashMap {
                 "image.jpg");
 
         //schedule a billboard
-        Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDateTime.parse("22-04-2021-T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDateTime.parse("2021-04-22T10:00:00.00"),
                 Duration.ofMinutes(5),"none", billboardList);
 
         //extract schedule info of billboard 1 into array list
@@ -53,21 +54,21 @@ public class TestscheduleHashMap {
     {
         //add billboard to billboardList
         billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg",LocalDateTime.parse("22-04-2021T10:00:00.00"), 5);
+                "image.jpg",LocalDateTime.parse("2021-04-22T10:00:00.00"), 5);
 
         //schedule the same billboard for a different time
-        Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDateTime.parse("15-04-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDateTime.parse("2021-04-15T10:00:00.00"),
                 Duration.ofMinutes(10), "none",billboardList);
         //extract schedule info of billboard 1 into array list
         ArrayList<Schedule_info>schedule_info = Billboard_schedule.getSchedule("Billboard_1");
 
         //Test if both entries have been saved
         //Test if schedule information matches info entered
-        assertEquals(LocalDateTime.parse("15-04-2021T10:00:00.00"), schedule_info.get(1).Time_scheduled);
+        assertEquals(LocalDateTime.parse("2021-04-15T10:00:00.00"), schedule_info.get(1).Time_scheduled);
         assertEquals(Duration.ofMinutes(10), schedule_info.get(1).duration);
 
         //Test if schedule information matches info entered
-        assertEquals(LocalDateTime.parse("22-04-2021T10:00:00.00"), schedule_info.get(2).Time_scheduled);
+        assertEquals(LocalDateTime.parse("2021-04-22T10:00:00.00"), schedule_info.get(2).Time_scheduled);
         assertEquals(Duration.ofMinutes(5), schedule_info.get(2).duration);
     }
 
@@ -84,11 +85,11 @@ public class TestscheduleHashMap {
                 "image.jpg");
 
         //Schedule billboard 1 in a vacant time slot
-        Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("01-05-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
                 Duration.ofMinutes(10),"none", billboardList);
 
         //Schedule billboard 2 in a non-vacant time slot
-        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("01-05-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-01T10:00:00.00"),
                 Duration.ofMinutes(10), "none",billboardList);
 
         //store scheduled time and duration of billboard 2 in an ArrayList
@@ -99,7 +100,7 @@ public class TestscheduleHashMap {
         Duration durationB2 = time_duration_b2.get(1).duration;
 
         //check if time scheduled and duration pair match for Billboard 2
-        assertEquals(LocalDateTime.parse("01-05-2021T10:00:00.00"), time_scheduledB2);
+        assertEquals(LocalDateTime.parse("2021-05-01T10:00:00.00"), time_scheduledB2);
         assertEquals(Duration.ofMinutes(10), durationB2);
 
         //-------------------------------------------------------------
@@ -112,7 +113,7 @@ public class TestscheduleHashMap {
         Duration durationB1 = time_duration_b1.get(1).duration;
 
         //check if Billboard 1 is not scheduled for that time
-        assertNotEquals(LocalDateTime.parse("01-05-2021T10:00:00.00"),time_scheduledB1);
+        assertNotEquals(LocalDateTime.parse("2021-05-01T10:00:00.00"),time_scheduledB1);
     }
 
     //Test 2.4: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
@@ -128,11 +129,11 @@ public class TestscheduleHashMap {
                 "image.jpg");
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
-        Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("01-05-2021-T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
                 Duration.ofMinutes(10), "none",billboardList);
 
         //Schedule billboard 2 in a non-vacant time slot from 10:00-10:05 on 01-05-2021
-        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("01-05-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-01T10:00:00.00"),
                 Duration.ofMinutes(5), "none",billboardList);
 
         //store scheduled time and duration of billboard 2 in an ArrayList
@@ -143,7 +144,7 @@ public class TestscheduleHashMap {
         Duration durationB2 = time_duration_b2.get(1).duration;
 
         //check if time scheduled and duration pair match for Billboard 2
-        assertEquals(LocalDateTime.parse("01-05-2021T10:00:00.00"), time_scheduledB2);
+        assertEquals(LocalDateTime.parse("2021-05-01T10:00:00.00"), time_scheduledB2);
         assertEquals(Duration.ofMinutes(10), durationB2);
 
         //-------------------------------------------------------------
@@ -156,7 +157,7 @@ public class TestscheduleHashMap {
         Duration durationB1 = time_duration_b1.get(1).duration;
 
         //check if Billboard 1 is scheduled for 10:05 - 10:10 on 01-05-2021 for 5 mins
-        assertEquals(LocalDateTime.parse("01-05-2021T10:05:00.00"),time_scheduledB1);
+        assertEquals(LocalDateTime.parse("2021-05-01T10:00:00.00"),time_scheduledB1);
         assertEquals(Duration.ofMinutes(5), durationB1);
     }
 
@@ -167,7 +168,7 @@ public class TestscheduleHashMap {
     {
         assertThrows(Exception.class,() -> {
             //schedule billboard for date in the past
-            Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("01-01-2000T10:00:00.00"),
+            Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2000-01-01T10:00:00.00"),
                     Duration.ofMinutes(10), "none",billboardList);
         });
     }
@@ -182,7 +183,7 @@ public class TestscheduleHashMap {
                 "image.jpg");
         assertThrows(Exception.class,() -> {
             //schedule billboard for negative
-            Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("01-01-2000T10:00:00.00"),
+            Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-01-01T10:00:00.00"),
                     Duration.ofMinutes(-1),"none", billboardList);
         });
     }
@@ -197,7 +198,7 @@ public class TestscheduleHashMap {
                 "image.jpg");
         assertThrows(Exception.class,() -> {
             //schedule billboard for negative
-            Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("01-01-2000T10:00:00.00"),
+            Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-01-01T10:00:00.00"),
                     Duration.ofMinutes(0), "none",billboardList);
         });
     }
@@ -208,7 +209,7 @@ public class TestscheduleHashMap {
     {
         assertThrows(Exception.class,() -> {
             //schedule billboard that does not exist
-            Billboard_schedule.scheduleBillboard("nonexistent",LocalDateTime.parse("01-01-2000T10:00:00.00"),
+            Billboard_schedule.scheduleBillboard("nonexistent",LocalDateTime.parse("01-01-2021T10:00:00.00"),
                     Duration.ofMinutes(10),"none", billboardList);
         });
     }
@@ -235,13 +236,13 @@ public class TestscheduleHashMap {
                 "image.jpg");
 
         //add billboards to schedule
-        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("10-05-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-01-10T10:00:00.00"),
                 Duration.ofMinutes(10), "none", billboardList);
-        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("04-05-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-04T10:00:00.00"),
                 Duration.ofMinutes(15), "none",billboardList);
-        Schedule_info BB2_schedule_info = new Schedule_info(LocalDateTime.parse("04-05-2021T10:00:00.00"),
+        Schedule_info BB2_schedule_info = new Schedule_info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
                 Duration.ofMinutes(15), "none");
-        Billboard_schedule.scheduleBillboard("Billboard_3", LocalDateTime.parse("03-05-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_3", LocalDateTime.parse("2021-05-03T10:00:00.00"),
                 Duration.ofMinutes(5),"none", billboardList);
 
         //remove billboard from schedule
@@ -259,7 +260,7 @@ public class TestscheduleHashMap {
     @Test
     public void RemoveSchedule_invalidBillboardName() throws Exception
     {
-        Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse("04-05-2021T10:00:00.00"),
+        Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
                 Duration.ofMinutes(15), "none");
 
 
@@ -274,12 +275,15 @@ public class TestscheduleHashMap {
     @Test
     public void RemoveSchedule_invalidBillboard() throws Exception
     {
+        //add billboard to billboard list
+        billboardList.Create_edit_Billboard("Billboard_1", "hello","red","No Image",
+                LocalDateTime.parse("2021-05-10T10:00:00.00"), 10);
         //schedule billboard
-        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("10-05-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-10T10:00:00.00"),
                 Duration.ofMinutes(10), "none",billboardList);
 
         //schedule info that does not match bb scheduled
-        Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse("04-05-2021T10:00:00.00"),
+        Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
                 Duration.ofMinutes(15), "none");
 
         assertThrows(Exception.class,() -> {
@@ -301,11 +305,11 @@ public class TestscheduleHashMap {
                 "image.jpg");
 
         //add billboards to schedule
-        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("10-05-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-05T10:00:00.00"),
                 Duration.ofMinutes(10),"none", billboardList);
-        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("04-05-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-04T10:00:00.00"),
                 Duration.ofMinutes(15),"none", billboardList);
-        Billboard_schedule.scheduleBillboard("Billboard_3", LocalDateTime.parse("03-05-2021T10:00:00.00"),
+        Billboard_schedule.scheduleBillboard("Billboard_3", LocalDateTime.parse("2021-05-03T10:00:00.00"),
                 Duration.ofMinutes(5), "none",billboardList);
 
         //store billboard schedule in temp HashMap
@@ -316,15 +320,15 @@ public class TestscheduleHashMap {
 
 
         //Create ordered HashMap to compare to
-        Schedule_info schedule_info3 = new Schedule_info(LocalDateTime.parse("03-05-2021T10:00:00.00"),
+        Schedule_info schedule_info3 = new Schedule_info(LocalDateTime.parse("2021-05-03T10:00:00.00"),
                 Duration.ofMinutes(5), "none");
         ExpectedSchedule_list.put("Billboard_3", schedule_info3);
 
-        Schedule_info schedule_info2 = new Schedule_info(LocalDateTime.parse("04-05-2021T10:00:00.00"),
+        Schedule_info schedule_info2 = new Schedule_info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
                 Duration.ofMinutes(15), "none");
         ExpectedSchedule_list.put("Billboard_2", schedule_info2);
 
-        Schedule_info schedule_info1 = new Schedule_info(LocalDateTime.parse("10-05-2021T10:00:00.00"),
+        Schedule_info schedule_info1 = new Schedule_info(LocalDateTime.parse("2021-05-05T10:00:00.00"),
                 Duration.ofMinutes(10), "none");
         ExpectedSchedule_list.put("Billboard_1", schedule_info1);
 

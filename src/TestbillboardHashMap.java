@@ -45,7 +45,7 @@ public class TestbillboardHashMap<E> {
     public void neg_duration() throws Exception
     {
         assertThrows(Exception.class, () -> {
-            billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
+            billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
                     "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), -5);
         });
     }
@@ -55,7 +55,7 @@ public class TestbillboardHashMap<E> {
     public void no_duration() throws Exception
     {
         assertThrows(Exception.class, () -> {
-            billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
+            billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
                     "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 0);
         });
     }
@@ -65,7 +65,7 @@ public class TestbillboardHashMap<E> {
     public void invalid_date() throws Exception
     {
         assertThrows(Exception.class, () -> {
-            billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
+            billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
                     "image.jpg", LocalDateTime.parse("20-04-202T10:00:00.00"), 5);
         });
     }
@@ -75,7 +75,7 @@ public class TestbillboardHashMap<E> {
     public void img_exists() throws Exception
     {
         assertThrows(Exception.class, () -> {
-            billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "blue",
+            billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
                     "doesn't_exist.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 5);
         });
     }
@@ -85,7 +85,7 @@ public class TestbillboardHashMap<E> {
     public void bg_valid() throws Exception
     {
         assertThrows(Exception.class, () -> {
-            billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "lmao",
+            billboardList.Create_edit_Billboard("Billboard2", "new billboard", "lmao",
                     "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 5);
         });
     }

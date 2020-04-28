@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class scheduleHashMap<Object> {
+public class scheduleHashMap extends HashMap{
 
     HashMap<String, Schedule_info> Billboard_schedule;
 
@@ -122,13 +122,13 @@ public class scheduleHashMap<Object> {
      * @throws Exception if Billboard does not exist & if duration is out of range or the time scheduled is in the past
      */
     public void scheduleBillboard(String new_billboard, LocalDateTime NewBB_startTime, Duration NewBB_duration,
-                                  String recurrence, HashMap<String, ArrayList<Object>> billboardList) throws Exception{
+                                  String recurrence, HashMap<String, Billboard> billboardList) throws Exception{
 
         //boolean variable to track whether billboard is in billboard list
         boolean billboard_exists = false;
 
         //For every billboard on billboardList
-        for (Map.Entry<String, ArrayList<Object>> billboardListEntry : billboardList.entrySet()) {
+        for (Map.Entry<String, Billboard> billboardListEntry : billboardList.entrySet()) {
 
             //if billboard name is in billboard list
             if(billboardListEntry.getKey() == new_billboard)
@@ -166,11 +166,69 @@ public class scheduleHashMap<Object> {
                 //calculate end time of new billboard viewing
                 ExistBB_endTime = ExistBB_startTime.plus(ExistBB_duration);
 
+             //---------------------------------------------------------------------------------------
+             // OVERLAPPING BILLBOARDS
                 //check if new billboard start time is after existing billboard start time
                 boolean isAfter = NewBB_startTime.isAfter(ExistBB_startTime);
 
                 //check if new billboard start time is before existing billboard end time
                 boolean isBefore = NewBB_startTime.isBefore(ExistBB_endTime);
+
+             //---------------------------------------------------------------------------------------
+             // RECURRING BILLBOARDS
+                //hour
+                int NewBB_startHr = NewBB_startTime.getHour();
+
+                int ExistBB_startHr = ExistBB_startTime.getHour();
+                int ExistBB_endHr = ExistBB_endTime.getHour();
+
+                boolean isAfterHr = false;
+                boolean isBeforeHr = false;
+
+                //check if new billboard is scheduled in the same hr as the existing
+                //check if new billboard start hr is after existing billboard start hr
+                if (NewBB_startHr>ExistBB_startHr)
+                {
+                    isAfterHr = true;
+                }
+
+                //check if the hour of new billboard start hr is before existing billboard end hr
+                if (NewBB_startHr<ExistBB_endHr)
+                {
+                    isBeforeHr = true;
+                }
+
+                //boolean to store whether new billboard is scheduled for the same hr as the existing
+                boolean sameHr = false;
+                sameHr = isAfterHr && isBeforeHr;
+
+                //Minute
+
+                int NewBB_startMin = NewBB_startTime.getMinute();
+
+                int ExistBB_startMin = ExistBB_startTime.getMinute();
+                int ExistBB_endMin = ExistBB_endTime.getMinute();
+
+                boolean isAfterMin = false;
+                boolean isBeforeMin = false;
+
+                //check if new billboard is scheduled in the same hr as the existing
+                //check if new billboard start hr is after existing billboard start hr
+                if (NewBB_startMin>ExistBB_startMin)
+                {
+                    isAfterMin = true;
+                }
+
+                //check if the hour of new billboard start hr is before existing billboard end hr
+                if (NewBB_startMin<ExistBB_endMin)
+                {
+                    isBeforeMin = true;
+                }
+
+                //boolean to store whether new billboard is scheduled for the same hr as the existing
+                boolean sameMin = false;
+                sameMin = isAfterMin && isBeforeMin;
+
 
                 //if start and end time of new billboard matches start and end time of existing billboard
                 if(NewBB_startTime == ExistBB_startTime && NewBB_endTime == ExistBB_endTime)
@@ -186,6 +244,7 @@ public class scheduleHashMap<Object> {
 
                 }
 
+                // OVERLAPPING BILLBOARDS
                 //if scheduled time is between start and end time of existing billboard
                 else if((isAfter && isBefore) == true)
                 {
@@ -208,16 +267,35 @@ public class scheduleHashMap<Object> {
                     Billboard_schedule.put(new_billboard, newBB_schedule_info);
                 }
 
-                //else if recurring billboard && between given times (HH:MM:ss)
+                // RECURRING BILLBOARDS
+                //else if recurring viewing && new viewing is scheduled for the same hr or minute of existing viewing
+                else if(recurrence != "none" && (sameHr || sameMin))
                 {
                     //if recurring every day
-                    //reschedule existing billboard for next available day
+                    if(recurrence =="day")
+                    {
+                        //remove existing billboard from schedule
+                        Billboard_schedule.remove(existing_billboard);
+
+                        //if one day after
+                        //reschedule existing billboard for next available day
+                    }
 
                     //if recurring every hour
-                    //reschedule existing billboard for next available hour
+                    if(recurrence =="hour") {
+                        //remove existing billboard from schedule
+                        Billboard_schedule.remove(existing_billboard);
+
+                        //reschedule existing billboard for next available hour
+                    }
 
                     //if recurring every minute
-                    //reschedule existing billboard for next available minute
+                    if(recurrence =="min") {
+                        ///remove existing billboard from schedule
+                        Billboard_schedule.remove(existing_billboard);
+
+                        //reschedule existing billboard for next available minute
+                    }
 
                     //create new schedule_info object for new billboard
                     Schedule_info newBB_schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration,recurrence);
@@ -235,7 +313,6 @@ public class scheduleHashMap<Object> {
                     Billboard_schedule.put(new_billboard, schedule_info);
                 }
             }
-
         }
     }
 
