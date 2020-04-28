@@ -11,14 +11,14 @@ import java.util.TreeMap;
  * @author - Jarod Evans & Emily Chang
  * @version - skeleton
  */
-public class billboardHashMap extends HashMap {
+public class billboardHashMap {
 
     HashMap<String, Billboard> billboardList;
 
     //constructor that creates HashMap
 
-    public billboardHashMap() {
-        billboardList = new HashMap<>(); // use tree map to sort by key
+    billboardHashMap() {
+        billboardList = new HashMap<String, Billboard>(); // use tree map to sort by key
     }
 
 //Obtain_data - Extract serialized objects from database, deserialize and store in HashMap of objects
@@ -53,45 +53,21 @@ public class billboardHashMap extends HashMap {
     public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
                                LocalDateTime schedule_time, int durationMinutes) {
         //Create a new billboard object
-        //Search for existing billboard
-        boolean bb_exists = billboardList.containsKey(billboard_name);
-        if (bb_exists) {
-            //remove billboard from list
-            //Create new billboard to the users updated specs
-            billboardNew = new Billboard(billboard_name, text,
-                    bg_colour, image, schedule_time, durationMinutes);
-            //put billboard in HashMap
-            billboardList.put(billboard_name, billboardNew);
-        } else {
-            //Create a billboard using the parameters provided.
-            billboardNew = new Billboard(billboard_name, text,
-                    bg_colour, image, schedule_time, durationMinutes);
+        billboardNew = new Billboard(billboard_name, text,
+                bg_colour, image, schedule_time, durationMinutes);
 
-            //put billboard in HashMap
-            billboardList.put(billboard_name, billboardNew);
-        }
+        //put billboard in HashMap - value will be replaced if key exists in HashMap
+        billboardList.put(billboard_name, billboardNew);
     }
 
     //For creating and editing billboards without the optional parameters.
     public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image) {
         //Create a new billboard object
-        //Search for existing billboard
-        boolean bb_exists = billboardList.containsKey(billboard_name);
-        if (bb_exists) {
-            //remove billboard from list
-            //Create new billboard to the users updated specs
-            billboardNew = new Billboard(billboard_name, text,
-                    bg_colour, image);
-            //put billboard in HashMap
-            billboardList.put(billboard_name, billboardNew);
-        } else {
-            //Create a billboard using the parameters provided.
-            billboardNew = new Billboard(billboard_name, text,
-                    bg_colour, image);
+        billboardNew = new Billboard(billboard_name, text,
+                bg_colour, image);
 
-            //put billboard in HashMap
-            billboardList.put(billboard_name, billboardNew);
-        }
+        //put billboard in HashMap - value will be replaced if key exists in HashMap
+        billboardList.put(billboard_name, billboardNew);
     }
 
     /**
@@ -99,12 +75,9 @@ public class billboardHashMap extends HashMap {
      * Return type void
      */
 
-    public static HashMap<String, Billboard> List_Billboards() {
+    public HashMap<String, Billboard> List_Billboards() {
 
-        //FOR TESTING PURPOSES
-        HashMap<String, Billboard> test_map = new HashMap<String, Billboard>();
-
-        return test_map;
+        return billboardList;
     }
 
     /**
@@ -113,7 +86,7 @@ public class billboardHashMap extends HashMap {
      * @param billboard_name Return type Billboard
      */
 
-    public static Billboard Get_billboard_info(String billboard_name) {
+    public Billboard Get_billboard_info(String billboard_name) {
         //retrieve billboard info from database
 
         //FOR TESTING PURPOSES

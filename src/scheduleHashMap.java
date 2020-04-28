@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class scheduleHashMap extends HashMap{
+public class scheduleHashMap{
 
     HashMap<String, Schedule_info> Billboard_schedule;
 
@@ -122,13 +122,13 @@ public class scheduleHashMap extends HashMap{
      * @throws Exception if Billboard does not exist & if duration is out of range or the time scheduled is in the past
      */
     public void scheduleBillboard(String new_billboard, LocalDateTime NewBB_startTime, Duration NewBB_duration,
-                                  String recurrence, HashMap<String, Billboard> billboardList) throws Exception{
+                                  String recurrence, billboardHashMap billboardList) throws Exception{
 
         //boolean variable to track whether billboard is in billboard list
         boolean billboard_exists = false;
 
         //For every billboard on billboardList
-        for (Map.Entry<String, Billboard> billboardListEntry : billboardList.entrySet()) {
+        for (Map.Entry<String, Billboard> billboardListEntry : (billboardList.List_Billboards()).entrySet()) {
 
             //if billboard name is in billboard list
             if(billboardListEntry.getKey() == new_billboard)
@@ -142,7 +142,18 @@ public class scheduleHashMap extends HashMap{
             throw new Exception("You cannot schedule a billboard that does not exist");
         }
 
-        else {
+        //if Billboard_schedule is empty
+        if(Billboard_schedule.isEmpty())
+        {
+            //create schedule info for billboard
+            Schedule_info schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration,recurrence);
+
+            //add billboard to schedule
+            Billboard_schedule.put(new_billboard, schedule_info);
+        }
+
+        else
+        {
             //For every entry of Billboard_schedule
             for (HashMap.Entry<String, Schedule_info> schedule_Entry : Billboard_schedule.entrySet())
             {
@@ -304,7 +315,7 @@ public class scheduleHashMap extends HashMap{
                     Billboard_schedule.put(new_billboard, newBB_schedule_info);
                 }
 
-                //else
+                else
                 {
                     //create schedule info for billboard
                     Schedule_info schedule_info = new Schedule_info(NewBB_startTime, NewBB_duration,recurrence);
