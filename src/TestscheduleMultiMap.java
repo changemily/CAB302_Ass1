@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestscheduleHashMap {
+public class TestscheduleMultiMap {
 
-    scheduleHashMap Billboard_schedule;
+    scheduleMultiMap Billboard_schedule;
     billboardHashMap billboardList;
 
     @BeforeEach
@@ -23,7 +24,7 @@ public class TestscheduleHashMap {
      */
     @BeforeEach
     @Test public void setUpBbSchedule() {
-        Billboard_schedule = new scheduleHashMap();
+        Billboard_schedule = new scheduleMultiMap();
     }
 
     //Test 2: Schedule billboard that has not been scheduled
@@ -39,8 +40,8 @@ public class TestscheduleHashMap {
         Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDateTime.parse("2021-04-22T10:00:00.00"),
                 Duration.ofMinutes(5),"none", billboardList);
 
-        //extract schedule info of billboard 1 into array list
-        ArrayList<Schedule_info>schedule_info = Billboard_schedule.getSchedule("Billboard_1");
+        //extract schedule info of billboard 1 into collection
+        ArrayList<Schedule_info> schedule_info = Billboard_schedule.getSchedule("Billboard_1");
 
         //Test if schedule information matches info entered
         assertEquals(LocalDateTime.parse("2021-04-22T10:00:00.00"), schedule_info.get(0).Time_scheduled);
@@ -299,8 +300,7 @@ public class TestscheduleHashMap {
 
     //Test 5: Test if the billboard schedule can be viewed correctly.
     @Test
-    public void View_schedule() throws Exception
-    {
+    public void View_schedule() throws Exception {
         //add billboards to billboardList
         billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
                 "image.jpg");
@@ -311,17 +311,17 @@ public class TestscheduleHashMap {
 
         //add billboards to schedule
         Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-05T10:00:00.00"),
-                Duration.ofMinutes(10),"none", billboardList);
+                Duration.ofMinutes(10), "none", billboardList);
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-04T10:00:00.00"),
-                Duration.ofMinutes(15),"none", billboardList);
+                Duration.ofMinutes(15), "none", billboardList);
         Billboard_schedule.scheduleBillboard("Billboard_3", LocalDateTime.parse("2021-05-03T10:00:00.00"),
-                Duration.ofMinutes(5), "none",billboardList);
+                Duration.ofMinutes(5), "none", billboardList);
 
         //store billboard schedule in temp HashMap
-        HashMap<String, Schedule_info> viewSchedule_list= Billboard_schedule.View_schedule();
+        MultiMap<String, Schedule_info> viewSchedule_list = Billboard_schedule.View_schedule();
 
         //check if output matches stored data and is in alphabetical order
-        HashMap<String, Schedule_info> ExpectedSchedule_list= new HashMap<String, Schedule_info>();
+        HashMap<String, Schedule_info> ExpectedSchedule_list = new HashMap<String, Schedule_info>();
 
 
         //Create ordered HashMap to compare to
@@ -339,14 +339,20 @@ public class TestscheduleHashMap {
 
         //compare expected HashMap to Billboard_schedule HashMap to see if they match
         // for every entry of viewSchedule_list
-        for (HashMap.Entry<String, Schedule_info> view_listEntry : viewSchedule_list.entrySet()) {
+        for (String billboard_name : viewSchedule_list.keySet()) {
+            //create ArrayList to store viewings of billboard
+            ArrayList<Schedule_info> viewings = viewSchedule_list.get(billboard_name);
 
-            // for every entry of Billboard_schedule
-            for (HashMap.Entry<String, Schedule_info> expected_listEntry : ExpectedSchedule_list.entrySet()) {
+            //for every viewing of billboard
+            for (Schedule_info viewing : viewings) {
 
-                //check if all billboards and info are listed correctly and ordered by date
-                assertEquals(expected_listEntry.getKey(),view_listEntry.getKey());
-                assertEquals(expected_listEntry.getValue(),view_listEntry.getValue());
+                // for every entry of Billboard_schedule
+                for (HashMap.Entry<String, Schedule_info> expected_listEntry : ExpectedSchedule_list.entrySet()) {
+
+                    //check if all billboards and info are listed correctly and ordered by date
+                    assertEquals(expected_listEntry.getKey(), billboard_name);
+                    assertEquals(expected_listEntry.getValue(), viewing);
+                }
             }
         }
     }
