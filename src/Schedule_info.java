@@ -2,13 +2,17 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Schedule_info {
-    LocalDateTime Time_scheduled;
+    LocalDateTime StartTime_Scheduled;
     Duration duration;
     String Recurrence;
+    LocalDateTime Scheduled_Time;
 
 
-    public Schedule_info( LocalDateTime time_scheduled, Duration duration_mins, String recurrence)throws Exception
+    public Schedule_info(LocalDateTime startTime_scheduled, Duration duration_mins, String recurrence)throws Exception
     {
+        //Set Scheduled_Time of viewing to now.
+        this.Scheduled_Time = LocalDateTime.now();
+
         //if duration is negative or zero
         if (duration_mins.isNegative() || duration_mins.isZero())
         {
@@ -23,7 +27,7 @@ public class Schedule_info {
         }
 
         //if the time scheduled is in the past
-        if (time_scheduled.compareTo(LocalDateTime.now())<0)
+        if (startTime_scheduled.compareTo(LocalDateTime.now())<0)
         {
             //throw exception
             throw new Exception("Time scheduled must be after"+ LocalDateTime.now());
@@ -32,7 +36,7 @@ public class Schedule_info {
         else
         {
             ////set time billboard is scheduled for showing
-            this.Time_scheduled = time_scheduled;
+            this.StartTime_Scheduled = startTime_scheduled;
         }
 
         //if the recurrence option is invalid

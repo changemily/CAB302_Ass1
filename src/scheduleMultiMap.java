@@ -1,5 +1,3 @@
-import org.mariadb.jdbc.internal.com.read.resultset.SelectResultSet;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,7 +25,7 @@ public class scheduleMultiMap {
      */
     public void RetrieveDBschedule() throws Exception {
 
-        final String SELECT = "SELECT * FROM schedule ORDER BY time_scheduled desc";
+        final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled desc";
 
         //Connect to database
         Connection connection;
@@ -43,12 +41,12 @@ public class scheduleMultiMap {
         {
             //store database info in local variables
             String billboard_name = rs.getString(1);
-            String Time_scheduled = rs.getString(2);
+            String Start_TimeScheduled = rs.getString(2);
             String duration = rs.getString(3);
             String recurrence = rs.getString(4);
 
             //store time scheduled and duration pair in array schedule_info
-            Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse(Time_scheduled),
+            Schedule_info schedule_info = new Schedule_info(LocalDateTime.parse(Start_TimeScheduled),
                     Duration.parse(duration), recurrence);
 
             //store billboard name with corresponding times scheduled and durations
@@ -64,7 +62,7 @@ public class scheduleMultiMap {
     }
 
     public void Write_To_DBschedule() throws SQLException {
-        final String SELECT = "SELECT * FROM schedule ORDER BY time_scheduled";
+        final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled";
 
         //Connect to database
         Connection connection;
@@ -89,13 +87,13 @@ public class scheduleMultiMap {
             //for every viewing of billboard
             for ( Schedule_info viewing : viewings ) {
                 //store Billboard_schedule info in local variables
-                String Time_scheduled = viewing.Time_scheduled.toString();
+                String Start_TimeScheduled = viewing.StartTime_Scheduled.toString();
                 String duration = viewing.duration.toString();
                 String recurrence = viewing.Recurrence;
 
                 //write to database
                 rs.updateString(1,billboard_name);
-                rs.updateString(2,Time_scheduled);
+                rs.updateString(2,Start_TimeScheduled);
                 rs.updateString(3,duration);
                 rs.updateString(4, recurrence);
             }
@@ -173,7 +171,7 @@ public class scheduleMultiMap {
 
                     //store viewing info of existing billboard in local variables
                     Duration ExistBB_duration = viewing.duration;
-                    LocalDateTime ExistBB_startTime = viewing.Time_scheduled;
+                    LocalDateTime ExistBB_startTime = viewing.StartTime_Scheduled;
 
                     //calculate end time of new billboard viewing
                     LocalDateTime ExistBB_endTime = ExistBB_startTime.plus(ExistBB_duration);
