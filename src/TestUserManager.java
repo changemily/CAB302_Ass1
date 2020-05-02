@@ -1,186 +1,200 @@
-/*
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-*/
-/**
- * This class contains methods that test the functionality of billboardManager class methods
- *  * @author — Harry Estreich
- *  * @version - extended skeleton
- *//*
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+//*
+ /* This class contains methods that test the functionality of billboardManager class methods
+ /*  * @author — Harry Estreich
+ /*  * @version - Draft
+  */
+
 
 
 public class TestUserManager {
+    // Test 1.1 Create a user manager without a target
+    @Test
+    public void create_user_manager(){
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
+        userManager admin = new userManager(adminUser);
+    }
 
-    // Test 1.1 Remove a permission from same user
+    // Test 1.2 Create a user manager with a target
+    @Test
+    public void create_user_manager_target(){
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
+        User otherUser = new User("Other", "5678", "Edit All Billboards");
+        userManager admin = new userManager(adminUser, otherUser);
+    }
+
+    // Test 2.1 Create a new user with Edit Users permission
+    @Test
+    public void create_user_admin(){
+        HashSet<User> UserList = new HashSet<>();
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
+        userManager admin = new userManager(adminUser);
+        User otherUser = new User("Other", "5678", "Edit All Billboards");
+        admin.add_user(otherUser, UserList);
+        assertTrue(UserList.contains(otherUser));
+    }
+
+    // Test 2.1 Create a new user without Edit Users permission
+    @Test
+    public void create_user_base(){
+        HashSet<User> UserList = new HashSet<>();
+        User adminUser = new User("Admin", "1234",  "Edit All Billboards");
+        userManager admin = new userManager(adminUser);
+        User otherUser = new User("Other", "5678", "Edit All Billboards");
+        admin.add_user(otherUser, UserList);
+        assertFalse(UserList.contains(otherUser));
+    }
+
+    // Test 3.1 Remove a permission from same user
     @Test
     public void remove_permission(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
-        admin.remove_user_permissions(adminUser, "Edit Billboards");
-        // pass
+        String Permissions[] = {"Edit Users"};
+        HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
+        admin.set_user_permissions(Permissions_List);
+        assertEquals(adminUser.Permissions, Permissions_List);
     }
 
-    // Test 1.2 Remove a permission from different user
+    // Test 3.2 Remove a permission from different user
     @Test
     public void remove_permission_different(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
-        User otherUser = new User("Other", "5678", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
+        User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
-        admin.remove_user_permissions(otherUser, "Edit Billboards");
-        // pass
-    }
-
-    // Test 2.1 Remove permission that doesn't exist from same user
-    @Test
-    public void remove_permission_non_exist(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
-        userManager admin = new userManager(adminUser, adminUser);
-        admin.remove_user_permissions(adminUser, "Schedule Billboards");
-        // fail
-    }
-
-    // Test 2.2 Remove permission that doesn't exist from different user
-    @Test
-    public void remove_permission_non_exist_different(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
-        User otherUser = new User("Other", "5678", "Edit Billboards");
-        userManager admin = new userManager(adminUser, otherUser);
-        admin.remove_user_permissions(otherUser, "Schedule Billboards");
-        // fail
-    }
-
-    // Test 3.1 Remove permission from a user that doesn't exist
-    @Test
-    public void remove_permission_non_exist_user(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
-        userManager admin = new userManager(adminUser, adminUser);
-        admin.remove_user_permissions(otherUser, "Schedule Billboards");
-        // fail
+        String Permissions[] = {};
+        HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
+        admin.set_user_permissions(Permissions_List);
+        assertEquals(adminUser.Permissions, Permissions_List);
     }
 
     // Test 4.1 Add permission to own user with admin
     @Test
     public void add_a_permission(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
-        admin.add_user_permissions(adminUser, "Schedule Billboards");
-        // pass
+        String Permissions[] = {"Edit Users", "Edit All Billboards", "Schedule Billboards"};
+        HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
+        admin.set_user_permissions(Permissions_List);
+        assertEquals(adminUser.Permissions, Permissions_List);
     }
 
     // Test 4.2 Add a permission to own user without admin
     @Test
     public void add_a_permissions(){
-        User adminUser = new User("Admin", "1234", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
-        admin.add_user_permissions(adminUser, "Schedule Billboards");
-        // fail
+        String Permissions[] = {"Edit Users", "Edit All Billboards", "Schedule Billboards"};
+        HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
+        assertThrows(Exception.class, () -> {
+            admin.set_user_permissions(Permissions_List);
+        });
     }
 
     // Test 4.3 Add permission to another user with admin
     @Test
     public void add_a_permission_different(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
-        User otherUser = new User("Other", "5678", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
+        User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
-        admin.add_user_permissions(otherUser, "Schedule Billboards");
-        // pass
-    }
-
-    // Test 4.4 Add permission to another user without admin
-
-    @Test
-    public void add_existing_permission(){
-        User adminUser = new User("Admin", "1234","Edit Billboards");
-        User otherUser = new User("Other", "5678", "Edit Billboards");
-        userManager admin = new userManager(adminUser, otherUser);
-        admin.add_user_permissions(otherUser, "Schedule Billboards");
-        // fail
-    }
-
-    // Test 4.5 Add permission to own user that already exists
-    @Test
-    public void add_a_permission(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
-        userManager admin = new userManager(adminUser, adminUser);
-        admin.add_user_permissions(adminUser, "Edit Billboards");
-        // fail
+        String Permissions[] = {"Edit Users", "Edit All Billboards"};
+        HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
+        admin.set_user_permissions(Permissions_List);
+        assertEquals(adminUser.Permissions, Permissions_List);
     }
 
     // Test 5.1 Remove edit user for self user -> fails
     @Test
     public void remove_self_user(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
-        admin.remove_user_permissions(adminUser, "Edit Users");
-        // fail
+        String Permissions[] = {"Edit Users", "Edit All Billboards"};
+        HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
+        admin.set_user_permissions(Permissions_List);
+        assertThrows(Exception.class, () -> {
+            admin.set_user_permissions(Permissions_List);
+        });
     }
 
     // Test 6.1 Set own password, with admin, pass
     @Test
     public void edit_own_password_admin(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
-        admin.set_user_password(adminUser, "4321");
-        // pass
+        String password = "4321";
+        admin.set_user_password(password);
+        assertEquals(adminUser.Password, password);
     }
 
     // Test 6.2 Set own password, without admin, pass
     @Test
     public void edit_own_password_without_admin(){
-        User adminUser = new User("Admin", "1234", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
-        admin.set_user_password(adminUser, "4321");
-        // pass
+        String password = "4321";
+        admin.set_user_password(password);
+        assertEquals(adminUser.Password, password);
     }
 
     // Test 6.3 Set other password, with admin, pass
     @Test
     public void edit_other_password_admin(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
-        User otherUser = new User("Other", "5678", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
+        User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
-        admin.set_user_password(otherUser, "8765");
-        // pass
+        String password = "4321";
+        admin.set_user_password(password);
+        assertEquals(adminUser.Password, password);
     }
 
     // Test 6.4 Set other password, without admin, fail
     @Test
     public void edit_other_password_without_admin(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
-        User otherUser = new User("Other", "5678", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
+        User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(otherUser, adminUser);
-        admin.set_user_password(adminUser, "4321");
-        // fail
+        String password = "4321";
+        assertThrows(Exception.class, () -> {
+            admin.set_user_password(password);
+        });
     }
 
     // Test 7.1 Delete own user, fail
     @Test
     public void delete_own_user(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
-        admin.delete_user(adminUser);
-        // fail
+        assertThrows(Exception.class, () -> {
+            admin.delete_user();
+        });
     }
 
     // Test 7.2 Delete other user, with admin, pass
     @Test
     public void delete_other_user_admin(){
-        User adminUser = new User("Admin", "1234", "Edit Users", "Edit Billboards");
-        User otherUser = new User("Other", "5678", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
+        User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
-        admin.delete_user(otherUser);
-        // pass
+        admin.delete_user();
     }
 
-    // Delete other user, without admin, fail
+    // Test 8.1 Delete other user, without admin, fail
     @Test
     public void delete_other_user_without_admin(){
-        User adminUser = new User("Admin", "1234", "Edit Billboards");
-        User otherUser = new User("Other", "5678", "Edit Billboards");
+        User adminUser = new User("Admin", "1234", "Edit All Billboards");
+        User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
-        admin.delete_user(otherUser);
-        // fail
+        assertThrows(Exception.class, () -> {
+            admin.delete_user();
+        });
     }
 }
 
-*/
