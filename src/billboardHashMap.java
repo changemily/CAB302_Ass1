@@ -10,32 +10,20 @@ import java.util.*;
  */
 public class billboardHashMap {
 
+    //Setup a hashmap for tracking billboards.
     HashMap<String, Billboard> billboardList;
 
+    //Setup a schedule multimap
     scheduleMultiMap scheduleMultiMap = new scheduleMultiMap();
 
-
-
     //constructor that creates HashMap
-
     billboardHashMap() {
         billboardList = new HashMap<String, Billboard>(); // use tree map to sort by key
     }
 
-//Obtain_data - Extract serialized objects from database, deserialize and store in HashMap of objects
-    // Extract serialized objects from database using sql queries
-    // deserialize objects
-    //store in HashMap
-
-    // needs to be done for schedule and billboard tables in DB
-
-
-    //Store_data - Serialize objects in list and write to DB
-
-
     //Create a new billboard object
     static Billboard billboardNew;
-    //static Billboard billboardNew2;
+
 
     /**
      * Method to create and edit billboards
@@ -48,9 +36,7 @@ public class billboardHashMap {
      * @param schedule_time   time (optional):void
      * @param durationMinutes The duration in minutes it will be displayed
      */
-
-    // NEEDS TO BE EDITED TO USE HASHMAP RETURNED FROM OBTAIN_DATA METHOD
-    //For creating and editing billboards provided all possible parameters.
+    
 
     public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
                                LocalDateTime schedule_time, Duration durationMinutes,String recurrence) throws Exception {
@@ -81,7 +67,6 @@ public class billboardHashMap {
      */
 
     public HashMap<String, Billboard> List_Billboards() {
-
         return billboardList;
     }
 
@@ -94,10 +79,9 @@ public class billboardHashMap {
 
     public ArrayList<Schedule_Info> Get_billboard_info(String billboard_name) throws Exception {
         //Find the correct billboard using its name
-        ArrayList<Schedule_Info>  billboard_info = this.scheduleMultiMap.getSchedule(billboard_name);
 
         //For the real thing
-        return billboard_info;
+        return this.scheduleMultiMap.getSchedule(billboard_name);
 
         //FOR TESTING PURPOSES
 //        Billboard billboard_test = new Billboard(billboard_name, "hello", "green", "image.jpg");
