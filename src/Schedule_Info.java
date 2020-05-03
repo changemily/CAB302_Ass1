@@ -1,14 +1,14 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class Schedule_info {
+public class Schedule_Info {
     LocalDateTime StartTime_Scheduled;
     Duration duration;
     String Recurrence;
     LocalDateTime Scheduled_Time;
 
 
-    public Schedule_info(LocalDateTime startTime_scheduled, Duration duration_mins, String recurrence)throws Exception
+    public Schedule_Info(LocalDateTime startTime_scheduled, Duration duration_mins, String recurrence)throws Exception
     {
         //Set Scheduled_Time of viewing to now.
         this.Scheduled_Time = LocalDateTime.now();
