@@ -26,6 +26,20 @@ public class ControlPanel_Client {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
+            //Login request
+            //List billboards
+            //Get Billboard info
+            //Create edit billboard
+            //Delete billboard
+            //View schedule
+            //Schedule Billboard
+            //Remove billboard
+            //List users
+            //Create user
+            //get user permissions
+            //set user permissions
+            //set user password
+            //
             oos.writeObject("hello");
             oos.flush();
 

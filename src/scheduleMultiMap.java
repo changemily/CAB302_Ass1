@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class scheduleMultiMap {
@@ -124,13 +125,13 @@ public class scheduleMultiMap {
      * @throws Exception if Billboard does not exist & if duration is out of range or the time scheduled is in the past
      */
     public void scheduleBillboard(String new_billboard, LocalDateTime NewBB_startTime, Duration NewBB_duration,
-                                  String recurrence, billboardHashMap billboardList) throws Exception{
+                                  String recurrence, HashMap<String, Billboard> billboardList) throws Exception{
 
         //boolean variable to track whether billboard is in billboard list
         boolean billboard_exists = false;
 
-        //For every billboard on billboardList
-        for (Map.Entry<String, Billboard> billboardListEntry : (billboardList.List_Billboards()).entrySet()) {
+        //For every billboard in billboardList
+        for (Map.Entry<String, Billboard> billboardListEntry : billboardList.entrySet()){
 
             //if billboard name is in billboard list
             if(billboardListEntry.getKey() == new_billboard)

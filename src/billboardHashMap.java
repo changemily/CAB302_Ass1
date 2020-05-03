@@ -16,6 +16,8 @@ import java.util.*;
 public class billboardHashMap {
 
     HashMap<String, Billboard> billboardList;
+
+    scheduleMultiMap scheduleMultiMap = new scheduleMultiMap();
     //constructor that creates HashMap
 
     billboardHashMap() {
@@ -51,14 +53,18 @@ public class billboardHashMap {
 
     // NEEDS TO BE EDITED TO USE HASHMAP RETURNED FROM OBTAIN_DATA METHOD
     //For creating and editing billboards provided all possible parameters.
+
     public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
-                               LocalDateTime schedule_time, int durationMinutes) {
+                               LocalDateTime schedule_time, Duration durationMinutes,String recurrence) throws Exception {
         //Create a new billboard object
         billboardNew = new Billboard(billboard_name, text,
                 bg_colour, image, schedule_time, durationMinutes);
 
         //put billboard in HashMap - value will be replaced if key exists in HashMap
         billboardList.put(billboard_name, billboardNew);
+
+        //add schedule info of bb to schedule multi map
+        this.scheduleMultiMap.scheduleBillboard(billboard_name,schedule_time, durationMinutes,recurrence,billboardList);
     }
 
     //For creating and editing billboards without the optional parameters.

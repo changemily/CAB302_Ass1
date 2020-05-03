@@ -51,7 +51,7 @@ public class Billboard {
      * @param Duration_mins Duration (minutes) Billboard is displayed for
      */
     Billboard(String billboard_name, String text, String bg_colour, String image_file ,
-                          LocalDateTime time_scheduled, int Duration_mins)
+                          LocalDateTime time_scheduled, Duration Duration_mins)
     {
         //set billboard properties
         this.Billboard_name = billboard_name;
@@ -64,9 +64,7 @@ public class Billboard {
             this.Image_file = image_file;
         }
         this.Time_scheduled = time_scheduled;
-
-        //convert int to Duration
-        this.duration = Duration.ofMinutes(Duration_mins);
+        this.duration = Duration_mins;
     }
 
     /**
