@@ -1,8 +1,3 @@
-import javax.swing.text.html.CSS;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -18,6 +13,9 @@ public class billboardHashMap {
     HashMap<String, Billboard> billboardList;
 
     scheduleMultiMap scheduleMultiMap = new scheduleMultiMap();
+
+
+
     //constructor that creates HashMap
 
     billboardHashMap() {
@@ -91,56 +89,42 @@ public class billboardHashMap {
      * Method for retrieving billboard information from database
      *
      * @param billboard_name Return type Billboard
+     * @return
      */
 
-    public Billboard Get_billboard_info(String billboard_name) throws SQLException {
-        //retrieve billboard info from database
-        final String SELECTinfo = "SELECT * FROM schedule WHERE billboard_name='"+billboard_name+"';";
+    public ArrayList<Schedule_Info> Get_billboard_info(String billboard_name) throws Exception {
+        //Find the correct billboard using its name
+        ArrayList<Schedule_Info>  billboard_info = this.scheduleMultiMap.getSchedule(billboard_name);
 
-//        //Connect to database
-//        Connection connection;
-//        connection = DBconnection.getInstance();
-//
-//        //create statement
-//        Statement ns = connection.createStatement();
-//        ResultSet RS = ns.executeQuery(SELECTinfo);
-
-//        //Get the info
-//        String billboard_name = RS.getString(1);
-//        String Time_scheduled = RS.getString(2);
-//        String duration = RS.getString(3);
-//        String recurrence = RS.getString(4);
+        //For the real thing
+        return billboard_info;
 
         //FOR TESTING PURPOSES
-        Billboard billboard_test = new Billboard(billboard_name, "hello", "green", "image.jpg");
-        return billboard_test;
-
-//        //close the connection
-//        connection.close();
+//        Billboard billboard_test = new Billboard(billboard_name, "hello", "green", "image.jpg");
+//        return billboard_test;
     }
 
     /**
      * @param billboard_name Name of billboard being deleted
      */
 
-    public static void Delete_billboard(String billboard_name) throws SQLException {
-        //Remove schedule information of Billboard object
-        final String DELETE = "DELETE FROM schedule WHERE billboard_name='"+billboard_name+"';";
+    public void Delete_billboard(String billboard_name) throws Exception {
 
-        //Connect to database
-        Connection connection;
-        connection = DBconnection.getInstance();
+        //The code for deleting the billboard info from the schedule.
+        //Get the billboard info and store it in an arrayList
+        ArrayList<Schedule_Info> billboard_info = Get_billboard_info(billboard_name);
 
-        //create statement
-        Statement CCS = connection.createStatement();
-        CCS.executeQuery(DELETE);
+        //Transfer the info from the arrayList to the Schedule_info object
+        Schedule_Info Schedule_info = new Schedule_Info(LocalDateTime.parse((CharSequence) billboard_info.get(0)),
+                Duration.parse((CharSequence) billboard_info.get(1)),
+                String.valueOf(billboard_info.get(2)));
 
-        //close the connection
-        connection.close();
+        //Use the billboard name given and the information collected about the billboard
+        //to remove the billboard from the billboard schedule.
+        this.scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);
 
-//        //Remove billboard from the schedule as well
-//        Schedule_info schedule_info = new Schedule_info(Time_scheduled, duration, recurrence);
-//        scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);
+        //The code for removing the billboard info from the billboardList.
+        billboardList.remove(billboard_name);
     }
 
 }
