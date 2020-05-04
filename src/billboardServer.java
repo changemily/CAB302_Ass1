@@ -8,18 +8,18 @@ import java.util.Properties;
 
 /**
  * Billboard server class
- * Class contains methods for connecting to, receiving and sending info to a database
+ * Class contains methods for connecting to, receiving and sending info to a client over a port,
  * @author Emily Chang
- * @version 1 - Skeleton
+ * @version 1 - under development
  */
 
 public class billboardServer{
 
-    public static void Setup_port(String properties_file){
-    //setup port used to connect Server with viewer and control panel
-    }
-
-    public static void Start_up() throws Exception {
+    /**
+     * Starts up Billboard server for connection to client
+     * Sends and Receives information from client
+     */
+    public static void Run_Server() {
         //create empty schedule, billboard list and user list
         scheduleMultiMap billboard_schedule = new scheduleMultiMap();
         //populate schedule, billboard list and user with data from database
@@ -147,10 +147,6 @@ public class billboardServer{
 
     }
 
-    public void Server_Connection(){
-        //Connect server to billboard viewer and control panel
-    }
-
     /*
     public String Login_request(String username, String password){
         // Sends back error or valid session token depending on outcome of login request
@@ -159,6 +155,6 @@ public class billboardServer{
     */
 
     public static void main(String args[]) throws Exception {
-        Start_up();
+        Run_Server();
     }
 }

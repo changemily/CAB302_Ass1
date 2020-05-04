@@ -3,11 +3,14 @@ import java.net.Socket;
 import java.util.Properties;
 
 /**
- *
+ * Control Panel class
+ * Class contains methods for connecting to, receiving and sending info to a server over a port,
+ * @author Emily Chang
+ * @version - under development
  */
 public class ControlPanel_Client {
 
-    public static void Start_up(){
+    public static void Run_Client(){
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
@@ -128,6 +131,6 @@ public class ControlPanel_Client {
     }
 
     public static void main(String args[]) throws IOException {
-        Start_up();
+        Run_Client();
     }
 }

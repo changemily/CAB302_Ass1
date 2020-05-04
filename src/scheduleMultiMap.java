@@ -9,12 +9,20 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * scheduleMultiMap Class
+ * This class contains methods that populate the billboard schedule, write the schedule to the database,
+ * retrieve schedule info and manipulate the multimap that stores the billboard schedule
+ * @author — Emily Chang
+ * @version - complete
+ */
 public class scheduleMultiMap {
 
     MultiMap<String, Schedule_Info> Billboard_schedule;
 
-    //constructor that creates a scheduleHashMap object
-
+    /**
+     * constructor that creates a scheduleHashMap object
+     */
     public scheduleMultiMap() {
         Billboard_schedule = new MultiMap<>();
     }

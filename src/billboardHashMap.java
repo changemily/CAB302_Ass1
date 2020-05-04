@@ -5,8 +5,8 @@ import java.util.*;
 /**
  * Billboard Manager class
  * Class contains methods for creating and controlling billboards.
- * @author - Jarod Evans & Emily Chang
- * @version - skeleton
+ * @author - Jarod Evans
+ * @version - under development
  */
 public class billboardHashMap {
 
@@ -18,7 +18,7 @@ public class billboardHashMap {
 
     //constructor that creates HashMap
     billboardHashMap() {
-        billboardList = new HashMap<String, Billboard>(); // use tree map to sort by key
+        billboardList = new HashMap<>(); // use tree map to sort by key
     }
 
     //Create a new billboard object
