@@ -3,6 +3,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
 
@@ -15,15 +16,34 @@ import java.util.Properties;
 
 public class billboardServer{
 
+    public static final String CREATE_USER_TABLE =
+            "CREATE TABLE IF NOT EXISTS Users (username varchar(255),text varchar(1000)," +
+                    "bg_colour varchar (255),image_file varchar(255), time_scheduled Datetime, minutes int);";
+
+    public static final String CREATE_BILLBOARD_TABLE =
+            "CREATE TABLE IF NOT EXISTS Billboards (billboard_name varchar(255)," +
+                    "text varchar(1000),bg_colour varchar (255)," +
+                    "image_file varchar(255), time_scheduled Datetime, minutes int);";
+
+    public static final String CREATE_SCHEDULE_TABLE =
+            "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(10), " +
+                    "Duration varchar (255), recurrence varchar (4));";
     /**
      * Starts up Billboard server for connection to client
      * Sends and Receives information from client
      */
-    public static void Run_Server() {
+    public static void Run_Server() throws Exception {
         //create empty schedule, billboard list and user list
         scheduleMultiMap billboard_schedule = new scheduleMultiMap();
-        //populate schedule, billboard list and user with data from database
-        //billboard_schedule.RetrieveDBschedule();
+
+        //create DB connection
+        Connection connection = DBconnection.getInstance();
+
+        //checks if tables exist in DB, if not adds tables
+        Check_tables(connection);
+
+        //populate schedule, billboard list and user list with data from database
+        billboard_schedule.RetrieveDBschedule(connection);
 
         Properties props = new Properties();
         FileInputStream fileIn = null;
@@ -139,11 +159,47 @@ public class billboardServer{
             e.printStackTrace();
         }
 
+        //write to DB
+
+        //close connection
+        connection.close();
     }
 
 
-    public void Add_table(){
-        //Adds tables to database
+    public static void Check_tables(Connection connection) {
+        //Adds tables to database if they do not exist
+
+        try {
+            Statement st = connection.createStatement();
+            st.execute(CREATE_BILLBOARD_TABLE);
+            st.close();
+            System.out.println("added billboard table to db");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        try {
+            Statement st = connection.createStatement();
+            st.execute(CREATE_SCHEDULE_TABLE);
+            st.close();
+            System.out.println("added schedule table to db");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Statement st = connection.createStatement();
+            st.execute(CREATE_USER_TABLE);
+            st.close();
+            System.out.println("added billboard table to db");
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -1,7 +1,4 @@
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,13 +29,10 @@ public class scheduleMultiMap {
      * @throws SQLException throws exception if billboard does not exist or combination of billboard &
      * schedule information does not exist
      */
-    public void RetrieveDBschedule() throws Exception {
+    public void RetrieveDBschedule(Connection connection) throws Exception {
 
         final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled desc";
 
-        //Connect to database
-        Connection connection;
-        connection = DBconnection.getInstance();
 
         //create statement
         Statement st = connection.createStatement();
@@ -66,16 +60,10 @@ public class scheduleMultiMap {
         rs.close();
         //close statement
         st.close();
-        //close connection
-        connection.close();
     }
 
-    public void Write_To_DBschedule() throws SQLException {
+    public void Write_To_DBschedule(Connection connection) throws SQLException {
         final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled";
-
-        //Connect to database
-        Connection connection;
-        connection = DBconnection.getInstance();
 
         //create statement
         Statement st = connection.createStatement();
@@ -90,8 +78,8 @@ public class scheduleMultiMap {
         //for every billboard name in Billboard_schedule
         for ( String billboard_name : Billboard_schedule.keySet() ) {
 
-            //create collection to store viewings of billboard
-            Collection<Schedule_Info>viewings = Billboard_schedule.get(billboard_name);
+            //create array list to store viewings of billboard
+            ArrayList<Schedule_Info> viewings = Billboard_schedule.get(billboard_name);
 
             //for every viewing of billboard
             for ( Schedule_Info viewing : viewings ) {
@@ -112,8 +100,6 @@ public class scheduleMultiMap {
         rs.close();
         //close statement
         st.close();
-        //close connection
-        connection.close();
     }
 
     /**
