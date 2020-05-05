@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 
@@ -35,6 +37,11 @@ public class billboardServer{
     public static void Run_Server() throws Exception {
         //create empty schedule, billboard list and user list
         scheduleMultiMap billboard_schedule = new scheduleMultiMap();
+
+        billboardHashMap billboard_list = new billboardHashMap();
+
+        //TEMP FOR TESTING
+        billboard_list.Create_edit_Billboard("Billboard_1", "hello","red", "No image");
 
         //create DB connection
         Connection connection = DBconnection.getInstance();
@@ -103,19 +110,27 @@ public class billboardServer{
                         return_message = "Billboard has been scheduled";
 
                         //read parameters sent by client
-                        Object billboard_name = ois.readObject();
-                        Object start_time = ois.readObject();
-                        Object duration = ois.readObject();
-                        Object recurrence = ois.readObject();
-                        Object billboard_list = ois.readObject();
+                        String billboard_name = ois.readObject().toString();
+                        String start_time = ois.readObject().toString();
+                        String duration = ois.readObject().toString();
+                        String recurrence = ois.readObject().toString();
+
+                        //print bb list
+                        System.out.println("billboard list: "+billboard_list);
 
                         //print what was received from client
                         System.out.println("billboard name: "+ billboard_name + "\n" +
                                 "start time: "+start_time+"\n" +
                                 "duration: " + duration +"\n"+
-                                "recurrence: " +recurrence +"\n" +
-                                "billboard list: " +billboard_list);
-                        //billboard_schedule.scheduleBillboard();
+                                "recurrence: " +recurrence +"\n");
+
+                        //schedule billboard with client input
+                        billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
+                                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards());
+
+                        //write to DB
+                        billboard_schedule.Write_To_DBschedule(connection);
+
                         break;
                     case "Remove billboard":
                         return_message = "billboard has been removed from schedule";

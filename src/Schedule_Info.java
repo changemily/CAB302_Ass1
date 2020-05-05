@@ -53,7 +53,7 @@ public class Schedule_Info {
         }
 
         //if the recurrence option is invalid
-        if (recurrence!= "day" && recurrence!= "hour" && recurrence!= "minute" && recurrence!= "none")
+        if (!recurrence.equals("day") && !recurrence.equals("hour")  && !recurrence.equals("minute") && !recurrence.equals("none"))
         {
             //throw exception
             throw new Exception("The given recurrence option is invalid, please specify whether the billboard recurs " +

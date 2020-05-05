@@ -128,7 +128,7 @@ public class scheduleMultiMap {
         for (Map.Entry<String, Billboard> billboardListEntry : billboardList.entrySet()){
 
             //if billboard name is in billboard list
-            if(billboardListEntry.getKey() == new_billboard)
+            if(billboardListEntry.getKey().equals(new_billboard))
             {
                 billboard_exists = true;
             }
@@ -300,7 +300,7 @@ public class scheduleMultiMap {
             for ( Schedule_Info viewing : viewings ) {
 
                 //if billboard name is listed in schedule
-                if(BillboardName == billboard_name)
+                if(BillboardName.equals(billboard_name))
                 {
                     billboard_exists = true;
 
@@ -358,7 +358,7 @@ public class scheduleMultiMap {
         for (String BillboardName : Billboard_schedule.keySet())
         {
             //if given billboard name matches billboard name in schedule
-            if (BillboardName == billboard_name)
+            if (BillboardName.equals(billboard_name))
             {
                 //store viewings of billboard in singleBBschedule collection
                 singleBBschedule = Billboard_schedule.get(billboard_name);
