@@ -2,9 +2,15 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Properties;
 
+/**
+ * Control Panel class
+ * Class contains methods for connecting to, receiving and sending info to a server over a port,
+ * @author Emily Chang
+ * @version - under development
+ */
 public class ControlPanel_Client {
 
-    public static void Start_up(){
+    public static void Run_Client(){
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
@@ -26,22 +32,83 @@ public class ControlPanel_Client {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-            //Login request
-            //List billboards
-            //Get Billboard info
-            //Create edit billboard
-            //Delete billboard
-            //View schedule
-            //Schedule Billboard
-            //Remove billboard
-            //List users
-            //Create user
-            //get user permissions
-            //set user permissions
-            //set user password
-            //
-            oos.writeObject("hello");
+
+            String button_clicked = "Remove billboard";
+            String request;
+
+            //request given by user saved in local var request
+            switch(button_clicked)
+            {
+                case "Login request":
+                    request = "Login request";
+                    break;
+                case "List billboards":
+                    request = "List billboards";
+                    break;
+                case "Get Billboard info":
+                    request = "Get Billboard info";
+                    break;
+                case "Create edit billboard":
+                    request = "Create edit billboard";
+                    break;
+                case "Delete billboard":
+                    request = "Delete billboard";
+                    break;
+                case "View schedule":
+                    request = "View schedule";
+                    //Write the Client's request to the server
+                    oos.writeObject(request);
+                    oos.flush();
+                    break;
+
+                case "Schedule Billboard":
+                    request = "Schedule Billboard";
+                    //Write the Client's request to the server
+                    oos.writeObject(request);
+
+                    //Write the details needed to schedule a billboard
+                    oos.writeObject("Billboard_name entry");
+                    oos.writeObject("start_time entry");
+                    oos.writeObject("duration entry");
+                    oos.writeObject("recurrence entry");
+                    oos.writeObject("billboard list entry");
+                    oos.flush();
+                    break;
+                case "Remove billboard":
+                    request = "Remove billboard";
+                    //Write the Client's request to the server
+                    oos.writeObject(request);
+
+                    //Write the details needed to remove a billboard
+                    oos.writeObject("billboard_name entry");
+                    oos.flush();
+                    break;
+                case "List users":
+                    request = "List users";
+                    break;
+                case "Create user":
+                    request = "Create user";
+                    break;
+                case "Get user permissions":
+                    request = "Get user permissions";
+                    break;
+                case "Set user permissions":
+                    request = "Set user permissions";
+                    break;
+                case "Set user password":
+                    request = "Set user password";
+                    break;
+                default:
+                    request = "No match";
+            }
+
             oos.flush();
+
+            //read response from by server
+            Object o = ois.readObject();
+
+            //print what was received from server
+            System.out.println("received from server: "+o);
 
             oos.close();
             ois.close();
@@ -53,6 +120,8 @@ public class ControlPanel_Client {
         } catch (
         IOException ex) {
             ex.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
         //read port & network address from server_props file
 
@@ -62,6 +131,6 @@ public class ControlPanel_Client {
     }
 
     public static void main(String args[]) throws IOException {
-        Start_up();
+        Run_Client();
     }
 }

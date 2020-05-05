@@ -1,5 +1,13 @@
 import java.util.*;
 
+/**
+ * MultiMap class
+ * This class implements a multimap object and methods which retrieve info and manipulate the multimap
+ * @author Emily Chang
+ * @param <K> MultiMap key
+ * @param <V> MultiMap Value
+ * @version complete
+ */
 class MultiMap<K, V>
 {
     private Map<K, ArrayList<V>> map = new HashMap<>();
@@ -9,7 +17,7 @@ class MultiMap<K, V>
      */
     public void put(K key, V value) {
         if (map.get(key) == null)
-            map.put(key, new ArrayList<V>());
+            map.put(key, new ArrayList<>());
 
         map.get(key).add(value);
     }
@@ -49,13 +57,6 @@ class MultiMap<K, V>
     public Set<Map.Entry<K, ArrayList<V>>> entrySet() {
         return map.entrySet();
     }
-
-    /**
-     * Returns a ArrayList view of ArrayList of the values present in this multimap.
-     *//*
-    public ArrayList<ArrayList<V>> values() {
-        return map.values();
-    }*/
 
     /**
      * Returns true if this multimap contains a mapping for the specified key.

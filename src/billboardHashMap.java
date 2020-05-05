@@ -5,8 +5,8 @@ import java.util.*;
 /**
  * Billboard Manager class
  * Class contains methods for creating and controlling billboards.
- * @author - Jarod Evans & Emily Chang
- * @version - skeleton
+ * @author - Jarod Evans
+ * @version - under development
  */
 public class billboardHashMap {
 

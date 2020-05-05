@@ -6,7 +6,7 @@ import java.util.HashMap;
  * Billboard class
  * This class contains methods that construct and edit billboards
  * @author — Emily Chang
- * @version - skeleton
+ * @version - under development
  */
 
 public class Billboard {

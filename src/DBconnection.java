@@ -10,7 +10,7 @@ import java.util.Properties;
  * DBconnection class
  * Class contains methods for connecting to the database
  * @author Jarod Evans & Emily Chang
- * @version 1
+ * @version - complete
  */
 
 public class DBconnection {
