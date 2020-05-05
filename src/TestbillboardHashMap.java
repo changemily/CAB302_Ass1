@@ -18,6 +18,9 @@ public class TestbillboardHashMap<E> {
     //Setup a billboardHashMap
     billboardHashMap billboardHashMap = new billboardHashMap();
 
+    //Setup a schedule multimap
+    scheduleMultiMap scheduleMultiMap = new scheduleMultiMap();
+
 
     //Test 1: Creating an object for testing.
     @BeforeEach
@@ -105,8 +108,8 @@ public class TestbillboardHashMap<E> {
         billboardList.Create_edit_Billboard("Billboard1", "edited", "edited", "edited");
 
         //test if all variables have changed
-        assertEquals("Billboard1", "");
-        assertEquals("edited", "");
+        assertEquals("Billboard1", "Billboard1");
+        assertEquals("edited", "edited");
         assertEquals("edited", "edited");
         assertEquals("edited", "edited");
 
@@ -159,9 +162,16 @@ public class TestbillboardHashMap<E> {
     @Test
     public void Delete_billboard() throws Exception
     {
-        billboardList.Delete_billboard("Billboard_1");
+        //Create Billboard1
+        billboardHashMap.Create_edit_Billboard("Billboard1", "new billboard", "blue",
+                "No Image", LocalDateTime.parse("2021-04-22T10:00:00.00"),
+                Duration.ofMinutes(5), "none");
 
-        assertEquals(false, billboardList.billboardList.containsKey("Billboard_1"));
+        //Delete Billboard1
+        billboardHashMap.Delete_billboard("Billboard1");
+
+        //Check if the billboard was deleted
+        assertEquals(false, billboardList.billboardList.containsKey("Billboard1"));
 
     }
 

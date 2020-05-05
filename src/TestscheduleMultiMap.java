@@ -404,7 +404,7 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(5), "none", billboardList.List_Billboards());
 
         //store billboard schedule in temp HashMap
-        MultiMap<String, Schedule_info> viewSchedule_list = Billboard_schedule.View_schedule();
+        MultiMap<String, Schedule_Info> viewSchedule_list = Billboard_schedule.View_schedule();
 
         //check if billboards are in viewSchedule_list View_schedule output
         assertEquals(true, viewSchedule_list.containsKey("Billboard_1"));
