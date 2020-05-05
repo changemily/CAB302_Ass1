@@ -18,11 +18,12 @@ public class billboardHashMap {
 
     //constructor that creates HashMap
     billboardHashMap() {
-        billboardList = new HashMap<String, Billboard>(); // use tree map to sort by key
+        billboardList = new HashMap<>(); // use tree map to sort by key
     }
 
     //Create a new billboard object
     static Billboard billboardNew;
+
 
 
     /**
