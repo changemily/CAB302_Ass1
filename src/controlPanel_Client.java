@@ -8,7 +8,7 @@ import java.util.Properties;
  * @author Emily Chang
  * @version - under development
  */
-public class ControlPanel_Client {
+public class controlPanel_Client {
 
     public static void Run_Client(){
         Properties props = new Properties();
@@ -33,7 +33,7 @@ public class ControlPanel_Client {
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
 
-            String button_clicked = "Remove billboard";
+            String button_clicked = "Schedule Billboard";
             String request;
 
             //request given by user saved in local var request
@@ -67,13 +67,13 @@ public class ControlPanel_Client {
                     oos.writeObject(request);
 
                     //Write the details needed to schedule a billboard
-                    oos.writeObject("Billboard_name entry");
-                    oos.writeObject("start_time entry");
-                    oos.writeObject("duration entry");
-                    oos.writeObject("recurrence entry");
-                    oos.writeObject("billboard list entry");
+                    oos.writeObject("Billboard_1");
+                    oos.writeObject("2021-01-01T10:00:00.00");
+                    oos.writeObject("10");
+                    oos.writeObject("none");
                     oos.flush();
                     break;
+
                 case "Remove billboard":
                     request = "Remove billboard";
                     //Write the Client's request to the server
@@ -104,7 +104,7 @@ public class ControlPanel_Client {
 
             oos.flush();
 
-            //read response from by server
+            //read response from server
             Object o = ois.readObject();
 
             //print what was received from server
