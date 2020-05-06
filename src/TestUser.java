@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * User test class
  * This class contains methods which test the methods within the User class
  * @author - Nickhil Nischal
- * @version - skeleton
+ * @version - under development
  */
 class TestUser {
     //Test 1.1: Creating a user with one permission
@@ -63,12 +63,6 @@ class TestUser {
         john9.DeleteUser();
     }
 
-    //Test 5.2 Deleting a user - invalid username (user does not exist)
-    @Test
-    public void testDeleteUserInvalid() {
-        //Incomplete test
-    }
-
     //Test 6.1 Editing a username
     @Test
     public void testEditUsername() {
@@ -76,23 +70,11 @@ class TestUser {
         john9.EditUsername("john10");
     }
 
-    //Test 6.2 Editing a username - invalid username (user does not exist)
-    @Test
-    public void testEditUsernameInvalid() {
-        //Incomplete test
-    }
-
     //Test 7.1 Editing a password
     @Test
     public void testEditPassword() {
         User john9 = new User("john9", "password1", "Create Billboards");
         john9.EditPassword("password2");
-    }
-
-    //Test 7.2 Editing a password - invalid username (user does not exist)
-    @Test
-    public void testEditPasswordInvalid() {
-        //Incomplete test
     }
 
     //Test 8.1 Removing a permission
@@ -108,12 +90,6 @@ class TestUser {
         //Incomplete test
     }
 
-    //Test 8.3 Removing a permission - invalid username (user does not exist)
-    @Test
-    public void testRemovePermissionInvalid2() {
-        //Incomplete test
-    }
-
     //Test 9.1 Adding a permission
     @Test
     public void testAddPermission() {
@@ -124,12 +100,6 @@ class TestUser {
     //Test 9.2 Adding a permission - invalid permission
     @Test
     public void testAddPermissionInvalid1() {
-        //Incomplete test
-    }
-
-    //Test 9.3 Adding a permission - invalid username (user does not exist)
-    @Test
-    public void testAddPermissionInvalid2() {
         //Incomplete test
     }
 }
