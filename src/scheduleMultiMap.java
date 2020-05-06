@@ -66,7 +66,8 @@ public class scheduleMultiMap {
         final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled";
 
         //create statement
-        Statement st = connection.createStatement();
+        Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_UPDATABLE);
 
         ResultSet rs = st.executeQuery(SELECT);
 
@@ -76,7 +77,7 @@ public class scheduleMultiMap {
         }
 
         //for every billboard name in Billboard_schedule
-        for ( String billboard_name : Billboard_schedule.keySet() ) {
+        for (String billboard_name : Billboard_schedule.keySet() ) {
 
             //create array list to store viewings of billboard
             ArrayList<Schedule_Info> viewings = Billboard_schedule.get(billboard_name);
@@ -88,11 +89,8 @@ public class scheduleMultiMap {
                 String duration = viewing.duration.toString();
                 String recurrence = viewing.Recurrence;
 
-                //write to database
-                rs.updateString(1,billboard_name);
-                rs.updateString(2,Start_TimeScheduled);
-                rs.updateString(3,duration);
-                rs.updateString(4, recurrence);
+                st.executeQuery("INSERT INTO Schedule (billboard_name,Start_TimeScheduled, Duration,recurrence) " +
+                        "VALUES(\""+billboard_name+"\",\""+Start_TimeScheduled+"\",\""+duration+"\",\""+recurrence+"\");");
             }
         }
 

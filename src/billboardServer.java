@@ -28,8 +28,8 @@ public class billboardServer{
                     "image_file varchar(255), time_scheduled Datetime, minutes int);";
 
     public static final String CREATE_SCHEDULE_TABLE =
-            "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(10), " +
-                    "Duration varchar (255), recurrence varchar (4));";
+            "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
+                    "Duration varchar (255), recurrence varchar (50));";
     /**
      * Starts up Billboard server for connection to client
      * Sends and Receives information from client
@@ -173,8 +173,6 @@ public class billboardServer{
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        //write to DB
 
         //close connection
         connection.close();
