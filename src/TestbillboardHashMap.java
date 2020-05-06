@@ -1,4 +1,4 @@
-/*
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TestbillboardHashMap<E> {
 
     ArrayList<E> billboardValues;
-    static billboardHashMap billboardList;
+    billboardHashMap billboardList = new billboardHashMap();
+
+    //Setup a billboardHashMap
+    billboardHashMap billboardHashMap = new billboardHashMap();
+
+    //Setup a schedule multimap
+    scheduleMultiMap scheduleMultiMap = new scheduleMultiMap();
 
 
     //Test 1: Creating an object for testing.
@@ -27,17 +33,16 @@ public class TestbillboardHashMap<E> {
     @Test
     public void add_Billboard() throws Exception
     {
-
         //Billboard with no scheduled viewing
         billboardList.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image");
 
-        assertEquals(true, billboardList.containsKey("Billboard1"));
+        assertEquals(true, billboardList.billboardList.containsKey("Billboard1"));
 
         //Billboard with scheduled viewing and image
         billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 5);
+                "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), Duration.ofMinutes(10), "none");
 
-        assertEquals(true, billboardList.containsKey("Billboard2"));
+        assertEquals(true, billboardList.billboardList.containsKey("Billboard2"));
 
     }
 
@@ -47,7 +52,7 @@ public class TestbillboardHashMap<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), -5);
+                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(-5), "none");
         });
     }
 
@@ -57,7 +62,7 @@ public class TestbillboardHashMap<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 0);
+                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(0), "none");
         });
     }
 
@@ -67,7 +72,7 @@ public class TestbillboardHashMap<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDateTime.parse("20-04-202T10:00:00.00"), 5);
+                    "image.jpg", LocalDateTime.parse("20-04-202T10:00:00.00"),Duration.ofMinutes(5), "none");
         });
     }
 
@@ -77,7 +82,7 @@ public class TestbillboardHashMap<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "doesn't_exist.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 5);
+                    "doesn't_exist.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(5), "none");
         });
     }
 
@@ -87,7 +92,7 @@ public class TestbillboardHashMap<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "lmao",
-                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), 5);
+                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(5), "none");
         });
     }
 
@@ -103,8 +108,8 @@ public class TestbillboardHashMap<E> {
         billboardList.Create_edit_Billboard("Billboard1", "edited", "edited", "edited");
 
         //test if all variables have changed
-        assertEquals("Billboard1", "");
-        assertEquals("edited", "");
+        assertEquals("Billboard1", "Billboard1");
+        assertEquals("edited", "edited");
         assertEquals("edited", "edited");
         assertEquals("edited", "edited");
 
@@ -119,7 +124,7 @@ public class TestbillboardHashMap<E> {
 
         //Loop checks to see if every billboard in the list is found and correctly.
         //Foreach billboard in billboardList check if it exists in the hashmap provided.
-        for(Object Billboard : billboardList.entrySet()) {
+        for(Object Billboard : billboardList.billboardList.entrySet()) {
             assertEquals(hashMap, Billboard);
         }
     }
@@ -129,18 +134,18 @@ public class TestbillboardHashMap<E> {
     public void Get_billboard_info(String billboard_name) throws Exception
     {
         //Store billboard info sourced in a temp billboard object
-        Billboard temp_billboard = billboardList.Get_billboard_info("Billboard_2");
+        ArrayList temp_billboard = billboardList.Get_billboard_info("Billboard_2");
         //Store the expected billboard in a temp billboard object
-        Billboard requested_billboard = billboardList.Get_billboard_info(billboard_name);
+        ArrayList requested_billboard = billboardList.Get_billboard_info(billboard_name);
 
         //Test if retrieved Billboard variables equal the original requested_billboard info.
         //If the billboards are the same it means the correct billboard info requested is being displayed.
-        assertEquals(requested_billboard.Billboard_name, temp_billboard.Billboard_name);
-        assertEquals(requested_billboard.Image_file, temp_billboard.Image_file);
-        assertEquals(requested_billboard.Bg_colour, temp_billboard.Bg_colour);
-        assertEquals(requested_billboard.Billboard_text, temp_billboard.Billboard_text);
-        assertEquals(requested_billboard.duration, temp_billboard.duration);
-        assertEquals(requested_billboard.Time_scheduled, temp_billboard.Time_scheduled);
+        assertEquals(requested_billboard.get(0), temp_billboard.get(0));
+        assertEquals(requested_billboard.get(1), temp_billboard.get(1));
+        assertEquals(requested_billboard.get(2), temp_billboard.get(2));
+        assertEquals(requested_billboard.get(3), temp_billboard.get(3));
+        assertEquals(requested_billboard.get(4), temp_billboard.get(4));
+        assertEquals(requested_billboard.get(5), temp_billboard.get(5));
 
     }
 
@@ -157,9 +162,16 @@ public class TestbillboardHashMap<E> {
     @Test
     public void Delete_billboard() throws Exception
     {
-        billboardList.Delete_billboard("Billboard_1");
+        //Create Billboard1
+        billboardHashMap.Create_edit_Billboard("Billboard1", "new billboard", "blue",
+                "No Image", LocalDateTime.parse("2021-04-22T10:00:00.00"),
+                Duration.ofMinutes(5), "none");
 
-        assertEquals(false, billboardList.containsKey("Billboard_1"));
+        //Delete Billboard1
+        billboardHashMap.Delete_billboard("Billboard1");
+
+        //Check if the billboard was deleted
+        assertEquals(false, billboardList.billboardList.containsKey("Billboard1"));
 
     }
 
@@ -173,4 +185,4 @@ public class TestbillboardHashMap<E> {
     }
 
 }
-*/
+
