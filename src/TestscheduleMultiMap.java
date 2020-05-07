@@ -403,7 +403,7 @@ public class TestscheduleMultiMap {
         Billboard_schedule.scheduleBillboard("Billboard_3", LocalDateTime.parse("2021-05-03T10:00:00.00"),
                 Duration.ofMinutes(5), "none", billboardList.List_Billboards());
 
-        //store billboard schedule in temp HashMap
+        //store billboard schedule in MultiMap
         MultiMap<String, Schedule_Info> viewSchedule_list = Billboard_schedule.View_schedule();
 
         //check if billboards are in viewSchedule_list View_schedule output
