@@ -99,10 +99,18 @@ public class billboardHashMap {
         //Get the billboard info and store it in an arrayList
         ArrayList<Schedule_Info> billboard_info = Get_billboard_info(billboard_name);
 
+        //Get the info from schedule for the billboard
+        ArrayList<Schedule_Info> billboard_info_schedule = scheduleMultiMap.getSchedule(billboard_name);
+        LocalDateTime startTime_scheduled = LocalDateTime.parse((CharSequence) billboard_info_schedule.get(0));
+        Duration duration_mins = Duration.ofMinutes(Long.parseLong(String.valueOf(billboard_info_schedule.get(1))));
+        String recurrence = billboard_info_schedule.get(2).toString();
+
         //Transfer the info from the arrayList to the Schedule_info object
-        Schedule_Info Schedule_info = new Schedule_Info(LocalDateTime.parse((CharSequence) billboard_info.get(0)),
-                Duration.parse((CharSequence) billboard_info.get(1)),
-                String.valueOf(billboard_info.get(2)));
+//        Schedule_Info Schedule_info = new Schedule_Info(LocalDateTime.parse((CharSequence) billboard_info.get(0)),
+//                Duration.parse((CharSequence) billboard_info.get(1)),
+//                String.valueOf(billboard_info.get(2)));
+
+        Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins,recurrence);
 
         //Use the billboard name given and the information collected about the billboard
         //to remove the billboard from the billboard schedule.
