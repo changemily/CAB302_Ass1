@@ -1,6 +1,8 @@
+import java.io.Serializable;
 import java.util.*;
 
 /**
+ * Sourced from https://www.techiedelight.com/implement-multimap-java/
  * MultiMap class
  * This class implements a multimap object and methods which retrieve info and manipulate the multimap
  * @author Emily Chang
@@ -8,7 +10,7 @@ import java.util.*;
  * @param <V> MultiMap Value
  * @version complete
  */
-class MultiMap<K, V>
+class MultiMap<K, V> implements Serializable
 {
     private Map<K, ArrayList<V>> map = new HashMap<>();
 

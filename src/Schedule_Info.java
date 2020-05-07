@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
  * @author Emily Chang
  * @version complete
  */
-public class Schedule_Info {
+public class Schedule_Info implements Serializable {
     LocalDateTime StartTime_Scheduled;
     Duration duration;
     String Recurrence;
