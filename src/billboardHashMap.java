@@ -1,6 +1,25 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Billboard Manager class
@@ -118,6 +137,30 @@ public class billboardHashMap {
 
         //The code for removing the billboard info from the billboardList.
         billboardList.remove(billboard_name);
+    }
+
+    //A method that edits a users XML file
+    public void editXMLFile(String xmlFile, String billboardName, String billboardText,
+                            String backgroundColour, String billboardImage) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException, TransformerException {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse(new File("xmlFile"));
+
+        //Update the Billboard name
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        Node billboard = (Node) xPath.compile("/billboard/billboardName").evaluate(document, XPathConstants.NODE);
+        billboard.setTextContent(billboardName);
+
+        //Update
+
+        //Save the changes back to the XML file
+        Transformer transFormer = TransformerFactory.newInstance().newTransformer();
+        transFormer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transFormer.setOutputProperty(OutputKeys.METHOD, "xml");
+
+        DOMSource dom = new DOMSource(document);
+        StreamResult stream = new StreamResult(new File("xmlFile"));
+        transFormer.transform(dom, stream);
     }
 
 }
