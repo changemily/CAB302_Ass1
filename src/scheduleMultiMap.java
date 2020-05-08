@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.CheckedOutputStream;
 
 /**
  * scheduleMultiMap Class
@@ -18,7 +19,7 @@ public class scheduleMultiMap {
     MultiMap<String, Schedule_Info> Billboard_schedule;
 
     /**
-     * constructor that creates a scheduleHashMap object
+     * constructor that creates a scheduleMultiMap object
      */
     public scheduleMultiMap() {
         Billboard_schedule = new MultiMap<>();
@@ -62,19 +63,20 @@ public class scheduleMultiMap {
         st.close();
     }
 
-    public void Write_To_DBschedule(Connection connection) throws SQLException {
-        final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled";
-
+    public void Clear_DBschedule(Connection connection) throws SQLException {
         //create statement
-        Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_UPDATABLE);
+        Statement st = connection.createStatement();
 
-        ResultSet rs = st.executeQuery(SELECT);
-
-        //clear existing database entries
-        while (rs.next()) {
-            rs.deleteRow();
+        //for all entries in schedule
+        for (String billboard_name : Billboard_schedule.keySet())
+        {
+            //remove entry from DB
+            st.execute("DELETE FROM Schedule WHERE billboard_name=\""+billboard_name+"\";");
         }
+    }
+    public void Write_To_DBschedule(Connection connection) throws SQLException {
+        //create statement
+        Statement st = connection.createStatement();
 
         //for every billboard name in Billboard_schedule
         for (String billboard_name : Billboard_schedule.keySet() ) {
@@ -94,15 +96,13 @@ public class scheduleMultiMap {
             }
         }
 
-        //close ResultSet
-        rs.close();
         //close statement
         st.close();
     }
 
     /**
      * Lists billboards that have been scheduled
-     * @return HashMap containing billboard name and an array list storing time scheduled and duration
+     * @return MultiMap containing billboard name and an array list storing time scheduled and duration
      */
 
     public MultiMap<String, Schedule_Info> View_schedule()
@@ -305,12 +305,14 @@ public class scheduleMultiMap {
                     //if number of viewings is 1
                     if (viewings.size() == 1)
                     {
+                        viewing_exists = true;
                         //remove entry from schedule
                         Billboard_schedule.remove(billboard_name);
+                        break outerloop;
                     }
 
                     //if combination of billboard name, and schedule info is listed in schedule
-                    if(viewing == schedule_info)
+                    else if(viewing == schedule_info)
                     {
                         viewing_exists = true;
                         //remove scheduled viewing from Billboard key

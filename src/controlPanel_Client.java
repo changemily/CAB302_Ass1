@@ -33,7 +33,7 @@ public class controlPanel_Client {
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
 
-            String button_clicked = "Schedule Billboard";
+            String button_clicked = "Remove Schedule";
             String request;
 
             //request given by user saved in local var request
@@ -74,10 +74,17 @@ public class controlPanel_Client {
                     oos.flush();
                     break;
 
-                case "Remove billboard":
-                    request = "Remove billboard";
+                case "Remove Schedule":
+                    request = "Remove Schedule";
                     //Write the Client's request to the server
                     oos.writeObject(request);
+
+                    //Write the details needed to remove a billboard
+                    oos.writeObject("Billboard_1");
+                    oos.writeObject("2021-01-01T10:00:00.00");
+                    oos.writeObject("10");
+                    oos.writeObject("none");
+                    oos.flush();
 
                     //Write the details needed to remove a billboard
                     oos.writeObject("billboard_name entry");
@@ -110,6 +117,7 @@ public class controlPanel_Client {
             //print what was received from server
             System.out.println("received from server: "+o);
 
+            //does things with received object
             oos.close();
             ois.close();
             socket.close();

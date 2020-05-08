@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
+ * Sourced from Week 7 lecture demonstrations
  * DBconnection class
  * Class contains methods for connecting to the database
  * @author Jarod Evans & Emily Chang

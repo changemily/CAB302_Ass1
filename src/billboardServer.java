@@ -38,10 +38,11 @@ public class billboardServer{
         //create empty schedule, billboard list and user list
         scheduleMultiMap billboard_schedule = new scheduleMultiMap();
 
-        billboardHashMap billboard_list = new billboardHashMap();
+        BillboardList billboard_list = new BillboardList();
 
         //TEMP FOR TESTING
         billboard_list.Create_edit_Billboard("Billboard_1", "hello","red", "No image");
+        billboard_list.Create_edit_Billboard("Billboard_2", "hello","red", "No image");
 
         //create DB connection
         Connection connection = DBconnection.getInstance();
@@ -89,9 +90,16 @@ public class billboardServer{
                 {
                     case "Login request":
                         return_message = "Login request";
+                        //retrieve hashed pwd from client
+                        //retrieve salted pwd from DB
+                        //unsalt pwd
+                        //check if hashed pwd match
+                        //if match return session token
+                        //else returns error to client
                         break;
                     case "List billboards":
                         return_message = "returned List of billboards";
+                        //write billboard list to client
                         break;
                     case "Get Billboard info":
                         return_message = "returned Billboard info";
@@ -104,7 +112,10 @@ public class billboardServer{
                         break;
                     case "View schedule":
                         return_message = "returned schedule";
-                        billboard_schedule.View_schedule();
+                        MultiMap<String, Schedule_Info> schedule = billboard_schedule.View_schedule();
+                        //send schedule to client
+                        oos.writeObject(schedule);
+                        oos.flush();
                         break;
                     case "Schedule Billboard":
                         return_message = "Billboard has been scheduled";
@@ -128,17 +139,38 @@ public class billboardServer{
                         billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
                                 Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards());
 
-                        //write to DB
+                        //write schedule to DB
                         billboard_schedule.Write_To_DBschedule(connection);
-
                         break;
-                    case "Remove billboard":
+                    case "Remove Schedule":
                         return_message = "billboard has been removed from schedule";
 
                         //read billboard name sent by client
                         Object Billboard_name = ois.readObject();
-
                         System.out.println("billboard name: "+ Billboard_name);
+
+                        //read start time of viewing sent by client
+                        String startTime = ois.readObject().toString();
+
+                        //read duration sent by client
+                        String duration2 = ois.readObject().toString();
+
+                        //read recurrence sent by client
+                        String recurrence2 = ois.readObject().toString();
+
+                        //create schedule info object with client's input
+                        Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
+                                Duration.ofMinutes(Integer.parseInt(duration2)),recurrence2);
+
+                        //Clear schedule table in DB
+                        billboard_schedule.Clear_DBschedule(connection);
+
+                        //remove billboard from schedule
+                        billboard_schedule.Schedule_Remove_billboard(Billboard_name.toString(),schedule_info);
+
+                        //write schedule to DB
+                        billboard_schedule.Write_To_DBschedule(connection);
+
                         break;
                     case "List users":
                         return_message = "returned list of users";
@@ -190,7 +222,6 @@ public class billboardServer{
 
         } catch (SQLException e) {
             e.printStackTrace();
-
         }
 
         try {
@@ -213,7 +244,6 @@ public class billboardServer{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     /*
