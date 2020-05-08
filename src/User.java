@@ -46,7 +46,7 @@ public class User {
         // For loop that iterates over each permission that is entered, to check if each permission is valid
         for (String Permission: Permissions) {
             // Checks if the entered permission is a valid permission, else user is not created
-            if (!PermissionChecker(Permission) == true) {
+            if (!PermissionChecker(Permission)) {
                 throw new Exception("Invalid Permission Type, user has not been created.");
             }
         }
@@ -100,7 +100,7 @@ public class User {
      */
     public void RemovePermissions(String Permission) throws Exception {
         // Checks if the entered permission is a valid permission, else permission is not removed from user
-        if (PermissionChecker(Permission) == true) {
+        if (PermissionChecker(Permission)) {
             // Checks if permission exists in user's HashSet
             if (this.Permissions.contains(Permission)) {
                 this.Permissions.remove(Permission);
@@ -119,7 +119,7 @@ public class User {
      */
     public void AddPermissions(String Permission) throws Exception {
         // Checks if the entered permission is a valid permission, else permission is not added to user
-        if (PermissionChecker(Permission) == true) {
+        if (PermissionChecker(Permission)) {
             // Checks if permission already exists in user's HashSet
             if (!this.Permissions.contains(Permission)) {
                 this.Permissions.add(Permission);
