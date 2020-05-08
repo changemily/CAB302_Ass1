@@ -10,12 +10,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestscheduleMultiMap {
 
     scheduleMultiMap Billboard_schedule;
-    billboardHashMap billboardList;
+    BillboardList billboardList;
 
     @BeforeEach
     public void setupBbList()
     {
-        billboardList = new billboardHashMap();
+        billboardList = new BillboardList();
     }
 
     /* Test 1: Constructing a schedule HashMap object

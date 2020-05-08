@@ -38,7 +38,7 @@ public class billboardServer{
         //create empty schedule, billboard list and user list
         scheduleMultiMap billboard_schedule = new scheduleMultiMap();
 
-        billboardHashMap billboard_list = new billboardHashMap();
+        BillboardList billboard_list = new BillboardList();
 
         //TEMP FOR TESTING
         billboard_list.Create_edit_Billboard("Billboard_1", "hello","red", "No image");

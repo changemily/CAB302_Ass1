@@ -15,10 +15,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -27,23 +24,21 @@ import org.xml.sax.SAXException;
  * @author - Jarod Evans
  * @version - under development
  */
-public class billboardHashMap {
+public class BillboardList {
 
     //Setup a hashmap for tracking billboards.
-    HashMap<String, Billboard> billboardList;
+    HashMap<String, Billboard> billboardHashMap;
 
     //Setup a schedule multimap
     scheduleMultiMap scheduleMultiMap = new scheduleMultiMap();
 
     //constructor that creates HashMap
-    billboardHashMap() {
-        billboardList = new HashMap<>(); // use tree map to sort by key
+    BillboardList() {
+        billboardHashMap = new HashMap<>(); // use tree map to sort by key
     }
 
     //Create a new billboard object
     static Billboard billboardNew;
-
-
 
     /**
      * Method to create and edit billboards
@@ -65,10 +60,10 @@ public class billboardHashMap {
                 bg_colour, image, schedule_time, durationMinutes);
 
         //put billboard in HashMap - value will be replaced if key exists in HashMap
-        billboardList.put(billboard_name, billboardNew);
+        billboardHashMap.put(billboard_name, billboardNew);
 
         //add schedule info of bb to schedule multi map
-        this.scheduleMultiMap.scheduleBillboard(billboard_name,schedule_time, durationMinutes,recurrence,billboardList);
+        this.scheduleMultiMap.scheduleBillboard(billboard_name,schedule_time, durationMinutes,recurrence, billboardHashMap);
     }
 
     //For creating and editing billboards without the optional parameters.
@@ -78,7 +73,7 @@ public class billboardHashMap {
                 bg_colour, image);
 
         //put billboard in HashMap - value will be replaced if key exists in HashMap
-        billboardList.put(billboard_name, billboardNew);
+        billboardHashMap.put(billboard_name, billboardNew);
     }
 
     /**
@@ -87,7 +82,7 @@ public class billboardHashMap {
      */
 
     public HashMap<String, Billboard> List_Billboards() {
-        return billboardList;
+        return billboardHashMap;
     }
 
     /**
@@ -97,15 +92,32 @@ public class billboardHashMap {
      * @return
      */
 
-    public ArrayList<Schedule_Info> Get_billboard_info(String billboard_name) throws Exception {
-        //Find the correct billboard using its name
+    public Billboard Get_billboard_info(String billboard_name) throws Exception {
+        //boolean variable to track whether billboard exists in schedule
+        boolean billboard_exists = false;
+        Billboard billboard_info = null;
 
-        //For the real thing
-        return this.scheduleMultiMap.getSchedule(billboard_name);
+        //For every entry of billboard list
+        for (String BillboardName : billboardHashMap.keySet())
+        {
+            //if given billboard name matches billboard name in schedule
+            if (BillboardName.equals(billboard_name))
+            {
+                //store viewings of billboard in singleBBschedule collection
+                billboard_info = billboardHashMap.get(billboard_name);
+                billboard_exists = true;
+                break;
+            }
+        }
 
-        //FOR TESTING PURPOSES
-//        Billboard billboard_test = new Billboard(billboard_name, "hello", "green", "image.jpg");
-//        return billboard_test;
+        //if billboard is not scheduled
+        if (billboard_exists == false)
+        {
+            throw new Exception("The billboard does not exist in the schedule");
+        }
+
+        //return billboard
+        return billboard_info;
     }
 
     /**
@@ -115,28 +127,27 @@ public class billboardHashMap {
     public void Delete_billboard(String billboard_name) throws Exception {
 
         //The code for deleting the billboard info from the schedule.
-        //Get the billboard info and store it in an arrayList
-        ArrayList<Schedule_Info> billboard_info = Get_billboard_info(billboard_name);
 
         //Get the info from schedule for the billboard
-        ArrayList<Schedule_Info> billboard_info_schedule = scheduleMultiMap.getSchedule(billboard_name);
-        LocalDateTime startTime_scheduled = LocalDateTime.parse((CharSequence) billboard_info_schedule.get(0));
-        Duration duration_mins = Duration.ofMinutes(Long.parseLong(String.valueOf(billboard_info_schedule.get(1))));
-        String recurrence = billboard_info_schedule.get(2).toString();
+        ArrayList<Schedule_Info> viewings = scheduleMultiMap.getSchedule(billboard_name);
 
-        //Transfer the info from the arrayList to the Schedule_info object
-//        Schedule_Info Schedule_info = new Schedule_Info(LocalDateTime.parse((CharSequence) billboard_info.get(0)),
-//                Duration.parse((CharSequence) billboard_info.get(1)),
-//                String.valueOf(billboard_info.get(2)));
+        //for each scheduled viewing of the billboard
+        for (Schedule_Info viewing : viewings ) {
 
-        Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins,recurrence);
+            //store schedule info in local vars
+            LocalDateTime startTime_scheduled = viewing.StartTime_Scheduled;
+            Duration duration_mins = viewing.duration;
+            String recurrence = viewing.Recurrence;
 
-        //Use the billboard name given and the information collected about the billboard
-        //to remove the billboard from the billboard schedule.
-        this.scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);
+            //create schedule info with viewing details
+            Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins,recurrence);
+
+            //remove viewing of billboard
+            this.scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);
+        }
 
         //The code for removing the billboard info from the billboardList.
-        billboardList.remove(billboard_name);
+        billboardHashMap.remove(billboard_name);
     }
 
     //A method that edits a users XML file
