@@ -1,6 +1,25 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Billboard Manager class
@@ -99,10 +118,18 @@ public class billboardHashMap {
         //Get the billboard info and store it in an arrayList
         ArrayList<Schedule_Info> billboard_info = Get_billboard_info(billboard_name);
 
+        //Get the info from schedule for the billboard
+        ArrayList<Schedule_Info> billboard_info_schedule = scheduleMultiMap.getSchedule(billboard_name);
+        LocalDateTime startTime_scheduled = LocalDateTime.parse((CharSequence) billboard_info_schedule.get(0));
+        Duration duration_mins = Duration.ofMinutes(Long.parseLong(String.valueOf(billboard_info_schedule.get(1))));
+        String recurrence = billboard_info_schedule.get(2).toString();
+
         //Transfer the info from the arrayList to the Schedule_info object
-        Schedule_Info Schedule_info = new Schedule_Info(LocalDateTime.parse((CharSequence) billboard_info.get(0)),
-                Duration.parse((CharSequence) billboard_info.get(1)),
-                String.valueOf(billboard_info.get(2)));
+//        Schedule_Info Schedule_info = new Schedule_Info(LocalDateTime.parse((CharSequence) billboard_info.get(0)),
+//                Duration.parse((CharSequence) billboard_info.get(1)),
+//                String.valueOf(billboard_info.get(2)));
+
+        Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins,recurrence);
 
         //Use the billboard name given and the information collected about the billboard
         //to remove the billboard from the billboard schedule.
@@ -110,6 +137,30 @@ public class billboardHashMap {
 
         //The code for removing the billboard info from the billboardList.
         billboardList.remove(billboard_name);
+    }
+
+    //A method that edits a users XML file
+    public void editXMLFile(String xmlFile, String billboardName, String billboardText,
+                            String backgroundColour, String billboardImage) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException, TransformerException {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse(new File("xmlFile"));
+
+        //Update the Billboard name
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        Node billboard = (Node) xPath.compile("/billboard/billboardName").evaluate(document, XPathConstants.NODE);
+        billboard.setTextContent(billboardName);
+
+        //Update
+
+        //Save the changes back to the XML file
+        Transformer transFormer = TransformerFactory.newInstance().newTransformer();
+        transFormer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transFormer.setOutputProperty(OutputKeys.METHOD, "xml");
+
+        DOMSource dom = new DOMSource(document);
+        StreamResult stream = new StreamResult(new File("xmlFile"));
+        transFormer.transform(dom, stream);
     }
 
 }

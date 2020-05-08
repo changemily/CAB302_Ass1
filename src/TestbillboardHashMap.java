@@ -1,4 +1,3 @@
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +39,7 @@ public class TestbillboardHashMap<E> {
 
         //Billboard with scheduled viewing and image
         billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"), Duration.ofMinutes(10), "none");
+                "image.jpg", LocalDateTime.parse("2021-04-22T10:00:00.00"), Duration.ofMinutes(10), "none");
 
         assertEquals(true, billboardList.billboardList.containsKey("Billboard2"));
 
@@ -117,7 +116,7 @@ public class TestbillboardHashMap<E> {
 
     //Test 5: Checks if all current billboards can be listed. Check for alphabetical order.
     @Test
-    public void List_Billboards(HashMap<String, Billboard> hashMap) throws Exception
+    public void List_Billboards() throws Exception
     {
         //store billboard schedule in temp HashMap
         HashMap<String, Billboard> temp_list = billboardList.List_Billboards();
@@ -125,28 +124,29 @@ public class TestbillboardHashMap<E> {
         //Loop checks to see if every billboard in the list is found and correctly.
         //Foreach billboard in billboardList check if it exists in the hashmap provided.
         for(Object Billboard : billboardList.billboardList.entrySet()) {
-            assertEquals(hashMap, Billboard);
+            assertEquals(temp_list, Billboard);
         }
     }
 
     //Test 6: Checks if all information pertaining to a specified billboard can be obtained.
     @Test
-    public void Get_billboard_info(String billboard_name) throws Exception
+    public void Get_billboard_info() throws Exception
     {
+        //Create a billboard to check
+        billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
+                "doesn't_exist.jpg", LocalDateTime.parse("2021-04-22T10:00:00.00"),Duration.ofMinutes(5), "none");
         //Store billboard info sourced in a temp billboard object
-        ArrayList temp_billboard = billboardList.Get_billboard_info("Billboard_2");
-        //Store the expected billboard in a temp billboard object
-        ArrayList requested_billboard = billboardList.Get_billboard_info(billboard_name);
+        ArrayList temp_billboard = billboardList.Get_billboard_info("Billboard2");
 
         //Test if retrieved Billboard variables equal the original requested_billboard info.
         //If the billboards are the same it means the correct billboard info requested is being displayed.
-        assertEquals(requested_billboard.get(0), temp_billboard.get(0));
-        assertEquals(requested_billboard.get(1), temp_billboard.get(1));
-        assertEquals(requested_billboard.get(2), temp_billboard.get(2));
-        assertEquals(requested_billboard.get(3), temp_billboard.get(3));
-        assertEquals(requested_billboard.get(4), temp_billboard.get(4));
-        assertEquals(requested_billboard.get(5), temp_billboard.get(5));
-
+        assertEquals("Billboard2", temp_billboard.get(0));
+        assertEquals("new billboard", temp_billboard.get(1));
+        assertEquals("blue", temp_billboard.get(2));
+        assertEquals("doesn't_exist.jpg", temp_billboard.get(3));
+        assertEquals(LocalDateTime.parse("2021-04-22T10:00:00.00"), temp_billboard.get(4));
+        assertEquals(Duration.ofMinutes(5), temp_billboard.get(5));
+        assertEquals("none", temp_billboard.get(6));
     }
 
     //Test 7: If Get_billboard_info attempts to retrieve information from a billboard that doesn't exist.
