@@ -153,6 +153,18 @@ public class BillboardList {
         billboardHashMap.remove(billboard_name);
     }
 
+    public void Clear_DBbillboardList(Connection connection) throws SQLException {
+        //create statement to connect to db
+        Statement st = connection.createStatement();
+
+        //for all entries in billboardHashMap
+        for (String billboard_name : billboardHashMap.keySet())
+        {
+            //remove each entry from DB using billboard_name
+            st.execute("DELETE FROM Schedule WHERE billboard_name=\""+billboard_name+"\";");
+        }
+    }
+
     //A method for writing the billboardList to the database
     public void Write_To_DBbillboard(Connection connection) throws SQLException {
         //create statement
