@@ -1,3 +1,6 @@
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -148,6 +151,30 @@ public class BillboardList {
 
         //The code for removing the billboard info from the billboardList.
         billboardHashMap.remove(billboard_name);
+    }
+
+    //A method for writing the billboardList to the database
+    public void Write_To_DBbillboard(Connection connection) throws SQLException {
+        //create statement
+        Statement st = connection.createStatement();
+
+        //for every billboard name in Billboard_schedule
+        for (Billboard billboard : billboardHashMap.values() ) {
+
+            //Pass the values of each billboard to the SQL statement.
+            String billboard_name = billboard.Billboard_name;
+            String text = billboard.Billboard_text;
+            String bg_colour = billboard.Bg_colour;
+            String image_file = billboard.Image_file;
+            LocalDateTime time_scheduled = billboard.Time_scheduled;
+            Duration Duration_mins = billboard.duration;
+
+            st.executeQuery("INSERT INTO Schedule (billboard_name, text, bg_colour, image_file, time_scheduled, Duration_mins) " +
+                    "VALUES(\""+billboard_name+"\",\""+text+"\",\""+bg_colour+"\",\""+image_file+"\",\""+time_scheduled+"\",\""+Duration_mins+"\");");
+        }
+
+        //close statement
+        st.close();
     }
 
     //A method that edits a users XML file
