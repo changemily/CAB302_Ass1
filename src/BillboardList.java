@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
@@ -151,6 +152,43 @@ public class BillboardList {
 
         //The code for removing the billboard info from the billboardList.
         billboardHashMap.remove(billboard_name);
+    }
+
+
+
+    public void RetrieveDBbillboardList(Connection connection) throws Exception {
+
+        final String SELECT = "SELECT * FROM billboard ORDER BY billboard_name desc";
+
+
+        //create statement
+        Statement st = connection.createStatement();
+
+        ResultSet rs = st.executeQuery(SELECT);
+
+        //for every database entry
+        while (rs.next())
+        {
+            //store database info in local variables
+            String billboard_name = rs.getString(0);
+            String text = rs.getString(1);
+            String bg_colour = rs.getString(2);
+            String image_file = rs.getString(3);
+            String time_scheduled = rs.getString(4);
+            String Duration_mins = rs.getString(5);
+
+            //store time scheduled and duration pair in array schedule_info
+            Billboard billboard = new Billboard(billboard_name, text, bg_colour,
+                    image_file, LocalDateTime.parse(time_scheduled), Duration.parse(Duration_mins));
+
+            //store billboard name with corresponding times scheduled and durations
+            billboardHashMap.put(billboard_name, billboard);
+        }
+
+        //close ResultSet
+        rs.close();
+        //close statement
+        st.close();
     }
 
     public void Clear_DBbillboardList(Connection connection) throws SQLException {
