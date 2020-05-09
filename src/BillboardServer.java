@@ -16,7 +16,7 @@ import java.util.Properties;
  * @version 1 - under development
  */
 
-public class billboardServer{
+public class BillboardServer {
 
     public static final String CREATE_USER_TABLE =
             "CREATE TABLE IF NOT EXISTS Users (username varchar(255),text varchar(1000)," +
@@ -36,7 +36,7 @@ public class billboardServer{
      */
     public static void Run_Server() throws Exception {
         //create empty schedule, billboard list and user list
-        scheduleMultiMap billboard_schedule = new scheduleMultiMap();
+        ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
 
         BillboardList billboard_list = new BillboardList();
 
@@ -85,7 +85,7 @@ public class billboardServer{
 
                 String return_message;
 
-                //save return message, based on what request was received from the client, in local variable return message
+                //save return message, based on what request was received from the client
                 switch(o.toString())
                 {
                     case "Login request":
@@ -112,66 +112,21 @@ public class billboardServer{
                         break;
                     case "View schedule":
                         return_message = "returned schedule";
-                        MultiMap<String, Schedule_Info> schedule = billboard_schedule.View_schedule();
-                        //send schedule to client
-                        oos.writeObject(schedule);
-                        oos.flush();
+                        viewSchedule(oos,billboard_schedule);
                         break;
+
                     case "Schedule Billboard":
                         return_message = "Billboard has been scheduled";
-
-                        //read parameters sent by client
-                        String billboard_name = ois.readObject().toString();
-                        String start_time = ois.readObject().toString();
-                        String duration = ois.readObject().toString();
-                        String recurrence = ois.readObject().toString();
-
-                        //print bb list
-                        System.out.println("billboard list: "+billboard_list);
-
-                        //print what was received from client
-                        System.out.println("billboard name: "+ billboard_name + "\n" +
-                                "start time: "+start_time+"\n" +
-                                "duration: " + duration +"\n"+
-                                "recurrence: " +recurrence +"\n");
-
-                        //schedule billboard with client input
-                        billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
-                                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards());
-
-                        //write schedule to DB
-                        billboard_schedule.Write_To_DBschedule(connection);
+                        //schedule billboard
+                        scheduleBillboard(ois, connection, billboard_list, billboard_schedule);
                         break;
+
                     case "Remove Schedule":
                         return_message = "billboard has been removed from schedule";
-
-                        //read billboard name sent by client
-                        Object Billboard_name = ois.readObject();
-                        System.out.println("billboard name: "+ Billboard_name);
-
-                        //read start time of viewing sent by client
-                        String startTime = ois.readObject().toString();
-
-                        //read duration sent by client
-                        String duration2 = ois.readObject().toString();
-
-                        //read recurrence sent by client
-                        String recurrence2 = ois.readObject().toString();
-
-                        //create schedule info object with client's input
-                        Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
-                                Duration.ofMinutes(Integer.parseInt(duration2)),recurrence2);
-
-                        //Clear schedule table in DB
-                        billboard_schedule.Clear_DBschedule(connection);
-
-                        //remove billboard from schedule
-                        billboard_schedule.Schedule_Remove_billboard(Billboard_name.toString(),schedule_info);
-
-                        //write schedule to DB
-                        billboard_schedule.Write_To_DBschedule(connection);
-
+                        //remove viewing from schedule
+                        removeSchedule(ois,connection,billboard_schedule);
                         break;
+
                     case "List users":
                         return_message = "returned list of users";
                         break;
@@ -206,7 +161,7 @@ public class billboardServer{
             e.printStackTrace();
         }
 
-        //close connection
+        //close connection to client
         connection.close();
     }
 
@@ -246,13 +201,67 @@ public class billboardServer{
         }
     }
 
-    /*
-    public String Login_request(String username, String password){
-        // Sends back error or valid session token depending on outcome of login request
-        return ;
-    }
-    */
 
+    public static void viewSchedule(ObjectOutputStream oos, ScheduleMultiMap billboard_schedule) throws IOException {
+        MultiMap<String, Schedule_Info> schedule = billboard_schedule.View_schedule();
+        //send schedule to client
+        oos.writeObject(schedule);
+        oos.flush();
+    }
+    public static void scheduleBillboard(ObjectInputStream ois, Connection connection, BillboardList billboard_list
+            , ScheduleMultiMap billboard_schedule) throws Exception {
+        //read parameters sent by client
+        String billboard_name = ois.readObject().toString();
+        String start_time = ois.readObject().toString();
+        String duration = ois.readObject().toString();
+        String recurrence = ois.readObject().toString();
+
+        //print bb list
+        System.out.println("billboard list: "+ billboard_list);
+
+        //print what was received from client
+        System.out.println("billboard name: "+ billboard_name + "\n" +
+                "start time: "+start_time+"\n" +
+                "duration: " + duration +"\n"+
+                "recurrence: " +recurrence +"\n");
+
+        //schedule billboard with client input
+        billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
+                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards());
+
+        //write schedule to DB
+        billboard_schedule.Write_To_DBschedule(connection);
+    }
+
+    public static void removeSchedule (ObjectInputStream ois, Connection connection,
+                                       ScheduleMultiMap billboard_schedule) throws Exception {
+
+        //read billboard name sent by client
+        Object Billboard_name = ois.readObject();
+        System.out.println("billboard name: "+ Billboard_name);
+
+        //read start time of viewing sent by client
+        String startTime = ois.readObject().toString();
+
+        //read duration sent by client
+        String duration2 = ois.readObject().toString();
+
+        //read recurrence sent by client
+        String recurrence2 = ois.readObject().toString();
+
+        //create schedule info object with client's input
+        Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
+                Duration.ofMinutes(Integer.parseInt(duration2)),recurrence2);
+
+        //Clear schedule table in DB
+        billboard_schedule.Clear_DBschedule(connection);
+
+        //remove billboard from schedule
+        billboard_schedule.Schedule_Remove_billboard(Billboard_name.toString(),schedule_info);
+
+        //write schedule to DB
+        billboard_schedule.Write_To_DBschedule(connection);
+    }
     public static void main(String args[]) throws Exception {
         Run_Server();
     }

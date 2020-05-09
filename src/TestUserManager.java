@@ -12,18 +12,17 @@ import static org.junit.jupiter.api.Assertions.*;
   */
 
 
-
 public class TestUserManager {
     // Test 1.1 Create a user manager without a target
     @Test
-    public void create_user_manager(){
+    public void create_user_manager() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser);
     }
 
     // Test 1.2 Create a user manager with a target
     @Test
-    public void create_user_manager_target(){
+    public void create_user_manager_target() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
@@ -31,7 +30,7 @@ public class TestUserManager {
 
     // Test 2.1 Create a new user with Edit Users permission
     @Test
-    public void create_user_admin(){
+    public void create_user_admin() throws Exception{
         HashSet<User> UserList = new HashSet<>();
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser);
@@ -42,7 +41,7 @@ public class TestUserManager {
 
     // Test 2.1 Create a new user without Edit Users permission
     @Test
-    public void create_user_base(){
+    public void create_user_base() throws Exception{
         HashSet<User> UserList = new HashSet<>();
         User adminUser = new User("Admin", "1234",  "Edit All Billboards");
         userManager admin = new userManager(adminUser);
@@ -53,7 +52,7 @@ public class TestUserManager {
 
     // Test 2.1 Show a that list_user creates a list of usernames that have been added to UserList
     @Test
-    public void list_user(){
+    public void list_user() throws Exception{
         HashSet<User> UserList = new HashSet<>();
         User adminUser = new User("Admin", "1234",  "Edit All Billboards", "Edit Users");
         userManager admin = new userManager(adminUser);
@@ -66,7 +65,7 @@ public class TestUserManager {
 
     // Test 2.1 Show a that list_user doesn't work without edit users
     @Test
-    public void list_user_base(){
+    public void list_user_base() throws Exception{
         HashSet<User> UserList = new HashSet<>();
         User adminUser = new User("Admin", "1234",  "Edit All Billboards");
         userManager admin = new userManager(adminUser);
@@ -79,7 +78,7 @@ public class TestUserManager {
 
     // Test 3.1 Remove a permission from same user
     @Test
-    public void remove_permission(){
+    public void remove_permission() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
         String Permissions[] = {"Edit Users"};
@@ -94,7 +93,7 @@ public class TestUserManager {
 
     // Test 3.2 Remove a permission from different user
     @Test
-    public void remove_permission_different(){
+    public void remove_permission_different() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
@@ -110,7 +109,7 @@ public class TestUserManager {
 
     // Test 4.1 Add permission to own user with admin
     @Test
-    public void add_a_permission(){
+    public void add_a_permission() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
         String Permissions[] = {"Edit Users", "Edit All Billboards", "Schedule Billboards"};
@@ -125,7 +124,7 @@ public class TestUserManager {
 
     // Test 4.2 Add a permission to own user without admin
     @Test
-    public void add_a_permissions(){
+    public void add_a_permissions() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
         String Permissions[] = {"Edit Users", "Edit All Billboards", "Schedule Billboards"};
@@ -137,7 +136,7 @@ public class TestUserManager {
 
     // Test 4.3 Add permission to another user with admin
     @Test
-    public void add_a_permission_different(){
+    public void add_a_permission_different() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
@@ -153,7 +152,7 @@ public class TestUserManager {
 
     // Test 5.1 Remove edit user for self user -> fails
     @Test
-    public void remove_self_user(){
+    public void remove_self_user() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
         String Permissions[] = {"Edit All Billboards"};
@@ -165,7 +164,7 @@ public class TestUserManager {
 
     // Test 6.1 Set own password, with admin, pass
     @Test
-    public void edit_own_password_admin(){
+    public void edit_own_password_admin() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
         String password = "4321";
@@ -181,7 +180,7 @@ public class TestUserManager {
 
     // Test 6.2 Set own password, without admin, pass
     @Test
-    public void edit_own_password_without_admin(){
+    public void edit_own_password_without_admin() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
         String password = "4321";
@@ -197,7 +196,7 @@ public class TestUserManager {
 
     // Test 6.3 Set other password, with admin, pass
     @Test
-    public void edit_other_password_admin(){
+    public void edit_other_password_admin() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
@@ -214,7 +213,7 @@ public class TestUserManager {
 
     // Test 6.4 Set other password, without admin, fail
     @Test
-    public void edit_other_password_without_admin(){
+    public void edit_other_password_without_admin() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(otherUser, adminUser);
@@ -226,7 +225,7 @@ public class TestUserManager {
 
     // Test 7.1 Delete own user, fail
     @Test
-    public void delete_own_user(){
+    public void delete_own_user() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
         assertThrows(Exception.class, () -> {
@@ -236,7 +235,7 @@ public class TestUserManager {
 
     // Test 7.2 Delete other user, with admin, pass
     @Test
-    public void delete_other_user_admin(){
+    public void delete_other_user_admin() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
@@ -250,7 +249,7 @@ public class TestUserManager {
 
     // Test 8.1 Delete other user, without admin, fail
     @Test
-    public void delete_other_user_without_admin(){
+    public void delete_other_user_without_admin() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);

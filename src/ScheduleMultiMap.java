@@ -14,14 +14,14 @@ import java.util.zip.CheckedOutputStream;
  * @author — Emily Chang
  * @version - complete
  */
-public class scheduleMultiMap {
+public class ScheduleMultiMap {
 
     MultiMap<String, Schedule_Info> Billboard_schedule;
 
     /**
      * constructor that creates a scheduleMultiMap object
      */
-    public scheduleMultiMap() {
+    public ScheduleMultiMap() {
         Billboard_schedule = new MultiMap<>();
     }
 

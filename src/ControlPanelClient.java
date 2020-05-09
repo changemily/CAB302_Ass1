@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.Socket;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Properties;
  * @author Emily Chang
  * @version - under development
  */
-public class controlPanel_Client {
+public class ControlPanelClient {
 
     public static void Run_Client(){
         Properties props = new Properties();
@@ -32,83 +34,55 @@ public class controlPanel_Client {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-
-            String button_clicked = "Remove Schedule";
-            String request;
+            String buttonClicked = "Remove Schedule";
 
             //request given by user saved in local var request
-            switch(button_clicked)
+            switch(buttonClicked)
             {
                 case "Login request":
-                    request = "Login request";
                     break;
+
                 case "List billboards":
-                    request = "List billboards";
                     break;
+
                 case "Get Billboard info":
-                    request = "Get Billboard info";
                     break;
+
                 case "Create edit billboard":
-                    request = "Create edit billboard";
                     break;
+
                 case "Delete billboard":
-                    request = "Delete billboard";
                     break;
+
                 case "View schedule":
-                    request = "View schedule";
-                    //Write the Client's request to the server
-                    oos.writeObject(request);
-                    oos.flush();
+                    viewSchedule(oos,buttonClicked);
                     break;
 
                 case "Schedule Billboard":
-                    request = "Schedule Billboard";
-                    //Write the Client's request to the server
-                    oos.writeObject(request);
-
-                    //Write the details needed to schedule a billboard
-                    oos.writeObject("Billboard_1");
-                    oos.writeObject("2021-01-01T10:00:00.00");
-                    oos.writeObject("10");
-                    oos.writeObject("none");
-                    oos.flush();
+                    //Send details of billboard wanting to be scheduled to server
+                    scheduleBillboard(oos, buttonClicked, "Billboard_1",
+                            "2021-01-01T10:00:00.00", "10", "none");
                     break;
 
                 case "Remove Schedule":
-                    request = "Remove Schedule";
-                    //Write the Client's request to the server
-                    oos.writeObject(request);
-
-                    //Write the details needed to remove a billboard
-                    oos.writeObject("Billboard_1");
-                    oos.writeObject("2021-01-01T10:00:00.00");
-                    oos.writeObject("10");
-                    oos.writeObject("none");
-                    oos.flush();
-
-                    //Write the details needed to remove a billboard
-                    oos.writeObject("billboard_name entry");
-                    oos.flush();
+                    //Send details of billboard wanting to be scheduled to server
+                    removeSchedule(oos,buttonClicked,"Billboard_1", "2021-01-01T10:00:00.00",
+                           "10", "none");
                     break;
+
                 case "List users":
-                    request = "List users";
                     break;
                 case "Create user":
-                    request = "Create user";
                     break;
                 case "Get user permissions":
-                    request = "Get user permissions";
                     break;
                 case "Set user permissions":
-                    request = "Set user permissions";
                     break;
                 case "Set user password":
-                    request = "Set user password";
                     break;
-                default:
-                    request = "No match";
             }
 
+            //flush output stream
             oos.flush();
 
             //read response from server
@@ -117,7 +91,7 @@ public class controlPanel_Client {
             //print what was received from server
             System.out.println("received from server: "+o);
 
-            //does things with received object
+            //close streams and connection with server
             oos.close();
             ois.close();
             socket.close();
@@ -131,14 +105,38 @@ public class controlPanel_Client {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        //read port & network address from server_props file
-
-        // creates tables if they are not present
-        //runs add table
 
     }
 
-    public static void main(String args[]) throws IOException {
+    public static void viewSchedule(ObjectOutputStream oos, String buttonClicked) throws IOException {
+        //Write the Client's request to the server
+        oos.writeObject(buttonClicked);
+    }
+
+    public static void scheduleBillboard(ObjectOutputStream oos, String buttonClicked, String billboardName,
+                       String startTime, String duration, String recurrence) throws IOException {
+        //Write the Client's request to the server
+        oos.writeObject(buttonClicked);
+
+        //Write the variables of billboard being scheduled to server
+        oos.writeObject(billboardName);
+        oos.writeObject(startTime);
+        oos.writeObject(duration);
+        oos.writeObject(recurrence);
+    }
+
+    public static void removeSchedule(ObjectOutputStream oos, String buttonClicked, String billboardName,
+                                      String startTime, String duration, String recurrence) throws IOException {
+        //Write the Client's request to the server
+        oos.writeObject(buttonClicked);
+
+        //Write the variables of billboard being removed to server
+        oos.writeObject(billboardName);
+        oos.writeObject(startTime);
+        oos.writeObject(duration);
+        oos.writeObject(recurrence);
+    }
+    public static void main(String args[]){
         Run_Client();
     }
 }
