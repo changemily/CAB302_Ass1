@@ -27,12 +27,7 @@ public class ControlPanelGUI extends JFrame {
         // Default close operation, so window does not continue running after it is closed
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Add layout
-        //getContentPane().setLayout(new BorderLayout());
-
         // Add label
-        //JLabel label = new JLabel("Control Panel Menu");
-        //getContentPane().add(label, BorderLayout.NORTH);
         JPanel label = new JPanel();
         label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
         label.add(Box.createHorizontalGlue());
@@ -40,8 +35,6 @@ public class ControlPanelGUI extends JFrame {
         label.add(Box.createHorizontalGlue());
 
         // Add edit users button
-        //JButton editUsersButton = new JButton("Edit Users");
-        //getContentPane().add(editUsersButton, BorderLayout.CENTER);
         JPanel editUsersButton = new JPanel();
         editUsersButton.setLayout(new BoxLayout(editUsersButton, BoxLayout.X_AXIS));
         editUsersButton.add(Box.createHorizontalGlue());
@@ -52,8 +45,6 @@ public class ControlPanelGUI extends JFrame {
         editUsersButton.add(Box.createHorizontalGlue());
 
         // Add edit billboard button
-        //JButton editBillboardButton = new JButton("Edit Billboard");
-        //getContentPane().add(editBillboardButton, BorderLayout.CENTER);
         JPanel editBillboardButton = new JPanel();
         editBillboardButton.setLayout(new BoxLayout(editBillboardButton, BoxLayout.X_AXIS));
         editBillboardButton.add(Box.createHorizontalGlue());
@@ -61,8 +52,6 @@ public class ControlPanelGUI extends JFrame {
         editBillboardButton.add(Box.createHorizontalGlue());
 
         // Add edit billboard schedule button
-        //JButton editBillboardScheduleButton = new JButton("Edit Billboard Schedule");
-        //getContentPane().add(editBillboardScheduleButton, BorderLayout.CENTER);
         JPanel editBillboardScheduleButton = new JPanel();
         editBillboardScheduleButton.setLayout(new BoxLayout(editBillboardScheduleButton, BoxLayout.X_AXIS));
         editBillboardScheduleButton.add(Box.createHorizontalGlue());
