@@ -90,7 +90,14 @@ public class BillboardServer {
                 {
                     case "Login request":
                         return_message = "Login request";
+                        //retrieve username
+                        String username = ois.readObject().toString();
                         //retrieve hashed pwd from client
+                        String password = ois.readObject().toString();
+
+                        System.out.println("Username: " +username);
+                        System.out.println("Password: " +password);
+
                         //retrieve salted pwd from DB
                         //unsalt pwd
                         //check if hashed pwd match
@@ -166,6 +173,10 @@ public class BillboardServer {
     }
 
 
+    /**
+     * Creates tables if they do not exist in DB
+     * @param connection Database connection
+     */
     public static void Check_tables(Connection connection) {
         //Adds tables to database if they do not exist
 
@@ -202,12 +213,26 @@ public class BillboardServer {
     }
 
 
+    /**
+     * Sends schedule to client
+     * @param oos Object Output stream of Server
+     * @param billboard_schedule schedule being sent to Client
+     * @throws IOException
+     */
     public static void viewSchedule(ObjectOutputStream oos, ScheduleMultiMap billboard_schedule) throws IOException {
         MultiMap<String, Schedule_Info> schedule = billboard_schedule.View_schedule();
         //send schedule to client
         oos.writeObject(schedule);
-        oos.flush();
     }
+
+    /**
+     * schedules Billboard sent by client and stores in DB
+     * @param ois Object Input stream of Server
+     * @param connection Database connection
+     * @param billboard_list
+     * @param billboard_schedule
+     * @throws Exception
+     */
     public static void scheduleBillboard(ObjectInputStream ois, Connection connection, BillboardList billboard_list
             , ScheduleMultiMap billboard_schedule) throws Exception {
         //read parameters sent by client
@@ -233,6 +258,13 @@ public class BillboardServer {
         billboard_schedule.Write_To_DBschedule(connection);
     }
 
+    /**
+     * Removes viewing sent by client from schedule
+     * @param ois
+     * @param connection
+     * @param billboard_schedule
+     * @throws Exception
+     */
     public static void removeSchedule (ObjectInputStream ois, Connection connection,
                                        ScheduleMultiMap billboard_schedule) throws Exception {
 
@@ -262,6 +294,12 @@ public class BillboardServer {
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
     }
+
+    /**
+     * Runs server
+     * @param args
+     * @throws Exception
+     */
     public static void main(String args[]) throws Exception {
         Run_Server();
     }
