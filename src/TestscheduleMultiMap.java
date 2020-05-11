@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestscheduleMultiMap {
 
-    scheduleMultiMap Billboard_schedule;
+    ScheduleMultiMap Billboard_schedule;
     BillboardList billboardList;
 
     @BeforeEach
@@ -22,7 +22,7 @@ public class TestscheduleMultiMap {
      */
     @BeforeEach
     @Test public void setUpBbSchedule() {
-        Billboard_schedule = new scheduleMultiMap();
+        Billboard_schedule = new ScheduleMultiMap();
     }
 
     //Test 2: Schedule billboard that has not been scheduled
@@ -407,9 +407,9 @@ public class TestscheduleMultiMap {
         MultiMap<String, Schedule_Info> viewSchedule_list = Billboard_schedule.View_schedule();
 
         //check if billboards are in viewSchedule_list View_schedule output
-        assertEquals(true, viewSchedule_list.containsKey("Billboard_1"));
-        assertEquals(true, viewSchedule_list.containsKey("Billboard_2"));
-        assertEquals(true, viewSchedule_list.containsKey("Billboard_3"));
+        assertTrue(viewSchedule_list.containsKey("Billboard_1"));
+        assertTrue(viewSchedule_list.containsKey("Billboard_2"));
+        assertTrue(viewSchedule_list.containsKey("Billboard_3"));
 
         //check if time scheduled of viewings, associated with each Billboard, are correct
         assertEquals(LocalDateTime.parse("2021-05-05T10:00:00.00"), viewSchedule_list.get("Billboard_1").get(0).StartTime_Scheduled);

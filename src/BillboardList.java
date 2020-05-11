@@ -34,7 +34,7 @@ public class BillboardList {
     HashMap<String, Billboard> billboardHashMap;
 
     //Setup a schedule multimap
-    scheduleMultiMap scheduleMultiMap = new scheduleMultiMap();
+    ScheduleMultiMap scheduleMultiMap = new ScheduleMultiMap();
 
     //constructor that creates HashMap
     BillboardList() {
@@ -93,7 +93,7 @@ public class BillboardList {
      * Method for retrieving billboard information from database
      *
      * @param billboard_name Return type Billboard
-     * @return
+     * @return returns HashMap of billboard names and objects
      */
 
     public Billboard Get_billboard_info(String billboard_name) throws Exception {

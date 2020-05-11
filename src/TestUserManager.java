@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
   */
 
 
-
 public class TestUserManager {
     // Test 1.1 Create a user manager without a target
     @Test
