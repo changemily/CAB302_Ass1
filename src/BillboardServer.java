@@ -37,6 +37,7 @@ public class BillboardServer {
     public static void Run_Server() throws Exception {
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
+        ReadWriteDB readWriteDB = new ReadWriteDB();
 
         BillboardList billboard_list = new BillboardList();
 
@@ -51,7 +52,7 @@ public class BillboardServer {
         Check_tables(connection);
 
         //populate schedule, billboard list and user list with data from database
-        billboard_schedule.RetrieveDBschedule(connection);
+        readWriteDB.RetrieveDB(connection, "Schedule");
 
         Properties props = new Properties();
         FileInputStream fileIn = null;
@@ -78,15 +79,15 @@ public class BillboardServer {
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
                 //read request sent by client
-                Object o = ois.readObject();
+                Object clientRequest = ois.readObject();
 
                 //print what was received from client
-                System.out.println("received from client: "+o);
+                System.out.println("received from client: "+clientRequest);
 
                 String return_message;
 
                 //save return message, based on what request was received from the client
-                switch(o.toString())
+                switch(clientRequest.toString())
                 {
                     case "Login request":
                         return_message = "Login request";
@@ -235,6 +236,7 @@ public class BillboardServer {
      */
     public static void scheduleBillboard(ObjectInputStream ois, Connection connection, BillboardList billboard_list
             , ScheduleMultiMap billboard_schedule) throws Exception {
+        ReadWriteDB readWriteDB = new ReadWriteDB();
         //read parameters sent by client
         String billboard_name = ois.readObject().toString();
         String start_time = ois.readObject().toString();
@@ -255,7 +257,7 @@ public class BillboardServer {
                 Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards());
 
         //write schedule to DB
-        billboard_schedule.Write_To_DBschedule(connection);
+        readWriteDB.WriteToDB(connection, "Schedule");
     }
 
     /**
@@ -268,6 +270,7 @@ public class BillboardServer {
     public static void removeSchedule (ObjectInputStream ois, Connection connection,
                                        ScheduleMultiMap billboard_schedule) throws Exception {
 
+        ReadWriteDB readWriteDB = new ReadWriteDB();
         //read billboard name sent by client
         Object Billboard_name = ois.readObject();
         System.out.println("billboard name: "+ Billboard_name);
@@ -286,13 +289,13 @@ public class BillboardServer {
                 Duration.ofMinutes(Integer.parseInt(duration2)),recurrence2);
 
         //Clear schedule table in DB
-        billboard_schedule.Clear_DBschedule(connection);
+        readWriteDB.ClearDB(connection, "Schedule");
 
         //remove billboard from schedule
         billboard_schedule.Schedule_Remove_billboard(Billboard_name.toString(),schedule_info);
 
         //write schedule to DB
-        billboard_schedule.Write_To_DBschedule(connection);
+        readWriteDB.WriteToDB(connection, "Schedule");
     }
 
     /**
