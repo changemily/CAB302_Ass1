@@ -71,11 +71,16 @@ public class ControlPanelGUICreateEditUser extends JFrame {
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.add(Box.createVerticalStrut(50));
 
+        // Creating another spacing JPanel, with a border
+        JPanel spacer = new JPanel();
+        spacer.setLayout(new BoxLayout(spacer, BoxLayout.X_AXIS));
+        spacer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        spacer.add(Box.createHorizontalStrut(10));
+
         // Add User Permissions label, inside of a JPanel
         JPanel permissionsPanel = new JPanel();
         permissionsPanel.setLayout(new BoxLayout(permissionsPanel, BoxLayout.Y_AXIS));
-        permissionsPanel.add(Box.createVerticalStrut(10));
-        permissionsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        permissionsPanel.add(Box.createVerticalStrut(20));
         JLabel userPermissionsLabel = new JLabel("User Permissions");
         userPermissionsLabel.setFont(new Font(null, Font.PLAIN, 15));
         userPermissionsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -104,8 +109,12 @@ public class ControlPanelGUICreateEditUser extends JFrame {
         JCheckBox editUsersBox = new JCheckBox("Edit Users (Admin)");
         editUsersBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         permissionsPanel.add(editUsersBox);
-        rightPanel.add(permissionsPanel);
-        permissionsPanel.add(Box.createVerticalStrut(10));
+
+        // Add JPanels inside of each other, with Structs for spacing
+        spacer.add(permissionsPanel);
+        spacer.add(Box.createHorizontalStrut(10));
+        rightPanel.add(spacer);
+        permissionsPanel.add(Box.createVerticalStrut(20));
         rightPanel.add(Box.createVerticalStrut(50));
 
         // Window formatting
