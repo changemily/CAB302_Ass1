@@ -37,7 +37,6 @@ public class BillboardServer {
     public static void Run_Server() throws Exception {
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
-        ReadWriteDB readWriteDB = new ReadWriteDB();
 
         BillboardList billboard_list = new BillboardList();
 
@@ -52,7 +51,7 @@ public class BillboardServer {
         Check_tables(connection);
 
         //populate schedule, billboard list and user list with data from database
-        readWriteDB.RetrieveDB(connection, "Schedule");
+        billboard_schedule.RetrieveDBschedule(connection);
 
         Properties props = new Properties();
         FileInputStream fileIn = null;
@@ -236,7 +235,6 @@ public class BillboardServer {
      */
     public static void scheduleBillboard(ObjectInputStream ois, Connection connection, BillboardList billboard_list
             , ScheduleMultiMap billboard_schedule) throws Exception {
-        ReadWriteDB readWriteDB = new ReadWriteDB();
         //read parameters sent by client
         String billboard_name = ois.readObject().toString();
         String start_time = ois.readObject().toString();
@@ -257,7 +255,7 @@ public class BillboardServer {
                 Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards());
 
         //write schedule to DB
-        readWriteDB.WriteToDB(connection, "Schedule");
+        billboard_schedule.Write_To_DBschedule(connection);
     }
 
     /**
@@ -269,8 +267,6 @@ public class BillboardServer {
      */
     public static void removeSchedule (ObjectInputStream ois, Connection connection,
                                        ScheduleMultiMap billboard_schedule) throws Exception {
-
-        ReadWriteDB readWriteDB = new ReadWriteDB();
         //read billboard name sent by client
         Object Billboard_name = ois.readObject();
         System.out.println("billboard name: "+ Billboard_name);
@@ -289,13 +285,13 @@ public class BillboardServer {
                 Duration.ofMinutes(Integer.parseInt(duration2)),recurrence2);
 
         //Clear schedule table in DB
-        readWriteDB.ClearDB(connection, "Schedule");
+        billboard_schedule.Clear_DBschedule(connection);
 
         //remove billboard from schedule
         billboard_schedule.Schedule_Remove_billboard(Billboard_name.toString(),schedule_info);
 
         //write schedule to DB
-        readWriteDB.WriteToDB(connection, "Schedule");
+        billboard_schedule.Write_To_DBschedule(connection);
     }
 
     /**

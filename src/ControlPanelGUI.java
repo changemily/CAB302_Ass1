@@ -45,7 +45,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         //create JPanel that holds button
         JPanel editUsersPanel = createButtonJPanel(editUsersButton);
 
-
         // create edit billboard button
         editBillboardButton = createButton("Edit Billboard");
         //create JPanel that holds button
@@ -115,18 +114,22 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         if (buttonClicked==editUsersButton) {
             System.out.println("edit users page");
+            //run User Control Panel GUI
+            //SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel());
         }
 
         else if (buttonClicked==editBillboardButton) {
             JButton btn = ((JButton) buttonClicked);
             System.out.println("edit billboard page");
+            //run Billboard Control Panel GUI
+            //SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel());
         }
 
         else if (buttonClicked == editBillboardScheduleButton)
         {
             System.out.println("edit schedule page");
+            //run calender GUI
         }
-
     }
 
     @Override
@@ -143,7 +146,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             e.printStackTrace();
         }
     }
-    public static void main(String args[]) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IOException, IllegalAccessException {
+    public static void main(String args[]){
         SwingUtilities.invokeLater(new ControlPanelGUI());
     }
 }
