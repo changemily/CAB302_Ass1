@@ -20,7 +20,12 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
      * @throws InstantiationException Exception handling
      * @throws IllegalAccessException Exception handling
      */
-    public ControlPanelGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+
+    JButton editUsersButton;
+    JButton editBillboardButton;
+    JButton editBillboardScheduleButton;
+
+    public ControlPanelGUI(){
         // Set window title
         super("Control Panel Menu");
     }
@@ -36,24 +41,31 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         JPanel label = createLabel("Control Panel Menu");
 
         // create edit users button
-        JPanel editUsersButton = createButton("Edit Users");
+        editUsersButton = createButton("Edit Users");
+        //create JPanel that holds button
+        JPanel editUsersPanel = createButtonJPanel(editUsersButton);
+
 
         // create edit billboard button
-        JPanel editBillboardButton = createButton("Edit Billboard");
+        editBillboardButton = createButton("Edit Billboard");
+        //create JPanel that holds button
+        JPanel editBillboardPanel = createButtonJPanel(editBillboardButton);
 
         // create edit billboard schedule button
-        JPanel editBillboardScheduleButton = createButton("Edit Billboard Schedule");
+        editBillboardScheduleButton = createButton("Edit Billboard Schedule");
+        //create JPanel that holds button
+        JPanel editBillboardSchedulePanel = createButtonJPanel(editBillboardScheduleButton);
 
         //Add label and buttons to content pane
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().add(Box.createVerticalStrut(30));
         getContentPane().add(label);
         getContentPane().add(Box.createVerticalStrut(50));
-        getContentPane().add(editUsersButton);
+        getContentPane().add(editUsersPanel);
         getContentPane().add(Box.createVerticalStrut(25));
-        getContentPane().add(editBillboardButton);
+        getContentPane().add(editBillboardPanel);
         getContentPane().add(Box.createVerticalStrut(25));
-        getContentPane().add(editBillboardScheduleButton);
+        getContentPane().add(editBillboardSchedulePanel);
         getContentPane().add(Box.createVerticalStrut(30));
 
         // Format window
@@ -74,21 +86,46 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         return labelPanel;
     }
 
-    private JPanel createButton(String buttonLabel) {
+    private JPanel createButtonJPanel(JButton button) {
         //create new JPanel to hold button
         JPanel buttonPanel = new JPanel();
         //set box layout
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         buttonPanel.add(Box.createHorizontalGlue());
         //add new button to button Panel
-        JButton button = new JButton(buttonLabel);
         buttonPanel.add(button);
         buttonPanel.add(Box.createHorizontalGlue());
         return buttonPanel;
     }
 
+    private JButton createButton(String buttonLabel) {
+        //Create a JButton object and store it in a local var
+        JButton button = new JButton(buttonLabel);
+
+        //Add the frame as an actionListener
+        button.addActionListener(this);
+
+        return button;
+    }
+
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent actionEvent) {
+        //Get button that has been clicked - event source
+        Object buttonClicked = actionEvent.getSource();
+
+        if (buttonClicked==editUsersButton) {
+            System.out.println("edit users page");
+        }
+
+        else if (buttonClicked==editBillboardButton) {
+            JButton btn = ((JButton) buttonClicked);
+            System.out.println("edit billboard page");
+        }
+
+        else if (buttonClicked == editBillboardScheduleButton)
+        {
+            System.out.println("edit schedule page");
+        }
 
     }
 
