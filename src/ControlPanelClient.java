@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -40,14 +41,14 @@ public class ControlPanelClient {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-            String buttonClicked = "Login request";
+            String request = "Login request";
 
             //request given by user saved in local var request
-            switch(buttonClicked)
+            switch(request)
             {
                 case "Login request":
                     //send username and password to server
-                    loginRequest(oos,buttonClicked);
+                    loginRequest(oos,request);
                     break;
 
                 case "List billboards":
@@ -63,18 +64,18 @@ public class ControlPanelClient {
                     break;
 
                 case "View schedule":
-                    viewSchedule(oos,buttonClicked);
+                    viewSchedule(oos,request);
                     break;
 
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
-                    scheduleBillboard(oos, buttonClicked, "Billboard_1",
+                    scheduleBillboard(oos, request, "Billboard_1",
                             "2021-01-01T10:00:00.00", "10", "none");
                     break;
 
                 case "Remove Schedule":
                     //Send details of billboard wanting to be scheduled to server
-                    removeSchedule(oos,buttonClicked,"Billboard_1", "2021-01-01T10:00:00.00",
+                    removeSchedule(oos,request,"Billboard_1", "2021-01-01T10:00:00.00",
                            "10", "none");
                     break;
 
@@ -219,7 +220,9 @@ public class ControlPanelClient {
      * Runs client
      * @param args
      */
-    public static void main(String args[]){
+    public static void main(String args[]) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IOException, IllegalAccessException {
+        //SwingUtilities.invokeLater(new ControlPanelGUI());
+
         Run_Client();
     }
 }

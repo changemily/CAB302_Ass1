@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * Control Panel GUI class
@@ -9,7 +12,7 @@ import java.awt.*;
  *
  * NOTES: Current version is a basic design; button functionality still needs to be added; further refinement required
  */
-public class ControlPanelGUI extends JFrame {
+public class ControlPanelGUI extends JFrame implements Runnable, ActionListener {
     /**
      * Method used to create a GUI window for the Control Panel Menu
      * @throws ClassNotFoundException Exception handling
@@ -20,45 +23,28 @@ public class ControlPanelGUI extends JFrame {
     public ControlPanelGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         // Set window title
         super("Control Panel Menu");
+    }
 
+    private void createGUI() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
         // Set look and feel of GUI to resemble operating system look and feel
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         // Default close operation, so window does not continue running after it is closed
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Add label
-        JPanel label = new JPanel();
-        label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
-        label.add(Box.createHorizontalGlue());
-        label.add(new JLabel("Control Panel Menu"));
-        label.add(Box.createHorizontalGlue());
+        // create label
+        JPanel label = createLabel("Control Panel Menu");
 
-        // Add edit users button
-        JPanel editUsersButton = new JPanel();
-        editUsersButton.setLayout(new BoxLayout(editUsersButton, BoxLayout.X_AXIS));
-        editUsersButton.add(Box.createHorizontalGlue());
-        JButton editUsersButton2 = new JButton("Edit Users");
-        editUsersButton.add(editUsersButton2);
-        //editUsersButton2.setPreferredSize(new Dimension(200,0));
-        //editUsersButton2.setSize(200,200);
-        editUsersButton.add(Box.createHorizontalGlue());
+        // create edit users button
+        JPanel editUsersButton = createButton("Edit Users");
 
-        // Add edit billboard button
-        JPanel editBillboardButton = new JPanel();
-        editBillboardButton.setLayout(new BoxLayout(editBillboardButton, BoxLayout.X_AXIS));
-        editBillboardButton.add(Box.createHorizontalGlue());
-        editBillboardButton.add(new JButton("Edit Billboard"));
-        editBillboardButton.add(Box.createHorizontalGlue());
+        // create edit billboard button
+        JPanel editBillboardButton = createButton("Edit Billboard");
 
-        // Add edit billboard schedule button
-        JPanel editBillboardScheduleButton = new JPanel();
-        editBillboardScheduleButton.setLayout(new BoxLayout(editBillboardScheduleButton, BoxLayout.X_AXIS));
-        editBillboardScheduleButton.add(Box.createHorizontalGlue());
-        editBillboardScheduleButton.add(new JButton("Edit Billboard Schedule"));
-        editBillboardScheduleButton.add(Box.createHorizontalGlue());
+        // create edit billboard schedule button
+        JPanel editBillboardScheduleButton = createButton("Edit Billboard Schedule");
 
-        // Window formatting
+        //Add label and buttons to content pane
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().add(Box.createVerticalStrut(30));
         getContentPane().add(label);
@@ -70,27 +56,57 @@ public class ControlPanelGUI extends JFrame {
         getContentPane().add(editBillboardScheduleButton);
         getContentPane().add(Box.createVerticalStrut(30));
 
-        // Display window
+        // Format window
         setPreferredSize(new Dimension(600,400));
-        //setPreferredSize(new Dimension((Toolkit.getDefaultToolkit().getScreenSize().width), (Toolkit.getDefaultToolkit().getScreenSize().height)));
-        //setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //setSize(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
-        //setState(Frame.NORMAL);
         setLocation(new Point(100,100));
         pack();
         setLocationRelativeTo(null); // centers window
         setVisible(true);
     }
 
-    /**
-     * Main method which creates a GUI window for the Control Panel Menu
-     * @param args This method takes no arguments
-     * @throws ClassNotFoundException Exception handling
-     * @throws UnsupportedLookAndFeelException Exception handling
-     * @throws InstantiationException Exception handling
-     * @throws IllegalAccessException Exception handling
-     */
-    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        new ControlPanelGUI();
+    private JPanel createLabel(String labelText) {
+        JPanel labelPanel = new JPanel();
+        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
+        labelPanel.add(Box.createHorizontalGlue());
+        JLabel label = new JLabel(labelText);
+        labelPanel.add(label);
+        labelPanel.add(Box.createHorizontalGlue());
+        return labelPanel;
+    }
+
+    private JPanel createButton(String buttonLabel) {
+        //create new JPanel to hold button
+        JPanel buttonPanel = new JPanel();
+        //set box layout
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(Box.createHorizontalGlue());
+        //add new button to button Panel
+        JButton button = new JButton(buttonLabel);
+        buttonPanel.add(button);
+        buttonPanel.add(Box.createHorizontalGlue());
+        return buttonPanel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void run() {
+        try {
+            createGUI();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void main(String args[]) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IOException, IllegalAccessException {
+        SwingUtilities.invokeLater(new ControlPanelGUI());
     }
 }
