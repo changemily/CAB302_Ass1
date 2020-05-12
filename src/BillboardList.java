@@ -55,10 +55,10 @@ public class BillboardList {
      * @param schedule_time   time (optional):void
      * @param durationMinutes The duration in minutes it will be displayed
      */
-    
+
 
     public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
-                               LocalDateTime schedule_time, Duration durationMinutes,String recurrence) throws Exception {
+                                      LocalDateTime schedule_time, Duration durationMinutes,String recurrence) throws Exception {
         //Create a new billboard object
         billboardNew = new Billboard(billboard_name, text,
                 bg_colour, image, schedule_time, durationMinutes);

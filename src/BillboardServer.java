@@ -78,15 +78,15 @@ public class BillboardServer {
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
                 //read request sent by client
-                Object o = ois.readObject();
+                Object clientRequest = ois.readObject();
 
                 //print what was received from client
-                System.out.println("received from client: "+o);
+                System.out.println("received from client: "+clientRequest);
 
                 String return_message;
 
                 //save return message, based on what request was received from the client
-                switch(o.toString())
+                switch(clientRequest.toString())
                 {
                     case "Login request":
                         return_message = "Login request";
@@ -267,7 +267,6 @@ public class BillboardServer {
      */
     public static void removeSchedule (ObjectInputStream ois, Connection connection,
                                        ScheduleMultiMap billboard_schedule) throws Exception {
-
         //read billboard name sent by client
         Object Billboard_name = ois.readObject();
         System.out.println("billboard name: "+ Billboard_name);
