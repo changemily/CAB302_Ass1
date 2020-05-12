@@ -52,7 +52,7 @@ public class BillboardServer {
         Check_tables(connection);
 
         //populate schedule, billboard list and user list with data from database
-        readWriteDB.RetrieveDBschedule(connection);
+        readWriteDB.RetrieveDB(connection, "Schedule");
 
         Properties props = new Properties();
         FileInputStream fileIn = null;
@@ -257,7 +257,7 @@ public class BillboardServer {
                 Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards());
 
         //write schedule to DB
-        readWriteDB.Write_To_DB(connection, "Schedule");
+        readWriteDB.WriteToDB(connection, "Schedule");
     }
 
     /**
@@ -289,13 +289,13 @@ public class BillboardServer {
                 Duration.ofMinutes(Integer.parseInt(duration2)),recurrence2);
 
         //Clear schedule table in DB
-        readWriteDB.Clear_DBschedule(connection);
+        readWriteDB.ClearDB(connection, "Schedule");
 
         //remove billboard from schedule
         billboard_schedule.Schedule_Remove_billboard(Billboard_name.toString(),schedule_info);
 
         //write schedule to DB
-        readWriteDB.Write_To_DB(connection, "Schedule");
+        readWriteDB.WriteToDB(connection, "Schedule");
     }
 
     /**

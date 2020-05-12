@@ -27,94 +27,103 @@ public class ReadWriteDB {
 
     MultiMap<String, Schedule_Info> Billboard_schedule;
 
-    public void Clear_DBbillboardList(Connection connection) throws SQLException {
-        //create statement to connect to db
-        Statement st = connection.createStatement();
-
-        //for all entries in billboardHashMap
-        for (String billboard_name : billboardHashMap.keySet())
-        {
-            //remove each entry from DB using billboard_name
-            st.execute("DELETE FROM Schedule WHERE billboard_name=\""+billboard_name+"\";");
-        }
-    }
-
 
     /**
      * extracts schedule data from database and stores it in Billboard_schedule
      * @throws SQLException throws exception if billboard does not exist or combination of billboard &
      * schedule information does not exist
      */
-    public void RetrieveDBschedule(Connection connection) throws Exception {
+    public void RetrieveDB(Connection connection, String DataType) throws Exception {
+        switch(DataType){
+            case "Billboard":
+                final String SELECT = "SELECT * FROM billboard ORDER BY billboard_name desc";
+                //create statement
+                Statement st = connection.createStatement();
+                //SQL statements
+                ResultSet rs = st.executeQuery(SELECT);
+                //for every database entry
+                while (rs.next())
+                {
+                    //store database info in local variables
+                    String billboard_name = rs.getString(0);
+                    String text = rs.getString(1);
+                    String bg_colour = rs.getString(2);
+                    String image_file = rs.getString(3);
+                    String time_scheduled = rs.getString(4);
+                    String Duration_mins = rs.getString(5);
 
-        final String SELECT = "SELECT * FROM billboard ORDER BY billboard_name desc";
-        final String SELECT1 = "SELECT * FROM schedule ORDER BY Start_TimeScheduled desc";
+                    //store time scheduled and duration pair in array schedule_info
+                    Billboard billboard = new Billboard(billboard_name, text, bg_colour,
+                            image_file, LocalDateTime.parse(time_scheduled), Duration.parse(Duration_mins));
 
-        //create statement
-        Statement st = connection.createStatement();
+                    //store billboard name with corresponding times scheduled and durations
+                    billboardHashMap.put(billboard_name, billboard);
+                }
 
-        //SQL statements
-        ResultSet rs = st.executeQuery(SELECT);
-        ResultSet rs1 = st.executeQuery(SELECT1);
+                //close ResultSet
+                rs.close();
+                //close statement
+                st.close();
+                break;
+            case "Schedule":
+                final String SELECT1 = "SELECT * FROM schedule ORDER BY Start_TimeScheduled desc";
+                //create statement
+                Statement st1 = connection.createStatement();
+                //SQL statements
+                ResultSet rs1 = st1.executeQuery(SELECT1);
+                //for every database entry
+                while (rs1.next())
+                {
+                    //store database info in local variables
+                    String billboard_name = rs1.getString(1);
+                    String Start_TimeScheduled = rs1.getString(2);
+                    String duration = rs1.getString(3);
+                    String recurrence = rs1.getString(4);
 
-        //for every database entry
-        while (rs.next())
-        {
-            //store database info in local variables
-            String billboard_name = rs.getString(0);
-            String text = rs.getString(1);
-            String bg_colour = rs.getString(2);
-            String image_file = rs.getString(3);
-            String time_scheduled = rs.getString(4);
-            String Duration_mins = rs.getString(5);
+                    //store time scheduled and duration pair in array schedule_info
+                    Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(Start_TimeScheduled),
+                            Duration.parse(duration), recurrence);
 
-            //store time scheduled and duration pair in array schedule_info
-            Billboard billboard = new Billboard(billboard_name, text, bg_colour,
-                    image_file, LocalDateTime.parse(time_scheduled), Duration.parse(Duration_mins));
+                    //store billboard name with corresponding times scheduled and durations
+                    Billboard_schedule.put(billboard_name, schedule_info);
+                }
 
-            //store billboard name with corresponding times scheduled and durations
-            billboardHashMap.put(billboard_name, billboard);
-        }
-
-        //close ResultSet
-        rs.close();
-
-        //for every database entry
-        while (rs1.next())
-        {
-            //store database info in local variables
-            String billboard_name = rs1.getString(1);
-            String Start_TimeScheduled = rs1.getString(2);
-            String duration = rs1.getString(3);
-            String recurrence = rs1.getString(4);
-
-            //store time scheduled and duration pair in array schedule_info
-            Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(Start_TimeScheduled),
-                    Duration.parse(duration), recurrence);
-
-            //store billboard name with corresponding times scheduled and durations
-            Billboard_schedule.put(billboard_name, schedule_info);
-        }
-
-        //close ResultSet
-        rs1.close();
-        //close statement
-        st.close();
-    }
-
-    public void Clear_DBschedule(Connection connection) throws SQLException {
-        //create statement
-        Statement st = connection.createStatement();
-
-        //for all entries in schedule
-        for (String billboard_name : Billboard_schedule.keySet())
-        {
-            //remove entry from DB
-            st.execute("DELETE FROM Schedule WHERE billboard_name=\""+billboard_name+"\";");
+                //close ResultSet
+                rs1.close();
+                //close statement
+                st1.close();
+                break;
         }
     }
 
-    public void Write_To_DB(Connection connection, String DataType) throws SQLException {
+    public void ClearDB(Connection connection, String DataType) throws SQLException {
+        switch (DataType){
+            case "Billboard":
+                //create statement to connect to db
+                Statement st = connection.createStatement();
+
+                //for all entries in billboardHashMap
+                for (String billboard_name : billboardHashMap.keySet())
+                {
+                    //remove each entry from DB using billboard_name
+                    st.execute("DELETE FROM Schedule WHERE billboard_name=\""+billboard_name+"\";");
+                }
+                break;
+            case "Schedule":
+                //create statement
+                Statement st1 = connection.createStatement();
+
+                //for all entries in schedule
+                for (String billboard_name : Billboard_schedule.keySet())
+                {
+                    //remove entry from DB
+                    st1.execute("DELETE FROM Schedule WHERE billboard_name=\""+billboard_name+"\";");
+                }
+                break;
+        }
+    }
+
+    public void WriteToDB(Connection connection, String DataType) throws SQLException {
         switch (DataType){
 
             case "Billboard":
