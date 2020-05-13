@@ -56,15 +56,16 @@ public class ControlPanelClient {
                     break;
 
                 case "Get Billboard info":
-                    getBillboardInfo(oos, request, "Billboard_1");
+                    getBillboardInfo(oos, request, "Billboard_3");
                     break;
 
                 case "Create edit billboard":
-                    createEditBillboard(oos, request, "Billboard_1", "Hello", "Black",
+                    createEditBillboard(oos, request, "Billboard_3", "Hello", "Black",
                             "Image.jpg", "2021-01-01T10:00:00.00", "10", "none");
                     break;
 
                 case "Delete billboard":
+                    deleteBillboard(oos, request, "Billboard_3");
                     break;
 
                 case "View schedule":
@@ -214,6 +215,20 @@ public class ControlPanelClient {
         //Write the request to the server
         oos.writeObject(buttonClicked);
         //Write the billboardname to the server
+        oos.writeObject(billboardName);
+    }
+
+    /**
+     * Sends a delete request to the server
+     * @param oos Object output stream of the client
+     * @param buttonClicked Request given by control panel GUI
+     * @param billboardName Name of the billboard to be deleted
+     * @throws IOException
+     */
+    public static void deleteBillboard(ObjectOutputStream oos, String buttonClicked, String billboardName)throws IOException{
+        //Write the request to the server
+        oos.writeObject(buttonClicked);
+        //Write the billboardName to the server
         oos.writeObject(billboardName);
     }
 
