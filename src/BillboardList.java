@@ -104,23 +104,23 @@ public class BillboardList {
         //For every entry of billboard list
         for (String BillboardName : billboardHashMap.keySet())
         {
-            //if given billboard name matches billboard name in schedule
+            //if given billboard name matches billboard name in billboard list
             if (BillboardName.equals(billboard_name))
             {
-                //store viewings of billboard in singleBBschedule collection
+                //store billboard info in local variable
                 billboard_info = billboardHashMap.get(billboard_name);
                 billboard_exists = true;
                 break;
             }
         }
 
-        //if billboard is not scheduled
+        //if billboard is not in list
         if (billboard_exists == false)
         {
-            throw new Exception("The billboard does not exist in the schedule");
+            throw new Exception("The billboard does not exist in the billboard list");
         }
 
-        //return billboard
+        //return billboard info
         return billboard_info;
     }
 

@@ -20,13 +20,12 @@ import java.util.Properties;
 public class BillboardServer {
 
     public static final String CREATE_USER_TABLE =
-            "CREATE TABLE IF NOT EXISTS Users (username varchar(255),text varchar(1000)," +
-                    "bg_colour varchar (255),image_file varchar(255), time_scheduled Datetime, minutes int);";
+            "CREATE TABLE IF NOT EXISTS Users (username varchar(255),password varchar(255));";
 
     public static final String CREATE_BILLBOARD_TABLE =
             "CREATE TABLE IF NOT EXISTS Billboards (billboard_name varchar(255)," +
                     "text varchar(1000),bg_colour varchar (255)," +
-                    "image_file varchar(255), time_scheduled Datetime, minutes int);";
+                    "image_file varchar(255), time_scheduled varchar(50), Duration_mins varchar(255));";
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
@@ -40,10 +39,6 @@ public class BillboardServer {
         ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
 
         BillboardList billboard_list = new BillboardList();
-
-        //TEMP FOR TESTING
-        billboard_list.Create_edit_Billboard("Billboard_1", "hello","red", "No image");
-        billboard_list.Create_edit_Billboard("Billboard_2", "hello","red", "No image");
 
         //create DB connection
         Connection connection = DBconnection.getInstance();
