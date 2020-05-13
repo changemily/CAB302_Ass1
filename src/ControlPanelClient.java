@@ -41,7 +41,7 @@ public class ControlPanelClient {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-            String request = "Login request";
+            String request = "Create edit billboard";
 
             //request given by user saved in local var request
             switch(request)
