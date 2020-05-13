@@ -10,8 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.util.Base64;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.StyledDocument;
 import javax.xml.parsers.*;
 
 /**
@@ -64,8 +62,6 @@ public class BillboardViewer extends JFrame{
             messageColour = "#000000";
             messageColourCode = Color.decode(messageColour);
         }
-        System.out.println(messageText);
-        System.out.println(messageColour);
 
         // Get Information
         NodeList information = file.getElementsByTagName("information");
@@ -87,8 +83,6 @@ public class BillboardViewer extends JFrame{
             informationColour = "#000000";
             informationColourCode = Color.decode(informationColour);
         }
-        System.out.println(informationText);
-        System.out.println(informationColour);
 
         // Get picture data
         NodeList picture = file.getElementsByTagName("picture");
@@ -98,7 +92,6 @@ public class BillboardViewer extends JFrame{
         BufferedImage pictureImage = null;
         try{
             pictureText = picture.item(0).getAttributes().getNamedItem("url").getTextContent();
-            System.out.println(pictureText);
             URL pictureURL = new URL(pictureText);
             pictureImage = ImageIO.read(pictureURL);
             urlBool = true;
@@ -112,7 +105,6 @@ public class BillboardViewer extends JFrame{
         try{
             if(!urlBool){
                 pictureText = picture.item(0).getAttributes().getNamedItem("data").getTextContent();
-                System.out.println(pictureText);
                 Base64.Decoder decoder = Base64.getDecoder();
                 byte[] pictureBytes = decoder.decode(pictureText);
                 ByteArrayInputStream byteInput = new ByteArrayInputStream(pictureBytes);
@@ -135,7 +127,7 @@ public class BillboardViewer extends JFrame{
         if(messageBool && !informationBool && !pictureBool) {
             int yLocation = 0;
             JLabel messageLabel = new JLabel();
-            displayMessage(billboard, messageLabel, messageText, messageColourCode, screenSize, yLocation, false, 0);
+            displayMessage(billboard, messageLabel, messageText, messageColourCode, screenSize, yLocation, false, 0, 1);
         }
 
         if(!messageBool && informationBool && !pictureBool) {
@@ -152,26 +144,38 @@ public class BillboardViewer extends JFrame{
         if(messageBool && informationBool && !pictureBool) {
             int yLocation = 0;
             JLabel messageLabel = new JLabel();
-            displayMessage(billboard, messageLabel, messageText, messageColourCode, screenSize, yLocation, false,0);
+            displayMessage(billboard, messageLabel, messageText, messageColourCode, screenSize, yLocation, false,0, 1);
             yLocation = 1;
             JLabel informationLabel = new JLabel();
-            displayInformation(billboard, informationLabel, informationText, informationColourCode, billboardColourCode, screenSize, yLocation, messageLabel, false, 0);
+            displayInformation(billboard, informationLabel, informationText, informationColourCode, billboardColourCode, screenSize, yLocation, messageLabel, false, 0, 3);
         }
 
         if(messageBool && !informationBool && pictureBool){
-            int ylocation = 1;
-            int padding = displayPicture(billboard, pictureImage, screenSize, ylocation, 2, true);
-            ylocation = 0;
+            int yLocation = 1;
+            int padding = displayPicture(billboard, pictureImage, screenSize, yLocation, 2, true);
+            yLocation = 0;
             JLabel messageLabel = new JLabel();
-            displayMessage(billboard, messageLabel, messageText, messageColourCode, screenSize, ylocation, true, padding);
+            displayMessage(billboard, messageLabel, messageText, messageColourCode, screenSize, yLocation, true, padding, 2);
         }
 
         if(!messageBool && informationBool && pictureBool){
-            int ylocation = 0;
-            int padding = displayPicture(billboard, pictureImage, screenSize, ylocation, 2, false);
-            ylocation = 1;
+            int yLocation = 0;
+            int padding = displayPicture(billboard, pictureImage, screenSize, yLocation, 2, false);
+            yLocation = 1;
             JLabel informationLabel = new JLabel();
-            displayInformation(billboard, informationLabel, informationText, informationColourCode, billboardColourCode, screenSize, ylocation, true, padding);
+            displayInformation(billboard, informationLabel, informationText, informationColourCode, billboardColourCode, screenSize, yLocation, true, padding);
+        }
+
+        if(messageBool && informationBool && pictureBool){
+            int yLocation = 1;
+            int padding = displayPicture(billboard, pictureImage, screenSize, yLocation, 3, true);
+            yLocation = 0;
+            JLabel messageLabel = new JLabel();
+            displayMessage(billboard, messageLabel, messageText, messageColourCode, screenSize, yLocation, true, padding, 3);
+            yLocation = 2;
+            JLabel informationLabel = new JLabel();
+            displayInformation(billboard, informationLabel, informationText, informationColourCode, billboardColourCode, screenSize, yLocation, messageLabel, true , padding, 3);
+
         }
 
 
@@ -222,7 +226,6 @@ public class BillboardViewer extends JFrame{
             textFont = textLabel.getFont();
             stringSize = textLabel.getFontMetrics(textFont).stringWidth(text);
             stringLines = stringSize / (screenSize.width * widthBuffer);
-            System.out.println(stringLines);
         }
         area.setFont(new Font(textLabel.getFont().getName(), Font.PLAIN, textLabel.getFont().getSize()));
         area.setSize((int)(screenSize.width * 0.75), (int)(screenSize.height * 0.5));
@@ -283,9 +286,6 @@ public class BillboardViewer extends JFrame{
             newHeight = (int)(currentHeight * ratioIncrease);
         }
 
-        System.out.println(newHeight);
-        System.out.println(newWidth);
-
         Image tempImage = picture.getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT);
         BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = resizedImage.createGraphics();
@@ -296,12 +296,10 @@ public class BillboardViewer extends JFrame{
 
 
 
-    public void displayMessage(JFrame billboard, JLabel message, String text, Color ColourCode, Dimension screenSize, int ylocation, boolean pictureWeight, int padding){
+    public void displayMessage(JFrame billboard, JLabel message, String text, Color ColourCode, Dimension screenSize, int ylocation, boolean pictureWeight, int padding, int items){
         double weight;
-        double screenHeight = (1.0)/(3.0);
         if(pictureWeight){
             weight = 0.5;
-            screenHeight = (1.0)/(3.0);
         }
         else{
             weight = 1;
@@ -312,13 +310,9 @@ public class BillboardViewer extends JFrame{
         c.gridy = ylocation;
         c.weighty = weight;
         c.anchor = GridBagConstraints.CENTER;
-        c.ipady = padding + (int)(screenHeight * screenSize.height);
-        System.out.println(c.ipady);
         message.setText(text);
-        int fontHeight = setMessageFontSize(message, screenSize, buffer);
-        c.ipady = (c.ipady - fontHeight)/2;
-        System.out.println(c.ipady);
         message.setForeground(ColourCode);
+        setMessageFontSize(message, screenSize, buffer);
         billboard.add(message, c);
     }
 
@@ -326,7 +320,6 @@ public class BillboardViewer extends JFrame{
         double widthBuffer = 0.70;
         double heightBuffer;
         double weight;
-        double screenHeight = (1.0)/(3.0);
         if(pictureWeight){
             weight = 0.5;
             heightBuffer = (1.0)/(6.0);
@@ -339,8 +332,7 @@ public class BillboardViewer extends JFrame{
         c.gridx = 0;
         c.gridy = ylocation;
         c.weighty = weight;
-        c.anchor = GridBagConstraints.PAGE_START;
-        double cInset = padding + (int)(screenHeight * screenSize.height);
+        c.anchor = GridBagConstraints.CENTER;
         information.setText(text);
         JEditorPane informationPane = new JEditorPane("text/plain", text);
         int fontHeight = setInformationFontSize(informationPane, information, screenSize, widthBuffer, heightBuffer);
@@ -350,20 +342,17 @@ public class BillboardViewer extends JFrame{
         htmlInformationPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
         htmlInformationPane.setFont(informationFont);
         htmlInformationPane.setText("<center>" + text + "</center");
-        htmlInformationPane.setPreferredSize(new Dimension((int)(screenSize.width * widthBuffer), fontHeight));
+        htmlInformationPane.setPreferredSize(new Dimension((int)(screenSize.width *  0.80), fontHeight));
         htmlInformationPane.setEditable(false);
-        cInset = (cInset - (fontHeight))/8;
-        c.insets = new Insets((int)cInset, 0, 0,0);
-        htmlInformationPane.setForeground(Color.GREEN);
-        htmlInformationPane.setBackground(Color.YELLOW);
+        htmlInformationPane.setForeground(ColourCode);
+        htmlInformationPane.setBackground(BackgroundColourCode);
         billboard.add(htmlInformationPane, c);
     }
 
-    public void displayInformation(JFrame billboard, JLabel information, String text, Color ColourCode, Color BackgroundColourCode, Dimension screenSize, int ylocation, JLabel message, boolean pictureWeight, int padding){
+    public void displayInformation(JFrame billboard, JLabel information, String text, Color ColourCode, Color BackgroundColourCode, Dimension screenSize, int ylocation, JLabel message, boolean pictureWeight, int padding, int items){
         double widthBuffer = 0.70;
         double heightBuffer;
         double weight;
-        double screenHeight = (1.0)/(3.0);
         if(pictureWeight){
             weight = 0.5;
             heightBuffer = (1.0)/(6.0);
@@ -376,8 +365,7 @@ public class BillboardViewer extends JFrame{
         c.gridx = 0;
         c.gridy = ylocation;
         c.weighty = weight;
-        c.anchor = GridBagConstraints.PAGE_START;
-        double cInset = padding + (int)(screenHeight * screenSize.height);
+        c.anchor = GridBagConstraints.CENTER;
         information.setText(text);
         JEditorPane informationPane = new JEditorPane("text/plain", text);
         int fontHeight = setInformationFontSize(informationPane, information, screenSize, widthBuffer, heightBuffer, message);
@@ -387,10 +375,8 @@ public class BillboardViewer extends JFrame{
         htmlInformationPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
         htmlInformationPane.setFont(informationFont);
         htmlInformationPane.setText("<center>" + text + "</center");
-        htmlInformationPane.setPreferredSize(new Dimension((int)(screenSize.width * (0.75)), fontHeight));
+        htmlInformationPane.setPreferredSize(new Dimension((int)(screenSize.width * 0.8), fontHeight));
         htmlInformationPane.setEditable(false);
-        cInset = (cInset - fontHeight)/2;
-        c.insets = new Insets((int)cInset, 0, 0,0);
         htmlInformationPane.setForeground(ColourCode);
         htmlInformationPane.setBackground(BackgroundColourCode);
         billboard.add(htmlInformationPane, c);
@@ -407,11 +393,13 @@ public class BillboardViewer extends JFrame{
         if(items == 1){
             c.anchor = GridBagConstraints.CENTER;
         }
-        else if(items == 2 && message){
-            c.anchor = GridBagConstraints.PAGE_START;
-        }
         else if(items == 2){ // info/picture
             c.anchor = GridBagConstraints.CENTER;
+            weight = 1;
+        }
+        else if(items == 3){
+            c.anchor = GridBagConstraints.CENTER;
+            weight = 0.5;
         }
 
         c.gridx = 0;
@@ -419,17 +407,17 @@ public class BillboardViewer extends JFrame{
         c.weighty = weight;
         BufferedImage resizedPicture = resizePicture(picture, screenSize, buffer);
         JLabel resizedImage = new JLabel(new ImageIcon(resizedPicture));
-        System.out.println(resizedImage.getHeight());
+        resizedImage.setForeground(Color.BLACK);
 
         billboard.add(resizedImage, c);
         if(items == 1){
             return 0;
         }
         else if(items == 2){
-            return (int)((screenSize.height * (2.0/3.0)) - resizedPicture.getHeight());
+            return (int)(resizedPicture.getHeight()/ (screenSize.height * (2.0/3.0)));
         }
         else{ // items == 3
-            return (int)((screenSize.height * (1.0/3.0)) - resizedPicture.getHeight());
+            return (int)(resizedPicture.getHeight()/ (screenSize.height * (2.0/3.0)));
         }
     }
 
@@ -437,7 +425,7 @@ public class BillboardViewer extends JFrame{
 
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         File file;
-        file = new File("./5.xml");
+        file = new File("./11.xml");
         new BillboardViewer(file);
     }
 }
