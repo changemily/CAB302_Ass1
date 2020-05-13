@@ -122,6 +122,8 @@ public class BillboardServer {
                         break;
                     case "Delete billboard":
                         return_message = "billboard has been deleted";
+                        //Write the delete to the db
+                        deleteBillboard(ois, connection, billboard_list);
                         break;
                     case "View schedule":
                         return_message = "returned schedule";
@@ -278,6 +280,30 @@ public class BillboardServer {
                 Duration.ofMinutes(Integer.parseInt(duration)), recurrence);
 
         //Write the new billboard to the DB
+        billboard_List.Write_To_DBbillboard(connection);
+    }
+
+    /**
+     * Sends a delete request to the DB
+     * @param ois Object input stream of the server
+     * @param connection connection to the db
+     * @param billboard_List the list of billboards
+     * @throws IOException
+     */
+    public static void deleteBillboard(ObjectInputStream ois, Connection connection, BillboardList billboard_List) throws Exception {
+        //Read the parameters given by the client
+        String billboard_name = ois.readObject().toString();
+        //Display the name of the billboard for ease of testing
+        System.out.println("billboard name: "+ billboard_name);
+
+        //Clear the db with the billboard information
+        billboard_List.Clear_DBbillboardList(connection);
+
+        //Now that the db is empty remove the billboard from the billboard list
+        billboard_List.Delete_billboard(billboard_name);
+
+        //Now that the billboard has been removed from the list of billboards
+        //Write the updated list to the db
         billboard_List.Write_To_DBbillboard(connection);
     }
 
