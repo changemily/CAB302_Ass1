@@ -108,9 +108,12 @@ public class BillboardServer {
                     case "List billboards":
                         return_message = "returned List of billboards";
                         //write billboard list to client
+                        listBillboards(oos,billboard_list);
                         break;
                     case "Get Billboard info":
                         return_message = "returned Billboard info";
+                        //write billboard info to client
+                        getBillboardInfo(oos,ois,billboard_list);
                         break;
                     case "Create edit billboard":
                         return_message = "Created/edited billboard";
@@ -217,14 +220,27 @@ public class BillboardServer {
     /**
      * Sends a list of billboards to the client
      * @param oos Object output stream of the server
-     * @param billboardList the list being sent to the client
+     * @param billboard_List the list being sent to the client
      * @throws Exception
      */
-    public static void billboardList(ObjectOutputStream oos, BillboardList billboardList) throws Exception{
+    public static void listBillboards(ObjectOutputStream oos, BillboardList billboard_List) throws Exception{
         //Output to client
-        oos.writeObject(billboardList.List_Billboards());
+        oos.writeObject(billboard_List.List_Billboards());
     }
 
+    /**
+     * Sends billboard info to the client
+     * @param oos Object output stream of client
+     * @param ois Object Input stream of server
+     * @param billboard_List A list of billboards
+     * @throws IOException
+     */
+    public static void getBillboardInfo(ObjectOutputStream oos, ObjectInputStream ois, BillboardList billboard_List)throws Exception{
+        //Read Parameters sent by client
+        String billboardName = ois.readObject().toString();
+        //Output results to the client
+        oos.writeObject(billboard_List.Get_billboard_info(billboardName));
+    }
 
     /**
      * Sends schedule to client

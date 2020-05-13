@@ -56,6 +56,7 @@ public class ControlPanelClient {
                     break;
 
                 case "Get Billboard info":
+                    getBillboardInfo(oos, request, "Billboard_1");
                     break;
 
                 case "Create edit billboard":
@@ -171,6 +172,20 @@ public class ControlPanelClient {
     public static void listBillboards(ObjectOutputStream oos, String buttonClicked)throws IOException{
         //Output clients request to the server
         oos.writeObject(buttonClicked);
+    }
+
+    /**
+     * Sends a get info request to the server
+     * @param oos Object output stream of client
+     * @param buttonClicked Request given by Contol Panel GUI
+     * @param billboardName Name of the billboard info requested
+     * @throws IOException
+     */
+    public static void getBillboardInfo(ObjectOutputStream oos, String buttonClicked, String billboardName)throws IOException{
+        //Write the request to the server
+        oos.writeObject(buttonClicked);
+        //Write the billboardname to the server
+        oos.writeObject(billboardName);
     }
 
     /**
