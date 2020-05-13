@@ -1,5 +1,9 @@
+import org.xml.sax.SAXException;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +26,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     JButton editBillboardButton;
     JButton scheduleBillboardButton;
     JButton createBillboardButton;
+    String billboardXML="./5.xml";
 
     public ControlPanelGUIBillboardControlPanel() {
         // Set window title
@@ -36,7 +41,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * @throws IllegalAccessException Exception handling
      * @throws IOException Exception handling
      */
-    private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
+    private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, ParserConfigurationException, SAXException {
         // Set look and feel of GUI to resemble operating system look and feel
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
@@ -59,11 +64,17 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         previewPanel.add(Box.createVerticalStrut(50));
         //JLabel billboardList = new JLabel("ADD BILLBOARD PREVIEW HERE");
 
-        String imagePath = "C:\\Users\\Nickhil N.NPN-ASUS\\OneDrive\\Documents\\Nickhil's Documents\\QUT\\3rd Year 2020\\Semester 1\\CAB302 - Software Development\\Major Project\\qutLogo.jpg";
+       /* String imagePath = "C:\\Users\\Nickhil N.NPN-ASUS\\OneDrive\\Documents\\Nickhil's Documents\\QUT\\3rd Year 2020\\Semester 1\\CAB302 - Software Development\\Major Project\\qutLogo.jpg";
         BufferedImage image = ImageIO.read(new File(imagePath));
         Image image2 = image.getScaledInstance(-1,300, Image.SCALE_DEFAULT);
         JLabel billboardPreview = new JLabel(new ImageIcon(image2));
-        previewPanel.add(billboardPreview);
+        */
+
+        //create new viewer to display xml
+        File file = new File(billboardXML);
+        new BillboardViewer(file);
+        //previewPanel.add(billboardPreview);
+
 
         // Create button JPanel
         JPanel buttonPanel = new JPanel();
@@ -115,11 +126,19 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     private JList createJList() {
         // Create billboard JList, and populate with test data
         // NOTE: Needs to be changed to populate billboard JList with real billboard data
-        String[] billboards = {"Test 1", "Test 2", "Test 3", "Test 4", "Test 5", "Test 6", "Test 7", "Test 9", "Test 10"};
+        String[] billboards = {"1", "2", "3", "4", "5", "Test 6", "Test 7", "Test 9", "Test 10"};
         JList billboardList = new JList(billboards);
-
+        billboardList.addListSelectionListener(this::valueChanged);
         // Return JPanel
         return billboardList;
+    }
+
+    // Changes billboard XML when a user selects a billboard from the list
+    public void valueChanged(ListSelectionEvent event) {
+        String billboardSelected = billboardList.getSelectedValue().toString();
+        billboardXML = "./"+billboardSelected+".xml";
+
+        System.out.println(billboardXML);
     }
 
     /**
@@ -155,7 +174,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
         }
     }
