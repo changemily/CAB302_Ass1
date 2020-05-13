@@ -56,16 +56,16 @@ public class ControlPanelClient {
                     break;
 
                 case "Get Billboard info":
-                    getBillboardInfo(oos, request, "Billboard_1");
+                    getBillboardInfo(oos, request, "Billboard_3");
                     break;
 
                 case "Create edit billboard":
-                    createEditBillboard(oos, request, "Billboard_1", "Hello", "Black",
+                    createEditBillboard(oos, request, "Billboard_3", "Hello", "Black",
                             "Image.jpg", "2021-01-01T10:00:00.00", "10", "none");
                     break;
 
                 case "Delete billboard":
-                    deleteBillboard(oos, request, "Billboard_1");
+                    deleteBillboard(oos, request, "Billboard_3");
                     break;
 
                 case "View schedule":
