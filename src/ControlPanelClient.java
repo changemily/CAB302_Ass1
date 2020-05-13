@@ -52,6 +52,7 @@ public class ControlPanelClient {
                     break;
 
                 case "List billboards":
+                    listBillboards(oos, request);
                     break;
 
                 case "Get Billboard info":
@@ -159,6 +160,17 @@ public class ControlPanelClient {
         //send username and hashed password to server
         oos.writeObject(username);
         oos.writeObject(hashedPassword);
+    }
+
+    /**
+     * Sends List billboards request to the server
+     * @param oos Object output stream
+     * @param buttonClicked Request given by the control panel GUI
+     * @throws IOException
+     */
+    public static void listBillboards(ObjectOutputStream oos, String buttonClicked)throws IOException{
+        //Output clients request to the server
+        oos.writeObject(buttonClicked);
     }
 
     /**

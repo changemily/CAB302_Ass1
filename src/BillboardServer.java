@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Properties;
 
 
@@ -210,6 +211,18 @@ public class BillboardServer {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Sends a list of billboards to the client
+     * @param oos Object output stream of the server
+     * @param billboardList the list being sent to the client
+     * @throws Exception
+     */
+    public static void billboardList(ObjectOutputStream oos, BillboardList billboardList) throws Exception{
+        //Output to client
+        oos.writeObject(billboardList.List_Billboards());
     }
 
 
