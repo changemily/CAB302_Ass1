@@ -158,7 +158,7 @@ public class BillboardList {
 
     public void RetrieveDBbillboardList(Connection connection) throws Exception {
 
-        final String SELECT = "SELECT * FROM billboard ORDER BY billboard_name desc";
+        final String SELECT = "SELECT * FROM Billboards ORDER BY billboard_name desc";
 
 
         //create statement
@@ -177,11 +177,11 @@ public class BillboardList {
             String time_scheduled = rs.getString(4);
             String Duration_mins = rs.getString(5);
 
-            //store time scheduled and duration pair in array schedule_info
+            //create a billboard using the information
             Billboard billboard = new Billboard(billboard_name, text, bg_colour,
                     image_file, LocalDateTime.parse(time_scheduled), Duration.parse(Duration_mins));
 
-            //store billboard name with corresponding times scheduled and durations
+            //store billboard name with corresponding billboard
             billboardHashMap.put(billboard_name, billboard);
         }
 
@@ -199,7 +199,7 @@ public class BillboardList {
         for (String billboard_name : billboardHashMap.keySet())
         {
             //remove each entry from DB using billboard_name
-            st.execute("DELETE FROM Schedule WHERE billboard_name=\""+billboard_name+"\";");
+            st.execute("DELETE FROM Billboards WHERE billboard_name=\""+billboard_name+"\";");
         }
     }
 
@@ -208,7 +208,7 @@ public class BillboardList {
         //create statement
         Statement st = connection.createStatement();
 
-        //for every billboard name in Billboard_schedule
+        //for every billboard name in billboardHashMap
         for (Billboard billboard : billboardHashMap.values() ) {
 
             //Pass the values of each billboard to the SQL statement.
@@ -219,7 +219,7 @@ public class BillboardList {
             LocalDateTime time_scheduled = billboard.Time_scheduled;
             Duration Duration_mins = billboard.duration;
 
-            st.executeQuery("INSERT INTO Schedule (billboard_name, text, bg_colour, image_file, time_scheduled, Duration_mins) " +
+            st.executeQuery("INSERT INTO Billboards (billboard_name, text, bg_colour, image_file, time_scheduled, Duration_mins) " +
                     "VALUES(\""+billboard_name+"\",\""+text+"\",\""+bg_colour+"\",\""+image_file+"\",\""+time_scheduled+"\",\""+Duration_mins+"\");");
         }
 
