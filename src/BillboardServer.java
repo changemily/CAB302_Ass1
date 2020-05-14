@@ -225,6 +225,7 @@ public class BillboardServer {
     public static void listBillboards(ObjectOutputStream oos, BillboardList billboard_List) throws Exception{
         //Output to client
         oos.writeObject(billboard_List.List_Billboards());
+        System.out.println("billboard list: "+ billboard_List.List_Billboards());
     }
 
     /**
@@ -239,6 +240,13 @@ public class BillboardServer {
         String billboardName = ois.readObject().toString();
         //Output results to the client
         oos.writeObject(billboard_List.Get_billboard_info(billboardName));
+
+        Billboard BillboardInfo = billboard_List.Get_billboard_info(billboardName);
+        System.out.println("billboard infos: "+ billboard_List.Get_billboard_info(billboardName));
+        System.out.println("billboard name: "+BillboardInfo.Billboard_name);
+        System.out.println("billboard bg colour: "+BillboardInfo.Bg_colour);
+        System.out.println("billboard image file: "+BillboardInfo.Image_file);
+        System.out.println("billboard duration: "+BillboardInfo.duration);
     }
 
     /**

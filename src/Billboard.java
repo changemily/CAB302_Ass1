@@ -1,6 +1,7 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.io.*;
 
 /**
  * Billboard class
@@ -9,7 +10,7 @@ import java.util.HashMap;
  * @version - under development
  */
 
-public class Billboard {
+public class Billboard implements java.io.Serializable{
     String Billboard_name;
     String Billboard_text;
     String Bg_colour;

@@ -5,8 +5,7 @@ import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,7 +27,7 @@ import org.xml.sax.SAXException;
  * @author - Jarod Evans
  * @version - under development
  */
-public class BillboardList {
+public class BillboardList implements java.io.Serializable {
 
     //Setup a hashmap for tracking billboards.
     HashMap<String, Billboard> billboardHashMap;
