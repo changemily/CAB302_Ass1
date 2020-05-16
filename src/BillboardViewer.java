@@ -50,6 +50,17 @@ public class BillboardViewer extends JFrame{
     private boolean pictureExists;
 
 
+    /**
+     * Constructor creates a GUI on an xml file in full screen
+     * @param xml_file (File)
+     * @throws ParserConfigurationException (error)
+     * @throws IOException (error)
+     * @throws SAXException (error)
+     * @throws ClassNotFoundException (error)
+     * @throws UnsupportedLookAndFeelException (error)
+     * @throws InstantiationException (error)
+     * @throws IllegalAccessException (error)
+     */
     public BillboardViewer(File xml_file) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         // Find screen size
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -115,6 +126,85 @@ public class BillboardViewer extends JFrame{
         // Pack billboard and set visible
         billboard.pack();
         billboard.setExtendedState(MAXIMIZED_BOTH);
+        billboard.setVisible(true);
+    }
+
+    /**
+     * Constructor creates a GUI on an xml file in set size
+     * @param xml_file (File)
+     * @throws ParserConfigurationException (error)
+     * @throws IOException (error)
+     * @throws SAXException (error)
+     * @throws ClassNotFoundException (error)
+     * @throws UnsupportedLookAndFeelException (error)
+     * @throws InstantiationException (error)
+     * @throws IllegalAccessException (error)
+     */
+    public BillboardViewer(File xml_file, Dimension size) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+        // Find screen size
+        screenSize = size;
+        // Parse File
+        parseFile(xml_file);
+
+        //// Find Elements from xml_file
+        findBillboardCode(parsedFile);
+        // Billboard Details
+        findMessageDetails(parsedFile);
+        findInformationDetails(parsedFile);
+        findPictureDetails(parsedFile);
+
+        // Create frame, and set basic settings
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        JFrame billboard = createBillboard();
+        billboard.setPreferredSize(size);
+
+        int billboardVariation = calculateVariation();
+
+        int yLocation;
+
+        switch(billboardVariation){
+            case 1:
+                yLocation = 0;
+                displayMessage(billboard, yLocation);
+                break;
+            case 2:
+                yLocation = 0;
+                displayInformation(billboard, yLocation);
+                break;
+            case 3:
+                yLocation = 0;
+                displayPicture(billboard, yLocation);
+                break;
+            case 4:
+                yLocation = 0;
+                displayMessage(billboard, yLocation);
+                yLocation = 1;
+                displayInformation(billboard, yLocation);
+                break;
+            case 5:
+                yLocation = 0;
+                displayMessage(billboard, yLocation);
+                yLocation = 1;
+                displayPicture(billboard, yLocation);
+                break;
+            case 6:
+                yLocation = 0;
+                displayPicture(billboard, yLocation);
+                yLocation = 1;
+                displayInformation(billboard, yLocation);
+                break;
+            case 7:
+                yLocation = 0;
+                displayMessage(billboard, yLocation);
+                yLocation = 1;
+                displayPicture(billboard, yLocation);
+                yLocation = 2;
+                displayInformation(billboard, yLocation);
+                break;
+        }
+
+        // Pack billboard and set visible
+        billboard.pack();
         billboard.setVisible(true);
     }
 
@@ -517,7 +607,8 @@ public class BillboardViewer extends JFrame{
 
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         File file;
-        file = new File("./15.xml");
+        file = new File("./10.xml");
         new BillboardViewer(file);
+        //new BillboardViewer(file, new Dimension(1000,1000));
     }
 }
