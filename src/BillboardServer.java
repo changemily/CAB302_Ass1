@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Properties;
 
 
@@ -19,13 +20,12 @@ import java.util.Properties;
 public class BillboardServer {
 
     public static final String CREATE_USER_TABLE =
-            "CREATE TABLE IF NOT EXISTS Users (username varchar(255),text varchar(1000)," +
-                    "bg_colour varchar (255),image_file varchar(255), time_scheduled Datetime, minutes int);";
+            "CREATE TABLE IF NOT EXISTS Users (username varchar(255),password varchar(255));";
 
     public static final String CREATE_BILLBOARD_TABLE =
             "CREATE TABLE IF NOT EXISTS Billboards (billboard_name varchar(255)," +
                     "text varchar(1000),bg_colour varchar (255)," +
-                    "image_file varchar(255), time_scheduled Datetime, minutes int);";
+                    "image_file varchar(255), time_scheduled varchar(50), Duration_mins varchar(255));";
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
@@ -39,10 +39,6 @@ public class BillboardServer {
         ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
 
         BillboardList billboard_list = new BillboardList();
-
-        //TEMP FOR TESTING
-        billboard_list.Create_edit_Billboard("Billboard_1", "hello","red", "No image");
-        billboard_list.Create_edit_Billboard("Billboard_2", "hello","red", "No image");
 
         //create DB connection
         Connection connection = DBconnection.getInstance();
@@ -107,15 +103,22 @@ public class BillboardServer {
                     case "List billboards":
                         return_message = "returned List of billboards";
                         //write billboard list to client
+                        listBillboards(oos, billboard_list);
                         break;
                     case "Get Billboard info":
                         return_message = "returned Billboard info";
+                        //write billboard info to client
+                        getBillboardInfo(oos, ois, billboard_list);
                         break;
                     case "Create edit billboard":
                         return_message = "Created/edited billboard";
+                        //Write the new billboard to the DB
+                        createEditBillboard(ois, connection, billboard_list);
                         break;
                     case "Delete billboard":
                         return_message = "billboard has been deleted";
+                        //Write the delete to the db
+                        deleteBillboard(ois, connection, billboard_list);
                         break;
                     case "View schedule":
                         return_message = "returned schedule";
@@ -212,6 +215,100 @@ public class BillboardServer {
         }
     }
 
+
+    /**
+     * Sends a list of billboards to the client
+     * @param oos Object output stream of the server
+     * @param billboard_List the list being sent to the client
+     * @throws Exception
+     */
+    public static void listBillboards(ObjectOutputStream oos, BillboardList billboard_List) throws Exception{
+        //Output to client
+        oos.writeObject(billboard_List.List_Billboards());
+        System.out.println("billboard list: "+ billboard_List.List_Billboards());
+    }
+
+    /**
+     * Sends billboard info to the client
+     * @param oos Object output stream of client
+     * @param ois Object Input stream of server
+     * @param billboard_List A list of billboards
+     * @throws IOException
+     */
+    public static void getBillboardInfo(ObjectOutputStream oos, ObjectInputStream ois, BillboardList billboard_List)throws Exception{
+        //Read Parameters sent by client
+        String billboardName = ois.readObject().toString();
+        //Output results to the client
+        oos.writeObject(billboard_List.Get_billboard_info(billboardName));
+
+        Billboard BillboardInfo = billboard_List.Get_billboard_info(billboardName);
+        System.out.println("billboard infos: "+ billboard_List.Get_billboard_info(billboardName));
+        System.out.println("billboard name: "+BillboardInfo.Billboard_name);
+        System.out.println("billboard bg colour: "+BillboardInfo.Bg_colour);
+        System.out.println("billboard image file: "+BillboardInfo.Image_file);
+        System.out.println("billboard duration: "+BillboardInfo.duration);
+    }
+
+    /**
+     * Sends a get info request to the server
+     * @param ois Object input stream of server
+     * @param connection connection to the db
+     * @param billboard_List
+     * @throws IOException
+     */
+    public static void createEditBillboard(ObjectInputStream ois, Connection connection, BillboardList billboard_List) throws Exception {
+        //Read parameters sent by the client
+        String billboard_name = ois.readObject().toString();
+        String text = ois.readObject().toString();
+        String bg_colour = ois.readObject().toString();
+        String image = ois.readObject().toString();
+        String startTime = ois.readObject().toString();
+        String duration = ois.readObject().toString();
+        String recurrence = ois.readObject().toString();
+
+        //For testing purposes
+        //print bb list
+        System.out.println("billboard list: "+ billboard_List);
+        //print what was received from client
+        System.out.println("billboard name: "+ billboard_name + "\n" +
+                "text: "+text+"\n"+
+                "bg_colour: "+bg_colour+"\n"+
+                "image: "+image+"\n"+
+                "start time: "+startTime+"\n" +
+                "duration: " + duration +"\n"+
+                "recurrence: " +recurrence +"\n");
+
+        //Create the billboard
+        billboard_List.Create_edit_Billboard(billboard_name, text, bg_colour, image, LocalDateTime.parse(startTime),
+                Duration.ofMinutes(Integer.parseInt(duration)), recurrence);
+
+        //Write the new billboard to the DB
+        billboard_List.Write_To_DBbillboard(connection);
+    }
+
+    /**
+     * Sends a delete request to the DB
+     * @param ois Object input stream of the server
+     * @param connection connection to the db
+     * @param billboard_List the list of billboards
+     * @throws IOException
+     */
+    public static void deleteBillboard(ObjectInputStream ois, Connection connection, BillboardList billboard_List) throws Exception {
+        //Read the parameters given by the client
+        String billboard_name = ois.readObject().toString();
+        //Display the name of the billboard for ease of testing
+        System.out.println("billboard name: "+ billboard_name);
+
+        //Clear the db with the billboard information
+        billboard_List.Clear_DBbillboardList(connection);
+
+        //Now that the db is empty remove the billboard from the billboard list
+        billboard_List.Delete_billboard(billboard_name);
+
+        //Now that the billboard has been removed from the list of billboards
+        //Write the updated list to the db
+        billboard_List.Write_To_DBbillboard(connection);
+    }
 
     /**
      * Sends schedule to client

@@ -1,6 +1,7 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.io.*;
 
 /**
  * Billboard class
@@ -9,7 +10,7 @@ import java.util.HashMap;
  * @version - under development
  */
 
-public class Billboard {
+public class Billboard implements java.io.Serializable{
     String Billboard_name;
     String Billboard_text;
     String Bg_colour;
@@ -81,29 +82,19 @@ public class Billboard {
      *Sets Background colour of given Billboard
      * @param bg_colour Background colour of Billboard
      */
-    public void Bg_colour(String bg_colour) throws Exception
+    public void Bg_colour(String bg_colour)
     {
-        //if bg colour does not exist
-        //if (!(bg_colour == ) )
-        //{
-            //throw exception
-            //throw new Exception("Colour does not exist");
-        //}
-        //else
-        //{
-            //set billboard bg colour
-            this.Bg_colour = bg_colour;
-        //}
+        //set billboard bg colour
+        this.Bg_colour = bg_colour;
     }
 
     /**
      *Adds image to given Billboard
      * @param file_name file name of image to add to Billboard
      */
-    public void Add_image(String file_name) throws Exception
+    public void Add_image(String file_name)
     {
-        //if file name does not exist
-        //throw new exception
+        //set image file name
         this.Image_file = file_name;
     }
 

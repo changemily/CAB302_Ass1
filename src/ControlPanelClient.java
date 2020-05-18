@@ -41,7 +41,7 @@ public class ControlPanelClient {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-            String request = "Login request";
+            String request = "Delete billboard";
 
             //request given by user saved in local var request
             switch(request)
@@ -52,15 +52,20 @@ public class ControlPanelClient {
                     break;
 
                 case "List billboards":
+                    listBillboards(oos, request);
                     break;
 
                 case "Get Billboard info":
+                    getBillboardInfo(oos, request, "Billboard_3");
                     break;
 
                 case "Create edit billboard":
+                    createEditBillboard(oos, request, "Billboard_3", "Hello", "Black",
+                            "Image.jpg", "2021-01-01T10:00:00.00", "10", "none");
                     break;
 
                 case "Delete billboard":
+                    deleteBillboard(oos, request, "Billboard_3");
                     break;
 
                 case "View schedule":
@@ -159,6 +164,72 @@ public class ControlPanelClient {
         //send username and hashed password to server
         oos.writeObject(username);
         oos.writeObject(hashedPassword);
+    }
+
+    /**
+     * Sends List billboards request to the server
+     * @param oos Object output stream
+     * @param buttonClicked Request given by the control panel GUI
+     * @throws IOException
+     */
+    public static void listBillboards(ObjectOutputStream oos, String buttonClicked)throws IOException{
+        //Output clients request to the server
+        oos.writeObject(buttonClicked);
+    }
+
+    /**
+     * Sends a get info request to the server
+     * @param oos Object output stream of client
+     * @param buttonClicked Request given by Contol Panel GUI
+     * @param billboardName What the users wants to name the billboard
+     * @param text The text that should be displayed on the billobard
+     * @param bg_colour The background colour the billboard should be
+     * @param image The string name of the image that will be displayed with the billboard
+     * @param startTime The time the billboard should start displaying
+     * @param duration The amount of time the billboard should display
+     * @param recurrence The frequency the billboard should display
+     * @throws IOException
+     */
+    public static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String billboardName, String text,
+                                           String bg_colour, String image, String startTime, String duration, String recurrence)throws IOException{
+        //Write the request to the server
+        oos.writeObject(buttonClicked);
+        //Write the details to the server
+        oos.writeObject(billboardName);
+        oos.writeObject(text);
+        oos.writeObject(bg_colour);
+        oos.writeObject(image);
+        oos.writeObject(startTime);
+        oos.writeObject(duration);
+        oos.writeObject(recurrence);
+    }
+
+    /**
+     * Sends a get info request to the server
+     * @param oos Object output stream of client
+     * @param buttonClicked Request given by Contol Panel GUI
+     * @param billboardName Name of the billboard info requested
+     * @throws IOException
+     */
+    public static void getBillboardInfo(ObjectOutputStream oos, String buttonClicked, String billboardName)throws IOException{
+        //Write the request to the server
+        oos.writeObject(buttonClicked);
+        //Write the billboardname to the server
+        oos.writeObject(billboardName);
+    }
+
+    /**
+     * Sends a delete request to the server
+     * @param oos Object output stream of the client
+     * @param buttonClicked Request given by control panel GUI
+     * @param billboardName Name of the billboard to be deleted
+     * @throws IOException
+     */
+    public static void deleteBillboard(ObjectOutputStream oos, String buttonClicked, String billboardName)throws IOException{
+        //Write the request to the server
+        oos.writeObject(buttonClicked);
+        //Write the billboardName to the server
+        oos.writeObject(billboardName);
     }
 
     /**

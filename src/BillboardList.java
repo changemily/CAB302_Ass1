@@ -5,8 +5,7 @@ import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,7 +27,7 @@ import org.xml.sax.SAXException;
  * @author - Jarod Evans
  * @version - under development
  */
-public class BillboardList {
+public class BillboardList implements java.io.Serializable {
 
     //Setup a hashmap for tracking billboards.
     HashMap<String, Billboard> billboardHashMap;
@@ -104,23 +103,23 @@ public class BillboardList {
         //For every entry of billboard list
         for (String BillboardName : billboardHashMap.keySet())
         {
-            //if given billboard name matches billboard name in schedule
+            //if given billboard name matches billboard name in billboard list
             if (BillboardName.equals(billboard_name))
             {
-                //store viewings of billboard in singleBBschedule collection
+                //store billboard info in local variable
                 billboard_info = billboardHashMap.get(billboard_name);
                 billboard_exists = true;
                 break;
             }
         }
 
-        //if billboard is not scheduled
+        //if billboard is not in list
         if (billboard_exists == false)
         {
-            throw new Exception("The billboard does not exist in the schedule");
+            throw new Exception("The billboard does not exist in the billboard list");
         }
 
-        //return billboard
+        //return billboard info
         return billboard_info;
     }
 
@@ -158,7 +157,7 @@ public class BillboardList {
 
     public void RetrieveDBbillboardList(Connection connection) throws Exception {
 
-        final String SELECT = "SELECT * FROM billboard ORDER BY billboard_name desc";
+        final String SELECT = "SELECT * FROM Billboards ORDER BY billboard_name desc";
 
 
         //create statement
@@ -177,11 +176,11 @@ public class BillboardList {
             String time_scheduled = rs.getString(4);
             String Duration_mins = rs.getString(5);
 
-            //store time scheduled and duration pair in array schedule_info
+            //create a billboard using the information
             Billboard billboard = new Billboard(billboard_name, text, bg_colour,
                     image_file, LocalDateTime.parse(time_scheduled), Duration.parse(Duration_mins));
 
-            //store billboard name with corresponding times scheduled and durations
+            //store billboard name with corresponding billboard
             billboardHashMap.put(billboard_name, billboard);
         }
 
@@ -199,7 +198,7 @@ public class BillboardList {
         for (String billboard_name : billboardHashMap.keySet())
         {
             //remove each entry from DB using billboard_name
-            st.execute("DELETE FROM Schedule WHERE billboard_name=\""+billboard_name+"\";");
+            st.execute("DELETE FROM Billboards WHERE billboard_name=\""+billboard_name+"\";");
         }
     }
 
@@ -208,7 +207,7 @@ public class BillboardList {
         //create statement
         Statement st = connection.createStatement();
 
-        //for every billboard name in Billboard_schedule
+        //for every billboard name in billboardHashMap
         for (Billboard billboard : billboardHashMap.values() ) {
 
             //Pass the values of each billboard to the SQL statement.
@@ -219,7 +218,7 @@ public class BillboardList {
             LocalDateTime time_scheduled = billboard.Time_scheduled;
             Duration Duration_mins = billboard.duration;
 
-            st.executeQuery("INSERT INTO Schedule (billboard_name, text, bg_colour, image_file, time_scheduled, Duration_mins) " +
+            st.executeQuery("INSERT INTO Billboards (billboard_name, text, bg_colour, image_file, time_scheduled, Duration_mins) " +
                     "VALUES(\""+billboard_name+"\",\""+text+"\",\""+bg_colour+"\",\""+image_file+"\",\""+time_scheduled+"\",\""+Duration_mins+"\");");
         }
 
