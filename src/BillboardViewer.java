@@ -2,7 +2,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;

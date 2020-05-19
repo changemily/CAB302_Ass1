@@ -74,6 +74,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             PreviewBox.setBackground(Color.white);
             PreviewBox.setForeground(Color.black);
             PreviewScrollPanel.setViewportView(PreviewBox);
+            PreviewBox.setEditable(false);
         }
 
         // Create ColourPickerLabel
