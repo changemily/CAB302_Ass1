@@ -1,10 +1,12 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  * @author Liam
@@ -102,6 +104,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         JTextField ImageURL = new JTextField();
         ImageURL.setBackground(Color.white);
         ImageURL.setForeground(Color.black);
+        ImageURL.setEditable(false);
 
         //Create ExtraInfoLabel
         JLabel ExtraInfoLabel = new JLabel();
@@ -121,7 +124,17 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         }
 
         // Create ImageBrowseBttn
-        JButton ImageBrowseBttn = new JButton();
+        JButton ImageBrowseBttn = new JButton(( new AbstractAction("Browse Image") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser FileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+                int returnValue = FileChooser.showOpenDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = FileChooser.getSelectedFile();
+                    ImageURL.setText(selectedFile.getAbsolutePath());
+                }
+            }
+        }));
         ImageBrowseBttn.setText("Browse");
         ImageBrowseBttn.setBackground(new Color(230, 230, 230));
         ImageBrowseBttn.setForeground(Color.black);
@@ -228,10 +241,10 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                                 .addComponent(ExitBttn)
                                                                 .addGap(425, 425, 425))
                                                         .addGroup(MainPanelLayout.createSequentialGroup()
-                                                                .addGroup(MainPanelLayout.createParallelGroup()
+                                                                .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                                                         .addComponent(MessageLabel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                                                                        .addGroup(MainPanelLayout.createSequentialGroup()
-                                                                                .addComponent(ImageURL, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
+                                                                        .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
+                                                                                .addComponent(ImageURL)
                                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                                 .addComponent(ImageBrowseBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
                                                                         .addComponent(MessageField, GroupLayout.PREFERRED_SIZE, 328, GroupLayout.PREFERRED_SIZE)
