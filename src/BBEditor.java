@@ -133,7 +133,13 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         SaveBttn.setForeground(Color.black);
 
         // Create ExitBttn
-        JButton ExitBttn = new JButton();
+        JButton ExitBttn = new JButton(( new AbstractAction("Exit")
+        {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                System.exit(0);
+            }
+        }));
         ExitBttn.setText("Exit Without Saving");
         ExitBttn.setBackground(new Color(230, 230, 230));
         ExitBttn.setForeground(Color.black);
