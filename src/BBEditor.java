@@ -8,6 +8,7 @@ import javax.swing.event.ChangeListener;
 
 /**
  * @author Liam
+ * To do: complete button functionaity, make preview panel dislplay actual preview
  */
 
 public class BBEditor extends JFrame implements Runnable, ActionListener, ChangeListener
