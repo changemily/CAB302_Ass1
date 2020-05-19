@@ -141,7 +141,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
         // Create SaveBttn
         JButton SaveBttn = new JButton();
-        SaveBttn.setText("Save And Exit");
+        SaveBttn.setText("Save");
         SaveBttn.setBackground(new Color(230, 230, 230));
         SaveBttn.setForeground(Color.black);
 
@@ -153,7 +153,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 System.exit(0);
             }
         }));
-        ExitBttn.setText("Exit Without Saving");
+        ExitBttn.setText("Exit (Save Changes First)");
         ExitBttn.setBackground(new Color(230, 230, 230));
         ExitBttn.setForeground(Color.black);
 
@@ -336,6 +336,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         setVisible(true);
     }
 
+    @SuppressWarnings("TryWithIdenticalCatches")
     @Override
     public void run()
     {
