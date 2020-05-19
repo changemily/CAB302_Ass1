@@ -187,8 +187,8 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         // Format JButton
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        //Add the frame as an actionListener
-        //button.addActionListener(this);
+        //Add the JButton as an actionListener
+        button.addActionListener(this);
 
         // Add JButton to specified JPanel
         panel.add(button);
@@ -212,6 +212,9 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Format JCheckBox
         box.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        //Add the JCheckBox as an actionListener
+        box.addActionListener(this);
 
         // Add JCheckBox to specified JPanel
         panel.add(box);
@@ -243,8 +246,27 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent actionEvent) {
+        //Get button that has been clicked - event source
+        Object buttonClicked = actionEvent.getSource();
 
+        // Checks if the Save and Exit button has been clicked
+        if (buttonClicked == saveExitButton) {
+            System.out.println("save and exit clicked");
+            System.out.println(username.getText());
+            System.out.println(password.getText());
+            System.out.println(createBillboardsBox.isSelected());
+            System.out.println(scheduleBillboardsBox.isSelected());
+            System.out.println(editAllBillboardsBox.isSelected());
+            System.out.println(editUsersBox.isSelected());
+            //run save info, and close window
+        }
+
+        // Checks if the Exit Without Saving button has been clicked
+        else if (buttonClicked == exitWithoutSaving) {
+            System.out.println("exit without saving clicked");
+            //run close window
+        }
     }
 
     @Override
