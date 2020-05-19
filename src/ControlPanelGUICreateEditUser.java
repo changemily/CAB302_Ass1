@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Create/Edit User class for Control Panel GUI
@@ -9,17 +11,32 @@ import java.awt.*;
  *
  * NOTES: Current version is a basic design; some functionality still needs to be added; further refinement required
  */
-public class ControlPanelGUICreateEditUser extends JFrame {
+public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener {
+    JTextField username;
+    JTextField password;
+    JButton saveExitButton;
+    JButton exitWithoutSaving;
+    JCheckBox createBillboardsBox;
+    JCheckBox scheduleBillboardsBox;
+    JCheckBox editAllBillboardsBox;
+    JCheckBox editUsersBox;
+
     /**
      * Method used to create a GUI window for the Create/Edit User Screen
+     */
+    public ControlPanelGUICreateEditUser() {
+        // Set window title
+        super("Create/Edit User");
+    }
+
+    /**
+     * Method used to create a GUI window for the Create/Edit User screen
      * @throws ClassNotFoundException Exception handling
      * @throws UnsupportedLookAndFeelException Exception handling
      * @throws InstantiationException Exception handling
      * @throws IllegalAccessException Exception handling
      */
-    public ControlPanelGUICreateEditUser() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        // Set window title
-        super("Create/Edit User");
+    private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
 
         // Set look and feel of GUI to resemble operating system look and feel
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -27,94 +44,59 @@ public class ControlPanelGUICreateEditUser extends JFrame {
         // Default close operation, so window does not continue running after it is closed
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Add username label, inside of a JPanel
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        leftPanel.add(Box.createVerticalStrut(50));
-        JLabel usernameLabel = new JLabel("Username");
-        usernameLabel.setFont(new Font(null, Font.PLAIN, 15));
-        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        leftPanel.add(usernameLabel);
+        // Create a left column JPanel for formatting
+        JPanel leftPanel = newFormatPanel();
 
-        // Add username text field, inside of left JPanel
-        JTextField username;
-        username = new JTextField(15);
-        leftPanel.add(username);
-        leftPanel.add(Box.createVerticalStrut(20));
+        // Create username JLabel, add to left JPanel
+        newLabel("Username", leftPanel);
 
-        // Add password label, inside of left JPanel
-        JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setFont(new Font(null, Font.PLAIN, 15));
-        passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        leftPanel.add(passwordLabel);
+        // Create username JTextField, add to left JPanel
+        username = newTextField(leftPanel);
 
-        // Add password text field, inside of left JPanel
-        JTextField password;
-        password = new JTextField(15);
-        leftPanel.add(password);
-        leftPanel.add(Box.createVerticalStrut(40));
+        // Create password JLabel, add to left JPanel
+        newLabel("Password", leftPanel);
 
-        // Add Save and Exit button, inside of left panel
-        JButton saveAndExitButton = new JButton("Save and Exit");
-        saveAndExitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        leftPanel.add(saveAndExitButton);
-        leftPanel.add(Box.createVerticalStrut(5));
+        // Create password JTextField, add to left JPanel
+        password = newTextField(leftPanel);
+        leftPanel.add(Box.createVerticalStrut(20)); // Formatting
 
-        // Add Exit Without Saving button, inside of left panel
-        JButton exitWithoutSavingButton = new JButton("Exit Without Saving");
-        exitWithoutSavingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        leftPanel.add(exitWithoutSavingButton);
-        leftPanel.add(Box.createVerticalStrut(50));
+        // Create Save and Exit JButton, add to left JPanel
+        saveExitButton = newButton("Save and Exit", leftPanel);
 
-        // Creating a right column JPanel for spacing
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.add(Box.createVerticalStrut(50));
+        // Create Exit Without Saving JButton, add to left JPanel
+        exitWithoutSaving = newButton("Exit Without Saving", leftPanel);
+        leftPanel.add(Box.createVerticalStrut(45)); // Formatting
 
-        // Creating another spacing JPanel, with a border
+        // Create a right column JPanel for formatting
+        JPanel rightPanel = newFormatPanel();
+
+        // Create a JPanel for spacing and border
         JPanel spacer = new JPanel();
         spacer.setLayout(new BoxLayout(spacer, BoxLayout.X_AXIS));
         spacer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        spacer.add(Box.createHorizontalStrut(10));
+        spacer.add(Box.createHorizontalStrut(10)); // Formatting
 
-        // Add User Permissions label, inside of a JPanel
-        JPanel permissionsPanel = new JPanel();
-        permissionsPanel.setLayout(new BoxLayout(permissionsPanel, BoxLayout.Y_AXIS));
-        permissionsPanel.add(Box.createVerticalStrut(20));
-        JLabel userPermissionsLabel = new JLabel("User Permissions");
-        userPermissionsLabel.setFont(new Font(null, Font.PLAIN, 15));
-        userPermissionsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        permissionsPanel.add(userPermissionsLabel);
-        permissionsPanel.add(Box.createVerticalStrut(20));
+        // Create User Permissions JLabel
+        JPanel permissionsPanel = newSubPanel("User Permissions");
 
-        // Add Create Billboards checkbox, inside of permissions JPanel
-        JCheckBox createBillboardsBox = new JCheckBox("Create Billboards");
-        createBillboardsBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        permissionsPanel.add(createBillboardsBox);
-        permissionsPanel.add(Box.createVerticalStrut(20));
+        // Create Create Billboards JCheckBox, add to permissions JPanel
+        createBillboardsBox = newCheckBox("Create Billboards", permissionsPanel);
 
-        // Add Schedule Billboards checkbox, inside of permissions JPanel
-        JCheckBox scheduleBillboardsBox = new JCheckBox("Schedule Billboards");
-        scheduleBillboardsBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        permissionsPanel.add(scheduleBillboardsBox);
-        permissionsPanel.add(Box.createVerticalStrut(20));
+        // Create Schedule Billboards JCheckBox, add to permissions JPanel
+        scheduleBillboardsBox = newCheckBox("Schedule Billboards", permissionsPanel);
 
-        // Add Edit All Billboards checkbox, inside of permissions JPanel
-        JCheckBox editAllBillboardsBox = new JCheckBox("Edit All Billboards");
-        editAllBillboardsBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        permissionsPanel.add(editAllBillboardsBox);
-        permissionsPanel.add(Box.createVerticalStrut(20));
+        // Create Edit All Billboards JCheckBox, add to permissions JPanel
+        editAllBillboardsBox = newCheckBox("Edit All Billboards", permissionsPanel);
 
-        // Add Edit Users (Admin) checkbox, inside of permissions JPanel
-        JCheckBox editUsersBox = new JCheckBox("Edit Users (Admin)");
-        editUsersBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        permissionsPanel.add(editUsersBox);
+        // Create Edit Users (Admin) JCheckBox, add to permissions JPanel
+        editUsersBox = newCheckBox("Edit Users (Admin)", permissionsPanel);
 
-        // Add JPanels inside of each other, with Structs for spacing
+        // Add permissions JPanel to spacer JPanel, with Structs for spacing
         spacer.add(permissionsPanel);
         spacer.add(Box.createHorizontalStrut(10));
+
+        // Add spacer JPanel to right JPanel, with Structs for spacing
         rightPanel.add(spacer);
-        permissionsPanel.add(Box.createVerticalStrut(20));
         rightPanel.add(Box.createVerticalStrut(50));
 
         // Window formatting
@@ -133,14 +115,158 @@ public class ControlPanelGUICreateEditUser extends JFrame {
     }
 
     /**
+     * This method creates a JPanel, used for formatting
+     * @return Returns a JPanel
+     */
+    private JPanel newFormatPanel() {
+        // Create JPanel
+        JPanel panel = new JPanel();
+
+        // Format JPanel
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(Box.createVerticalStrut(50));
+
+        // Returns a JPanel
+        return panel;
+    }
+
+    /**
+     * This method creates a JLabel, and adds it to a specified JPanel
+     * @param labelName The text that will appear in the JLabel
+     * @param panel The JPanel that the created JButton is to be added to
+     * @return Returns a JLabel
+     */
+    private JLabel newLabel(String labelName, JPanel panel) {
+        // Create JLabel
+        JLabel label = new JLabel(labelName);
+
+        // Format JLabel
+        label.setFont(new Font(null, Font.PLAIN, 15));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Add JLabel to specified JPanel
+        panel.add(label);
+
+        // Returns a JLabel
+        return label;
+    }
+
+    /**
+     * This method creates a JTextField, and adds it to a specified JPanel
+     * @param panel The JPanel that the created JTextField is to be added to
+     * @return Returns a JTextField
+     */
+    private JTextField newTextField(JPanel panel) {
+        // Create JTextField
+        JTextField textField;
+
+        // Format JTextField
+        textField = new JTextField(15);
+
+        // Add JTextField to the specified JPanel
+        panel.add(textField);
+
+        // Format specified JPanel
+        panel.add(Box.createVerticalStrut(20));
+
+        // Returns a JTextField
+        return textField;
+
+    }
+
+    /**
+     * This method creates a JButton, and adds it to a specified JPanel
+     * @param buttonName The text that will be displayed inside the button
+     * @param panel The JPanel that the created JButton is to be added to
+     * @return Returns a JButton
+     */
+    private JButton newButton(String buttonName, JPanel panel) {
+        //Create JButton
+        JButton button = new JButton(buttonName);
+
+        // Format JButton
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        //Add the frame as an actionListener
+        //button.addActionListener(this);
+
+        // Add JButton to specified JPanel
+        panel.add(button);
+
+        // Format
+        panel.add(Box.createVerticalStrut(5));
+
+        // Returns a JButton
+        return button;
+    }
+
+    /**
+     * This method creates a JCheckBox, and adds it to a specified JPanel
+     * @param name The text that will appear next to the JCheckBox
+     * @param panel  The JPanel that the created JCheckBox is to be added to
+     * @return Returns a JCheckBox
+     */
+    private JCheckBox newCheckBox(String name, JPanel panel) {
+        // Create JCheckBox
+        JCheckBox box = new JCheckBox(name);
+
+        // Format JCheckBox
+        box.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Add JCheckBox to specified JPanel
+        panel.add(box);
+
+        // Format
+        panel.add(Box.createVerticalStrut(20));
+
+        // Returns a JCheckBox
+        return box;
+    }
+
+    /**
+     * This method creates a JLabel, inside of a JPanel
+     * @param labelName The text that will appear in the JLabel
+     * @return Returns a JPanel
+     */
+    private JPanel newSubPanel(String labelName) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(Box.createVerticalStrut(20));
+        JLabel label = new JLabel(labelName);
+        label.setFont(new Font(null, Font.PLAIN, 15));
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(label);
+        panel.add(Box.createVerticalStrut(20));
+
+        // Returns a JPanel
+        return panel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void run() {
+        try {
+            createGUI();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Main method which creates a GUI window for the Create/Edit User Screen
      * @param args This method takes no arguments
-     * @throws ClassNotFoundException Exception handling
-     * @throws UnsupportedLookAndFeelException Exception handling
-     * @throws InstantiationException Exception handling
-     * @throws IllegalAccessException Exception handling
      */
-    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        new ControlPanelGUICreateEditUser();
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
     }
 }
