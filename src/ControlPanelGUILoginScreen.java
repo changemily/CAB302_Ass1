@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Login Screen class for Control Panel GUI
@@ -9,17 +11,27 @@ import java.awt.*;
  *
  * NOTES: Current version is a basic design; button functionality still needs to be added; further refinement required
  */
-public class ControlPanelGUILoginScreen extends JFrame {
+public class ControlPanelGUILoginScreen extends JFrame implements Runnable, ActionListener {
+    JButton loginButton;
+    JTextField username;
+    JTextField password;
+
     /**
-     * Method used to create a GUI window for the Login Screen
+     * Method used to create a GUI window for the Login screen
+     */
+    public ControlPanelGUILoginScreen() {
+        // Set window title
+        super("Billboard Control Panel Login Screen");
+    }
+
+    /**
+     * Method used to create a GUI window for the Login screen
      * @throws ClassNotFoundException Exception handling
      * @throws UnsupportedLookAndFeelException Exception handling
      * @throws InstantiationException Exception handling
      * @throws IllegalAccessException Exception handling
      */
-    public ControlPanelGUILoginScreen() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        // Set window title
-        super("Billboard Control Panel Login Screen");
+    private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
 
         // Set look and feel of GUI to resemble operating system look and feel
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -27,45 +39,31 @@ public class ControlPanelGUILoginScreen extends JFrame {
         // Default close operation, so window does not continue running after it is closed
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Add title label, inside of a JPanel
-        JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
-        titlePanel.add(new JLabel("Welcome to the Billboard Control Panel"));
+        // Create title label, inside of a JPanel
+        JPanel titlePanel = newLabel("Welcome to the Billboard Control Panel");
+        titlePanel.add(Box.createHorizontalStrut(100));
 
-        // Add subtitle label, inside of a JPanel
-        JPanel subtitlePanel = new JPanel();
-        subtitlePanel.setLayout(new BoxLayout(subtitlePanel, BoxLayout.X_AXIS));
-        subtitlePanel.add(new JLabel("Please enter login details to begin"));
+        // Create subtitle label, inside of a JPanel
+        JPanel subtitlePanel = newLabel("Please enter login details to begin");
+        subtitlePanel.add(Box.createHorizontalStrut(100));
 
-        // Add username label, inside of a JPanel
-        JPanel usernamePanel = new JPanel();
-        usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
-        usernamePanel.add(Box.createHorizontalStrut(100));
-        usernamePanel.add(new JLabel("Username     "));
+        // Create username label, inside of a JPanel
+        JPanel usernamePanel = newLabel("Username     ");
 
-        // Add username text field, inside of a JPanel
-        JTextField username;
-        username = new JTextField(15);
-        usernamePanel.add(username);
-        usernamePanel.add(Box.createHorizontalStrut(100));
+        // Create username text field, and add to the username JPanel
+        username = newTextField(usernamePanel);
 
-        // Add password label, inside of a JPanel
-        JPanel labelPassword = new JPanel();
-        labelPassword.setLayout(new BoxLayout(labelPassword, BoxLayout.X_AXIS));
-        labelPassword.add(Box.createHorizontalStrut(100));
-        labelPassword.add(new JLabel("Password      "));
+        // Create password label, inside of a JPanel
+        JPanel passwordPanel = newLabel("Password      ");
 
-        // Add password text field, inside of a JPanel
-        JTextField password;
-        password = new JTextField(15);
-        labelPassword.add(password);
-        labelPassword.add(Box.createHorizontalStrut(100));
+        // Create password text field, and add to the password JPanel
+        password = newTextField(passwordPanel);
 
-        // Add login button, inside of a JPanel
-        JPanel loginPanel = new JPanel();
-        loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.X_AXIS));
-        JButton loginButton2 = new JButton("Login");
-        loginPanel.add(loginButton2);
+        // Create JPanel for the login button
+        JPanel loginPanel = newButtonPanel();
+
+        // Create login button, inside of login JPanel
+        loginButton = newButton("Login", loginPanel);
 
         // Window formatting
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -76,7 +74,7 @@ public class ControlPanelGUILoginScreen extends JFrame {
         getContentPane().add(Box.createVerticalStrut(20));
         getContentPane().add(usernamePanel);
         getContentPane().add(Box.createVerticalStrut(10));
-        getContentPane().add(labelPassword);
+        getContentPane().add(passwordPanel);
         getContentPane().add(Box.createVerticalStrut(20));
         getContentPane().add(loginPanel);
         getContentPane().add(Box.createVerticalStrut(50));
@@ -89,14 +87,116 @@ public class ControlPanelGUILoginScreen extends JFrame {
     }
 
     /**
+     * This method creates a JLabel, inside of a JPanel
+     * @param label The text of the JLabel
+     * @return Returns a JPanel
+     */
+    private JPanel newLabel(String label) {
+        // Create JPanel
+        JPanel labelPanel = new JPanel();
+
+        // Format JPanel
+        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
+        labelPanel.add(Box.createHorizontalStrut(100));
+
+        // Add the JLabel to the created JPanel
+        labelPanel.add(new JLabel(label));
+
+        // Returns a JPanel with a JLabel inside
+        return labelPanel;
+    }
+
+    /**
+     * This method creates a JTextField, and adds it to a specified JPanel
+     * @param panel The JPanel that the created JTextField is to be added to
+     * @return Returns a JTextField
+     */
+    private JTextField newTextField(JPanel panel) {
+        // Create JTextField
+        JTextField textField;
+
+        // Format JTextField
+        textField = new JTextField(15);
+
+        // Add JTextField to the specified JPanel
+        panel.add(textField);
+
+        // Format specified JPanel
+        panel.add(Box.createHorizontalStrut(100));
+
+        // Returns a JText field
+        return textField;
+    }
+
+    /**
+     * This method creates a JPanel which can hold a button
+     * @return Returns a JPanel
+     */
+    private JPanel newButtonPanel() {
+        // Create JPanel
+        JPanel buttonPanel = new JPanel();
+
+        // Format JPanel
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+
+        // Returns a JPanel
+        return buttonPanel;
+    }
+
+    /**
+     * This method creates a JButton, and adds it to a specified JPanel
+     * @param buttonName The text that will be displayed inside the button
+     * @param panel The JPanel that the created JButton is to be added to
+     * @return Returns a JButton
+     */
+    private JButton newButton(String buttonName, JPanel panel) {
+        JButton button = new JButton(buttonName);
+
+        //Add the frame as an actionListener
+        button.addActionListener(this);
+
+        // Add JButton to specified JPanel
+        panel.add(button);
+
+        // Returns a JButton
+        return button;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        //Get button that has been clicked - event source
+        Object buttonClicked = actionEvent.getSource();
+
+        // Checks if the login button has been clicked
+        if (buttonClicked==loginButton) {
+            System.out.println("login button clicked");
+            System.out.println(username.getText());
+            System.out.println(password.getText());
+            //run login credentials check with username and password, then if successful open Control Panel GUI
+            //SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel());
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            createGUI();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Main method which creates a GUI window for the Login Screen
      * @param args This method takes no arguments
-     * @throws ClassNotFoundException Exception handling
-     * @throws UnsupportedLookAndFeelException Exception handling
-     * @throws InstantiationException Exception handling
-     * @throws IllegalAccessException Exception handling
      */
-    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        new ControlPanelGUILoginScreen();
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
     }
 }
