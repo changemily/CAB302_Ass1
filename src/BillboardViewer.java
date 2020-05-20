@@ -24,6 +24,7 @@ public class BillboardViewer extends JFrame{
     private final JLabel messageLabel = new JLabel();
     private final JEditorPane informationPane = new JEditorPane();
     private final JLabel pictureLabel = new JLabel();
+    private final JPanel sizedBillboard = new JPanel();
 
     private final String colourBlack = "#000000";
 
@@ -63,7 +64,7 @@ public class BillboardViewer extends JFrame{
      * @throws InstantiationException (error)
      * @throws IllegalAccessException (error)
      */
-    public BillboardViewer(File xml_file) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+    public BillboardViewer(File xml_file, boolean fullScreen) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         // Find screen size
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         // Parse File
@@ -77,8 +78,6 @@ public class BillboardViewer extends JFrame{
         findPictureDetails(parsedFile);
 
         // Create frame, and set basic settings
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        JFrame billboard = createBillboard();
 
         billboardVariation = calculateVariation();
 
@@ -111,13 +110,15 @@ public class BillboardViewer extends JFrame{
                 break;
         }
 
-        // Display billboard
-        displayAll(billboard);
-
-        // Pack billboard and set visible
-        billboard.pack();
-        billboard.setExtendedState(MAXIMIZED_BOTH);
-        billboard.setVisible(true);
+        // Display and pack billboard
+        if(fullScreen) {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            JFrame billboard = createBillboard();
+            displayAllFrame(billboard);
+            billboard.pack();
+            billboard.setExtendedState(MAXIMIZED_BOTH);
+            billboard.setVisible(true);
+        }
     }
 
     /**
@@ -127,12 +128,8 @@ public class BillboardViewer extends JFrame{
      * @throws ParserConfigurationException (error)
      * @throws IOException (error)
      * @throws SAXException (error)
-     * @throws ClassNotFoundException (error)
-     * @throws UnsupportedLookAndFeelException (error)
-     * @throws InstantiationException (error)
-     * @throws IllegalAccessException (error)
      */
-    public BillboardViewer(File xml_file, Dimension size) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+    public BillboardViewer(File xml_file, Dimension size) throws ParserConfigurationException, IOException, SAXException{
         // Find screen size
         screenSize = size;
         // Parse File
@@ -146,10 +143,6 @@ public class BillboardViewer extends JFrame{
         findPictureDetails(parsedFile);
 
         // Create frame, and set basic settings
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        JFrame billboard = createBillboard();
-        billboard.setPreferredSize(size);
-
         billboardVariation = calculateVariation();
 
         switch(billboardVariation){
@@ -182,11 +175,8 @@ public class BillboardViewer extends JFrame{
         }
 
         // Display billboard
-        displayAll(billboard);
-
-        // Pack billboard and set visible
-        billboard.pack();
-        billboard.setVisible(true);
+        setBillboardPanel();
+        addAllPanel(sizedBillboard);
     }
 
     /**
@@ -313,6 +303,12 @@ public class BillboardViewer extends JFrame{
         return billboard;
     }
 
+    private void setBillboardPanel(){
+        sizedBillboard.setBackground(billboardColourCode);
+        sizedBillboard.setLayout(new BoxLayout(sizedBillboard, BoxLayout.Y_AXIS));
+    }
+
+
     /**
      * Calculate which variation of billboard the file is
      * @return (int)
@@ -351,6 +347,9 @@ public class BillboardViewer extends JFrame{
         double messageBuffer = 0.95;
         double maxWidth = (screenSize.width * messageBuffer);
 
+        // Set Font to 1
+        textLabel.setFont(new Font(textLabel.getFont().getName(), Font.PLAIN, 1));
+
         Font textFont = textLabel.getFont(); // Font
         int fontSize = textFont.getSize(); // Font Size
         int stringSize = textLabel.getFontMetrics(textFont).stringWidth(messageText); // Calculate string width
@@ -378,6 +377,9 @@ public class BillboardViewer extends JFrame{
         double informationBuffer = 0.7;
         double maxWidth = (screenSize.width * informationBuffer);
         double maxHeight = (screenSize.height * heightBuffer);
+
+        // Set Font to 1
+        textLabel.setFont(new Font(textLabel.getFont().getName(), Font.PLAIN, 1));
 
         // Calculate max width if message exists
         // ratio for maximum size of information text compared to message text
@@ -547,7 +549,7 @@ public class BillboardViewer extends JFrame{
      * The add.(Box.createRigidArea) is set based upon the specifications
      * @param billboard (JFrame)
      */
-    private void displayAll(JFrame billboard){
+    private void displayAllFrame(JFrame billboard){
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         informationPane.setAlignmentX(Component.CENTER_ALIGNMENT);
         pictureLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -598,10 +600,66 @@ public class BillboardViewer extends JFrame{
                 billboard.add(Box.createRigidArea(new Dimension(0,((screenSize.height/2) - (resizedPicture.getHeight() / 2))/2 - (informationFontHeight / 2))));
                 billboard.add(informationPane);
                 billboard.add(Box.createRigidArea(new Dimension(0,((screenSize.height/2) - (resizedPicture.getHeight() / 2))/2 - (informationFontHeight / 2))));
-                System.out.println(informationText);
                 break;
         }
     }
+
+    private void addAllPanel(JPanel billboard){
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        informationPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pictureLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        switch(billboardVariation){
+            case 1: // Set messageLabel to middle
+                billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/2) - (messageFontHeight / 2))));
+                billboard.add(messageLabel);
+                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/2) - (messageFontHeight / 2))));
+                break;
+            case 2: // Set informationPane to middle
+                billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/2) - (informationFontHeight / 2))));
+                billboard.add(informationPane);
+                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/2) - (informationFontHeight / 2))));
+                break;
+            case 3: // Set pictureLabel to middle
+                billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/2) - (pictureImage.getHeight() / 2))));
+                billboard.add(pictureLabel);
+                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/2) - (pictureImage.getHeight() / 2))));
+                break;
+            case 4: // Set messageLabel to middle of top half, informationPane to middle of top half
+                billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/4) - (messageFontHeight / 2))));
+                billboard.add(messageLabel);
+                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/4) - (messageFontHeight / 2))));
+                billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/4) - (informationFontHeight / 2))));
+                billboard.add(informationPane);
+                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/4) - (informationFontHeight / 2))));
+                break;
+            case 5: // Set pictureLabel to middle of bottom 2/3rds, messageLabel to middle of rest
+                billboard.add(Box.createRigidArea(new Dimension(0,(2*(screenSize.height/3) - (resizedPicture.getHeight() / 2))/2 - (messageFontHeight / 2))));
+                billboard.add(messageLabel);
+                billboard.add(Box.createRigidArea(new Dimension(0,(2*(screenSize.height/3) - (resizedPicture.getHeight() / 2))/2 - (messageFontHeight / 2))));
+                billboard.add(pictureLabel);
+                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/3) - (resizedPicture.getHeight() / 2))));
+                break;
+            case 6: // Set pictureLabel to middle of top 2/3rds, informationPane to middle of rest
+                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/3) - (resizedPicture.getHeight() / 2))));
+                billboard.add(pictureLabel);
+                billboard.add(Box.createRigidArea(new Dimension(0,(2*(screenSize.height/3) - (resizedPicture.getHeight() / 2))/2 - (informationFontHeight / 2))));
+                billboard.add(informationPane);
+                billboard.add(Box.createRigidArea(new Dimension(0,(2*(screenSize.height/3) - (resizedPicture.getHeight() / 2))/2 - (informationFontHeight / 2))));
+                break;
+            case 7: // Set picture to middle of middle 1/3rds, pictureLabel to middle of top section, informationPane to middle of bottom section
+                billboard.add(Box.createRigidArea(new Dimension(0,((screenSize.height/2) - (resizedPicture.getHeight() / 2))/2 - (messageFontHeight / 2))));
+                billboard.add(messageLabel);
+                billboard.add(Box.createRigidArea(new Dimension(0,((screenSize.height/2) - (resizedPicture.getHeight() / 2))/2 - (messageFontHeight / 2))));
+                billboard.add(pictureLabel);
+                billboard.add(Box.createRigidArea(new Dimension(0,((screenSize.height/2) - (resizedPicture.getHeight() / 2))/2 - (informationFontHeight / 2))));
+                billboard.add(informationPane);
+                billboard.add(Box.createRigidArea(new Dimension(0,((screenSize.height/2) - (resizedPicture.getHeight() / 2))/2 - (informationFontHeight / 2))));
+                break;
+        }
+    }
+
+
 
     // External methods
     public Color getBillboardColour(){
@@ -632,11 +690,16 @@ public class BillboardViewer extends JFrame{
         return pictureDataString;
     }
 
+    public JPanel getSizedBillboard(){
+        return sizedBillboard;
+    }
+
 
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         File file;
         file = new File("./10.xml");
-        new BillboardViewer(file);
+        new BillboardViewer(file, true);
         //new BillboardViewer(file, new Dimension(1000,1000));
+
     }
 }

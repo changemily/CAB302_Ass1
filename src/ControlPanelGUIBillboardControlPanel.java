@@ -72,8 +72,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         //create new viewer to display xml
         File file = new File(billboardXML);
-        new BillboardViewer(file);
-        //previewPanel.add(billboardPreview);
+        BillboardViewer Billboard = new BillboardViewer(file, new Dimension(150,150));
+        JPanel billboardPreview = Billboard.getSizedBillboard();
+        previewPanel.add(billboardPreview);
 
 
         // Create button JPanel
