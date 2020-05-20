@@ -45,9 +45,11 @@ public class BillboardViewer extends JFrame{
     private boolean informationExists;
     private int informationFontHeight;
 
-    BufferedImage pictureImage;
-    BufferedImage resizedPicture;
+    private BufferedImage pictureImage;
+    private BufferedImage resizedPicture;
     private boolean pictureExists;
+    private String pictureURL;
+    private String pictureDataString;
 
 
     /**
@@ -275,9 +277,9 @@ public class BillboardViewer extends JFrame{
         boolean urlExists;
 
         try{ // try to find urlString, if passes, read url and pictureExists = true, if fails, urlExists = false
-            String urlString = picture.item(0).getAttributes().getNamedItem("url").getTextContent();
-            URL pictureURL = new URL(urlString);
-            pictureImage = ImageIO.read(pictureURL);
+            pictureURL = picture.item(0).getAttributes().getNamedItem("url").getTextContent();
+            URL picURL = new URL(pictureURL);
+            pictureImage = ImageIO.read(picURL);
             urlExists = true;
             pictureExists = true;
         } catch (Exception e){
@@ -286,9 +288,9 @@ public class BillboardViewer extends JFrame{
 
         if(!urlExists){ // if !urlExists, try to find dataString, if passes, read data and pictureExists = true, if fails, pictureExists = false
             try{
-                String dataString = picture.item(0).getAttributes().getNamedItem("data").getTextContent();
+                pictureDataString = picture.item(0).getAttributes().getNamedItem("data").getTextContent();
                 Base64.Decoder decoder = Base64.getDecoder(); // decodes BASE64 data
-                byte[] pictureBytes = decoder.decode(dataString);
+                byte[] pictureBytes = decoder.decode(pictureDataString);
                 ByteArrayInputStream byteInput = new ByteArrayInputStream(pictureBytes); // creates byte array
                 pictureImage = ImageIO.read(byteInput);
                 pictureExists = true;
@@ -422,7 +424,7 @@ public class BillboardViewer extends JFrame{
      * @param picture (BufferedImage)
      * @return (BufferedImage)
      */
-    public BufferedImage resizePicture(BufferedImage picture, double pictureBuffer){
+    private BufferedImage resizePicture(BufferedImage picture, double pictureBuffer){
         // Picture size
         int currentHeight = picture.getHeight();
         int currentWidth = picture.getWidth();
@@ -492,7 +494,7 @@ public class BillboardViewer extends JFrame{
     /**
      * Method for setting the informationPane
      */
-    public void setInformation(){
+    private void setInformation(){
         double heightBuffer; // vertical size limit for info text
         double oneBufferHeight = 1.0 / 2.0;
         double twoBufferHeight = 1.0 / 4.0;
@@ -528,7 +530,7 @@ public class BillboardViewer extends JFrame{
     /**
      * Method for setting the pictureLabel
      */
-    public void setPicture(){
+    private void setPicture(){
         double pictureBuffer = 0.5;
         if(billboardVariation == 7){
             pictureBuffer = (1.0/3.0);
@@ -545,7 +547,7 @@ public class BillboardViewer extends JFrame{
      * The add.(Box.createRigidArea) is set based upon the specifications
      * @param billboard (JFrame)
      */
-    public void displayAll(JFrame billboard){
+    private void displayAll(JFrame billboard){
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         informationPane.setAlignmentX(Component.CENTER_ALIGNMENT);
         pictureLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -599,9 +601,36 @@ public class BillboardViewer extends JFrame{
                 System.out.println(informationText);
                 break;
         }
-
     }
 
+    // External methods
+    public Color getBillboardColour(){
+        return billboardColourCode;
+    }
+
+    public String getMessageText(){
+        return messageText;
+    }
+
+    public Color getMessageColour(){
+        return messageColourCode;
+    }
+
+    public String getInformationText(){
+        return informationText;
+    }
+
+    public Color getInformationColour(){
+        return informationColourCode;
+    }
+
+    public String getPictureURL(){
+        return pictureURL;
+    }
+
+    public String getPictureDataString(){
+        return pictureDataString;
+    }
 
 
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
