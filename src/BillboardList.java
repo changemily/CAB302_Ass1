@@ -18,7 +18,9 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -233,7 +235,7 @@ public class BillboardList implements java.io.Serializable {
                             String backgroundColour, String billboardImage) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException, TransformerException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(new File("xmlFile"));
+        Document document = documentBuilder.parse(new File(xmlFile));
 
         //Update the Billboard name
         XPath xPath = XPathFactory.newInstance().newXPath();
@@ -248,8 +250,45 @@ public class BillboardList implements java.io.Serializable {
         transFormer.setOutputProperty(OutputKeys.METHOD, "xml");
 
         DOMSource dom = new DOMSource(document);
-        StreamResult stream = new StreamResult(new File("xmlFile"));
+        StreamResult stream = new StreamResult(new File(xmlFile));
         transFormer.transform(dom, stream);
     }
 
+
+    //A method that accepts an xml file and creates a billboard using it
+    public void importXML(String xmlFile) throws Exception {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse(new File(xmlFile));
+
+        //Use information in XNL to create a billboard.
+        //Get access to the XML files nodes and elements
+        NodeList listNodes = document.getElementsByTagName("billboard");
+        Node node = listNodes.item(0);
+        Element a = (Element) node;
+
+        //Getting the billboard Name
+        String BillboardName = xmlFile;
+
+        //Getting the billboard Text
+        String text = String.valueOf((Element) a.getElementsByTagName("billboard").item(0));
+
+        //Getting the billboard bg Colour
+        String bgColour = ((Element) node).getAttribute("billboard");
+
+        //Getting the billboard image File
+        String imageFile = String.valueOf((Element) a.getElementsByTagName("billboard").item(1));
+
+        //Setting a default billboard time Scheduled
+        LocalDateTime timeSchedule = null;
+
+        //Setting a default billboard Duration in minutes
+        Duration durationMinutes = Duration.ofMinutes(5);
+
+        //Setting the recurrence to a default empty
+        String recurrence = "none";
+
+        //Use the specs retrieved from the XML to create the billboard
+        Create_edit_Billboard(BillboardName, text, bgColour, imageFile, timeSchedule, durationMinutes, recurrence);
+    }
 }
