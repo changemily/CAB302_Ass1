@@ -153,7 +153,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 System.exit(0);
             }
         }));
-        ExitBttn.setText("Exit (Save Changes First)");
+        ExitBttn.setText("Exit");
         ExitBttn.setBackground(new Color(230, 230, 230));
         ExitBttn.setForeground(Color.black);
 
@@ -236,7 +236,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addGap(19, 19, 19)
                                                 .addGroup(MainPanelLayout.createParallelGroup()
                                                         .addGroup(MainPanelLayout.createSequentialGroup()
-                                                                .addComponent(SaveBttn, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(SaveBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(ExitBttn)
                                                                 .addGap(425, 425, 425))

@@ -90,9 +90,10 @@ public class ScheduleMultiMap {
                 String Start_TimeScheduled = viewing.StartTime_Scheduled.toString();
                 String duration = viewing.duration.toString();
                 String recurrence = viewing.Recurrence;
+                String time_scheduled = viewing.Scheduled_Time.toString();
 
-                st.executeQuery("INSERT INTO Schedule (billboard_name,Start_TimeScheduled, Duration,recurrence) " +
-                        "VALUES(\""+billboard_name+"\",\""+Start_TimeScheduled+"\",\""+duration+"\",\""+recurrence+"\");");
+                st.executeQuery("INSERT INTO Schedule (billboard_name,Start_TimeScheduled, Duration,recurrence, time_scheduled) " +
+                        "VALUES(\""+billboard_name+"\",\""+Start_TimeScheduled+"\",\""+duration+"\",\""+recurrence+"\",\""+time_scheduled+"\");");
             }
         }
 
@@ -129,6 +130,7 @@ public class ScheduleMultiMap {
             if(billboardListEntry.getKey().equals(new_billboard))
             {
                 billboard_exists = true;
+                break;
             }
         }
 
@@ -149,6 +151,7 @@ public class ScheduleMultiMap {
 
         else
         {
+            boolean schedule_clashes = false;
             outerloop:
             //For every entry of Billboard_schedule
             for (String existing_billboard : Billboard_schedule.keySet())
@@ -185,6 +188,7 @@ public class ScheduleMultiMap {
                     //if start and end time of new billboard matches start and end time of existing billboard
                     if(NewBB_startTime.isEqual(ExistBB_startTime)&& NewBB_endTime.isEqual(ExistBB_endTime))
                     {
+                        schedule_clashes = true;
                         //if number of viewings is 1
                         if (viewings.size() == 1)
                         {
@@ -202,7 +206,7 @@ public class ScheduleMultiMap {
                         //schedule new billboard for given time
                         Billboard_schedule.put(new_billboard, new_schedule_info);
 
-                        break;
+                        break outerloop;
 
                     }
 
@@ -210,6 +214,7 @@ public class ScheduleMultiMap {
                     //if scheduled time is between start and end time of existing billboard or start times are equal
                     else if(((isAfter && isBefore)||isEqual) == true)
                     {
+                        schedule_clashes = true;
                         //if number of viewings is 1
                         if (viewings.size() == 1)
                         {
@@ -256,18 +261,17 @@ public class ScheduleMultiMap {
                         break outerloop;
                     }
 
-                    //NO SCHEDULE CLASHES
-                    else
-                    {
-                        //create schedule info for billboard
-                        Schedule_Info schedule_info = new Schedule_Info(NewBB_startTime, NewBB_duration,recurrence);
-
-                        //add viewing to schedule
-                        Billboard_schedule.put(new_billboard, schedule_info);
-                        break outerloop;
-                    }
                 }
 
+            }
+
+            if (schedule_clashes == false)
+            {
+                //create schedule info for billboard
+                Schedule_Info schedule_info = new Schedule_Info(NewBB_startTime, NewBB_duration,recurrence);
+
+                //add viewing to schedule
+                Billboard_schedule.put(new_billboard, schedule_info);
             }
         }
     }
