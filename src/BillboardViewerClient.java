@@ -2,7 +2,10 @@ import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Time;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BillboardViewerClient {
 
@@ -35,12 +38,6 @@ public class BillboardViewerClient {
 
             //request viewer from server
             oos.writeObject(request);
-
-            //retrieve billboard scheduled for current time
-            String billboard_name = "4";
-
-            //write billboard's name to server
-            oos.writeObject(billboard_name);
 
             //flush output stream
             oos.flush();
