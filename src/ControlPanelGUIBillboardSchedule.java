@@ -51,7 +51,6 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         getContentPane().add(Box.createVerticalStrut(50)); // boundary
 
         // Display window
-        setLocation(new Point(100,100));
         pack();
         setLocationRelativeTo(null); // centers window
         setVisible(true);
@@ -125,7 +124,15 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         String[][] data = new String[24][8];
 
         // Populate array with billboard data
-        data[1][1] = "Billboard 1"; // Test, need to populate with real billboard data here
+        //data[1][1] = "Billboard 1" + " by " + "User 1"; // Test, need to populate with real billboard data
+        // For loop which iterates through each day
+        for(int day = 1; day < 8; day++) {
+            // For loop which iterates through each hour in the day
+            for(int hour = 0; hour < 24; hour++) {
+                // Populate each element in the array (this translates to each cell in the table)
+                data[hour][day] = day + " by " + hour; // Change this line to "BillboardName by User"
+            }
+        }
 
         // Returns a two-dimensional array for use in the JTable
         return data;
@@ -160,9 +167,33 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
 
         // Create and populate This Week JTable
         JTable thisWeek = new JTable(data, days);
-        //thisWeek.setBounds(30,40,200,300); //keep this line for formatting the JTable
-        JScrollPane scroll = new JScrollPane(thisWeek); // Scroll pane
+
+        // Makes cells uneditable by user
+        thisWeek.setEnabled(false);
+
+        // Formats the JTable
+        //thisWeek.setBounds(30,40,200,300); //keep this line
+
+        // Makes columns fixed, columns cannot be rearranged by user
+        thisWeek.getTableHeader().setReorderingAllowed(false);
+
+        // Set preferred widths for columns
+        //thisWeek.getColumnModel().getColumn(5).setPreferredWidth(days[5].length()); // Keep this line
+
+        // Makes columns fixed, column widths cannot be changed by user
+        // For loop iterates through each day
+        for (int j = 0; j <= days.length - 1; j++) {
+            thisWeek.getColumnModel().getColumn(j).setResizable(false);
+        }
+
+        // Add JScrollPane
+        JScrollPane scroll = new JScrollPane(thisWeek);
+        scroll.setPreferredSize(new Dimension(1000, 450));
+
+        // Add scroll bar to table JPanel and makes this week JTable visible
         table.add(scroll);
+
+        // Formatting
         table.add(Box.createHorizontalStrut(100));
 
         // Returns the JTable
