@@ -169,16 +169,18 @@ public class BillboardList implements java.io.Serializable {
         while (rs.next())
         {
             //store database info in local variables
-            String billboard_name = rs.getString(0);
-            String text = rs.getString(1);
-            String bg_colour = rs.getString(2);
-            String image_file = rs.getString(3);
-            String time_scheduled = rs.getString(4);
-            String Duration_mins = rs.getString(5);
+            String billboard_name = rs.getString(1);
+            String text = rs.getString(2);
+            String bg_colour = rs.getString(3);
+            String image_file = rs.getString(4);
+           /* String time_scheduled = rs.getString(5);
+            String Duration_mins = rs.getString(6);*/
 
             //create a billboard using the information
+            /*Billboard billboard = new Billboard(billboard_name, text, bg_colour,
+                    image_file, LocalDateTime.parse(time_scheduled), Duration.parse(Duration_mins));*/
             Billboard billboard = new Billboard(billboard_name, text, bg_colour,
-                    image_file, LocalDateTime.parse(time_scheduled), Duration.parse(Duration_mins));
+                    image_file);
 
             //store billboard name with corresponding billboard
             billboardHashMap.put(billboard_name, billboard);

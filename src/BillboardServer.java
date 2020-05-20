@@ -10,8 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
+import java.util.Timer;
 
 
 /**
@@ -33,7 +33,7 @@ public class BillboardServer {
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
-                    "Duration varchar (255), recurrence varchar (50));";
+                    "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50));";
     /**
      * Starts up Billboard server for connection to client
      * Sends and Receives information from client
@@ -52,6 +52,7 @@ public class BillboardServer {
 
         //populate schedule, billboard list and user list with data from database
         billboard_schedule.RetrieveDBschedule(connection);
+        billboard_list.RetrieveDBbillboardList(connection);
 
         Properties props = new Properties();
         FileInputStream fileIn = null;
@@ -158,7 +159,7 @@ public class BillboardServer {
                         break;
                     case "Billboard Viewer":
                         return_message = "Billboard Viewer";
-                        billboardViewer(ois);
+                        runViewer(ois,billboard_schedule);
                         break;
 
                     default:
@@ -356,6 +357,9 @@ public class BillboardServer {
                 "duration: " + duration +"\n"+
                 "recurrence: " +recurrence +"\n");
 
+        //Clear schedule table in DB
+        billboard_schedule.Clear_DBschedule(connection);
+
         //schedule billboard with client input
         billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
                 Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards());
@@ -400,12 +404,66 @@ public class BillboardServer {
         billboard_schedule.Write_To_DBschedule(connection);
     }
 
-    public static void billboardViewer(ObjectInputStream ois) throws SAXException, IllegalAccessException, IOException, InstantiationException, UnsupportedLookAndFeelException, ParserConfigurationException, ClassNotFoundException {
-        //read billboard name sent by client
-        Object Billboard_name = ois.readObject();
-        File file = new File("./"+Billboard_name+".xml");
-        System.out.println("xml file: "+ file);
-        new BillboardViewer(file);
+    public static void runViewer(ObjectInputStream ois, ScheduleMultiMap billboard_schedule) throws Exception {
+        //every 15 seconds
+        //for each viewing
+        //For every entry of Billboard_schedule
+        String Billboard_name ="test";
+        for (String billboard_name : billboard_schedule.Billboard_schedule.keySet())
+        {
+            //create array list to store viewings of billboard
+            ArrayList<Schedule_Info> viewings = billboard_schedule.getSchedule(billboard_name);
+
+            //for every viewing of billboard
+            for ( Schedule_Info viewing : viewings ) {
+
+                //if start time of viewing matches current time
+                if (viewing.StartTime_Scheduled.isEqual(LocalDateTime.now()))
+                {
+
+                }
+
+                else
+                {
+
+                }
+
+            }
+
+                //if other billboards are scheduled for the same time
+                    //check which was scheduled later
+                        //retrieve name of billboard
+            //else
+                //retrieve name of billboard
+            //else
+            //retrieve name of billboard
+
+            File file = new File("./"+Billboard_name+".xml");
+            System.out.println("xml file: "+ file);
+
+            new Timer();
+
+            new TimerTask() {
+                @Override
+                public void run(){
+                    try {
+                        new BillboardViewer(file, true);
+                    } catch (SAXException | ParserConfigurationException | IOException | ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+        }
+
+        //if billboard is recurring
+        //schedule viewing at fixed rate
+
+        //if billboard does not recur
+        //schedule viewing
+
     }
 
     /**
