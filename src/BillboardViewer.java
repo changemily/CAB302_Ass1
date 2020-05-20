@@ -1,3 +1,4 @@
+import org.junit.platform.commons.function.Try;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -10,13 +11,15 @@ import java.io.*;
 import java.net.URL;
 import java.util.Base64;
 import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * Billboard Viewer Gui
  * This class contains a Main method and method that creates a GUI window for the Billboard Viewer
  * @author - Harry Estreich
  * @version - under development
- * NOTES: Completed background colour
  */
 
 public class BillboardViewer extends JFrame{
@@ -31,17 +34,20 @@ public class BillboardViewer extends JFrame{
     // Billboard Details
     private Document parsedFile;
     private final Dimension screenSize;
-    private int billboardVariation;
+    private final int billboardVariation;
 
     // Billboard Details
+    private String billboardColourString;
     private Color billboardColourCode;
 
     private String messageText;
+    private String messageColourString;
     private Color messageColourCode;
     private boolean messageExists;
     private int messageFontHeight;
 
     private String informationText;
+    private String informationColourString;
     private Color informationColourCode;
     private boolean informationExists;
     private int informationFontHeight;
@@ -49,6 +55,7 @@ public class BillboardViewer extends JFrame{
     private BufferedImage pictureImage;
     private BufferedImage resizedPicture;
     private boolean pictureExists;
+    private boolean urlExists;
     private String pictureURL;
     private String pictureDataString;
 
@@ -190,22 +197,72 @@ public class BillboardViewer extends JFrame{
     }
 
     /**
+     * Creates an xml file and writes it to output
+     * @param output (Result)
+     * @throws ParserConfigurationException (error)
+     * @throws TransformerException (error)
+     */
+    public void writeFile(Result output) throws ParserConfigurationException, TransformerException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); // create a new instance
+        DocumentBuilder build = factory.newDocumentBuilder(); // create a new factory builder
+        Document file = build.newDocument(); // create a new file
+        file.setXmlStandalone(true);
+
+        // Write to file
+        Element billboardElement = file.createElement("billboard");
+        billboardElement.setAttribute("background", billboardColourString);
+        file.appendChild(billboardElement);
+
+        // Add message
+        if(messageExists) {
+            Element messageElement = file.createElement("message");
+            messageElement.setAttribute("colour", messageColourString);
+            messageElement.appendChild(file.createTextNode(messageText));
+            billboardElement.appendChild(messageElement);
+        }
+
+        // Add picture
+        if(pictureExists) {
+            Element pictureElement = file.createElement("picture");
+            if(urlExists){
+                pictureElement.setAttribute("url", pictureURL);
+            }
+            else{ // !urlExists
+                pictureElement.setAttribute("data", pictureDataString);
+            }
+            billboardElement.appendChild(pictureElement);
+        }
+
+        // Add information
+        if(informationExists) {
+            Element informationElement = file.createElement("information");
+            informationElement.setAttribute("colour", informationColourString);
+            informationElement.appendChild(file.createTextNode(informationText));
+            billboardElement.appendChild(informationElement);
+        }
+
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.transform(new DOMSource(file), output);
+
+    }
+
+    /**
      * Method for determining background colour, if none found, choose white
      * @param file (Document)
      */
     private void findBillboardCode(Document file){
-        String billboardColour;
         String colourWhite = "#FFFFFF";
 
         Element billboardElement = file.getDocumentElement(); // find any document elements
         if(billboardElement.hasAttribute("background")){ // check for background attribute
-            billboardColour = billboardElement.getAttribute("background"); // set backgroundColour to attribute
+            billboardColourString = billboardElement.getAttribute("background"); // set backgroundColour to attribute
         }
         else{ // no attribute
             // Colour variables
-            billboardColour = colourWhite;
+            billboardColourString = colourWhite;
         }
-        billboardColourCode = Color.decode(billboardColour); // decode colour string to colour code which java swing uses
+        billboardColourCode = Color.decode(billboardColourString); // decode colour string to colour code which java swing uses
     }
 
     /**
@@ -225,11 +282,11 @@ public class BillboardViewer extends JFrame{
 
         if(messageExists){ // if messageExists, then try to find messageColour, if fails, set to black
             try {
-                messageColour = message.item(0).getAttributes().getNamedItem("colour").getTextContent();
+                messageColourString = message.item(0).getAttributes().getNamedItem("colour").getTextContent();
             } catch (Exception e){
-                messageColour = colourBlack;
+                messageColourString = colourBlack;
             }
-            messageColourCode = Color.decode(messageColour);
+            messageColourCode = Color.decode(messageColourString);
         }
     }
 
@@ -239,7 +296,6 @@ public class BillboardViewer extends JFrame{
      */
     private void findInformationDetails(Document file){
         NodeList information = file.getElementsByTagName("information"); // Find information element
-        String informationColour;
 
         try{ // try to find informationText, if fails, informationExists = false
             informationText = information.item(0).getTextContent();
@@ -250,11 +306,11 @@ public class BillboardViewer extends JFrame{
 
         if(informationExists){ // if informationExists, then try to find informationColour, if fails, set to black
             try{
-                informationColour = information.item(0).getAttributes().getNamedItem("colour").getTextContent();
+                informationColourString = information.item(0).getAttributes().getNamedItem("colour").getTextContent();
             } catch (Exception e){
-                informationColour = colourBlack;
+                informationColourString = colourBlack;
             }
-            informationColourCode = Color.decode(informationColour);
+            informationColourCode = Color.decode(informationColourString);
         }
     }
 
@@ -264,7 +320,6 @@ public class BillboardViewer extends JFrame{
      */
     private void findPictureDetails(Document file){
         NodeList picture = file.getElementsByTagName("picture"); // Find picture element
-        boolean urlExists;
 
         try{ // try to find urlString, if passes, read url and pictureExists = true, if fails, urlExists = false
             pictureURL = picture.item(0).getAttributes().getNamedItem("url").getTextContent();
@@ -303,6 +358,9 @@ public class BillboardViewer extends JFrame{
         return billboard;
     }
 
+    /**
+     * Set billboard's settings
+     */
     private void setBillboardPanel(){
         sizedBillboard.setBackground(billboardColourCode);
         sizedBillboard.setLayout(new BoxLayout(sizedBillboard, BoxLayout.Y_AXIS));
@@ -604,6 +662,11 @@ public class BillboardViewer extends JFrame{
         }
     }
 
+    /**
+     * Creates a billboard based of which billboardVariation it is
+     * The add.(Box.createRigidArea) is set based upon the specification
+     * @param billboard (JPanel)
+     */
     private void addAllPanel(JPanel billboard){
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         informationPane.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -661,44 +724,150 @@ public class BillboardViewer extends JFrame{
 
 
 
-    // External methods
+    // External methods to get
+
+    /**
+     * Get billboard colour
+     * @return (Color)
+     */
     public Color getBillboardColour(){
         return billboardColourCode;
     }
 
+    /**
+     * Get message text
+     * @return (String)
+     */
     public String getMessageText(){
         return messageText;
     }
 
+    /**
+     * Get message colour
+     * @return (Color)
+     */
     public Color getMessageColour(){
         return messageColourCode;
     }
 
+    /**
+     * Get information text
+     * @return (String)
+     */
     public String getInformationText(){
         return informationText;
     }
 
+    /**
+     * Get information colour
+     * @return (Color)
+     */
     public Color getInformationColour(){
         return informationColourCode;
     }
 
+    /**
+     * Get picture URL
+     * @return (String)
+     */
     public String getPictureURL(){
         return pictureURL;
     }
 
+    /**
+     * Get picture data string
+     * @return (String)
+     */
     public String getPictureDataString(){
         return pictureDataString;
     }
 
+    /**
+     * Get sized JPanel for use in control panel GUI
+     * @return (JPanel)
+     */
     public JPanel getSizedBillboard(){
         return sizedBillboard;
     }
 
+    // External methods to write
 
-    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        File file;
-        file = new File("./10.xml");
-        new BillboardViewer(file, true);
+    /**
+     * Set billboard colour
+     * @param colour (Color)
+     */
+    public void setBillboardColour(Color colour){
+        billboardColourCode = colour;
+    }
+
+    /**
+     * Set message text
+     * @param text (String)
+     */
+    public void setMessageText(String text){
+        messageText = text;
+    }
+
+    /**
+     * Set message colour
+     * @param colour (Color)
+     */
+    public void setMessageColour(Color colour){
+        messageColourCode = colour;
+        messageColourString = String.format("#%02x%02x%02x", messageColourCode.getRed(), messageColourCode.getGreen(), messageColourCode.getBlue());
+    }
+
+    /**
+     * Set information text
+     * @param text (String)
+     */
+    public void setInformationText(String text){
+        informationText = text;
+    }
+
+    /**
+     * Set information colour
+     * @param colour (Color)
+     */
+    public void setInformationColour(Color colour){
+        informationColourCode = colour;
+        informationColourString = String.format("#%02x%02x%02x", informationColourCode.getRed(), informationColourCode.getGreen(), informationColourCode.getBlue());
+    }
+
+    /**
+     * Set picture URL
+     * @param url (String)
+     */
+    public void setPictureURL(String url){
+        pictureURL = url;
+    }
+
+    /**
+     * Set picture data string
+     * @param dataString (String)
+     */
+    public void setPictureDataString(String dataString){
+        pictureDataString = dataString;
+    }
+
+    /**
+     * Main program for testing
+     * @param args (String[])
+     * @throws IOException (error)
+     * @throws ParserConfigurationException (error)
+     * @throws SAXException (error)
+     * @throws ClassNotFoundException (error)
+     * @throws UnsupportedLookAndFeelException (error)
+     * @throws InstantiationException (error)
+     * @throws IllegalAccessException (error)
+     * @throws TransformerException (error)
+     */
+    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, TransformerException {
+        StreamResult output = new StreamResult("./10rewrite.xml");
+        File file = new File("./10.xml");
+        BillboardViewer BV = new BillboardViewer(file, true);
+        BV.setInformationText("Changed Text");
+        BV.writeFile(output);
         //new BillboardViewer(file, new Dimension(1000,1000));
 
     }
