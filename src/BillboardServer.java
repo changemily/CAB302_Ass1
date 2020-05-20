@@ -1,3 +1,7 @@
+import org.xml.sax.SAXException;
+
+import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -152,6 +156,11 @@ public class BillboardServer {
                     case "Set user password":
                         return_message = "user password has been set";
                         break;
+                    case "Billboard Viewer":
+                        return_message = "Billboard Viewer";
+                        billboardViewer(ois);
+                        break;
+
                     default:
                         return_message = "No match";
                 }
@@ -389,6 +398,14 @@ public class BillboardServer {
 
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
+    }
+
+    public static void billboardViewer(ObjectInputStream ois) throws SAXException, IllegalAccessException, IOException, InstantiationException, UnsupportedLookAndFeelException, ParserConfigurationException, ClassNotFoundException {
+        //read billboard name sent by client
+        Object Billboard_name = ois.readObject();
+        File file = new File("./"+Billboard_name+".xml");
+        System.out.println("xml file: "+ file);
+        new BillboardViewer(file);
     }
 
     /**
