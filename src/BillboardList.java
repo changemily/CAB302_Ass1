@@ -259,7 +259,7 @@ public class BillboardList implements java.io.Serializable {
     public void importXML(String xmlFile) throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(new File(xmlFile));
+        Document document = documentBuilder.parse(xmlFile);
 
         //Use information in XNL to create a billboard.
         //Get access to the XML files nodes and elements
@@ -290,5 +290,36 @@ public class BillboardList implements java.io.Serializable {
 
         //Use the specs retrieved from the XML to create the billboard
         Create_edit_Billboard(BillboardName, text, bgColour, imageFile, timeSchedule, durationMinutes, recurrence);
+    }
+
+
+    //A method that accepts an xml file and creates a billboard using it
+    public void exportXML(String billboardName) throws Exception {
+        //Use the billboard name provided to find the correct info
+        //to store in the xml file
+        //Find billboard info and store it in a billboard
+        Billboard billboardDetails = Get_billboard_info(billboardName);
+
+        //Create an xml file to store the information in.
+        String xmlFile = billboardDetails.Billboard_name;
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+        //Store the billboard name as the file name.
+        Document document = documentBuilder.parse(new File(xmlFile));
+
+        //Store the text of the billboard in the xml file.
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        Node billboardText = (Node) xPath.compile("/billboard/message").evaluate(document, XPathConstants.NODE);
+        billboardText.setTextContent(billboardDetails.Billboard_text);
+
+        //Store the bg colour of the billboard in the xml file.
+        Element bgColour = (Element) document.getElementsByTagName("billboard").item(0);
+        bgColour.setAttribute("background", billboardDetails.Bg_colour);
+
+        //Store the text of the billboard in the xml file.
+        xPath = XPathFactory.newInstance().newXPath();
+        Node billboardImage = (Node) xPath.compile("/billboard/picture").evaluate(document, XPathConstants.NODE);
+        billboardImage.setTextContent(billboardDetails.Image_file);
     }
 }
