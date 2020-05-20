@@ -35,11 +35,16 @@ public class BillboardServer {
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
                     "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50));";
+
     /**
      * Starts up Billboard server for connection to client
      * Sends and Receives information from client
      */
     public static void Run_Server() throws Exception {
+        //Setup a default user.
+        User DefaultUser = new User("DefaultUserName", "DefaultPassword",
+                "Create Billboards", "Edit All Billboards", "Schedule Billboards", "Edit Users");
+
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
 
