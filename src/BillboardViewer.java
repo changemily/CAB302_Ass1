@@ -1,4 +1,3 @@
-import org.junit.platform.commons.function.Try;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -30,11 +29,13 @@ public class BillboardViewer extends JFrame{
     private final JPanel sizedBillboard = new JPanel();
 
     private final String colourBlack = "#000000";
+    private final String colourWhite = "#FFFFFF";
+    private final String colourRed = "#ff0000";
 
     // Billboard Details
     private Document parsedFile;
     private final Dimension screenSize;
-    private final int billboardVariation;
+    private int billboardVariation;
 
     // Billboard Details
     private String billboardColourString;
@@ -59,6 +60,39 @@ public class BillboardViewer extends JFrame{
     private String pictureURL;
     private String pictureDataString;
 
+    /**
+     * Empty constructor that creates an error message
+     * @throws ClassNotFoundException (Error)
+     * @throws UnsupportedLookAndFeelException (Error)
+     * @throws InstantiationException (Error)
+     * @throws IllegalAccessException (Error)
+     */
+    public BillboardViewer() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Set variables to error settings
+        messageText = "Error found!";
+        messageColourCode = Color.decode(colourRed);
+        messageExists = true;
+        informationText = "No available billboard";
+        informationColourCode = Color.decode(colourBlack);
+        informationExists = true;
+
+        // Set format to message/information
+        billboardVariation = 4;
+
+        // Set components
+        setMessage();
+        setInformation();
+
+        // Display billboard
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        JFrame billboard = createBillboard();
+        displayAllFrame(billboard);
+        billboard.pack();
+        billboard.setExtendedState(MAXIMIZED_BOTH);
+        billboard.setVisible(true);
+    }
 
     /**
      * Constructor creates a GUI on an xml file in full screen
@@ -252,7 +286,6 @@ public class BillboardViewer extends JFrame{
      * @param file (Document)
      */
     private void findBillboardCode(Document file){
-        String colourWhite = "#FFFFFF";
 
         Element billboardElement = file.getDocumentElement(); // find any document elements
         if(billboardElement.hasAttribute("background")){ // check for background attribute
@@ -271,7 +304,6 @@ public class BillboardViewer extends JFrame{
      */
     private void findMessageDetails(Document file){
         NodeList message = file.getElementsByTagName("message"); // Find message element
-        String messageColour;
 
         try{ // try to find messageText, if fails, messageExists = false
             messageText = message.item(0).getTextContent();
@@ -853,21 +885,18 @@ public class BillboardViewer extends JFrame{
     /**
      * Main program for testing
      * @param args (String[])
-     * @throws IOException (error)
-     * @throws ParserConfigurationException (error)
-     * @throws SAXException (error)
      * @throws ClassNotFoundException (error)
      * @throws UnsupportedLookAndFeelException (error)
      * @throws InstantiationException (error)
      * @throws IllegalAccessException (error)
-     * @throws TransformerException (error)
      */
-    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, TransformerException {
-        StreamResult output = new StreamResult("./10rewrite.xml");
-        File file = new File("./10.xml");
-        BillboardViewer BV = new BillboardViewer(file, true);
-        BV.setInformationText("Changed Text");
-        BV.writeFile(output);
+    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException{
+        //File file = new File("./10.xml");
+        //BillboardViewer BV = new BillboardViewer(file, true);
+        //BV.setInformationText("Changed Text");
+        //StreamResult output = new StreamResult("./temp.xml");
+        //BV.writeFile(output);
+        new BillboardViewer();
         //new BillboardViewer(file, new Dimension(1000,1000));
 
     }
