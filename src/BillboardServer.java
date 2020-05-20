@@ -3,6 +3,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLNonTransientConnectionException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -41,7 +42,22 @@ public class BillboardServer {
         BillboardList billboard_list = new BillboardList();
 
         //create DB connection
-        Connection connection = DBconnection.getInstance();
+        Connection connection = null;
+
+        //A while loop that attempts to connect to the database
+        //Every 15 seconds until a connection is made.
+        boolean connectionMade = false;
+        while(connectionMade == false){
+            connection = DBconnection.getInstance();
+            if(connection != null){
+                connectionMade = true;
+                System.out.println("Connection made, resuming.");
+            }
+            else {
+                System.out.println("Connection cannot be made. Attempting connection again in 15 seconds...");
+                Thread.sleep(15000);
+            }
+        }
 
         //checks if tables exist in DB, if not adds tables
         Check_tables(connection);
