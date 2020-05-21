@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -277,7 +276,6 @@ public class BillboardServer {
         System.out.println("billboard name: "+BillboardInfo.Billboard_name);
         System.out.println("billboard bg colour: "+BillboardInfo.Bg_colour);
         System.out.println("billboard image file: "+BillboardInfo.Image_file);
-        System.out.println("billboard duration: "+BillboardInfo.duration);
     }
 
     /**
@@ -293,9 +291,6 @@ public class BillboardServer {
         String text = ois.readObject().toString();
         String bg_colour = ois.readObject().toString();
         String image = ois.readObject().toString();
-        String startTime = ois.readObject().toString();
-        String duration = ois.readObject().toString();
-        String recurrence = ois.readObject().toString();
         String billboard_creator = ois.readObject().toString();
 
         //For testing purposes
@@ -305,14 +300,10 @@ public class BillboardServer {
         System.out.println("billboard name: "+ billboard_name + "\n" +
                 "text: "+text+"\n"+
                 "bg_colour: "+bg_colour+"\n"+
-                "image: "+image+"\n"+
-                "start time: "+startTime+"\n" +
-                "duration: " + duration +"\n"+
-                "recurrence: " +recurrence +"\n");
+                "image: "+image+"\n");
 
         //Create the billboard
-        billboard_List.Create_edit_Billboard(billboard_name, text, bg_colour, image, LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration)), recurrence, billboard_creator);
+        billboard_List.Create_edit_Billboard(billboard_name, text, bg_colour, image, billboard_creator);
 
         //Write the new billboard to the DB
         billboard_List.Write_To_DBbillboard(connection);
