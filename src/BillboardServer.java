@@ -37,6 +37,13 @@ public class BillboardServer {
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
                     "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_creator varchar (255));";
 
+    //Setup a hashmap for session tokens and their times.
+    HashMap<String, Timer> sessionTokenHashmap;
+    //Setup another hashmap to store an id and hasmap of the token and its timer
+    HashMap<Integer, String> SessionCombinedHashmap;
+    //Setup a hashmap to store the two hashmaps relevant to each session token
+    HashMap<Integer, String> SessionTokenListHashmap;
+
     /**
      * Starts up Billboard server for connection to client
      * Sends and Receives information from client
@@ -45,6 +52,8 @@ public class BillboardServer {
         //Setup a default user.
         User DefaultUser = new User("DefaultUserName", "DefaultPassword",
                 "Create Billboards", "Edit All Billboards", "Schedule Billboards", "Edit Users");
+
+
 
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
@@ -498,6 +507,19 @@ public class BillboardServer {
 
     }
 
+    //Static int for counting which session has expired.
+    public static int i = 0;
+    //Inner class called when a timer expires.
+    class RemoveFromList extends TimerTask{
+        public void run(){
+            //Remove the session info from the hashmap for the session token that has expired.
+            SessionTokenListHashmap.remove(i);
+            i++;
+        }
+    }
+
+    int counter;
+
     /**
      * If the user is valid this creates a session token and sends it back to the control panel.
      * @param ois ObjectInputStream
@@ -505,7 +527,7 @@ public class BillboardServer {
      * @param connection Database connection
      * @throws Exception
      */
-    private static void sessionToken(ObjectInputStream ois, ObjectOutputStream oos,
+    private void sessionToken(ObjectInputStream ois, ObjectOutputStream oos,
                                     Connection connection) throws IOException, ClassNotFoundException {
         //Setup for the random token
         final SecureRandom secRand = new SecureRandom();
@@ -516,9 +538,29 @@ public class BillboardServer {
 
         //If valid give a session token else return a message.
         if (Validity == "Valid"){
+            counter++;
+            //Create a random Session Token for the user
             byte[] randomBytes = new byte[24];
             secRand.nextBytes(randomBytes);
-            oos.writeObject(base64En.encodeToString(randomBytes));
+            String sessionToken = base64En.encodeToString(randomBytes);
+            String thisSessionToken = sessionToken;
+            //Send the randomised Session Token back to the control panel
+            oos.writeObject(thisSessionToken);
+
+            //Create a new timer to be stored in an hashmap with the session token
+            Timer timer = new Timer();
+            TimerTask taskA = new RemoveFromList();
+            //Set the timer to 24 hours, after which it will be removed from the hashmap
+            timer.schedule(taskA, (long) 8.64e+7);
+
+            //Store the timer and session token in the hashmap
+            sessionTokenHashmap.put(thisSessionToken, timer);
+            //Then store the Token and timer hashmap in another hashmap associating
+            //it with an id number
+            SessionCombinedHashmap.put(counter, thisSessionToken);
+            //Then store the combined session token info in another hashmap
+            SessionTokenListHashmap.put(counter, SessionCombinedHashmap.get(counter));
+
         }else{
             oos.writeObject("User Invalid");
         }
