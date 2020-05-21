@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLNonTransientConnectionException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.Instant;
@@ -35,18 +36,38 @@ public class BillboardServer {
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
                     "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50));";
+
     /**
      * Starts up Billboard server for connection to client
      * Sends and Receives information from client
      */
     public static void Run_Server() throws Exception {
+        //Setup a default user.
+        User DefaultUser = new User("DefaultUserName", "DefaultPassword",
+                "Create Billboards", "Edit All Billboards", "Schedule Billboards", "Edit Users");
+
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
 
         BillboardList billboard_list = new BillboardList();
 
         //create DB connection
-        Connection connection = DBconnection.getInstance();
+        Connection connection = null;
+
+        //A while loop that attempts to connect to the database
+        //Every 15 seconds until a connection is made.
+        boolean connectionMade = false;
+        while(connectionMade == false){
+            connection = DBconnection.getInstance();
+            if(connection != null){
+                connectionMade = true;
+                System.out.println("Connection made, resuming.");
+            }
+            else {
+                System.out.println("Connection cannot be made. Attempting connection again in 15 seconds...");
+                Thread.sleep(15000);
+            }
+        }
 
         //checks if tables exist in DB, if not adds tables
         Check_tables(connection);

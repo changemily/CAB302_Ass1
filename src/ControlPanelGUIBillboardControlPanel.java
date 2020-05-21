@@ -52,11 +52,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         JPanel billboardPanel = new JPanel();
         billboardPanel.setLayout(new BoxLayout(billboardPanel, BoxLayout.X_AXIS));
 
-        //Create billboard JList
-        billboardList = createJList();
-
-        // Add billboard JList to billboard JPanel
-        billboardPanel.add(billboardList);
+        //Create billboard JList, and add it to billboard JPanel
+        billboardList = createJList(billboardPanel);
 
         // Add billboard preview image, inside of a JPanel
         JPanel previewPanel = new JPanel();
@@ -72,7 +69,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         //create new viewer to display xml
         File file = new File(billboardXML);
-        BillboardViewer Billboard = new BillboardViewer(file, new Dimension(150,150));
+        BillboardViewer Billboard = new BillboardViewer(file, new Dimension(400,200));
         JPanel billboardPreview = Billboard.getSizedBillboard();
         previewPanel.add(billboardPreview);
 
@@ -97,9 +94,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // Create and add Create Billboard button, inside billboard create billboard JPanel; and add formatting
         createBillboardButton = createButton("Create Billboard");
         createBillboardPanel.add(Box.createVerticalStrut(30));
-        createBillboardPanel.add(Box.createHorizontalGlue());
         createBillboardPanel.add(createBillboardButton);
-        createBillboardPanel.add(Box.createHorizontalGlue());
         createBillboardPanel.add(Box.createVerticalStrut(100));
 
         // Add create billboard JPanel to preview panel JPanel
@@ -124,14 +119,36 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * This method creates a JList, returns a JList
      * @return Returns JList
      */
-    private JList createJList() {
+    private JList createJList(JPanel panel) {
         // Create billboard JList, and populate with test data
         // NOTE: Needs to be changed to populate billboard JList with real billboard data
         String[] billboards = {"1", "2", "3", "4", "5", "Test 6", "Test 7", "Test 9", "Test 10"};
-        JList billboardList = new JList(billboards);
-        billboardList.addListSelectionListener(this::valueChanged);
+
+        // Create new JPanel for spacing and formatting
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
+        panel2.add(Box.createVerticalStrut(50));
+
+        // Create new JList
+        JList list = new JList(billboards);
+
+        // Create JScrollPane
+        JScrollPane scroll = new JScrollPane(list);
+
+        // Add JScrollPane to the specified JPanel
+        panel2.add(scroll);
+
+        // Formatting
+        panel2.add(Box.createVerticalStrut(50));
+
+        // Add list selection listener, so billboard preview changes when different billboard is clicked
+        list.addListSelectionListener(this::valueChanged);
+
+        // Add JPanel 2, to JPanel
+        panel.add(panel2);
+
         // Return JPanel
-        return billboardList;
+        return list;
     }
 
     // Changes billboard XML when a user selects a billboard from the list
