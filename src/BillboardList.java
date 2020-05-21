@@ -53,33 +53,19 @@ public class BillboardList implements java.io.Serializable {
      * @param text            Text on the billboard
      * @param bg_colour       Background colour of the billboard
      * @param image           (optional)
-     * @param schedule_time   time (optional):void
-     * @param durationMinutes The duration in minutes it will be displayed
      */
 
 
     public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
-                                      LocalDateTime schedule_time, Duration durationMinutes,String recurrence, String billboard_creator) throws Exception {
+                                       String billboard_creator) throws Exception {
         //Create a new billboard object
         billboardNew = new Billboard(billboard_name, text,
-                bg_colour, image, schedule_time, durationMinutes);
-
-        //put billboard in HashMap - value will be replaced if key exists in HashMap
-        billboardHashMap.put(billboard_name, billboardNew);
-
-        //add schedule info of bb to schedule multi map
-        this.scheduleMultiMap.scheduleBillboard(billboard_name,schedule_time, durationMinutes,recurrence, billboardHashMap, billboard_creator);
-    }
-
-    //For creating and editing billboards without the optional parameters.
-    public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image) {
-        //Create a new billboard object
-        billboardNew = new Billboard(billboard_name, text,
-                bg_colour, image);
+                bg_colour, image, billboard_creator);
 
         //put billboard in HashMap - value will be replaced if key exists in HashMap
         billboardHashMap.put(billboard_name, billboardNew);
     }
+
 
     /**
      * Method for listing current billboards
@@ -176,6 +162,7 @@ public class BillboardList implements java.io.Serializable {
             String text = rs.getString(2);
             String bg_colour = rs.getString(3);
             String image_file = rs.getString(4);
+            String billboard_creator = rs.getString(5);
            /* String time_scheduled = rs.getString(5);
             String Duration_mins = rs.getString(6);*/
 
@@ -183,7 +170,7 @@ public class BillboardList implements java.io.Serializable {
             /*Billboard billboard = new Billboard(billboard_name, text, bg_colour,
                     image_file, LocalDateTime.parse(time_scheduled), Duration.parse(Duration_mins));*/
             Billboard billboard = new Billboard(billboard_name, text, bg_colour,
-                    image_file);
+                    image_file, billboard_creator);
 
             //store billboard name with corresponding billboard
             billboardHashMap.put(billboard_name, billboard);
@@ -220,11 +207,10 @@ public class BillboardList implements java.io.Serializable {
             String text = billboard.Billboard_text;
             String bg_colour = billboard.Bg_colour;
             String image_file = billboard.Image_file;
-            LocalDateTime time_scheduled = billboard.Time_scheduled;
-            Duration Duration_mins = billboard.duration;
+            String billboard_creator = billboard.Image_file;
 
-            st.executeQuery("INSERT INTO Billboards (billboard_name, text, bg_colour, image_file, time_scheduled, Duration_mins) " +
-                    "VALUES(\""+billboard_name+"\",\""+text+"\",\""+bg_colour+"\",\""+image_file+"\",\""+time_scheduled+"\",\""+Duration_mins+"\");");
+            st.executeQuery("INSERT INTO Billboards (billboard_name, text, bg_colour, image_file, billboard_creator) " +
+                    "VALUES(\""+billboard_name+"\",\""+text+"\",\""+bg_colour+"\",\""+image_file+"\",\""+image_file+"\");");
         }
 
         //close statement
@@ -293,7 +279,7 @@ public class BillboardList implements java.io.Serializable {
         String billboard_creator = "emily";
 
         //Use the specs retrieved from the XML to create the billboard
-        Create_edit_Billboard(BillboardName, text, bgColour, imageFile, timeSchedule, durationMinutes, recurrence, billboard_creator);
+        Create_edit_Billboard(BillboardName, text, bgColour, imageFile, billboard_creator);
     }
 
 

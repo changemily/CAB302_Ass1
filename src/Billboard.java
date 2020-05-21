@@ -1,7 +1,3 @@
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.io.*;
 
 /**
  * Billboard class
@@ -15,30 +11,8 @@ public class Billboard implements java.io.Serializable{
     String Billboard_text;
     String Bg_colour;
     String Image_file;
-    LocalDateTime Time_scheduled;
-    Duration duration;
+    String Billboard_creator;
 
-    /**
-     *Constructor that is used to create object Billboard. Billboard has an assigned a name, text
-     *  and background colour
-     * @param billboard_name Billboard's name
-     * @param text Text set on Billboard
-     * @param bg_colour Background colour of Billboard
-     * @param image_file file name of image on billboard
-     */
-    Billboard(String billboard_name, String text, String bg_colour, String image_file)
-    {
-        //set billboard properties
-        this.Billboard_name = billboard_name;
-        this.Billboard_text = text;
-        this.Bg_colour = bg_colour;
-
-        //if there is an image on the billboard
-        if (!(image_file == "No Image"))
-        {
-            this.Image_file = image_file;
-        }
-    }
 
     /**
      *Overloaded method  - Optional for Billboard  to be scheduled for display
@@ -48,24 +22,22 @@ public class Billboard implements java.io.Serializable{
      * @param text Text set on Billboard
      * @param bg_colour Background colour of Billboard
      * @param image_file file name of image on Billboard
-     * @param time_scheduled Time (date) Billboard is scheduled for showing
-     * @param Duration_mins Duration (minutes) Billboard is displayed for
+     * @param billboard_creator Username of the person who has created the billboard
      */
     Billboard(String billboard_name, String text, String bg_colour, String image_file ,
-                          LocalDateTime time_scheduled, Duration Duration_mins)
+                          String billboard_creator)
     {
         //set billboard properties
         this.Billboard_name = billboard_name;
         this.Billboard_text = text;
         this.Bg_colour = bg_colour;
+        this.Billboard_creator = billboard_creator;
 
         //if there is an image on the billboard
         if (!(image_file == "No Image"))
         {
             this.Image_file = image_file;
         }
-        this.Time_scheduled = time_scheduled;
-        this.duration = Duration_mins;
     }
 
     /**
