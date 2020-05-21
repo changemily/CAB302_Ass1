@@ -5,6 +5,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -387,7 +388,7 @@ public class BillboardServer {
     *//**
      * Removes viewing sent by client from schedule
      * @param ois
-     * @param connection
+     * @param  
      * @param billboard_schedule
      * @throws Exception
      *//*
@@ -492,6 +493,32 @@ public class BillboardServer {
         }
 
     }
+
+//    /**
+//     * If the user is valid this creates a session token and sends it back to the control panel.
+//     * @param ois ObjectInputStream
+//     * @param oos Object Output stream of Server
+//     * @param connection Database connection
+//     * @throws Exception
+//     */
+//    private static void sessionToken(ObjectInputStream ois, ObjectOutputStream oos,
+//                                    Connection connection) throws IOException, ClassNotFoundException {
+//        //Setup for the random token
+//        final SecureRandom secRand = new SecureRandom();
+//        final Base64.Encoder base64En = Base64.getUrlEncoder();
+//
+//        //Check if the user was valid
+//        String Validity = ois.readObject().toString();
+//
+//        //If valid give a session token else return a message.
+//        if (Validity == "Valid"){
+//            byte[] randomBytes = new byte[24];
+//            secRand.nextBytes(randomBytes);
+//            oos.writeObject(base64En.encodeToString(randomBytes));
+//        }else{
+//            oos.writeObject("User Invalid");
+//        }
+//    }
 
     /**
      * Runs server
