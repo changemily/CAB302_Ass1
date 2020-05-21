@@ -31,7 +31,7 @@ public class TestbillboardList<E> {
 
         //Billboard with scheduled viewing and image
         billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                "image.jpg", LocalDateTime.parse("2021-04-22T10:00:00.00"), Duration.ofMinutes(10), "none");
+                "image.jpg", LocalDateTime.parse("2021-04-22T10:00:00.00"), Duration.ofMinutes(10), "none", "jarod");
 
         assertEquals(true, billboardList.billboardHashMap.containsKey("Billboard2"));
 
@@ -43,7 +43,7 @@ public class TestbillboardList<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(-5), "none");
+                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(-5), "none", "jarod");
         });
     }
 
@@ -53,7 +53,7 @@ public class TestbillboardList<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(0), "none");
+                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(0), "none", "jarod");
         });
     }
 
@@ -63,7 +63,7 @@ public class TestbillboardList<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDateTime.parse("20-04-202T10:00:00.00"),Duration.ofMinutes(5), "none");
+                    "image.jpg", LocalDateTime.parse("20-04-202T10:00:00.00"),Duration.ofMinutes(5), "none", "jarod");
         });
     }
 
@@ -73,7 +73,7 @@ public class TestbillboardList<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "doesn't_exist.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(5), "none");
+                    "doesn't_exist.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(5), "none", "jarod");
         });
     }
 
@@ -83,7 +83,7 @@ public class TestbillboardList<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "lmao",
-                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(5), "none");
+                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(5), "none", "jarod");
         });
     }
 
@@ -126,7 +126,7 @@ public class TestbillboardList<E> {
     {
         //Create a billboard to check
         billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                "doesn't_exist.jpg", LocalDateTime.parse("2021-04-22T10:00:00.00"),Duration.ofMinutes(5), "none");
+                "doesn't_exist.jpg", LocalDateTime.parse("2021-04-22T10:00:00.00"),Duration.ofMinutes(5), "none", "jarod");
         //Store billboard info sourced in a temp billboard object
         Billboard temp_billboard = billboardList.Get_billboard_info("Billboard2");
 
@@ -156,7 +156,7 @@ public class TestbillboardList<E> {
         //Create Billboard1
         billboardList.Create_edit_Billboard("Billboard1", "new billboard", "blue",
                 "No Image", LocalDateTime.parse("2021-04-22T10:00:00.00"),
-                Duration.ofMinutes(5), "none");
+                Duration.ofMinutes(5), "none", "jarod");
 
         //Delete Billboard1
         billboardList.Delete_billboard("Billboard1");

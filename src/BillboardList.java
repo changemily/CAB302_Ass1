@@ -59,7 +59,7 @@ public class BillboardList implements java.io.Serializable {
 
 
     public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
-                                      LocalDateTime schedule_time, Duration durationMinutes,String recurrence) throws Exception {
+                                      LocalDateTime schedule_time, Duration durationMinutes,String recurrence, String billboard_scheduler) throws Exception {
         //Create a new billboard object
         billboardNew = new Billboard(billboard_name, text,
                 bg_colour, image, schedule_time, durationMinutes);
@@ -68,7 +68,7 @@ public class BillboardList implements java.io.Serializable {
         billboardHashMap.put(billboard_name, billboardNew);
 
         //add schedule info of bb to schedule multi map
-        this.scheduleMultiMap.scheduleBillboard(billboard_name,schedule_time, durationMinutes,recurrence, billboardHashMap);
+        this.scheduleMultiMap.scheduleBillboard(billboard_name,schedule_time, durationMinutes,recurrence, billboardHashMap, billboard_scheduler);
     }
 
     //For creating and editing billboards without the optional parameters.
@@ -143,9 +143,10 @@ public class BillboardList implements java.io.Serializable {
             LocalDateTime startTime_scheduled = viewing.StartTime_Scheduled;
             Duration duration_mins = viewing.duration;
             String recurrence = viewing.Recurrence;
+            String billboard_scheduler = viewing.Billboard_scheduler;
 
             //create schedule info with viewing details
-            Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins,recurrence);
+            Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins,recurrence, billboard_scheduler);
 
             //remove viewing of billboard
             this.scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);
@@ -288,8 +289,11 @@ public class BillboardList implements java.io.Serializable {
         //Setting the recurrence to a default empty
         String recurrence = "none";
 
+        //Billboard scheduler
+        String billboard_scheduler = "emily";
+
         //Use the specs retrieved from the XML to create the billboard
-        Create_edit_Billboard(BillboardName, text, bgColour, imageFile, timeSchedule, durationMinutes, recurrence);
+        Create_edit_Billboard(BillboardName, text, bgColour, imageFile, timeSchedule, durationMinutes, recurrence, billboard_scheduler);
     }
 
 

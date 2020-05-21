@@ -7,7 +7,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLNonTransientConnectionException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.Instant;
@@ -35,7 +34,7 @@ public class BillboardServer {
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
-                    "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50));";
+                    "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_scheduler varchar (50));";
 
     /**
      * Starts up Billboard server for connection to client
@@ -297,6 +296,7 @@ public class BillboardServer {
         String startTime = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrence = ois.readObject().toString();
+        String billboardScheduler = ois.readObject().toString();
 
         //For testing purposes
         //print bb list
@@ -312,7 +312,7 @@ public class BillboardServer {
 
         //Create the billboard
         billboard_List.Create_edit_Billboard(billboard_name, text, bg_colour, image, LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration)), recurrence);
+                Duration.ofMinutes(Integer.parseInt(duration)), recurrence, billboardScheduler);
 
         //Write the new billboard to the DB
         billboard_List.Write_To_DBbillboard(connection);
@@ -369,6 +369,7 @@ public class BillboardServer {
         String start_time = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrence = ois.readObject().toString();
+        String billboard_scheduler = ois.readObject().toString();
 
         //print bb list
         System.out.println("billboard list: "+ billboard_list);
@@ -384,7 +385,7 @@ public class BillboardServer {
 
         //schedule billboard with client input
         billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
-                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards());
+                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards(),billboard_scheduler);
 
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
@@ -410,11 +411,14 @@ public class BillboardServer {
         String duration2 = ois.readObject().toString();
 
         //read recurrence sent by client
-        String recurrence2 = ois.readObject().toString();
+        String recurrence = ois.readObject().toString();
+
+        //read recurrence sent by client
+        String billboard_scheduler = ois.readObject().toString();
 
         //create schedule info object with client's input
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration2)),recurrence2);
+                Duration.ofMinutes(Integer.parseInt(duration2)),recurrence, billboard_scheduler);
 
         //Clear schedule table in DB
         billboard_schedule.Clear_DBschedule(connection);
