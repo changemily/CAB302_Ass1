@@ -39,7 +39,7 @@ public class ControlPanelClient {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-            String request = "View schedule";
+            String request = "Create edit billboard";
 
             //request given by user saved in local var request
             switch(request)
@@ -59,7 +59,7 @@ public class ControlPanelClient {
 
                 case "Create edit billboard":
                     createEditBillboard(oos, request, "Billboard_4", "Hello", "Black",
-                            "Image.jpg", "2021-01-01T10:00:00.00", "10", "none", "emily");
+                            "Image.jpg", "emily");
                     break;
 
                 case "Delete billboard":
@@ -184,14 +184,10 @@ public class ControlPanelClient {
      * @param text The text that should be displayed on the billobard
      * @param bg_colour The background colour the billboard should be
      * @param image The string name of the image that will be displayed with the billboard
-     * @param startTime The time the billboard should start displaying
-     * @param duration The amount of time the billboard should display
-     * @param recurrence The frequency the billboard should display
      * @throws IOException
      */
     public static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String billboardName, String text,
-                                           String bg_colour, String image, String startTime, String duration, String recurrence,
-                                           String billboard_creator)throws IOException{
+                                           String bg_colour, String image, String billboard_creator)throws IOException{
         //Write the request to the server
         oos.writeObject(buttonClicked);
         //Write the details to the server
@@ -199,9 +195,6 @@ public class ControlPanelClient {
         oos.writeObject(text);
         oos.writeObject(bg_colour);
         oos.writeObject(image);
-        oos.writeObject(startTime);
-        oos.writeObject(duration);
-        oos.writeObject(recurrence);
         oos.writeObject(billboard_creator);
     }
 

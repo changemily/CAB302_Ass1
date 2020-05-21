@@ -16,20 +16,12 @@ public class TestBillboard {
     // Test 1: Constructing a Billboard object with scheduled time
     @BeforeEach @Test
     public void setUpBillboard() {
-        billboard = new Billboard("Billboard 1", "Hello World", "blue", "image.jpg");
-    }
-
-    @Test
-    // Test 1.2: Constructing a Billboard object with scheduled time
-    public void setUpBillboardTime() {
-        Billboard billboard2 = new Billboard("Billboard 2", "Hello World", "red", "image.jpg",
-                LocalDateTime.parse("2020-04-06T10:00:00.00"), Duration.ofMinutes(5));
+        billboard = new Billboard("Billboard 1", "Hello World", "blue", "image.jpg", "jarod");
     }
 
     @Test
     // Test 1.3: Constructing a Billboard object without image
     public void setUpBillboard_img() {
-        Billboard billboard3 = new Billboard("Billboard 2", "Hello World", "red", "No Image",
-                LocalDateTime.parse("2020-04-06T10:00:00.00"),Duration.ofMinutes(5));
+        Billboard billboard3 = new Billboard("Billboard 2", "Hello World", "red", "No Image","jarod");
     }
 }

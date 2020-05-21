@@ -139,14 +139,13 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
                 //get day of the week from LocalDateTime
                 DayOfWeek billboard_day = viewing.StartTime_Scheduled.getDayOfWeek();
 
-                //convert to int
+                //get int value of day
                 int day_int = billboard_day.getValue();
 
                 //get hour displayed from LocalDateTime
                 int billboard_hour = viewing.StartTime_Scheduled.getHour();
 
-                System.out.println(billboard_day);
-
+                //populate cell with billboard name and creator
                 data[billboard_hour][day_int] = billboard_name + " by " + viewing.Billboard_creator; // Change this line to "BillboardName by User"
 
                 }

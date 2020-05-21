@@ -25,46 +25,16 @@ public class TestbillboardList<E> {
     public void add_Billboard() throws Exception
     {
         //Billboard with no scheduled viewing
-        billboardList.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image");
+        billboardList.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image", "jarod");
 
         assertEquals(true, billboardList.billboardHashMap.containsKey("Billboard1"));
 
         //Billboard with scheduled viewing and image
         billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                "image.jpg", LocalDateTime.parse("2021-04-22T10:00:00.00"), Duration.ofMinutes(10), "none", "jarod");
+                "image.jpg","jarod");
 
         assertEquals(true, billboardList.billboardHashMap.containsKey("Billboard2"));
 
-    }
-
-    //Test 3.1: Check for negative duration.
-    @Test
-    public void neg_duration()
-    {
-        assertThrows(Exception.class, () -> {
-            billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(-5), "none", "jarod");
-        });
-    }
-
-    //Test 3.2: Check for 0 duration.
-    @Test
-    public void no_duration()
-    {
-        assertThrows(Exception.class, () -> {
-            billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(0), "none", "jarod");
-        });
-    }
-
-    //Test 3.3: Invalid date - date in the past etc.
-    @Test
-    public void invalid_date()
-    {
-        assertThrows(Exception.class, () -> {
-            billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "image.jpg", LocalDateTime.parse("20-04-202T10:00:00.00"),Duration.ofMinutes(5), "none", "jarod");
-        });
     }
 
     //Test 3.4: Check if img exists.
@@ -73,7 +43,7 @@ public class TestbillboardList<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                    "doesn't_exist.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(5), "none", "jarod");
+                    "doesn't_exist.jpg", "jarod");
         });
     }
 
@@ -83,20 +53,19 @@ public class TestbillboardList<E> {
     {
         assertThrows(Exception.class, () -> {
             billboardList.Create_edit_Billboard("Billboard2", "new billboard", "lmao",
-                    "image.jpg", LocalDateTime.parse("20-04-2020T10:00:00.00"),Duration.ofMinutes(5), "none", "jarod");
+                    "image.jpg", "jarod");
         });
     }
 
     //Test 4: Checks if a billboard can be edited.
     @Test
-    public void Edit_Billboard()
-    {
+    public void Edit_Billboard() throws Exception {
 
         //Create Billboard1
-        billboardList.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image");
+        billboardList.Create_edit_Billboard("Billboard1", "new billboard", "blue", "No Image","jarod");
 
         //edit billboard 1
-        billboardList.Create_edit_Billboard("Billboard1", "edited", "edited", "edited");
+        billboardList.Create_edit_Billboard("Billboard1", "edited", "edited", "edited","jarod");
 
         //test if all variables have changed
         assertEquals("Billboard1", "Billboard1");
@@ -126,7 +95,7 @@ public class TestbillboardList<E> {
     {
         //Create a billboard to check
         billboardList.Create_edit_Billboard("Billboard2", "new billboard", "blue",
-                "doesn't_exist.jpg", LocalDateTime.parse("2021-04-22T10:00:00.00"),Duration.ofMinutes(5), "none", "jarod");
+                "doesn't_exist.jpg", "jarod");
         //Store billboard info sourced in a temp billboard object
         Billboard temp_billboard = billboardList.Get_billboard_info("Billboard2");
 
@@ -136,8 +105,7 @@ public class TestbillboardList<E> {
         assertEquals("new billboard", temp_billboard.Billboard_text);
         assertEquals("blue", temp_billboard.Bg_colour);
         assertEquals("doesn't_exist.jpg", temp_billboard.Image_file);
-        assertEquals(LocalDateTime.parse("2021-04-22T10:00:00.00"), temp_billboard.Time_scheduled);
-        assertEquals(Duration.ofMinutes(5), temp_billboard.duration);
+        assertEquals("jarod", temp_billboard.Billboard_creator);
     }
 
     //Test 7: If Get_billboard_info attempts to retrieve information from a billboard that doesn't exist.
@@ -155,8 +123,7 @@ public class TestbillboardList<E> {
     {
         //Create Billboard1
         billboardList.Create_edit_Billboard("Billboard1", "new billboard", "blue",
-                "No Image", LocalDateTime.parse("2021-04-22T10:00:00.00"),
-                Duration.ofMinutes(5), "none", "jarod");
+                "No Image", "jarod");
 
         //Delete Billboard1
         billboardList.Delete_billboard("Billboard1");

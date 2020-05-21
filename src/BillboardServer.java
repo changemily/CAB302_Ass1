@@ -9,6 +9,7 @@ import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -353,7 +354,7 @@ public class BillboardServer {
      * @param billboard_list
      * @param billboard_schedule
      * @throws Exception
-     *//*
+     */
     public static void scheduleBillboard(ObjectInputStream ois, Connection connection, BillboardList billboard_list
             , ScheduleMultiMap billboard_schedule) throws Exception {
         //read parameters sent by client
@@ -363,7 +364,7 @@ public class BillboardServer {
         String recurrence = ois.readObject().toString();
 
         Billboard billboard = billboard_list.Get_billboard_info(billboard_name);
-        String billboard_creator = billboard.Creator;
+        String billboard_creator = billboard.Billboard_creator;
 
         //print bb list
         System.out.println("billboard list: "+ billboard_list);
@@ -385,13 +386,13 @@ public class BillboardServer {
         billboard_schedule.Write_To_DBschedule(connection);
     }
 
-    *//**
+    /**
      * Removes viewing sent by client from schedule
      * @param ois
      * @param  
      * @param billboard_schedule
      * @throws Exception
-     *//*
+     */
     public static void removeSchedule (ObjectInputStream ois, Connection connection,
                                        ScheduleMultiMap billboard_schedule, BillboardList billboard_list) throws Exception {
         //read billboard name sent by client
@@ -408,7 +409,7 @@ public class BillboardServer {
         String recurrence = ois.readObject().toString();
 
         Billboard billboard = billboard_list.Get_billboard_info(billboard_name.toString());
-        String billboard_creator = billboard.Creator;
+        String billboard_creator = billboard.Billboard_creator;
 
         //create schedule info object with client's input
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
@@ -423,7 +424,7 @@ public class BillboardServer {
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
     }
-*/
+
     public static void runViewer(ObjectInputStream ois, ScheduleMultiMap billboard_schedule) throws Exception {
         //every 15 seconds
         //create new timer
