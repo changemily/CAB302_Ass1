@@ -147,7 +147,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
 
                 System.out.println(billboard_day);
 
-                data[billboard_hour][day_int] = billboard_name + " by " + billboard_hour; // Change this line to "BillboardName by User"
+                data[billboard_hour][day_int] = billboard_name + " by " + viewing.Billboard_creator; // Change this line to "BillboardName by User"
 
                 }
 

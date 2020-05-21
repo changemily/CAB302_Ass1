@@ -34,7 +34,7 @@ public class BillboardServer {
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
-                    "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_scheduler varchar (50));";
+                    "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_creator varchar (50));";
 
     /**
      * Starts up Billboard server for connection to client
@@ -154,13 +154,13 @@ public class BillboardServer {
                     case "Schedule Billboard":
                         return_message = "Billboard has been scheduled";
                         //schedule billboard
-                        scheduleBillboard(ois, connection, billboard_list, billboard_schedule);
+                        //scheduleBillboard(ois, connection, billboard_list, billboard_schedule);
                         break;
 
                     case "Remove Schedule":
                         return_message = "billboard has been removed from schedule";
                         //remove viewing from schedule
-                        removeSchedule(ois,connection,billboard_schedule);
+                        //removeSchedule(ois,connection,billboard_schedule, billboard_list);
                         break;
 
                     case "List users":
@@ -296,7 +296,7 @@ public class BillboardServer {
         String startTime = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrence = ois.readObject().toString();
-        String billboardScheduler = ois.readObject().toString();
+        String billboard_creator = ois.readObject().toString();
 
         //For testing purposes
         //print bb list
@@ -312,7 +312,7 @@ public class BillboardServer {
 
         //Create the billboard
         billboard_List.Create_edit_Billboard(billboard_name, text, bg_colour, image, LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration)), recurrence, billboardScheduler);
+                Duration.ofMinutes(Integer.parseInt(duration)), recurrence, billboard_creator);
 
         //Write the new billboard to the DB
         billboard_List.Write_To_DBbillboard(connection);
@@ -354,14 +354,14 @@ public class BillboardServer {
         oos.writeObject(schedule);
     }
 
-    /**
+   /* *//**
      * schedules Billboard sent by client and stores in DB
      * @param ois Object Input stream of Server
      * @param connection Database connection
      * @param billboard_list
      * @param billboard_schedule
      * @throws Exception
-     */
+     *//*
     public static void scheduleBillboard(ObjectInputStream ois, Connection connection, BillboardList billboard_list
             , ScheduleMultiMap billboard_schedule) throws Exception {
         //read parameters sent by client
@@ -369,7 +369,9 @@ public class BillboardServer {
         String start_time = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrence = ois.readObject().toString();
-        String billboard_scheduler = ois.readObject().toString();
+
+        Billboard billboard = billboard_list.Get_billboard_info(billboard_name);
+        String billboard_creator = billboard.Creator;
 
         //print bb list
         System.out.println("billboard list: "+ billboard_list);
@@ -385,51 +387,51 @@ public class BillboardServer {
 
         //schedule billboard with client input
         billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
-                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards(),billboard_scheduler);
+                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards(),billboard_creator);
 
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
     }
 
-    /**
+    *//**
      * Removes viewing sent by client from schedule
      * @param ois
      * @param connection
      * @param billboard_schedule
      * @throws Exception
-     */
+     *//*
     public static void removeSchedule (ObjectInputStream ois, Connection connection,
-                                       ScheduleMultiMap billboard_schedule) throws Exception {
+                                       ScheduleMultiMap billboard_schedule, BillboardList billboard_list) throws Exception {
         //read billboard name sent by client
-        Object Billboard_name = ois.readObject();
-        System.out.println("billboard name: "+ Billboard_name);
+        Object billboard_name = ois.readObject();
+        System.out.println("billboard name: "+ billboard_name);
 
         //read start time of viewing sent by client
         String startTime = ois.readObject().toString();
 
         //read duration sent by client
-        String duration2 = ois.readObject().toString();
+        String duration = ois.readObject().toString();
 
         //read recurrence sent by client
         String recurrence = ois.readObject().toString();
 
-        //read recurrence sent by client
-        String billboard_scheduler = ois.readObject().toString();
+        Billboard billboard = billboard_list.Get_billboard_info(billboard_name.toString());
+        String billboard_creator = billboard.Creator;
 
         //create schedule info object with client's input
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration2)),recurrence, billboard_scheduler);
+                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_creator);
 
         //Clear schedule table in DB
         billboard_schedule.Clear_DBschedule(connection);
 
         //remove billboard from schedule
-        billboard_schedule.Schedule_Remove_billboard(Billboard_name.toString(),schedule_info);
+        billboard_schedule.Schedule_Remove_billboard(billboard_name.toString(),schedule_info);
 
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
     }
-
+*/
     public static void runViewer(ObjectInputStream ois, ScheduleMultiMap billboard_schedule) throws Exception {
         //every 15 seconds
         //create new timer
@@ -496,12 +498,7 @@ public class BillboardServer {
                 }
             }
 
-
-
-
         }
-
-
 
     }
 

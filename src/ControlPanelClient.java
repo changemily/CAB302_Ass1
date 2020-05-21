@@ -74,13 +74,13 @@ public class ControlPanelClient {
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
                     scheduleBillboard(oos, request, "Billboard_4",
-                            "2021-03-04T11:00:00.00", "5", "none", "emily");
+                            "2021-03-04T11:00:00.00", "5", "none");
                     break;
 
                 case "Remove Schedule":
                     //Send details of billboard wanting to be scheduled to server
                     removeSchedule(oos,request,"Billboard_2", "2023-01-01T10:00:00.00",
-                            "5", "none", "emily");
+                            "5", "none");
                     break;
 
                 case "List users":
@@ -191,7 +191,7 @@ public class ControlPanelClient {
      */
     public static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String billboardName, String text,
                                            String bg_colour, String image, String startTime, String duration, String recurrence,
-                                           String billboard_scheduler)throws IOException{
+                                           String billboard_creator)throws IOException{
         //Write the request to the server
         oos.writeObject(buttonClicked);
         //Write the details to the server
@@ -202,7 +202,7 @@ public class ControlPanelClient {
         oos.writeObject(startTime);
         oos.writeObject(duration);
         oos.writeObject(recurrence);
-        oos.writeObject(billboard_scheduler);
+        oos.writeObject(billboard_creator);
     }
 
     /**
@@ -268,7 +268,7 @@ public class ControlPanelClient {
      * @throws IOException
      */
     public static void scheduleBillboard(ObjectOutputStream oos, String buttonClicked, String billboardName,
-                       String startTime, String duration, String recurrence, String billboard_scheduler) throws IOException {
+                       String startTime, String duration, String recurrence) throws IOException {
         //Write the Client's request to the server
         oos.writeObject(buttonClicked);
 
@@ -277,7 +277,6 @@ public class ControlPanelClient {
         oos.writeObject(startTime);
         oos.writeObject(duration);
         oos.writeObject(recurrence);
-        oos.writeObject(billboard_scheduler);
     }
 
     /**
@@ -291,7 +290,7 @@ public class ControlPanelClient {
      * @throws IOException
      */
     public static void removeSchedule(ObjectOutputStream oos, String buttonClicked, String billboardName,
-                                      String startTime, String duration, String recurrence, String billboard_scheduler) throws IOException {
+                                      String startTime, String duration, String recurrence) throws IOException {
         //Write the Client's request to the server
         oos.writeObject(buttonClicked);
 
@@ -300,7 +299,6 @@ public class ControlPanelClient {
         oos.writeObject(startTime);
         oos.writeObject(duration);
         oos.writeObject(recurrence);
-        oos.writeObject(billboard_scheduler);
     }
 
     /**
