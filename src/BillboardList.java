@@ -142,8 +142,6 @@ public class BillboardList implements java.io.Serializable {
         billboardHashMap.remove(billboard_name);
     }
 
-
-
     public void RetrieveDBbillboardList(Connection connection) throws Exception {
 
         final String SELECT = "SELECT * FROM Billboards ORDER BY billboard_name desc";
@@ -207,10 +205,10 @@ public class BillboardList implements java.io.Serializable {
             String text = billboard.Billboard_text;
             String bg_colour = billboard.Bg_colour;
             String image_file = billboard.Image_file;
-            String billboard_creator = billboard.Image_file;
+            String billboard_creator = billboard.Billboard_creator;
 
             st.executeQuery("INSERT INTO Billboards (billboard_name, text, bg_colour, image_file, billboard_creator) " +
-                    "VALUES(\""+billboard_name+"\",\""+text+"\",\""+bg_colour+"\",\""+image_file+"\",\""+image_file+"\");");
+                    "VALUES(\""+billboard_name+"\",\""+text+"\",\""+bg_colour+"\",\""+image_file+"\",\""+billboard_creator+"\");");
         }
 
         //close statement

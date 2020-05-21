@@ -30,11 +30,11 @@ public class BillboardServer {
     public static final String CREATE_BILLBOARD_TABLE =
             "CREATE TABLE IF NOT EXISTS Billboards (billboard_name varchar(255)," +
                     "text varchar(1000),bg_colour varchar (255)," +
-                    "image_file varchar(255), time_scheduled varchar(50), Duration_mins varchar(255));";
+                    "image_file varchar(255), billboard_creator varchar(255));";
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
-                    "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_creator varchar (50));";
+                    "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_creator varchar (255));";
 
     /**
      * Starts up Billboard server for connection to client
@@ -154,13 +154,13 @@ public class BillboardServer {
                     case "Schedule Billboard":
                         return_message = "Billboard has been scheduled";
                         //schedule billboard
-                        //scheduleBillboard(ois, connection, billboard_list, billboard_schedule);
+                        scheduleBillboard(ois, connection, billboard_list, billboard_schedule);
                         break;
 
                     case "Remove Schedule":
                         return_message = "billboard has been removed from schedule";
                         //remove viewing from schedule
-                        //removeSchedule(ois,connection,billboard_schedule, billboard_list);
+                        removeSchedule(ois,connection,billboard_schedule, billboard_list);
                         break;
 
                     case "List users":
@@ -302,6 +302,9 @@ public class BillboardServer {
                 "text: "+text+"\n"+
                 "bg_colour: "+bg_colour+"\n"+
                 "image: "+image+"\n");
+
+        //Clear the db with the billboard information
+        billboard_List.Clear_DBbillboardList(connection);
 
         //Create the billboard
         billboard_List.Create_edit_Billboard(billboard_name, text, bg_colour, image, billboard_creator);

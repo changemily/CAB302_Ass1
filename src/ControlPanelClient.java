@@ -39,7 +39,7 @@ public class ControlPanelClient {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-            String request = "Create edit billboard";
+            String request = "Schedule Billboard";
 
             //request given by user saved in local var request
             switch(request)
@@ -58,8 +58,8 @@ public class ControlPanelClient {
                     break;
 
                 case "Create edit billboard":
-                    createEditBillboard(oos, request, "Billboard_4", "Hello", "Black",
-                            "Image.jpg", "emily");
+                    createEditBillboard(oos, request, "Billboard_3", "Hello", "Black",
+                            "Image.jpg", "jarod");
                     break;
 
                 case "Delete billboard":
@@ -73,13 +73,13 @@ public class ControlPanelClient {
 
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
-                    scheduleBillboard(oos, request, "Billboard_4",
-                            "2021-03-04T11:00:00.00", "5", "none");
+                    scheduleBillboard(oos, request, "Billboard_2",
+                            "2021-03-04T11:10:00.00", "5", "none");
                     break;
 
                 case "Remove Schedule":
                     //Send details of billboard wanting to be scheduled to server
-                    removeSchedule(oos,request,"Billboard_2", "2023-01-01T10:00:00.00",
+                    removeSchedule(oos,request,"Billboard_1", "2021-03-04T11:05:00.00",
                             "5", "none");
                     break;
 
