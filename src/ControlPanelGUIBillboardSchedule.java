@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -13,12 +15,15 @@ import java.util.Arrays;
  * NOTES: Current version is a basic design; some functionality still needs to be added; further refinement required
  */
 public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, ActionListener {
+    MultiMap billboard_schedule;
     /**
      * Method used to create a GUI window for the Billboard Schedule Screen
      */
-    public ControlPanelGUIBillboardSchedule() {
+    public ControlPanelGUIBillboardSchedule(MultiMap schedule) {
         // Set window title
         super("Billboard Schedule");
+
+        billboard_schedule = schedule;
     }
 
     /**
@@ -123,16 +128,30 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         // Create string array for each cell in table
         String[][] data = new String[24][8];
 
-        // Populate array with billboard data
-        //data[1][1] = "Billboard 1" + " by " + "User 1"; // Test, need to populate with real billboard data
-        // For loop which iterates through each day
-        for(int day = 1; day < 8; day++) {
-            // For loop which iterates through each hour in the day
-            for(int hour = 0; hour < 24; hour++) {
-                // Populate each element in the array (this translates to each cell in the table)
-                data[hour][day] = day + " by " + hour; // Change this line to "BillboardName by User"
+        //for each billboard in billboard_schedule
+        for (Object billboard_name : billboard_schedule.keySet() ) {
+
+            //create array list to store viewings of billboard
+            ArrayList<Schedule_Info> viewings = billboard_schedule.get(billboard_name);
+
+            //for every viewing of billboard
+            for ( Schedule_Info viewing : viewings ) {
+                //get day of the week from LocalDateTime
+                DayOfWeek billboard_day = viewing.StartTime_Scheduled.getDayOfWeek();
+
+                //convert to int
+                int day_int = billboard_day.getValue();
+
+                //get hour displayed from LocalDateTime
+                int billboard_hour = viewing.StartTime_Scheduled.getHour();
+
+                System.out.println(billboard_day);
+
+                data[billboard_hour][day_int] = billboard_name + " by " + billboard_hour; // Change this line to "BillboardName by User"
+
+                }
+
             }
-        }
 
         // Returns a two-dimensional array for use in the JTable
         return data;
@@ -221,11 +240,4 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
 
     }
 
-    /**
-     * Main method which creates a GUI window for the Billboard Schedule screen
-     * @param args This method takes no arguments
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule());
-    }
 }

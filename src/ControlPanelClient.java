@@ -39,7 +39,7 @@ public class ControlPanelClient {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-            String request = "Create edit billboard";
+            String request = "View schedule";
 
             //request given by user saved in local var request
             switch(request)
@@ -58,7 +58,7 @@ public class ControlPanelClient {
                     break;
 
                 case "Create edit billboard":
-                    createEditBillboard(oos, request, "Billboard_3", "Hello", "Black",
+                    createEditBillboard(oos, request, "Billboard_4", "Hello", "Black",
                             "Image.jpg", "2021-01-01T10:00:00.00", "10", "none", "emily");
                     break;
 
@@ -67,13 +67,14 @@ public class ControlPanelClient {
                     break;
 
                 case "View schedule":
-                    viewSchedule(oos,request);
+                    viewScheduleWrite(oos,request);
+                    viewScheduleRead(ois);
                     break;
 
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
-                    scheduleBillboard(oos, request, "Billboard_2",
-                            "2023-01-01T10:00:00.00", "5", "none", "emily");
+                    scheduleBillboard(oos, request, "Billboard_4",
+                            "2021-03-04T11:00:00.00", "5", "none", "emily");
                     break;
 
                 case "Remove Schedule":
@@ -238,9 +239,22 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by Contol Panel GUI
      * @throws IOException
      */
-    public static void viewSchedule(ObjectOutputStream oos, String buttonClicked) throws IOException {
+    public static void viewScheduleWrite(ObjectOutputStream oos, String buttonClicked) throws IOException {
         //Write the Client's request to the server
         oos.writeObject(buttonClicked);
+    }
+
+    /**
+     * Sends view schedule request to Server
+     * @param ois Object input stream of client
+     * @throws IOException
+     */
+
+    public static void viewScheduleRead(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        //read schedule sent by server
+        MultiMap schedule = (MultiMap) ois.readObject();
+
+        SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(schedule));
     }
 
     /**
