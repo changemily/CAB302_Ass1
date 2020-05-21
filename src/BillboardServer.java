@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Timer;
@@ -406,9 +407,10 @@ public class BillboardServer {
 
     public static void runViewer(ObjectInputStream ois, ScheduleMultiMap billboard_schedule) throws Exception {
         //every 15 seconds
-        //for each viewing
+        //create new timer
+        Timer timer = new Timer();
+
         //For every entry of Billboard_schedule
-        String Billboard_name ="test";
         for (String billboard_name : billboard_schedule.Billboard_schedule.keySet())
         {
             //create array list to store viewings of billboard
@@ -420,49 +422,61 @@ public class BillboardServer {
                 //if start time of viewing matches current time
                 if (viewing.StartTime_Scheduled.isEqual(LocalDateTime.now()))
                 {
+                    //create xml file path
+                    File finalFile = new File("./"+billboard_name+".xml");
+                    System.out.println("xml file: "+ finalFile);
+
+                    //create new timer task to display billboard
+                    TimerTask run_viewer = new TimerTask() {
+                        @Override
+                        public void run(){
+                            try {
+                                new BillboardViewer(finalFile, true);
+                            } catch (SAXException | ParserConfigurationException | IOException | ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException e) {
+                                e.printStackTrace();
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+                    //if billboard is recurs daily
+                    if (viewing.Recurrence == "day")
+                    {
+                        int duration_int = Integer.parseInt(viewing.duration.toString());
+                        //schedule viewing at fixed rate
+                        timer.scheduleAtFixedRate(run_viewer, Date.from(Instant.now()),(long) duration_int);
+                    }
+
+                    //if billboard is recurs hourly
+                    if (viewing.Recurrence == "hour")
+                    {
+                        //schedule viewing at fixed rate
+                    }
+
+                    //if billboard is recurs every minute
+                    if (viewing.Recurrence == "minute")
+                    {
+                        //schedule viewing at fixed rate
+                    }
+
+                    //if billboard does not recur
+                    if (viewing.Recurrence == "none")
+                    {
+                        int duration_int = Integer.parseInt(viewing.duration.toString());
+                        //schedule viewing
+                        timer.schedule(run_viewer, Date.from(Instant.now()),(long) duration_int);
+                    }
 
                 }
-
-                else
-                {
-
-                }
-
             }
 
-                //if other billboards are scheduled for the same time
-                    //check which was scheduled later
-                        //retrieve name of billboard
-            //else
-                //retrieve name of billboard
-            //else
-            //retrieve name of billboard
 
-            File file = new File("./"+Billboard_name+".xml");
-            System.out.println("xml file: "+ file);
 
-            new Timer();
-
-            new TimerTask() {
-                @Override
-                public void run(){
-                    try {
-                        new BillboardViewer(file, true);
-                    } catch (SAXException | ParserConfigurationException | IOException | ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
 
         }
 
-        //if billboard is recurring
-        //schedule viewing at fixed rate
 
-        //if billboard does not recur
-        //schedule viewing
 
     }
 
