@@ -122,8 +122,11 @@ public class TestbillboardList<E> {
     public void Delete_billboard() throws Exception
     {
         //Create Billboard1
-        billboardList.Create_edit_Billboard("Billboard1", "new billboard", "blue",
+        billboardList.Create_edit_Billboard("Billboard1", "new billboard", "#d0fb24",
                 "No Image", "jarod");
+
+        //Schedule Billboard1
+
 
         //Delete Billboard1
         billboardList.Delete_billboard("Billboard1");

@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.io.*;
+import javax.swing.plaf.synth.ColorType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -58,12 +62,25 @@ public class BillboardList implements java.io.Serializable {
 
     public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
                                        String billboard_creator) throws Exception {
-        //Create a new billboard object
-        billboardNew = new Billboard(billboard_name, text,
-                bg_colour, image, billboard_creator);
+        //Check if image exists
+        boolean exists = Files.exists(Paths.get(image));
+        //Check if bg_colour is valid
+        Color bgColour = SystemColor.decode(bg_colour);
 
-        //put billboard in HashMap - value will be replaced if key exists in HashMap
-        billboardHashMap.put(billboard_name, billboardNew);
+        //Check for issues before creating the billboard.
+        if (exists == false && image != "No Image")
+        {
+            throw new Exception ("The image does not exist. Please input a valid image.");
+        }else if (bgColour == null) {
+            throw new Exception ("The background colour entered is invalid. Please enter a valid colour.");
+        }else{
+            //Create a new billboard object
+            billboardNew = new Billboard(billboard_name, text,
+                    bg_colour, image, billboard_creator);
+
+            //put billboard in HashMap - value will be replaced if key exists in HashMap
+            billboardHashMap.put(billboard_name, billboardNew);
+        }
     }
 
 
