@@ -68,7 +68,10 @@ public class BillboardList implements java.io.Serializable {
         Color bgColour = SystemColor.decode(bg_colour);
 
         //Check for issues before creating the billboard.
-        if (exists == false && image != "No Image")
+        if(image == ""){
+            throw new Exception("There was no image inputted. Please specify an image or opt for 'No Image'.");
+        }
+        else if (image != "No Image" && exists == false)
         {
             throw new Exception ("The image does not exist. Please input a valid image.");
         }else if (bgColour == null) {
@@ -152,7 +155,7 @@ public class BillboardList implements java.io.Serializable {
             Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins,recurrence, billboard_creator);
 
             //remove viewing of billboard
-            this.scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);
+            scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);
         }
 
         //The code for removing the billboard info from the billboardList.
