@@ -3,8 +3,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Billboard Schedule class for Control Panel GUI
@@ -16,6 +19,7 @@ import java.util.Arrays;
  */
 public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, ActionListener {
     MultiMap billboard_schedule;
+    final int days_in_week = 7;
     /**
      * Method used to create a GUI window for the Billboard Schedule Screen
      */
@@ -136,17 +140,54 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
 
             //for every viewing of billboard
             for ( Schedule_Info viewing : viewings ) {
-                //get day of the week from LocalDateTime
-                DayOfWeek billboard_day = viewing.StartTime_Scheduled.getDayOfWeek();
 
-                //get int value of day
-                int day_int = billboard_day.getValue();
+                //store scheduled date time of billboard in local var
+                LocalDateTime scheduled_date_time = viewing.StartTime_Scheduled;
 
-                //get hour displayed from LocalDateTime
-                int billboard_hour = viewing.StartTime_Scheduled.getHour();
+                //store current date time in local var
+                LocalDateTime current_date_time = LocalDateTime.now();
 
-                //populate cell with billboard name and creator
-                data[billboard_hour][day_int] = billboard_name + " by " + viewing.Billboard_creator; // Change this line to "BillboardName by User"
+                //round scheduled date time up in days
+                LocalDateTime ceiling_scheduled_date_time = viewing.StartTime_Scheduled.truncatedTo(DAYS).plusDays(1);
+
+                //round current date time up in days
+                LocalDateTime ceiling_current_date_time = LocalDateTime.now().truncatedTo(DAYS).plusDays(1);
+
+                //calculate days in between current time and scheduled viewing
+                long time_diff = DAYS.between(ceiling_current_date_time, ceiling_scheduled_date_time);
+
+                System.out.println("time diff of "+ billboard_name +"= "+time_diff);
+
+                //get current day of the week
+                DayOfWeek current_day = current_date_time.getDayOfWeek();
+
+                System.out.println("scheduled day" + scheduled_date_time.getDayOfWeek());
+                System.out.println("scheduled day int: " + scheduled_date_time.getDayOfWeek().getValue());
+                System.out.println("current day: "+current_day);
+
+                //convert day to int value
+                int int_current_day = current_day.getValue();
+
+                //calculate time till end of the week (Sunday)
+                int time_end_wk = days_in_week - int_current_day;
+
+                System.out.println("end of week: "+time_end_wk);
+                //if viewing is in the current week
+                if (time_diff <= time_end_wk)
+                {
+                    //get day of the week from LocalDateTime
+                    DayOfWeek billboard_day = scheduled_date_time.getDayOfWeek();
+
+                    //get int value of day
+                    int day_int = billboard_day.getValue();
+
+                    //get hour displayed from LocalDateTime
+                    int billboard_hour = scheduled_date_time.getHour();
+
+                    //populate cell with billboard name and creator
+                    data[billboard_hour][day_int] = billboard_name + " by " + viewing.Billboard_creator; // Change this line to "BillboardName by User"
+
+                }
 
                 }
 
