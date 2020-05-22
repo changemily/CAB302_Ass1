@@ -37,11 +37,9 @@ public class BillboardServer {
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
                     "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_creator varchar (255));";
 
-    //Setup a hashmap for session tokens and their times.
-    HashMap<String, Timer> sessionTokenHashmap;
     //Setup another hashmap to store an id and hasmap of the token and its timer
-    HashMap<Integer, String> SessionCombinedHashmap;
-    //Setup a hashmap to store the two hashmaps relevant to each session token
+    HashMap<Integer, Timer> SessionCombinedHashmap;
+    //Setup a hashmap to store each hasmap with a timer
     HashMap<Integer, String> SessionTokenListHashmap;
 
     /**
@@ -513,8 +511,7 @@ public class BillboardServer {
     class RemoveFromList extends TimerTask{
         public void run(){
             //Remove the session info from the hashmap for the session token that has expired.
-            SessionTokenListHashmap.remove(i);
-            i++;
+            SessionTokenListHashmap.remove(i++);
         }
     }
 
@@ -553,16 +550,42 @@ public class BillboardServer {
             //Set the timer to 24 hours, after which it will be removed from the hashmap
             timer.schedule(taskA, (long) 8.64e+7);
 
-            //Store the timer and session token in the hashmap
-            sessionTokenHashmap.put(thisSessionToken, timer);
-            //Then store the Token and timer hashmap in another hashmap associating
-            //it with an id number
-            SessionCombinedHashmap.put(counter, thisSessionToken);
-            //Then store the combined session token info in another hashmap
-            SessionTokenListHashmap.put(counter, SessionCombinedHashmap.get(counter));
+            //Store counter ID and session token
+            SessionCombinedHashmap.put(counter, timer);
+            //Then store the hasmpa of counter and token with a timer
+            SessionTokenListHashmap.put(counter, thisSessionToken);
 
         }else{
             oos.writeObject("User Invalid");
+        }
+    }
+
+    /**
+     * Checks the Hashmap of Tokens for the users token
+     * @param oos Object Output stream of Server
+     * @param oois ObjectInputStream
+     * @throws IOException
+     */
+    private void checkToken(ObjectOutputStream oos, ObjectInputStream oois) throws IOException, ClassNotFoundException {
+        //Get the user inputted token
+        String userToken = oois.readObject().toString();
+
+        //Boolean for checking existance of session token
+        Boolean tokenExists = false;
+        //Check the user inputted token
+        for(Map.Entry<Integer, String> entry : SessionTokenListHashmap.entrySet()){
+            //If the user token exists in the hashmap then return a true value.
+            if(entry.getValue() == userToken) {
+                tokenExists = true;
+                oos.writeChars("Valid Token");
+            }else{
+                //Token doesn't exist in the hashmap
+                tokenExists = false;
+            }
+        }
+        //If the token wasn't found in the hashmap then it has expired
+        if(tokenExists == false){
+            oos.writeChars("Token has expired.");
         }
     }
 
