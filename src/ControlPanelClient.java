@@ -73,8 +73,8 @@ public class ControlPanelClient {
 
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
-                    scheduleBillboard(oos, request, "sat",
-                            "2020-05-23T10:00:00.00", "5", "none");
+                    scheduleBillboard(oos, request, "fri",
+                            "2020-05-29T10:00:00.00", "5", "none");
                     break;
 
                 case "Remove Schedule":

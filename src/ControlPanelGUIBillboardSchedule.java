@@ -19,7 +19,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
  */
 public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, ActionListener {
     MultiMap billboard_schedule;
-    final int days_in_week = 6;
+    final int days_in_week = 7;
     /**
      * Method used to create a GUI window for the Billboard Schedule Screen
      */
@@ -147,8 +147,14 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
                 //store current date time in local var
                 LocalDateTime current_date_time = LocalDateTime.now();
 
+                //round scheduled date time up in days
+                LocalDateTime ceiling_scheduled_date_time = viewing.StartTime_Scheduled.truncatedTo(DAYS).plusDays(1);
+
+                //round current date time up in days
+                LocalDateTime ceiling_current_date_time = LocalDateTime.now().truncatedTo(DAYS).plusDays(1);
+
                 //calculate days in between current time and scheduled viewing
-                long time_diff = DAYS.between(current_date_time, scheduled_date_time);
+                long time_diff = DAYS.between(ceiling_current_date_time, ceiling_scheduled_date_time);
 
                 System.out.println("time diff of "+ billboard_name +"= "+time_diff);
 
