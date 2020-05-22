@@ -47,7 +47,7 @@ public class ScheduleMultiMap {
             String Start_TimeScheduled = rs.getString(2);
             String duration = rs.getString(3);
             String recurrence = rs.getString(4);
-            String billboard_creator = rs.getString(5);
+            String billboard_creator = rs.getString(6);
 
             //store time scheduled and duration pair in array schedule_info
             Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(Start_TimeScheduled),

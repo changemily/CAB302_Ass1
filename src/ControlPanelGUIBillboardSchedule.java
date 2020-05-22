@@ -184,9 +184,17 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
                     //get hour displayed from LocalDateTime
                     int billboard_hour = scheduled_date_time.getHour();
 
-                    //populate cell with billboard name and creator
-                    data[billboard_hour][day_int] = billboard_name + " by " + viewing.Billboard_creator; // Change this line to "BillboardName by User"
+                    //retrieve string from cell
+                    String temp_cell_string = data[billboard_hour][day_int];
 
+                    //add billboard name and creator to string in cell
+                    temp_cell_string += billboard_name + " by " + viewing.Billboard_creator + "\n";
+
+                    //replace all instances of null with empty string
+                    String cell_string = temp_cell_string.replaceAll("null", "");
+
+                    //populate cell with new string
+                    data[billboard_hour][day_int] = cell_string; // Change this line to "BillboardName by User"
                 }
 
                 }
