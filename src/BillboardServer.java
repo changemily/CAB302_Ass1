@@ -560,23 +560,34 @@ public class BillboardServer {
         }
     }
 
-//    /**
-//     * Checks the Hashmap of Tokens for the users token
-//     * @param oos Object Output stream of Server
-//     * @param oois ObjectInputStream
-//     * @throws IOException
-//     */
-//    private void checkToken(ObjectOutputStream oos, ObjectInputStream oois) throws IOException, ClassNotFoundException {
-//        //Get the user inputted token
-//        String userToken = oois.readObject().toString();
-//
-//        //Boolean for checking existance of session token
-//        Boolean tokenExists;
-//        //Check the user inputted token
-//        for(SessionTokenListHashmap.Entry<Integer, >){
-//
-//        }
-//    }
+    /**
+     * Checks the Hashmap of Tokens for the users token
+     * @param oos Object Output stream of Server
+     * @param oois ObjectInputStream
+     * @throws IOException
+     */
+    private void checkToken(ObjectOutputStream oos, ObjectInputStream oois) throws IOException, ClassNotFoundException {
+        //Get the user inputted token
+        String userToken = oois.readObject().toString();
+
+        //Boolean for checking existance of session token
+        Boolean tokenExists = false;
+        //Check the user inputted token
+        for(Map.Entry<Integer, String> entry : SessionTokenListHashmap.entrySet()){
+            //If the user token exists in the hashmap then return a true value.
+            if(entry.getValue() == userToken) {
+                tokenExists = true;
+                oos.writeChars("Valid Token");
+            }else{
+                //Token doesn't exist in the hashmap
+                tokenExists = false;
+            }
+        }
+        //If the token wasn't found in the hashmap then it has expired
+        if(tokenExists == false){
+            oos.writeChars("Token has expired.");
+        }
+    }
 
     /**
      * Runs server
