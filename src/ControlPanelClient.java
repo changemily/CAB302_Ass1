@@ -3,6 +3,8 @@ import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 /**
@@ -39,8 +41,8 @@ public class ControlPanelClient {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-            String request = "Schedule Billboard";
-            //String request = "Run Billboard Viewer";
+            //String request = "Schedule Billboard";
+            String request = "Run Billboard Viewer";
             //request given by user saved in local var request
             switch(request)
             {
@@ -73,8 +75,11 @@ public class ControlPanelClient {
 
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
-                    scheduleBillboard(oos, request, "monday",
-                            "2020-05-23T20:40:00.00", "5", "none");
+
+                    String time =LocalDateTime.now().plus(Duration.ofMinutes(1)).toString();
+                    System.out.println("time scheduled: " +time);
+                    scheduleBillboard(oos, request, "sun",
+                            time, "5", "none");
                     break;
 
                 case "Remove Schedule":

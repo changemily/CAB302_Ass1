@@ -32,6 +32,9 @@ public class Schedule_Info implements Serializable {
 
         this.Billboard_creator = billboard_creator;
 
+        ////set time billboard is scheduled for showing
+        this.StartTime_Scheduled = startTime_scheduled;
+
         //if duration is negative or zero
         if (duration_mins.isNegative() || duration_mins.isZero())
         {
@@ -43,19 +46,6 @@ public class Schedule_Info implements Serializable {
         {
             //set duration billboard is displayed for
             this.duration = duration_mins;
-        }
-
-        //if the time scheduled is in the past
-        if (startTime_scheduled.compareTo(LocalDateTime.now())<0)
-        {
-            //throw exception
-            throw new Exception("Time scheduled must be after"+ LocalDateTime.now());
-        }
-
-        else
-        {
-            ////set time billboard is scheduled for showing
-            this.StartTime_Scheduled = startTime_scheduled;
         }
 
         //if the recurrence option is invalid

@@ -33,7 +33,6 @@ public class ScheduleMultiMap {
 
         final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled desc";
 
-
         //create statement
         Statement st = connection.createStatement();
 
@@ -121,6 +120,13 @@ public class ScheduleMultiMap {
      */
     public void scheduleBillboard(String new_billboard, LocalDateTime NewBB_startTime, Duration NewBB_duration,
                                   String recurrence, HashMap<String, Billboard> billboardList, String billboard_creator) throws Exception{
+
+        //if the time scheduled is in the past
+        if (NewBB_startTime.isBefore(LocalDateTime.now()))
+        {
+            //throw exception
+            throw new Exception("Time scheduled must be after"+ LocalDateTime.now());
+        }
 
         //boolean variable to track whether billboard is in billboard list
         boolean billboard_exists = false;

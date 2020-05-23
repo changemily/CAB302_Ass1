@@ -81,6 +81,9 @@ public class BillboardServer {
         billboard_schedule.RetrieveDBschedule(connection);
         billboard_list.RetrieveDBbillboardList(connection);
 
+        //populate queue with schedule
+        populateQueue(connection);
+
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
@@ -400,11 +403,11 @@ public class BillboardServer {
         billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
                 Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards(),billboard_creator);
 
-        //update viewer queue
-        populateQueue(connection);
-
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
+
+        //update viewer queue
+        populateQueue(connection);
     }
 
     /**
@@ -431,7 +434,7 @@ public class BillboardServer {
             //if viewing start time is equal to startTime given
             if (viewing.StartTime_Scheduled.equals(startTime))
             {
-                //retrieve time schedule was created
+                //retrieve the time the schedule was created
                 LocalDateTime time_scheduled = viewing.Time_Scheduled;
 
                 //retrieve billboard object
@@ -450,11 +453,11 @@ public class BillboardServer {
                 //remove viewing from schedule
                 billboard_schedule.Schedule_Remove_billboard(billboard_name,schedule_info);
 
-                //update viewer queue
-                populateQueue(connection);
-
                 //write schedule to DB
                 billboard_schedule.Write_To_DBschedule(connection);
+
+                //update viewer queue
+                populateQueue(connection);
             }
         }
     }
@@ -521,25 +524,21 @@ public class BillboardServer {
     }
 
     public static void runViewer(BillboardList billboardList, ScheduleMultiMap billboard_schedule, Connection connection) throws Exception {
-        //update queue
-        populateQueue(connection);
-
         //if billboards have been scheduled
         if(queue.length > 0)
         {   //store current time and time of next viewing in local variables
             LocalDateTime current_time = LocalDateTime.now();
-            LocalDateTime next_viewing_time = LocalDateTime.parse(queue[0][1]);
 
             //store schedule info in local variables
             String billboard_name = queue[0][0];
-            LocalDateTime Start_TimeScheduled = LocalDateTime.parse(queue[0][1]);
+            LocalDateTime next_viewing_time = LocalDateTime.parse(queue[0][1]);
             Duration duration = Duration.parse(queue[0][2]);
             String viewing_recurrence = queue[0][3];
             LocalDateTime time_scheduled = LocalDateTime.parse(queue[0][4]);
             String billboard_creator = queue[0][5];
 
             //get schedule info of viewing that has been displayed
-            Schedule_Info displayed_schedule = new Schedule_Info(Start_TimeScheduled, duration,
+            Schedule_Info displayed_schedule = new Schedule_Info(next_viewing_time, duration,
                     viewing_recurrence, time_scheduled, billboard_creator);
 
             //Check if the next viewing in the queue is before or equal to current time
@@ -559,7 +558,7 @@ public class BillboardServer {
                     Duration day = Duration.ofDays(1);
 
                     //add  1 day to current time
-                    LocalDateTime new_start_time = Start_TimeScheduled.plus(day);
+                    LocalDateTime new_start_time = next_viewing_time.plus(day);
 
                     //Reschedule start time of viewing for +1 day
                     billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,viewing_recurrence,
@@ -572,7 +571,7 @@ public class BillboardServer {
                     Duration hour = Duration.ofHours(1);
 
                     //add  1 hour to current time
-                    LocalDateTime new_start_time = Start_TimeScheduled.plus(hour);
+                    LocalDateTime new_start_time = next_viewing_time.plus(hour);
 
                     //Reschedule start time of viewing for +1 hr
                     billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,viewing_recurrence,
@@ -586,12 +585,15 @@ public class BillboardServer {
                     Duration hour = Duration.ofMinutes(1);
 
                     //add  1 minute to current time
-                    LocalDateTime new_start_time = Start_TimeScheduled.plus(hour);
+                    LocalDateTime new_start_time = next_viewing_time.plus(hour);
 
                     //Reschedule start time of viewing for +1 min
                     billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,viewing_recurrence,
                             billboardList.billboardHashMap, billboard_creator);
                 }
+
+                //update viewer queue
+                populateQueue(connection);
             }
 
             else

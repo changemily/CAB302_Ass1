@@ -348,7 +348,51 @@ public class TestscheduleMultiMap {
         });
     }
 
-    //Test 4.1: Remove scheduling of billboard that is not in the schedule - nonexistent name
+    //Test 4: Checks if a single viewing of a billboard, scheduled multiple times, can be removed from the schedule.
+    @Test
+    public void Schedule_Remove_Same_billboard() throws Exception
+    {
+        //add billboard to billboardList
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image","emily");
+
+        //schedule billboard multiple times
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-01-10T10:00:00.00"),
+                Duration.ofMinutes(10), "none", billboardList.List_Billboards(), "emily");
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-04T10:00:00.00"),
+                Duration.ofMinutes(10), "none",billboardList.List_Billboards(),"emily");
+
+        //get viewings of billboard 1
+        ArrayList<Schedule_Info> billboard_viewings = Billboard_schedule.getSchedule("Billboard_1");
+
+        //for each viewing
+        for (Schedule_Info viewing : billboard_viewings)
+        {
+            //if viewing start time is equal to startTime given
+            if (viewing.StartTime_Scheduled.equals(LocalDateTime.parse("2021-01-10T10:00:00.00")))
+            {
+                //retrieve the time the schedule was created
+                LocalDateTime time_scheduled = viewing.Time_Scheduled;
+
+                //schedule info of viewing being removed
+                Schedule_Info removed_schedule_info= new Schedule_Info(LocalDateTime.parse("2021-01-10T10:00:00.00"),
+                        Duration.ofMinutes(10), "none",time_scheduled, "emily");
+
+                //remove billboard from schedule
+                Billboard_schedule.Schedule_Remove_billboard("Billboard_1",removed_schedule_info);
+
+                //get viewings of billboard 1
+                ArrayList<Schedule_Info> viewings = Billboard_schedule.getSchedule("Billboard_1");
+
+                //check that viewings does not contain schedule info of deleted viewing
+                assertEquals(false, viewings.contains(removed_schedule_info));
+
+            }
+        }
+
+    }
+
+    //Test 4.2: Remove scheduling of billboard that is not in the schedule - nonexistent name
     //
     @Test
     public void RemoveSchedule_invalidBillboardName() throws Exception
@@ -363,7 +407,7 @@ public class TestscheduleMultiMap {
         });
     }
 
-    //Test 4.2: Remove scheduling of billboard that is not in the schedule - nonexistent name,time & duration combination
+    //Test 4.3: Remove scheduling of billboard that is not in the schedule - nonexistent name,time & duration combination
     //
     @Test
     public void RemoveSchedule_invalidBillboard() throws Exception
