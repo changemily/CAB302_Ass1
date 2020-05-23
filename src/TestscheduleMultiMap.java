@@ -384,8 +384,11 @@ public class TestscheduleMultiMap {
                 //get viewings of billboard 1
                 ArrayList<Schedule_Info> viewings = Billboard_schedule.getSchedule("Billboard_1");
 
-                //check that viewings does not contain schedule info of deleted viewing
-                assertEquals(false, viewings.contains(removed_schedule_info));
+                //check if 1 viewing is in list
+                assertEquals(1, viewings.size());
+
+                //check if viewing in list is correct
+                assertEquals(LocalDateTime.parse("2021-05-04T10:00:00.00"), viewings.get(1).StartTime_Scheduled);
 
             }
         }
