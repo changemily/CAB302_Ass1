@@ -19,6 +19,9 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     }
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException
     {
+        // Set default look and feel & window properties
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // Create DurationSpinner
         JSpinner DurationSpinner = new JSpinner();
