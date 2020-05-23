@@ -8,6 +8,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileSystemView;
 
+import static javax.swing.JOptionPane.YES_OPTION;
+import static javax.swing.JOptionPane.showConfirmDialog;
+
 /**
  * @author Liam
  * To do: complete button functionaity, make preview panel dislplay actual preview
@@ -150,7 +153,11 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         {
             @Override
             public void actionPerformed( ActionEvent e ) {
-                System.exit(0);
+                int a = showConfirmDialog(null, "Have you saved any changes?");
+                if(a == YES_OPTION)
+                {
+                    dispose();
+                }
             }
         }));
         ExitBttn.setText("Exit");
