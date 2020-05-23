@@ -40,7 +40,7 @@ public class ControlPanelClient {
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
             String request = "Schedule Billboard";
-
+            //String request = "Run Billboard Viewer";
             //request given by user saved in local var request
             switch(request)
             {
@@ -73,8 +73,8 @@ public class ControlPanelClient {
 
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
-                    scheduleBillboard(oos, request, "sun",
-                            "2021-07-23T10:10:00.00", "5", "none");
+                    scheduleBillboard(oos, request, "monday",
+                            "2020-05-23T20:40:00.00", "5", "none");
                     break;
 
                 case "Remove Schedule":
@@ -92,6 +92,12 @@ public class ControlPanelClient {
                 case "Set user permissions":
                     break;
                 case "Set user password":
+                    break;
+                case "Run Billboard Viewer":
+                    //write request to server
+                    oos.writeObject(request);
+                    //retrieve info of currently displayed billboard
+                    //display billboard on viewer
                     break;
             }
 

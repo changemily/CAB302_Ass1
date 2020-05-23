@@ -10,7 +10,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Timer;
-
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 /**
  * Billboard server class
@@ -33,7 +35,7 @@ public class BillboardServer {
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
                     "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_creator varchar (255));";
     //Create queue 2D array
-    private static String [][] queue;
+    private static String [][] queue = new String [0][0];
 
     //Setup another hashmap to store an id and hasmap of the token and its timer
     HashMap<Integer, Timer> SessionCombinedHashmap;
@@ -182,9 +184,28 @@ public class BillboardServer {
                     case "Set user password":
                         return_message = "user password has been set";
                         break;
-                    case "Billboard Viewer":
-                        return_message = "Billboard Viewer";
-                        runViewer(ois,billboard_schedule);
+                    case "Run Billboard Viewer":
+                        return_message = "Running Billboard Viewer";
+
+                        Connection finalConnection = connection;
+
+                        //create new timer
+                        Timer timer = new Timer();
+
+                        //create timer task that runs viewer
+                        class runViewer extends TimerTask {
+                            public void run() {
+                                try {
+                                    runViewer(billboard_list, billboard_schedule, finalConnection);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        //run viewer every 15 seconds
+                        timer.schedule(new runViewer(), 0, 15000);
+
                         break;
 
                     default:
@@ -379,6 +400,9 @@ public class BillboardServer {
         billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
                 Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards(),billboard_creator);
 
+        //update viewer queue
+        populateQueue(connection);
+
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
     }
@@ -426,28 +450,52 @@ public class BillboardServer {
                 //remove viewing from schedule
                 billboard_schedule.Schedule_Remove_billboard(billboard_name,schedule_info);
 
+                //update viewer queue
+                populateQueue(connection);
+
                 //write schedule to DB
                 billboard_schedule.Write_To_DBschedule(connection);
             }
         }
-
-
     }
 
     public static void populateQueue (Connection connection) throws SQLException {
-        //Read from DB - sort by start time of viewing
-        final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled desc";
+
+        //Read data from DB - sort rows in ascending order by start time of viewing
+        final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled ASC;";
+        final String GET_NUM_ROWS = "select count(*) from Schedule;";
 
         //create statement
         Statement st = connection.createStatement();
 
         ResultSet rs = st.executeQuery(SELECT);
 
-        //for every database entry
-        int noDBrows= rs.getFetchSize();
-        for (int n=0; n<noDBrows; n++)
+        //retrieve number of rows from schedule table in DB
+        ResultSet row_resultSet = st.executeQuery(GET_NUM_ROWS);
+
+        int numDB_rows;
+        try{
+            //store number of schedule table rows in local int
+            row_resultSet.next();
+            numDB_rows = row_resultSet.getInt(1);
+            System.out.println("rows in DB:" +numDB_rows);
+        }
+        catch (Exception e)
         {
-            queue = new String [noDBrows][5];
+            //if no rows are in DB set numDB_rows to 0
+            numDB_rows = 0;
+            System.out.println("rows in DB:" +numDB_rows);
+        }
+        //create 2D array that stores the contents of each row in the DB
+        queue = new String[numDB_rows][6];
+
+        int row_no = -1;
+
+        //for every database entry
+        while (rs.next())
+        {
+            row_no++;
+
             //store database info in local variables
             String billboard_name = rs.getString(1);
             String Start_TimeScheduled = rs.getString(2);
@@ -457,13 +505,12 @@ public class BillboardServer {
             String billboard_creator = rs.getString(6);
 
            //add to queue
-            queue[n][0] = billboard_name;
-            queue[n][1] = Start_TimeScheduled;
-            queue[n][2] = duration;
-            queue[n][3] = recurrence;
-            queue[n][4] = time_scheduled;
-            queue[n][5] = billboard_creator;
-
+            queue[row_no][0] = billboard_name;
+            queue[row_no][1] = Start_TimeScheduled;
+            queue[row_no][2] = duration;
+            queue[row_no][3] = recurrence;
+            queue[row_no][4] = time_scheduled;
+            queue[row_no][5] = billboard_creator;
         }
 
         //close ResultSet
@@ -473,12 +520,103 @@ public class BillboardServer {
 
     }
 
-    public static void runViewer(ObjectInputStream ois, ScheduleMultiMap billboard_schedule) throws Exception {
-        //Read from DB - sort by start time of viewing
+    public static void runViewer(BillboardList billboardList, ScheduleMultiMap billboard_schedule, Connection connection) throws Exception {
+        //update queue
+        populateQueue(connection);
 
-        //Populate queue - billboard name, start time, duration, time scheduled and recurrence
+        //if billboards have been scheduled
+        if(queue.length > 0)
+        {   //store current time and time of next viewing in local variables
+            LocalDateTime current_time = LocalDateTime.now();
+            LocalDateTime next_viewing_time = LocalDateTime.parse(queue[0][1]);
 
+            //store schedule info in local variables
+            String billboard_name = queue[0][0];
+            LocalDateTime Start_TimeScheduled = LocalDateTime.parse(queue[0][1]);
+            Duration duration = Duration.parse(queue[0][2]);
+            String viewing_recurrence = queue[0][3];
+            LocalDateTime time_scheduled = LocalDateTime.parse(queue[0][4]);
+            String billboard_creator = queue[0][5];
 
+            //get schedule info of viewing that has been displayed
+            Schedule_Info displayed_schedule = new Schedule_Info(Start_TimeScheduled, duration,
+                    viewing_recurrence, time_scheduled, billboard_creator);
+
+            //Check if the next viewing in the queue is before or equal to current time
+            if(next_viewing_time.isBefore(current_time) || next_viewing_time.isEqual(current_time))
+            {
+                System.out.println("\n"+LocalDateTime.now());
+
+                //Send billboard info to client
+                System.out.println(billboard_name+" is being displayed");
+
+                //Remove viewing from schedule
+                billboard_schedule.Schedule_Remove_billboard(billboard_name, displayed_schedule);
+
+                //if billboard viewing recurs daily
+                if(viewing_recurrence.equals("day"))
+                {
+                    Duration day = Duration.ofDays(1);
+
+                    //add  1 day to current time
+                    LocalDateTime new_start_time = Start_TimeScheduled.plus(day);
+
+                    //Reschedule start time of viewing for +1 day
+                    billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,viewing_recurrence,
+                            billboardList.billboardHashMap, billboard_creator);
+                }
+
+                //if billboard viewing recurs hourly
+                else if(viewing_recurrence.equals("hour"))
+                {
+                    Duration hour = Duration.ofHours(1);
+
+                    //add  1 hour to current time
+                    LocalDateTime new_start_time = Start_TimeScheduled.plus(hour);
+
+                    //Reschedule start time of viewing for +1 hr
+                    billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,viewing_recurrence,
+                            billboardList.billboardHashMap, billboard_creator);
+
+                }
+
+                //if billboard viewing recurs every minute
+                else if(viewing_recurrence.equals("min"))
+                {
+                    Duration hour = Duration.ofMinutes(1);
+
+                    //add  1 minute to current time
+                    LocalDateTime new_start_time = Start_TimeScheduled.plus(hour);
+
+                    //Reschedule start time of viewing for +1 min
+                    billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,viewing_recurrence,
+                            billboardList.billboardHashMap, billboard_creator);
+                }
+            }
+
+            else
+            {
+                System.out.println("\n"+LocalDateTime.now());
+                //Send error message to client
+                System.out.println("There are no billboards scheduled for this time");
+            }
+
+            //clear DB
+            billboard_schedule.Clear_DBschedule(connection);
+
+            //Write schedule changes to DB
+            billboard_schedule.Write_To_DBschedule(connection);
+        }
+
+        else
+        {
+            System.out.println("\n"+LocalDateTime.now());
+
+            //Send error message to client
+            System.out.println("queue is empty");
+
+            //System.out.println("There are no billboards scheduled for this time");
+        }
     }
 
     //Static int for counting which session has expired.
