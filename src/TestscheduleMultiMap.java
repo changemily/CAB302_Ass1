@@ -388,7 +388,7 @@ public class TestscheduleMultiMap {
                 assertEquals(1, viewings.size());
 
                 //check if viewing in list is correct
-                assertEquals(LocalDateTime.parse("2021-05-04T10:00:00.00"), viewings.get(1).StartTime_Scheduled);
+                assertEquals(LocalDateTime.parse("2021-05-04T10:00:00.00"), viewings.get(0).StartTime_Scheduled);
 
             }
         }

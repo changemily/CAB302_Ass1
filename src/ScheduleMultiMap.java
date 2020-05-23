@@ -342,15 +342,15 @@ public class ScheduleMultiMap {
                     }
 
                     //if combination of billboard name, and schedule info is listed in schedule
-                    else if(viewing == schedule_info)
+                    else if(viewing.StartTime_Scheduled.equals(schedule_info.StartTime_Scheduled))
                     {
                         viewing_exists = true;
+
                         //remove scheduled viewing from Billboard key
-                        Schedule_MultiMap.remove(billboard_name,schedule_info);
+                        Schedule_MultiMap.remove(billboard_name,viewing);
                         break outerloop;
                     }
                 }
-
             }
         }
 
