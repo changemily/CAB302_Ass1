@@ -1,9 +1,12 @@
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * User Control Panel class for Control Panel GUI
@@ -13,13 +16,31 @@ import java.awt.event.ActionListener;
  *
  * NOTES: Current version is a basic design; some functionality still needs to be added; further refinement required
  */
-public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener {
+public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener {
+    // Search JTextField
     JTextField search;
+
+    // User JList
     JList list;
+
+    // User Selection JLabel
     JLabel userSelectionLabel;
+
+    // Edit User JButton
     JButton editUserButton;
+
+    // Delete User JButton
     JButton deleteUserButton;
+
+    // Create User JButton
     JButton createUserButton;
+
+    // Master Array of Users, used in user search checking
+    String[] usersMasterArray;
+
+    // Variable list used to populate JList when user is searching
+    DefaultListModel userListModel = new DefaultListModel();
+
 
     /**
      * Method used to create a GUI window for the User Control Panel
@@ -63,8 +84,11 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         // Formatting
         leftPanel.add(Box.createVerticalStrut(20));
 
-        // Create user list, inside of left JPanel
-        list = newUserList(leftPanel);
+        // Populate the master array of users, with user information
+        usersMasterArray = populateUserArray();
+
+        // Create user JList which is linked to the User List Model, populated with data from Users Master Array, inside of left JPanel
+        list = newList(userListModel, usersMasterArray, leftPanel);
 
         // Create right JPanel, with Y axis Box Layout
         JPanel rightPanel = newPanel('Y');
@@ -72,7 +96,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         rightPanel.add(Box.createVerticalStrut(50));
 
         // Create user selection JLabel, inside of right JPanel
-        userSelectionLabel = newLargeTitle(" ", rightPanel);
+        userSelectionLabel = newLargeTitle("", rightPanel);
 
         // Create buttons JPanel, with X axis Box Layout
         JPanel buttonsPanel = newPanel('X');
@@ -152,17 +176,36 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
     }
 
     /**
-     * This method creates a JList from a populated String array, and adds it to a specified JPanel
-     * @param panel The JPanel that the created JLabel is to be added to
+     * This method populates an array with real user information
+     * @return Returns a String array
+     */
+    private String[] populateUserArray() {
+
+        // String array with all users
+        // NOTE: NEEDS TO BE CHANGED TO FETCH REAL USER INFORMATION
+        String[] array = {"User 1", "User 2", "User 3", "User 4", "User 5", "User 6", "User 7", "User 9", "User 10"};
+
+        return array;
+    }
+
+    /**
+     * This method creates a JList from a specified list model, then populates the list model from a populated String array,
+     *  then the JList is added to a specified JPanel
+     * @param listModel The list model to be written to
+     * @param array The array to fetch information from
+     * @param panel The JPanel that the created JList is to be added to
      * @return Returns a JList
      */
-    private JList newUserList(JPanel panel) {
-        // String array with all users
-        // NEEDS TO BE CHANGED TO FETCH REAL USER INFORMATION
-        String users[] = {"User 1", "User 2", "User 3", "User 4", "User 5", "User 6", "User 7", "User 9", "User 10"};
+    private JList newList(DefaultListModel listModel, String[] array, JPanel panel) {
 
         // Create JList
-        JList list = new JList(users);
+        JList list = new JList(listModel);
+
+        // For each element in the provided array, add the element to the list model
+        for (String a : array) {
+            // Add element a to the list model
+            listModel.addElement(a);
+        }
 
         // Create JScrollPane
         JScrollPane scroll = new JScrollPane(list);
@@ -174,7 +217,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         panel.add(Box.createVerticalStrut(50));
 
         // Listener for user selection
-        // When a user is clicked from the user list, it is displayed above the Edit User and Delete User buttons
+        // When a user is clicked from the user list, the selection is displayed above the Edit User and Delete User buttons
         list.addListSelectionListener(this);
 
         // Returns a JList
@@ -216,6 +259,8 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         // Create new JTextField
         JTextField textField = new JTextField(10);
 
+        textField.getDocument().addDocumentListener(this);
+
         // Add the JTextField to the specified JPanel
         panel.add(textField);
 
@@ -249,6 +294,46 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         return button;
     }
 
+    /**
+     * This method checks the user's search within a given array, and updates the search results accordingly in the JList live
+     * Used for the Document Listener (insertUpdate, removeUpdate, and changedUpdate)
+     * @param model The model list to be changed, translates to the JList
+     * @param array The master array to be checked against
+     */
+    private void listSearch(DefaultListModel model, String[] array) {
+        // Converts any input by the user to lowercase characters (making the check case insensitive)
+        String textLower = search.getText().toLowerCase();
+
+        // Iterates through each element in the provided master array
+        for (String a : array) {
+            //  Checks if string entered in JTextField is not present in the master array (lowercase for case insensitivity)
+            if (!a.toLowerCase().contains(textLower)) {
+                // If list model already contains the element a
+                if (model.contains(a)) {
+                    // If element a is the same as the current user selection JLabel, clear the JLabel
+                    if (userSelectionLabel.getText().equals(a)) {
+                        // Clear any selection made by the user in the JList
+                        list.clearSelection();
+
+                        // Clear the user selection label
+                        userSelectionLabel.setText("");
+                    }
+
+                    // Remove the element a from the model
+                    model.removeElement(a);
+                }
+            }
+            // The string entered is present in the master array
+            else {
+                // If list model does not already contain the element a
+                if (!model.contains(a)) {
+                    // Add the the element a to the model
+                    model.addElement(a);
+                }
+            }
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         //Get button that has been clicked - event source
@@ -279,8 +364,29 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
     @Override
     public void valueChanged(ListSelectionEvent selectionEvent) {
-        // If an option is clicked in the JList, the user selection label is changed to display the option clicked
-        userSelectionLabel.setText(list.getSelectedValue().toString());
+        // If an option is currently selected in the JList, the user selection label is changed to display the option clicked,
+        if (!list.isSelectionEmpty()) {
+            // Set the user selection label text to be the value selected in the JList
+            userSelectionLabel.setText(list.getSelectedValue().toString());
+        }
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        // Execute search
+        listSearch(userListModel, usersMasterArray);
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        // Execute search
+        listSearch(userListModel, usersMasterArray);
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        // Execute search
+        listSearch(userListModel, usersMasterArray);
     }
 
     @Override
