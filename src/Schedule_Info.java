@@ -13,6 +13,7 @@ public class Schedule_Info implements Serializable {
     Duration duration;
     String Recurrence;
     LocalDateTime Scheduled_Time;
+    String Billboard_creator;
 
     /**
      *Constructor that is used to create Schedule_info object. Schedule_info object is assigned a start time scheduled,
@@ -20,13 +21,15 @@ public class Schedule_Info implements Serializable {
      * @param startTime_scheduled start time billboard is scheduled for
      * @param duration_mins duration billboard is scheduled for
      * @param recurrence type of recurrence billboard is scheduled for
+     * @param billboard_creator
      * @throws Exception throws exception if recurrence is invalid, duration or start time scheduled is out of range
      */
-    public Schedule_Info(LocalDateTime startTime_scheduled, Duration duration_mins, String recurrence)throws Exception
+    public Schedule_Info(LocalDateTime startTime_scheduled, Duration duration_mins, String recurrence, String billboard_creator)throws Exception
     {
         //Set Scheduled_Time of viewing to now.
         this.Scheduled_Time = LocalDateTime.now();
 
+        this.Billboard_creator = billboard_creator;
         //if duration is negative or zero
         if (duration_mins.isNegative() || duration_mins.isZero())
         {
@@ -66,6 +69,7 @@ public class Schedule_Info implements Serializable {
             //set recurrence of billboard
             this.Recurrence = recurrence;
         }
+
     }
 
 }

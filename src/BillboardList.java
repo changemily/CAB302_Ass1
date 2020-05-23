@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.io.*;
+import javax.swing.plaf.synth.ColorType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -53,33 +57,35 @@ public class BillboardList implements java.io.Serializable {
      * @param text            Text on the billboard
      * @param bg_colour       Background colour of the billboard
      * @param image           (optional)
-     * @param schedule_time   time (optional):void
-     * @param durationMinutes The duration in minutes it will be displayed
      */
 
 
     public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
-                                      LocalDateTime schedule_time, Duration durationMinutes,String recurrence) throws Exception {
-        //Create a new billboard object
-        billboardNew = new Billboard(billboard_name, text,
-                bg_colour, image, schedule_time, durationMinutes);
+                                       String billboard_creator) throws Exception {
+        //Check if image exists
+        boolean exists = Files.exists(Paths.get(image));
+        //Check if bg_colour is valid
+        Color bgColour = SystemColor.decode(bg_colour);
 
-        //put billboard in HashMap - value will be replaced if key exists in HashMap
-        billboardHashMap.put(billboard_name, billboardNew);
+        //Check for issues before creating the billboard.
+        if(image == ""){
+            throw new Exception("There was no image inputted. Please specify an image or opt for 'No Image'.");
+        }
+        else if (image != "No Image" && exists == false)
+        {
+            throw new Exception ("The image does not exist. Please input a valid image.");
+        }else if (bgColour == null) {
+            throw new Exception ("The background colour entered is invalid. Please enter a valid colour.");
+        }else{
+            //Create a new billboard object
+            billboardNew = new Billboard(billboard_name, text,
+                    bg_colour, image, billboard_creator);
 
-        //add schedule info of bb to schedule multi map
-        this.scheduleMultiMap.scheduleBillboard(billboard_name,schedule_time, durationMinutes,recurrence, billboardHashMap);
+            //put billboard in HashMap - value will be replaced if key exists in HashMap
+            billboardHashMap.put(billboard_name, billboardNew);
+        }
     }
 
-    //For creating and editing billboards without the optional parameters.
-    public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image) {
-        //Create a new billboard object
-        billboardNew = new Billboard(billboard_name, text,
-                bg_colour, image);
-
-        //put billboard in HashMap - value will be replaced if key exists in HashMap
-        billboardHashMap.put(billboard_name, billboardNew);
-    }
 
     /**
      * Method for listing current billboards
@@ -143,19 +149,18 @@ public class BillboardList implements java.io.Serializable {
             LocalDateTime startTime_scheduled = viewing.StartTime_Scheduled;
             Duration duration_mins = viewing.duration;
             String recurrence = viewing.Recurrence;
+            String billboard_creator = viewing.Billboard_creator;
 
             //create schedule info with viewing details
-            Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins,recurrence);
+            Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins,recurrence, billboard_creator);
 
             //remove viewing of billboard
-            this.scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);
+            scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);
         }
 
         //The code for removing the billboard info from the billboardList.
         billboardHashMap.remove(billboard_name);
     }
-
-
 
     public void RetrieveDBbillboardList(Connection connection) throws Exception {
 
@@ -175,6 +180,7 @@ public class BillboardList implements java.io.Serializable {
             String text = rs.getString(2);
             String bg_colour = rs.getString(3);
             String image_file = rs.getString(4);
+            String billboard_creator = rs.getString(5);
            /* String time_scheduled = rs.getString(5);
             String Duration_mins = rs.getString(6);*/
 
@@ -182,7 +188,7 @@ public class BillboardList implements java.io.Serializable {
             /*Billboard billboard = new Billboard(billboard_name, text, bg_colour,
                     image_file, LocalDateTime.parse(time_scheduled), Duration.parse(Duration_mins));*/
             Billboard billboard = new Billboard(billboard_name, text, bg_colour,
-                    image_file);
+                    image_file, billboard_creator);
 
             //store billboard name with corresponding billboard
             billboardHashMap.put(billboard_name, billboard);
@@ -219,11 +225,10 @@ public class BillboardList implements java.io.Serializable {
             String text = billboard.Billboard_text;
             String bg_colour = billboard.Bg_colour;
             String image_file = billboard.Image_file;
-            LocalDateTime time_scheduled = billboard.Time_scheduled;
-            Duration Duration_mins = billboard.duration;
+            String billboard_creator = billboard.Billboard_creator;
 
-            st.executeQuery("INSERT INTO Billboards (billboard_name, text, bg_colour, image_file, time_scheduled, Duration_mins) " +
-                    "VALUES(\""+billboard_name+"\",\""+text+"\",\""+bg_colour+"\",\""+image_file+"\",\""+time_scheduled+"\",\""+Duration_mins+"\");");
+            st.executeQuery("INSERT INTO Billboards (billboard_name, text, bg_colour, image_file, billboard_creator) " +
+                    "VALUES(\""+billboard_name+"\",\""+text+"\",\""+bg_colour+"\",\""+image_file+"\",\""+billboard_creator+"\");");
         }
 
         //close statement
@@ -288,8 +293,11 @@ public class BillboardList implements java.io.Serializable {
         //Setting the recurrence to a default empty
         String recurrence = "none";
 
+        //Billboard creator
+        String billboard_creator = "emily";
+
         //Use the specs retrieved from the XML to create the billboard
-        Create_edit_Billboard(BillboardName, text, bgColour, imageFile, timeSchedule, durationMinutes, recurrence);
+        Create_edit_Billboard(BillboardName, text, bgColour, imageFile, billboard_creator);
     }
 
 

@@ -5,11 +5,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLNonTransientConnectionException;
 import java.sql.Statement;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Timer;
@@ -30,11 +31,16 @@ public class BillboardServer {
     public static final String CREATE_BILLBOARD_TABLE =
             "CREATE TABLE IF NOT EXISTS Billboards (billboard_name varchar(255)," +
                     "text varchar(1000),bg_colour varchar (255)," +
-                    "image_file varchar(255), time_scheduled varchar(50), Duration_mins varchar(255));";
+                    "image_file varchar(255), billboard_creator varchar(255));";
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
-                    "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50));";
+                    "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_creator varchar (255));";
+
+    //Setup another hashmap to store an id and hasmap of the token and its timer
+    HashMap<Integer, Timer> SessionCombinedHashmap;
+    //Setup a hashmap to store each hasmap with a timer
+    HashMap<Integer, String> SessionTokenListHashmap;
 
     /**
      * Starts up Billboard server for connection to client
@@ -44,6 +50,8 @@ public class BillboardServer {
         //Setup a default user.
         User DefaultUser = new User("DefaultUserName", "DefaultPassword",
                 "Create Billboards", "Edit All Billboards", "Schedule Billboards", "Edit Users");
+
+
 
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
@@ -160,7 +168,7 @@ public class BillboardServer {
                     case "Remove Schedule":
                         return_message = "billboard has been removed from schedule";
                         //remove viewing from schedule
-                        removeSchedule(ois,connection,billboard_schedule);
+                        removeSchedule(ois,connection,billboard_schedule, billboard_list);
                         break;
 
                     case "List users":
@@ -277,7 +285,6 @@ public class BillboardServer {
         System.out.println("billboard name: "+BillboardInfo.Billboard_name);
         System.out.println("billboard bg colour: "+BillboardInfo.Bg_colour);
         System.out.println("billboard image file: "+BillboardInfo.Image_file);
-        System.out.println("billboard duration: "+BillboardInfo.duration);
     }
 
     /**
@@ -293,9 +300,7 @@ public class BillboardServer {
         String text = ois.readObject().toString();
         String bg_colour = ois.readObject().toString();
         String image = ois.readObject().toString();
-        String startTime = ois.readObject().toString();
-        String duration = ois.readObject().toString();
-        String recurrence = ois.readObject().toString();
+        String billboard_creator = ois.readObject().toString();
 
         //For testing purposes
         //print bb list
@@ -304,14 +309,13 @@ public class BillboardServer {
         System.out.println("billboard name: "+ billboard_name + "\n" +
                 "text: "+text+"\n"+
                 "bg_colour: "+bg_colour+"\n"+
-                "image: "+image+"\n"+
-                "start time: "+startTime+"\n" +
-                "duration: " + duration +"\n"+
-                "recurrence: " +recurrence +"\n");
+                "image: "+image+"\n");
+
+        //Clear the db with the billboard information
+        billboard_List.Clear_DBbillboardList(connection);
 
         //Create the billboard
-        billboard_List.Create_edit_Billboard(billboard_name, text, bg_colour, image, LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration)), recurrence);
+        billboard_List.Create_edit_Billboard(billboard_name, text, bg_colour, image, billboard_creator);
 
         //Write the new billboard to the DB
         billboard_List.Write_To_DBbillboard(connection);
@@ -353,7 +357,7 @@ public class BillboardServer {
         oos.writeObject(schedule);
     }
 
-    /**
+   /* *//**
      * schedules Billboard sent by client and stores in DB
      * @param ois Object Input stream of Server
      * @param connection Database connection
@@ -369,6 +373,9 @@ public class BillboardServer {
         String duration = ois.readObject().toString();
         String recurrence = ois.readObject().toString();
 
+        Billboard billboard = billboard_list.Get_billboard_info(billboard_name);
+        String billboard_creator = billboard.Billboard_creator;
+
         //print bb list
         System.out.println("billboard list: "+ billboard_list);
 
@@ -383,7 +390,7 @@ public class BillboardServer {
 
         //schedule billboard with client input
         billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
-                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards());
+                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards(),billboard_creator);
 
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
@@ -397,29 +404,32 @@ public class BillboardServer {
      * @throws Exception
      */
     public static void removeSchedule (ObjectInputStream ois, Connection connection,
-                                       ScheduleMultiMap billboard_schedule) throws Exception {
+                                       ScheduleMultiMap billboard_schedule, BillboardList billboard_list) throws Exception {
         //read billboard name sent by client
-        Object Billboard_name = ois.readObject();
-        System.out.println("billboard name: "+ Billboard_name);
+        Object billboard_name = ois.readObject();
+        System.out.println("billboard name: "+ billboard_name);
 
         //read start time of viewing sent by client
         String startTime = ois.readObject().toString();
 
         //read duration sent by client
-        String duration2 = ois.readObject().toString();
+        String duration = ois.readObject().toString();
 
         //read recurrence sent by client
-        String recurrence2 = ois.readObject().toString();
+        String recurrence = ois.readObject().toString();
+
+        Billboard billboard = billboard_list.Get_billboard_info(billboard_name.toString());
+        String billboard_creator = billboard.Billboard_creator;
 
         //create schedule info object with client's input
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration2)),recurrence2);
+                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_creator);
 
         //Clear schedule table in DB
         billboard_schedule.Clear_DBschedule(connection);
 
         //remove billboard from schedule
-        billboard_schedule.Schedule_Remove_billboard(Billboard_name.toString(),schedule_info);
+        billboard_schedule.Schedule_Remove_billboard(billboard_name.toString(),schedule_info);
 
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
@@ -427,9 +437,10 @@ public class BillboardServer {
 
     public static void runViewer(ObjectInputStream ois, ScheduleMultiMap billboard_schedule) throws Exception {
         //every 15 seconds
-        //for each viewing
+        //create new timer
+        Timer timer = new Timer();
+
         //For every entry of Billboard_schedule
-        String Billboard_name ="test";
         for (String billboard_name : billboard_schedule.Billboard_schedule.keySet())
         {
             //create array list to store viewings of billboard
@@ -441,50 +452,141 @@ public class BillboardServer {
                 //if start time of viewing matches current time
                 if (viewing.StartTime_Scheduled.isEqual(LocalDateTime.now()))
                 {
+                    //create xml file path
+                    File finalFile = new File("./"+billboard_name+".xml");
+                    System.out.println("xml file: "+ finalFile);
 
-                }
+                    //create new timer task to display billboard
+                    TimerTask run_viewer = new TimerTask() {
+                        @Override
+                        public void run(){
+                            try {
+                                new BillboardViewer(finalFile, true);
+                            } catch (SAXException | ParserConfigurationException | IOException | ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException e) {
+                                e.printStackTrace();
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
 
-                else
-                {
-
-                }
-
-            }
-
-                //if other billboards are scheduled for the same time
-                    //check which was scheduled later
-                        //retrieve name of billboard
-            //else
-                //retrieve name of billboard
-            //else
-            //retrieve name of billboard
-
-            File file = new File("./"+Billboard_name+".xml");
-            System.out.println("xml file: "+ file);
-
-            new Timer();
-
-            new TimerTask() {
-                @Override
-                public void run(){
-                    try {
-                        new BillboardViewer(file, true);
-                    } catch (SAXException | ParserConfigurationException | IOException | ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                    //if billboard is recurs daily
+                    if (viewing.Recurrence == "day")
+                    {
+                        int duration_int = Integer.parseInt(viewing.duration.toString());
+                        //schedule viewing at fixed rate
+                        timer.scheduleAtFixedRate(run_viewer, Date.from(Instant.now()),(long) duration_int);
                     }
+
+                    //if billboard is recurs hourly
+                    if (viewing.Recurrence == "hour")
+                    {
+                        //schedule viewing at fixed rate
+                    }
+
+                    //if billboard is recurs every minute
+                    if (viewing.Recurrence == "minute")
+                    {
+                        //schedule viewing at fixed rate
+                    }
+
+                    //if billboard does not recur
+                    if (viewing.Recurrence == "none")
+                    {
+                        int duration_int = Integer.parseInt(viewing.duration.toString());
+                        //schedule viewing
+                        timer.schedule(run_viewer, Date.from(Instant.now()),(long) duration_int);
+                    }
+
                 }
-            };
+            }
 
         }
 
-        //if billboard is recurring
-        //schedule viewing at fixed rate
+    }
 
-        //if billboard does not recur
-        //schedule viewing
+    //Static int for counting which session has expired.
+    public static int i = 0;
+    //Inner class called when a timer expires.
+    class RemoveFromList extends TimerTask{
+        public void run(){
+            //Remove the session info from the hashmap for the session token that has expired.
+            SessionTokenListHashmap.remove(i++);
+        }
+    }
 
+    int counter;
+
+    /**
+     * If the user is valid this creates a session token and sends it back to the control panel.
+     * @param ois ObjectInputStream
+     * @param oos Object Output stream of Server
+     * @param connection Database connection
+     * @throws Exception
+     */
+    private void sessionToken(ObjectInputStream ois, ObjectOutputStream oos,
+                                    Connection connection) throws IOException, ClassNotFoundException {
+        //Setup for the random token
+        final SecureRandom secRand = new SecureRandom();
+        final Base64.Encoder base64En = Base64.getUrlEncoder();
+
+        //Check if the user was valid
+        String Validity = ois.readObject().toString();
+
+        //If valid give a session token else return a message.
+        if (Validity == "Valid"){
+            counter++;
+            //Create a random Session Token for the user
+            byte[] randomBytes = new byte[24];
+            secRand.nextBytes(randomBytes);
+            String sessionToken = base64En.encodeToString(randomBytes);
+            String thisSessionToken = sessionToken;
+            //Send the randomised Session Token back to the control panel
+            oos.writeObject(thisSessionToken);
+
+            //Create a new timer to be stored in an hashmap with the session token
+            Timer timer = new Timer();
+            TimerTask taskA = new RemoveFromList();
+            //Set the timer to 24 hours, after which it will be removed from the hashmap
+            timer.schedule(taskA, (long) 8.64e+7);
+
+            //Store counter ID and session token
+            SessionCombinedHashmap.put(counter, timer);
+            //Then store the hasmpa of counter and token with a timer
+            SessionTokenListHashmap.put(counter, thisSessionToken);
+
+        }else{
+            oos.writeObject("User Invalid");
+        }
+    }
+
+    /**
+     * Checks the Hashmap of Tokens for the users token
+     * @param oos Object Output stream of Server
+     * @param oois ObjectInputStream
+     * @throws IOException
+     */
+    private void checkToken(ObjectOutputStream oos, ObjectInputStream oois) throws IOException, ClassNotFoundException {
+        //Get the user inputted token
+        String userToken = oois.readObject().toString();
+
+        //Boolean for checking existance of session token
+        Boolean tokenExists = false;
+        //Check the user inputted token
+        for(Map.Entry<Integer, String> entry : SessionTokenListHashmap.entrySet()){
+            //If the user token exists in the hashmap then return a true value.
+            if(entry.getValue() == userToken) {
+                tokenExists = true;
+                oos.writeChars("Valid Token");
+            }else{
+                //Token doesn't exist in the hashmap
+                tokenExists = false;
+            }
+        }
+        //If the token wasn't found in the hashmap then it has expired
+        if(tokenExists == false){
+            oos.writeChars("Token has expired.");
+        }
     }
 
     /**
