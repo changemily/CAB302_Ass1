@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -44,8 +45,11 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         FrequencyLabel.setFont(FrequencyLabel.getFont().deriveFont(FrequencyLabel.getFont().getSize() + 5f));
         FrequencyLabel.setAlignmentX(0.5F);
 
+        // Create list of frequency options
+        String[] FrequencyOptions = { "Every Minute", "Every Hour", "Every Day" };
+
         // Create FrequencyPicker
-        JComboBox FrequencyPicker = new JComboBox();
+        JComboBox FrequencyPicker = new JComboBox(FrequencyOptions);
 
         // Create Remove Button
         JButton RemoveBttn = new JButton(
