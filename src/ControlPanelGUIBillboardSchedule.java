@@ -196,10 +196,9 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
                     //populate cell with new string
                     data[billboard_hour][day_int] = cell_string; // Change this line to "BillboardName by User"
                 }
-
-                }
-
             }
+
+        }
 
         // Returns a two-dimensional array for use in the JTable
         return data;
@@ -217,7 +216,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
 
         // Create string array for days of the week, used in table column headers
         // First element of array left blank for time column
-        String[] days = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        String[] days = {"", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
         // Populate string array with times in a day (24 hours)
         String[] times = tableTimes();
