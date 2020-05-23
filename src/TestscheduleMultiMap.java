@@ -31,8 +31,8 @@ public class TestscheduleMultiMap {
     public void Schedule_billboardTest() throws Exception
     {
         //add billboard being scheduled to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
 
         //schedule a billboard
         Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDateTime.parse("2021-04-22T10:00:00.00"),
@@ -52,8 +52,8 @@ public class TestscheduleMultiMap {
     public void Schedule_billboardTest2() throws Exception
     {
         //add billboard to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
 
         //schedule billboard
         Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDateTime.parse("2021-04-22T10:00:00.00"),
@@ -83,11 +83,11 @@ public class TestscheduleMultiMap {
     public void Matching_Schedules() throws Exception
     {
         //add billboards to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
 
-        billboardList.Create_edit_Billboard("Billboard_2", "hello world", "red",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_2", "hello world", "#000000",
+                "No Image", "emily");
 
         //Schedule billboard 1 in a vacant time slot
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
@@ -123,15 +123,15 @@ public class TestscheduleMultiMap {
     public void Matching_Schedules2() throws Exception
     {
         //add billboards to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
 
         //add billboards to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
 
-        billboardList.Create_edit_Billboard("Billboard_2", "hello world", "red",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_2", "hello world", "#000000",
+                "No Image", "emily");
 
         //Schedule billboard 1 twice in vacant time slots
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
@@ -174,11 +174,11 @@ public class TestscheduleMultiMap {
     public void OverlapSchedule_equal() throws Exception
     {
         //add billboards to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
 
-        billboardList.Create_edit_Billboard("Billboard_2", "hello world", "red",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_2", "hello world", "#000000",
+                "No Image", "emily");
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
@@ -219,11 +219,11 @@ public class TestscheduleMultiMap {
     public void OverlapSchedule_diff() throws Exception
     {
         //add billboards to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
 
-        billboardList.Create_edit_Billboard("Billboard_2", "hello world", "red",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_2", "hello world", "#000000",
+                "No Image", "emily");
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
@@ -275,8 +275,8 @@ public class TestscheduleMultiMap {
     @Test
     public void Schedule_NegDuration() throws Exception {
         //add billboard to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
         assertThrows(Exception.class,() -> {
             //schedule billboard for negative
             Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-01-01T10:00:00.00"),
@@ -289,8 +289,8 @@ public class TestscheduleMultiMap {
     @Test
     public void Schedule_ZerDuration() throws Exception {
         //add billboard to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
         assertThrows(Exception.class,() -> {
             //schedule billboard for negative
             Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-01-01T10:00:00.00"),
@@ -323,12 +323,12 @@ public class TestscheduleMultiMap {
     public void Schedule_Remove_billboard() throws Exception
     {
         //add billboards to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg","emily");
-        billboardList.Create_edit_Billboard("Billboard_2", "hello", "red",
-                "image.jpg","emily");
-        billboardList.Create_edit_Billboard("Billboard_3", "goodbye", "black",
-                "image.jpg","emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image","emily");
+        billboardList.Create_edit_Billboard("Billboard_2", "hello", "#000000",
+                "No Image","emily");
+        billboardList.Create_edit_Billboard("Billboard_3", "goodbye", "#000000",
+                "No Image","emily");
 
         //add billboards to schedule
         Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-01-10T10:00:00.00"),
@@ -354,7 +354,7 @@ public class TestscheduleMultiMap {
     public void RemoveSchedule_invalidBillboardName() throws Exception
     {
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
-                Duration.ofMinutes(15), "none", "emily");
+                Duration.ofMinutes(15),"none", LocalDateTime.now(), "emily");
 
 
         assertThrows(Exception.class,() -> {
@@ -369,7 +369,7 @@ public class TestscheduleMultiMap {
     public void RemoveSchedule_invalidBillboard() throws Exception
     {
         //add billboard to billboard list
-        billboardList.Create_edit_Billboard("Billboard_1", "hello","red","No Image", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "hello","#000000","No Image", "emily");
 
         //schedule billboard twice
         Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-10T10:00:00.00"), Duration.ofMinutes(10), "none",
@@ -380,7 +380,7 @@ public class TestscheduleMultiMap {
 
         //schedule info that does not match bb scheduled
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
-                Duration.ofMinutes(15), "none", "emily");
+                Duration.ofMinutes(15),"none", LocalDateTime.now(), "emily");
 
         assertThrows(Exception.class,() -> {
             //remove viewing from schedule that does not exist
@@ -392,12 +392,12 @@ public class TestscheduleMultiMap {
     @Test
     public void View_schedule() throws Exception {
         //add billboards to billboardList
-        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "blue",
-                "image.jpg", "emily");
-        billboardList.Create_edit_Billboard("Billboard_2", "hello", "red",
-                "image.jpg", "emily");
-        billboardList.Create_edit_Billboard("Billboard_3", "goodbye", "black",
-                "image.jpg", "emily");
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
+        billboardList.Create_edit_Billboard("Billboard_2", "hello", "#000000",
+                "No Image", "emily");
+        billboardList.Create_edit_Billboard("Billboard_3", "goodbye", "#000000",
+                "No Image", "emily");
 
         //add billboards to schedule
         Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-05T10:00:00.00"),
@@ -426,4 +426,5 @@ public class TestscheduleMultiMap {
         assertEquals(Duration.ofMinutes(5), viewSchedule_list.get("Billboard_3").get(0).duration);
 
     }
+
 }

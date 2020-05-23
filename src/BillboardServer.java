@@ -1,16 +1,12 @@
-import org.xml.sax.SAXException;
-
-import javax.swing.*;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.SecureRandom;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Timer;
@@ -36,6 +32,8 @@ public class BillboardServer {
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
                     "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_creator varchar (255));";
+    //Create queue 2D array
+    private static String [][] queue;
 
     //Setup another hashmap to store an id and hasmap of the token and its timer
     HashMap<Integer, Timer> SessionCombinedHashmap;
@@ -50,8 +48,6 @@ public class BillboardServer {
         //Setup a default user.
         User DefaultUser = new User("DefaultUserName", "DefaultPassword",
                 "Create Billboards", "Edit All Billboards", "Schedule Billboards", "Edit Users");
-
-
 
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
@@ -376,15 +372,6 @@ public class BillboardServer {
         Billboard billboard = billboard_list.Get_billboard_info(billboard_name);
         String billboard_creator = billboard.Billboard_creator;
 
-        //print bb list
-        System.out.println("billboard list: "+ billboard_list);
-
-        //print what was received from client
-        System.out.println("billboard name: "+ billboard_name + "\n" +
-                "start time: "+start_time+"\n" +
-                "duration: " + duration +"\n"+
-                "recurrence: " +recurrence +"\n");
-
         //Clear schedule table in DB
         billboard_schedule.Clear_DBschedule(connection);
 
@@ -405,103 +392,92 @@ public class BillboardServer {
      */
     public static void removeSchedule (ObjectInputStream ois, Connection connection,
                                        ScheduleMultiMap billboard_schedule, BillboardList billboard_list) throws Exception {
-        //read billboard name sent by client
-        Object billboard_name = ois.readObject();
-        System.out.println("billboard name: "+ billboard_name);
-
-        //read start time of viewing sent by client
+        //read parameters sent by client
+        String billboard_name = ois.readObject().toString();
         String startTime = ois.readObject().toString();
-
-        //read duration sent by client
         String duration = ois.readObject().toString();
-
-        //read recurrence sent by client
         String recurrence = ois.readObject().toString();
 
-        Billboard billboard = billboard_list.Get_billboard_info(billboard_name.toString());
-        String billboard_creator = billboard.Billboard_creator;
+        //retrieve array list of billboards viewings
+        ArrayList<Schedule_Info> billboard_viewings = billboard_schedule.getSchedule(billboard_name.toString());
 
-        //create schedule info object with client's input
-        Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_creator);
+        //for each viewing
+        for (Schedule_Info viewing : billboard_viewings)
+        {
+            //if viewing start time is equal to startTime given
+            if (viewing.StartTime_Scheduled.equals(startTime))
+            {
+                //retrieve time schedule was created
+                LocalDateTime time_scheduled = viewing.Time_Scheduled;
 
-        //Clear schedule table in DB
-        billboard_schedule.Clear_DBschedule(connection);
+                //retrieve billboard object
+                Billboard billboard = billboard_list.Get_billboard_info(billboard_name);
 
-        //remove billboard from schedule
-        billboard_schedule.Schedule_Remove_billboard(billboard_name.toString(),schedule_info);
+                //retrieve billboard creator
+                String billboard_creator = billboard.Billboard_creator;
 
-        //write schedule to DB
-        billboard_schedule.Write_To_DBschedule(connection);
+                //create schedule info object with client's input
+                Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
+                        Duration.ofMinutes(Integer.parseInt(duration)), recurrence, time_scheduled, billboard_creator);
+
+                //Clear schedule table in DB
+                billboard_schedule.Clear_DBschedule(connection);
+
+                //remove viewing from schedule
+                billboard_schedule.Schedule_Remove_billboard(billboard_name,schedule_info);
+
+                //write schedule to DB
+                billboard_schedule.Write_To_DBschedule(connection);
+            }
+        }
+
+
+    }
+
+    public static void populateQueue (Connection connection) throws SQLException {
+        //Read from DB - sort by start time of viewing
+        final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled desc";
+
+        //create statement
+        Statement st = connection.createStatement();
+
+        ResultSet rs = st.executeQuery(SELECT);
+
+        //for every database entry
+        int noDBrows= rs.getFetchSize();
+        for (int n=0; n<noDBrows; n++)
+        {
+            queue = new String [noDBrows][5];
+            //store database info in local variables
+            String billboard_name = rs.getString(1);
+            String Start_TimeScheduled = rs.getString(2);
+            String duration = rs.getString(3);
+            String recurrence = rs.getString(4);
+            String time_scheduled = rs.getString(5);
+            String billboard_creator = rs.getString(6);
+
+           //add to queue
+            queue[n][0] = billboard_name;
+            queue[n][1] = Start_TimeScheduled;
+            queue[n][2] = duration;
+            queue[n][3] = recurrence;
+            queue[n][4] = time_scheduled;
+            queue[n][5] = billboard_creator;
+
+        }
+
+        //close ResultSet
+        rs.close();
+        //close statement
+        st.close();
+
     }
 
     public static void runViewer(ObjectInputStream ois, ScheduleMultiMap billboard_schedule) throws Exception {
-        //every 15 seconds
-        //create new timer
-        Timer timer = new Timer();
+        //Read from DB - sort by start time of viewing
 
-        //For every entry of Billboard_schedule
-        for (String billboard_name : billboard_schedule.Billboard_schedule.keySet())
-        {
-            //create array list to store viewings of billboard
-            ArrayList<Schedule_Info> viewings = billboard_schedule.getSchedule(billboard_name);
+        //Populate queue - billboard name, start time, duration, time scheduled and recurrence
 
-            //for every viewing of billboard
-            for ( Schedule_Info viewing : viewings ) {
-
-                //if start time of viewing matches current time
-                if (viewing.StartTime_Scheduled.isEqual(LocalDateTime.now()))
-                {
-                    //create xml file path
-                    File finalFile = new File("./"+billboard_name+".xml");
-                    System.out.println("xml file: "+ finalFile);
-
-                    //create new timer task to display billboard
-                    TimerTask run_viewer = new TimerTask() {
-                        @Override
-                        public void run(){
-                            try {
-                                new BillboardViewer(finalFile, true);
-                            } catch (SAXException | ParserConfigurationException | IOException | ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException e) {
-                                e.printStackTrace();
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-
-                    //if billboard is recurs daily
-                    if (viewing.Recurrence == "day")
-                    {
-                        int duration_int = Integer.parseInt(viewing.duration.toString());
-                        //schedule viewing at fixed rate
-                        timer.scheduleAtFixedRate(run_viewer, Date.from(Instant.now()),(long) duration_int);
-                    }
-
-                    //if billboard is recurs hourly
-                    if (viewing.Recurrence == "hour")
-                    {
-                        //schedule viewing at fixed rate
-                    }
-
-                    //if billboard is recurs every minute
-                    if (viewing.Recurrence == "minute")
-                    {
-                        //schedule viewing at fixed rate
-                    }
-
-                    //if billboard does not recur
-                    if (viewing.Recurrence == "none")
-                    {
-                        int duration_int = Integer.parseInt(viewing.duration.toString());
-                        //schedule viewing
-                        timer.schedule(run_viewer, Date.from(Instant.now()),(long) duration_int);
-                    }
-
-                }
-            }
-
-        }
 
     }
 

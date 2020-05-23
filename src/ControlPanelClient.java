@@ -39,7 +39,7 @@ public class ControlPanelClient {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-            String request = "View schedule";
+            String request = "Schedule Billboard";
 
             //request given by user saved in local var request
             switch(request)
@@ -73,8 +73,8 @@ public class ControlPanelClient {
 
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
-                    scheduleBillboard(oos, request, "sat",
-                            "2020-05-23T10:10:00.00", "5", "none");
+                    scheduleBillboard(oos, request, "sun",
+                            "2021-07-23T10:10:00.00", "5", "none");
                     break;
 
                 case "Remove Schedule":
