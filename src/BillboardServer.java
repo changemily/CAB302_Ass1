@@ -549,6 +549,9 @@ public class BillboardServer {
                 //Send billboard info to client
                 System.out.println(billboard_name+" is being displayed");
 
+                //clear DB
+                billboard_schedule.Clear_DBschedule(connection);
+
                 //Remove viewing from schedule
                 billboard_schedule.Schedule_Remove_billboard(billboard_name, displayed_schedule);
 
@@ -592,8 +595,6 @@ public class BillboardServer {
                             billboardList.billboardHashMap, billboard_creator);
                 }
 
-                //update viewer queue
-                populateQueue(connection);
             }
 
             else
@@ -603,11 +604,11 @@ public class BillboardServer {
                 System.out.println("There are no billboards scheduled for this time");
             }
 
-            //clear DB
-            billboard_schedule.Clear_DBschedule(connection);
-
             //Write schedule changes to DB
             billboard_schedule.Write_To_DBschedule(connection);
+
+            //update viewer queue
+            populateQueue(connection);
         }
 
         else
