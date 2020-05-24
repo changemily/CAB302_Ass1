@@ -656,9 +656,9 @@ public class BillboardViewer extends JFrame{
                 billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/2) - (informationFontHeight / 2))));
                 break;
             case 3: // Set pictureLabel to middle
-                billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/2) - (pictureImage.getHeight() / 2))));
+                billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/2) - (resizedPicture.getHeight() / 2))));
                 billboard.add(pictureLabel);
-                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/2) - (pictureImage.getHeight() / 2))));
+                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/2) - (resizedPicture.getHeight() / 2))));
                 break;
             case 4: // Set messageLabel to middle of top half, informationPane to middle of top half
                 billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/4) - (messageFontHeight / 2))));
@@ -716,9 +716,9 @@ public class BillboardViewer extends JFrame{
                 billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/2) - (informationFontHeight / 2))));
                 break;
             case 3: // Set pictureLabel to middle
-                billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/2) - (pictureImage.getHeight() / 2))));
+                billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/2) - (resizedPicture.getHeight() / 2))));
                 billboard.add(pictureLabel);
-                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/2) - (pictureImage.getHeight() / 2))));
+                billboard.add(Box.createRigidArea(new Dimension(0, (screenSize.height/2) - (resizedPicture.getHeight() / 2))));
                 break;
             case 4: // Set messageLabel to middle of top half, informationPane to middle of top half
                 billboard.add(Box.createRigidArea(new Dimension(0,(screenSize.height/4) - (messageFontHeight / 2))));
@@ -752,6 +752,9 @@ public class BillboardViewer extends JFrame{
                 billboard.add(Box.createRigidArea(new Dimension(0,((screenSize.height/2) - (resizedPicture.getHeight() / 2))/2 - (informationFontHeight / 2))));
                 break;
         }
+        sizedBillboard.setPreferredSize(screenSize);
+        sizedBillboard.setMaximumSize(screenSize);
+        sizedBillboard.setMinimumSize(screenSize);
     }
 
 
@@ -848,6 +851,7 @@ public class BillboardViewer extends JFrame{
      */
     public void setBillboardColour(Color colour){
         billboardColourCode = colour;
+        billboardColourString = String.format("#%02x%02x%02x", billboardColourCode.getRed(), billboardColourCode.getGreen(), billboardColourCode.getBlue());
     }
 
     /**
@@ -905,27 +909,27 @@ public class BillboardViewer extends JFrame{
      * @param args (String[])
      * @throws IOException (error)
      */
-    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, InterruptedException{
-        //File file = new File("./5.xml");
-        //BillboardViewer BV = new BillboardViewer(file, true);
+    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+        File file = new File("./3.xml");
+        BillboardViewer BV = new BillboardViewer(file, true);
         //BV.setInformationText("Changed Text");
         //StreamResult output = new StreamResult("./temp.xml");
         //BV.writeFile(output);
         //new BillboardViewer();
-        // new BillboardViewer(file, new Dimension(1000,1000));
-        JFrame screen = new JFrame();
-        File file = new File("./4.xml");
-        File file2 = new File("./5.xml");
-        BillboardViewer BV = new BillboardViewer(file,new Dimension(1920, 1080));
-        JPanel fileBB = BV.getSizedBillboard();
-        BV = new BillboardViewer(file2, new Dimension(1920, 1080));
-        JPanel file2BB = BV.getSizedBillboard();
-        screen.add(fileBB);
-        screen.pack();
-        screen.setVisible(true);
-        Thread.sleep(5000);
-        screen.remove(fileBB);
-        screen.add(file2BB);
-        screen.pack();
+        //BillboardViewer BV = new BillboardViewer(file, true);
+        //JFrame screen = new JFrame();
+        //File file = new File("./3.xml");
+        //File file2 = new File("./5.xml");
+        //BillboardViewer BV = new BillboardViewer(file,new Dimension(1920, 1080));
+        //JPanel fileBB = BV.getSizedBillboard();
+        //BV = new BillboardViewer(file2, new Dimension(1920, 1080));
+        //JPanel file2BB = BV.getSizedBillboard();
+        //screen.add(fileBB);
+        //screen.pack();
+        //screen.setVisible(true);
+        //Thread.sleep(5000);
+        //screen.remove(fileBB);
+        //screen.add(file2BB);
+        //screen.pack();
     }
 }
