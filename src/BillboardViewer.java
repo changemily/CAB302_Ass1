@@ -12,7 +12,6 @@ import java.util.Base64;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 /**
  * Billboard Viewer Gui
@@ -885,19 +884,29 @@ public class BillboardViewer extends JFrame{
     /**
      * Main program for testing
      * @param args (String[])
-     * @throws ClassNotFoundException (error)
-     * @throws UnsupportedLookAndFeelException (error)
-     * @throws InstantiationException (error)
-     * @throws IllegalAccessException (error)
+     * @throws IOException (error)
      */
-    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException{
-        //File file = new File("./10.xml");
+    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, InterruptedException {
+        //File file = new File("./5.xml");
         //BillboardViewer BV = new BillboardViewer(file, true);
         //BV.setInformationText("Changed Text");
         //StreamResult output = new StreamResult("./temp.xml");
         //BV.writeFile(output);
-        new BillboardViewer();
+        //new BillboardViewer();
         //new BillboardViewer(file, new Dimension(1000,1000));
-
+        JFrame screen = new JFrame();
+        File file = new File("./4.xml");
+        File file2 = new File("./5.xml");
+        BillboardViewer BV = new BillboardViewer(file,new Dimension(1920, 1080));
+        JPanel fileBB = BV.getSizedBillboard();
+        BV = new BillboardViewer(file2, new Dimension(1920, 1080));
+        JPanel file2BB = BV.getSizedBillboard();
+        screen.add(fileBB);
+        screen.pack();
+        screen.setVisible(true);
+        Thread.sleep(5000);
+        screen.remove(fileBB);
+        screen.add(file2BB);
+        screen.pack();
     }
 }
