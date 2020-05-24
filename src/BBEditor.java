@@ -1,12 +1,16 @@
+import org.xml.sax.SAXException;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
+import java.io.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileSystemView;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
 
 import static javax.swing.JOptionPane.YES_OPTION;
 import static javax.swing.JOptionPane.showConfirmDialog;
@@ -24,8 +28,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         super("Billboard Editor");
     }
 
-    private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException
-    {
+    private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, SAXException, ParserConfigurationException {
         // Set default look and feel & window properties
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -71,16 +74,17 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         ImageLabel.setForeground(Color.black);
         ImageLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
-        // Create PreviewScrollPanel and PreviewBox
-        JScrollPane PreviewScrollPanel;
-        {
-            PreviewScrollPanel = new JScrollPane();
-            JTextPane PreviewBox = new JTextPane();
-            PreviewBox.setBackground(Color.white);
-            PreviewBox.setForeground(Color.black);
-            PreviewScrollPanel.setViewportView(PreviewBox);
-            PreviewBox.setEditable(false);
-        }
+        // Create Billboard Preview Panel
+        JPanel PreviewPanel = new JPanel();
+        PreviewPanel.setLayout(new BoxLayout(PreviewPanel, BoxLayout.Y_AXIS));
+        PreviewPanel.add(Box.createVerticalStrut(50));
+
+        // Initialise and add Billboard to Preview Panel
+        File f = new File("C:\\Users\\liamj\\OneDrive\\Desktop\\New folder\\2.xml");
+        Dimension d = new Dimension(600, 350);
+        BillboardViewer bb = new BillboardViewer(f, d);
+        JPanel billboardPreview = bb.getSizedBillboard();
+        PreviewPanel.add(billboardPreview);
 
         // Create BackgroundColourPickerLabel
         JLabel BackgroundColourPickerLabel = new JLabel();
@@ -230,7 +234,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                         .addGroup(MainPanelLayout.createSequentialGroup()
                                 .addGap(337, 337, 337)
                                 .addComponent(PreviewLabel)
-                                .addContainerGap(336, Short.MAX_VALUE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(MainPanelLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(MainPanelLayout.createParallelGroup()
@@ -243,7 +247,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addGap(19, 19, 19)
                                                 .addGroup(MainPanelLayout.createParallelGroup()
                                                         .addGroup(MainPanelLayout.createSequentialGroup()
-                                                                .addComponent(SaveBttn)
+                                                                .addComponent(SaveBttn, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(ExitBttn)
                                                                 .addGap(425, 425, 425))
@@ -258,7 +262,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                                         .addComponent(ImageLabel, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                 .addGroup(MainPanelLayout.createParallelGroup()
-                                                                        .addComponent(ExtraInfoScrollPanel, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE)
                                                                         .addComponent(ExtraInfoLabel)
                                                                         .addComponent(BackgroundColourPickerLabel, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
                                                                         .addGroup(MainPanelLayout.createSequentialGroup()
@@ -277,27 +280,28 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                                                                 .addComponent(MessageTextColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))))
                                                                                         .addComponent(ExtraTextColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)))
-                                                                        .addComponent(ExtraTextColourPickerLabel, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 23, GroupLayout.PREFERRED_SIZE)))))
+                                                                        .addComponent(ExtraTextColourPickerLabel, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
+                                                                        .addComponent(ExtraInfoScrollPanel, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE))
+                                                                .addGap(23, 23, 23)))))
                                 .addContainerGap())
                         .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
-                                .addContainerGap(62, Short.MAX_VALUE)
-                                .addComponent(PreviewScrollPanel, GroupLayout.PREFERRED_SIZE, 601, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(55, Short.MAX_VALUE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(PreviewPanel, GroupLayout.PREFERRED_SIZE, 600, GroupLayout.PREFERRED_SIZE)
+                                .addGap(58, 58, 58))
         );
         MainPanelLayout.setVerticalGroup(
                 MainPanelLayout.createParallelGroup()
                         .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(PreviewLabel)
-                                .addGap(12, 12, 12)
-                                .addComponent(PreviewScrollPanel, GroupLayout.PREFERRED_SIZE, 364, GroupLayout.PREFERRED_SIZE)
-                                .addGap(27, 27, 27)
+                                .addGap(18, 18, 18)
+                                .addComponent(PreviewPanel, GroupLayout.PREFERRED_SIZE, 350, GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(DividerLine, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(EditLabel)
                                 .addGap(1, 1, 1)
-                                .addGroup(MainPanelLayout.createParallelGroup()
+                                .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addGroup(MainPanelLayout.createSequentialGroup()
                                                 .addComponent(MessageLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -306,17 +310,18 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addComponent(ImageLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(ImageURL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(ImageBrowseBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
-                                                .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(SaveBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(ExitBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)))
+                                                        .addComponent(ImageBrowseBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(ImageURL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                                         .addGroup(MainPanelLayout.createSequentialGroup()
                                                 .addComponent(ExtraInfoLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(ExtraInfoScrollPanel, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(ExtraInfoScrollPanel)))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(MainPanelLayout.createParallelGroup()
+                                        .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(SaveBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(ExitBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
                                                 .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(BackgroundColourPickerLabel)
                                                         .addComponent(MessageColourPickerLabel))
@@ -333,7 +338,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                         .addComponent(ExtraTextColourBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(ExtraTextColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(26, 26, 26)))
-                                .addGap(20, 20, 20))
+                                .addGap(64, 64, 64))
         );
 
         getContentPane().add(MainPanel);
@@ -360,6 +365,15 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         {
             e.printStackTrace();
         } catch (UnsupportedLookAndFeelException e)
+        {
+            e.printStackTrace();
+        } catch (SAXException e)
+        {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e)
+        {
+            e.printStackTrace();
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
