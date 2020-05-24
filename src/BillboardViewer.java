@@ -12,6 +12,7 @@ import java.util.Base64;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * Billboard Viewer Gui
@@ -814,6 +815,24 @@ public class BillboardViewer extends JFrame{
     }
 
     /**
+     * Returns true if message exists
+     * @return (boolean)
+     */
+    public boolean getMessageExists(){ return messageExists;}
+
+    /**
+     * Returns true if information exists
+     * @return (boolean)
+     */
+    public boolean getInformationExists(){ return informationExists;}
+
+    /**
+     * Returns true if picture exists
+     * @return (boolean)
+     */
+    public boolean getPictureExists(){ return pictureExists;}
+
+    /**
      * Get sized JPanel for use in control panel GUI
      * @return (JPanel)
      */
@@ -886,14 +905,14 @@ public class BillboardViewer extends JFrame{
      * @param args (String[])
      * @throws IOException (error)
      */
-    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, InterruptedException {
+    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, InterruptedException{
         //File file = new File("./5.xml");
         //BillboardViewer BV = new BillboardViewer(file, true);
         //BV.setInformationText("Changed Text");
         //StreamResult output = new StreamResult("./temp.xml");
         //BV.writeFile(output);
         //new BillboardViewer();
-        //new BillboardViewer(file, new Dimension(1000,1000));
+        // new BillboardViewer(file, new Dimension(1000,1000));
         JFrame screen = new JFrame();
         File file = new File("./4.xml");
         File file2 = new File("./5.xml");
