@@ -230,11 +230,13 @@ public class ScheduleMultiMap {
                     //check if new billboard start time is between existing billboard start and end time
                     boolean existEndIsBetween = existEndIsAfter && existEndIsBefore;
 
+                    //get current time
+                    LocalDateTime current_time = LocalDateTime.now();
+
                     // OVERLAP MATCHING BILLBOARDS
                     //if new and existing schedules match OR if new viewing fully overlaps existing
                     if((startTimesEqual  == true && endTimesEqual == true) || (existStartIsBetween == true && existEndIsBetween == true))
                     {
-                        schedule_clashes = true;
                         //if number of viewings is 1
                         if (viewings.size() == 1)
                         {
@@ -245,9 +247,6 @@ public class ScheduleMultiMap {
                             //remove existing viewing from schedule
                             Schedule_MultiMap.remove(existing_billboard,viewing);
                         }
-
-                        //get current time
-                        LocalDateTime current_time = LocalDateTime.now();
 
                         //create new schedule_info object for new billboard
                         Schedule_Info new_schedule_info = new Schedule_Info(NewBB_startTime, NewBB_duration, recurrence, current_time, billboard_creator);
@@ -262,7 +261,6 @@ public class ScheduleMultiMap {
                     //if new end time is during existing viewing and new start and end times do not match existing
                     else if ((startIsBetween == true && endIsBetween == true) && (startTimesEqual == false && endTimesEqual == false))
                     {
-                        schedule_clashes = true;
                         //if number of viewings is 1
                         if (viewings.size() == 1)
                         {
@@ -277,9 +275,6 @@ public class ScheduleMultiMap {
                         //calculate the new durations of existing billboard split viewing
                         Duration new_duration1 = Duration.between(ExistBB_startTime, NewBB_startTime);
                         Duration new_duration2 = Duration.between(NewBB_endTime, ExistBB_endTime);
-
-                        //get current time
-                        LocalDateTime current_time = LocalDateTime.now();
 
                         //create new schedule_info object for existing billboard
                         Schedule_Info new_schedule_info1 = new Schedule_Info(ExistBB_startTime,new_duration1, recurrence, current_time, billboard_creator);
@@ -296,7 +291,6 @@ public class ScheduleMultiMap {
                     //if new start time is during existing viewing
                     else if(startIsBetween == true)
                     {
-                        schedule_clashes = true;
                         //if number of viewings is 1
                         if (viewings.size() == 1)
                         {
@@ -312,9 +306,6 @@ public class ScheduleMultiMap {
 
                         Duration new_duration = Duration.between(ExistBB_startTime, NewBB_startTime);
 
-                        //get current time
-                        LocalDateTime current_time = LocalDateTime.now();
-
                         //create new schedule_info object for existing billboard
                         Schedule_Info new_schedule_info = new Schedule_Info(ExistBB_startTime,new_duration, recurrence, current_time, billboard_creator);
 
@@ -328,7 +319,6 @@ public class ScheduleMultiMap {
                     //if new end time is during existing viewing
                     else if (endIsBetween == true)
                     {
-                        schedule_clashes = true;
                         //if number of viewings is 1
                         if (viewings.size() == 1)
                         {
@@ -343,9 +333,6 @@ public class ScheduleMultiMap {
                         //calculate new duration of existing billboard
                         Duration new_duration = Duration.between(NewBB_endTime, ExistBB_endTime);
 
-                        //get current time
-                        LocalDateTime current_time = LocalDateTime.now();
-
                         //create new schedule_info object for existing billboard
                         Schedule_Info new_schedule_info = new Schedule_Info(NewBB_endTime,new_duration, recurrence, current_time, billboard_creator);
 
@@ -354,11 +341,10 @@ public class ScheduleMultiMap {
 
                         break outerloop;
                     }
-
                 }
             }
 
-            //schedule new billboard
+            //Schedule new billboard
             //get current time
             LocalDateTime current_time = LocalDateTime.now();
 
