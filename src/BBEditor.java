@@ -76,8 +76,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
         // Create Billboard Preview Panel
         JPanel PreviewPanel = new JPanel();
-        PreviewPanel.setLayout(new BoxLayout(PreviewPanel, BoxLayout.Y_AXIS));
-        PreviewPanel.add(Box.createVerticalStrut(50));
 
         // Initialise and add Billboard to Preview Panel
         File f = new File("C:\\Users\\liamj\\OneDrive\\Desktop\\New folder\\2.xml");
