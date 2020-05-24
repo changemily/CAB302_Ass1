@@ -851,6 +851,7 @@ public class BillboardViewer extends JFrame{
      */
     public void setBillboardColour(Color colour){
         billboardColourCode = colour;
+        billboardColourString = String.format("#%02x%02x%02x", billboardColourCode.getRed(), billboardColourCode.getGreen(), billboardColourCode.getBlue());
     }
 
     /**
