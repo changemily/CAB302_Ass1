@@ -583,7 +583,7 @@ public class BillboardServer {
                 }
 
                 //if billboard viewing recurs every minute
-                else if(viewing_recurrence.equals("min"))
+                else if(viewing_recurrence.equals("minute"))
                 {
                     Duration hour = Duration.ofMinutes(1);
 
@@ -595,6 +595,9 @@ public class BillboardServer {
                             billboardList.billboardHashMap, billboard_creator);
                 }
 
+                //Write schedule changes to DB
+                billboard_schedule.Write_To_DBschedule(connection);
+
             }
 
             else
@@ -603,9 +606,6 @@ public class BillboardServer {
                 //Send error message to client
                 System.out.println("There are no billboards scheduled for this time");
             }
-
-            //Write schedule changes to DB
-            billboard_schedule.Write_To_DBschedule(connection);
 
             //update viewer queue
             populateQueue(connection);
