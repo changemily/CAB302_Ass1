@@ -210,9 +210,29 @@ public class ScheduleMultiMap {
                     //check if new billboard start time is equal to existing billboard start time
                     boolean endTimesEqual = (NewBB_endTime.isEqual(ExistBB_endTime));
 
+
+                    //check if existing billboard start time is after new billboard start time
+                    boolean existStartIsAfter = ExistBB_startTime.isAfter(NewBB_startTime);
+
+                    //check if existing billboard start time is before new billboard end time
+                    boolean existStartIsBefore = ExistBB_startTime.isBefore(NewBB_endTime);
+
+                    //check if new billboard start time is between existing billboard start and end time
+                    boolean existStartIsBetween = existStartIsAfter && existStartIsBefore;
+
+
+                    //check if existing billboard end time is after new billboard start time
+                    boolean existEndIsAfter = ExistBB_endTime.isAfter(NewBB_startTime);
+
+                    //check if existing billboard end time is before new billboard end time
+                    boolean existEndIsBefore = ExistBB_endTime.isBefore(NewBB_endTime);
+
+                    //check if new billboard start time is between existing billboard start and end time
+                    boolean existEndIsBetween = existEndIsAfter && existEndIsBefore;
+
                     // OVERLAP MATCHING BILLBOARDS
                     //if new and existing schedules match OR if new viewing fully overlaps existing
-                    if((startTimesEqual  == true && endTimesEqual == true) || (startIsBetween == false && endIsBetween == false))
+                    if((startTimesEqual  == true && endTimesEqual == true) || (existStartIsBetween == true && existEndIsBetween == true))
                     {
                         schedule_clashes = true;
                         //if number of viewings is 1
