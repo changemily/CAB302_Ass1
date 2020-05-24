@@ -541,8 +541,24 @@ public class BillboardServer {
             Schedule_Info displayed_schedule = new Schedule_Info(next_viewing_time, duration,
                     viewing_recurrence, time_scheduled, billboard_creator);
 
+            LocalDateTime end_time = next_viewing_time.plus(duration);
+
+            //if viewing duration has passed
+            if(current_time.isAfter(end_time))
+            {
+                //clear DB
+                billboard_schedule.Clear_DBschedule(connection);
+
+                //Remove viewing from schedule
+                billboard_schedule.Schedule_Remove_billboard(billboard_name, displayed_schedule);
+
+                //Write schedule changes to DB
+                billboard_schedule.Write_To_DBschedule(connection);
+
+            }
+
             //Check if the next viewing in the queue is before or equal to current time
-            if(next_viewing_time.isBefore(current_time) || next_viewing_time.isEqual(current_time))
+            else if(next_viewing_time.isBefore(current_time) || next_viewing_time.isEqual(current_time))
             {
                 System.out.println("\n"+LocalDateTime.now());
 
@@ -551,9 +567,6 @@ public class BillboardServer {
 
                 //clear DB
                 billboard_schedule.Clear_DBschedule(connection);
-
-                //Remove viewing from schedule
-                billboard_schedule.Schedule_Remove_billboard(billboard_name, displayed_schedule);
 
                 //if billboard viewing recurs daily
                 if(viewing_recurrence.equals("day"))

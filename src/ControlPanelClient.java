@@ -79,7 +79,7 @@ public class ControlPanelClient {
                     String time =LocalDateTime.now().plus(Duration.ofMinutes(1)).toString();
                     System.out.println("time scheduled: " +time);
                     scheduleBillboard(oos, request, "sun",
-                            time, "10", "none");
+                            time, "1", "none");
 
                     /*scheduleBillboard(oos, request, "monday",
                             time, "5", "minute");*/
