@@ -176,7 +176,19 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent actionEvent) {
+        //Get button that has been clicked - event source
+        Object buttonClicked = actionEvent.getSource();
+
+        if (buttonClicked==editBillboardButton || buttonClicked == createBillboardButton) {
+            //run Billboard editor/creator GUI
+            SwingUtilities.invokeLater(new BBEditor());
+        }
+
+        else if (buttonClicked==scheduleBillboardButton) {
+            //run schedule billboard GUI pop up
+            SwingUtilities.invokeLater(new BBSchedulePopup());
+        }
 
     }
 
@@ -197,11 +209,4 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         }
     }
 
-    /**
-     * Main method which creates a GUI window for the Billboard Control Panel
-     * @param args This method takes no arguments
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel());
-    }
 }

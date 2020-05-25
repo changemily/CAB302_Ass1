@@ -46,12 +46,12 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         JPanel editUsersPanel = createButtonJPanel(editUsersButton);
 
         // create edit billboard button
-        editBillboardButton = createButton("Edit Billboard");
+        editBillboardButton = createButton("Edit Billboards");
         //create JPanel that holds button
         JPanel editBillboardPanel = createButtonJPanel(editBillboardButton);
 
         // create edit billboard schedule button
-        editBillboardScheduleButton = createButton("Edit Billboard Schedule");
+        editBillboardScheduleButton = createButton("View Billboard Schedule");
         //create JPanel that holds button
         JPanel editBillboardSchedulePanel = createButtonJPanel(editBillboardScheduleButton);
 
@@ -113,22 +113,18 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         Object buttonClicked = actionEvent.getSource();
 
         if (buttonClicked==editUsersButton) {
-            System.out.println("edit users page");
             //run User Control Panel GUI
             SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel());
         }
 
         else if (buttonClicked==editBillboardButton) {
-            JButton btn = ((JButton) buttonClicked);
-            System.out.println("edit billboard page");
             //run Billboard Control Panel GUI
             SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel());
         }
 
         else if (buttonClicked == editBillboardScheduleButton)
         {
-            System.out.println("edit schedule page");
-            //run calender GUI
+            //request schedule and run calendar GUI
             ControlPanelClient.Run_Client("View schedule");
         }
     }
