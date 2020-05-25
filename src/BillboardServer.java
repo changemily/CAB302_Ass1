@@ -30,9 +30,12 @@ public class BillboardServer {
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
-                    "Duration varchar (255), recurrence varchar (50), billboard_creator varchar (255));";
+                    "Duration varchar (255), recurrence_delay varchar (50), billboard_creator varchar (255));";
     //Create queue 2D array
     private static String [][] queue = new String [0][0];
+
+    final int minutes_inDay = 1440;
+    final int minutes_inHour = 60;
 
     //Setup another hashmap to store an id and hasmap of the token and its timer
     HashMap<Integer, Timer> SessionCombinedHashmap;
@@ -372,7 +375,7 @@ public class BillboardServer {
         String billboard_name = ois.readObject().toString();
         String start_time = ois.readObject().toString();
         String duration = ois.readObject().toString();
-        String recurrence = ois.readObject().toString();
+        String recurrence_delay = ois.readObject().toString();
 
         Billboard billboard = billboard_list.Get_billboard_info(billboard_name);
         String billboard_creator = billboard.Billboard_creator;
@@ -382,7 +385,7 @@ public class BillboardServer {
 
         //schedule billboard with client input
         billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
-                Duration.ofMinutes(Integer.parseInt(duration)),recurrence, billboard_list.List_Billboards(),billboard_creator);
+                Duration.ofMinutes(Integer.parseInt(duration)), Integer.parseInt(recurrence_delay), billboard_list.List_Billboards(),billboard_creator);
 
         //write schedule to DB
         billboard_schedule.Write_To_DBschedule(connection);
@@ -404,7 +407,7 @@ public class BillboardServer {
         String billboard_name = ois.readObject().toString();
         String startTime = ois.readObject().toString();
         String duration = ois.readObject().toString();
-        String recurrence = ois.readObject().toString();
+        String recurrence_delay = ois.readObject().toString();
 
         //retrieve billboard object
         Billboard billboard = billboard_list.Get_billboard_info(billboard_name);
@@ -414,7 +417,7 @@ public class BillboardServer {
 
         //create schedule info object with client's input
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration)), recurrence, billboard_creator);
+                Duration.ofMinutes(Integer.parseInt(duration)), Integer.parseInt(recurrence_delay), billboard_creator);
 
         //Clear schedule table in DB
         billboard_schedule.Clear_DBschedule(connection);
@@ -495,12 +498,12 @@ public class BillboardServer {
             String billboard_name = queue[0][0];
             LocalDateTime next_viewing_time = LocalDateTime.parse(queue[0][1]);
             Duration duration = Duration.parse(queue[0][2]);
-            String viewing_recurrence = queue[0][3];
+            int recurrence_delay = Integer.parseInt(queue[0][3]);
             String billboard_creator = queue[0][4];
 
             //get schedule info of viewing that has been displayed
             Schedule_Info displayed_schedule = new Schedule_Info(next_viewing_time, duration,
-                    viewing_recurrence, billboard_creator);
+                    recurrence_delay, billboard_creator);
 
             LocalDateTime end_time = next_viewing_time.plus(duration);
 
@@ -533,45 +536,20 @@ public class BillboardServer {
                 //clear DB
                 billboard_schedule.Clear_DBschedule(connection);
 
-                //if billboard viewing recurs daily
-                if(viewing_recurrence.equals("day"))
+                //if billboard viewing recurs
+                if(recurrence_delay != 0)
                 {
-                    Duration day = Duration.ofDays(1);
+                    //convert recurrence delay to duration
+                    Duration duration_recurrence_delay = Duration.ofMinutes(recurrence_delay);
 
-                    //add  1 day to current time
-                    LocalDateTime new_start_time = next_viewing_time.plus(day);
+                    //add delay to current time
+                    LocalDateTime new_start_time = next_viewing_time.plus(duration_recurrence_delay);
 
                     //Reschedule start time of viewing for +1 day
-                    billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,viewing_recurrence,
+                    billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,recurrence_delay,
                             billboardList.billboardHashMap, billboard_creator);
                 }
 
-                //if billboard viewing recurs hourly
-                else if(viewing_recurrence.equals("hour"))
-                {
-                    Duration hour = Duration.ofHours(1);
-
-                    //add  1 hour to current time
-                    LocalDateTime new_start_time = next_viewing_time.plus(hour);
-
-                    //Reschedule start time of viewing for +1 hr
-                    billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,viewing_recurrence,
-                            billboardList.billboardHashMap, billboard_creator);
-
-                }
-
-                //if billboard viewing recurs every minute
-                else if(viewing_recurrence.equals("minute"))
-                {
-                    Duration hour = Duration.ofMinutes(1);
-
-                    //add  1 minute to current time
-                    LocalDateTime new_start_time = next_viewing_time.plus(hour);
-
-                    //Reschedule start time of viewing for +1 min
-                    billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,viewing_recurrence,
-                            billboardList.billboardHashMap, billboard_creator);
-                }
                 //Write schedule changes to DB
                 billboard_schedule.Write_To_DBschedule(connection);
             }

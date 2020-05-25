@@ -9,9 +9,12 @@ import java.time.LocalDateTime;
  * @version complete
  */
 public class Schedule_Info implements Serializable {
+    final int minutes_inDay = 1440;
+    final int minutes_inHour = 60;
+
     LocalDateTime StartTime_Scheduled;
     Duration duration;
-    String Recurrence;
+    int Recurrence_delay;
     String Billboard_creator;
 
     /**
@@ -19,11 +22,11 @@ public class Schedule_Info implements Serializable {
      * duration (mins) & recurrence type
      * @param startTime_scheduled start time billboard is scheduled for
      * @param duration_mins duration billboard is scheduled for
-     * @param recurrence type of recurrence billboard is scheduled for
+     * @param recurrence_delay time till next recurrence billboard is scheduled for
      * @param billboard_creator
      * @throws Exception throws exception if recurrence is invalid, duration or start time scheduled is out of range
      */
-    public Schedule_Info(LocalDateTime startTime_scheduled, Duration duration_mins, String recurrence , String billboard_creator)throws Exception
+    public Schedule_Info(LocalDateTime startTime_scheduled, Duration duration_mins, int recurrence_delay , String billboard_creator)throws Exception
     {
 
         this.Billboard_creator = billboard_creator;
@@ -45,7 +48,7 @@ public class Schedule_Info implements Serializable {
         }
 
         //if the recurrence option is invalid
-        if (!recurrence.equals("day") && !recurrence.equals("hour")  && !recurrence.equals("minute") && !recurrence.equals("none"))
+        if (recurrence_delay != minutes_inDay && recurrence_delay != minutes_inHour && !(recurrence_delay < minutes_inHour) && recurrence_delay != 0)
         {
             //throw exception
             throw new Exception("The given recurrence option is invalid, please specify whether the billboard recurs " +
@@ -55,7 +58,7 @@ public class Schedule_Info implements Serializable {
         else
         {
             //set recurrence of billboard
-            this.Recurrence = recurrence;
+            this.Recurrence_delay = recurrence_delay;
         }
 
     }

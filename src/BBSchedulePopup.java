@@ -144,7 +144,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
             //FOR TESTING
             String current_time = LocalDateTime.now().plus(Duration.ofMinutes(2)).toString();
             //change user inputs to GUI inputs
-            String [] user_inputs = {"Schedule Billboard","3",current_time, "1", "none"};
+            String [] user_inputs = {"Schedule Billboard","3",current_time, "1", "0"};
 
             //Schedule billboard with viewing details given by user
             ControlPanelClient.Run_Client(user_inputs);
@@ -164,7 +164,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
             if(a == YES_OPTION)
             {
                 //change user inputs to GUI inputs
-                String [] user_inputs = {"Remove Schedule","2", "2021-05-25T10:00:00.00", "1", "none"};
+                String [] user_inputs = {"Remove Schedule","2", "2021-05-25T10:00:00.00", "1", "0"};
                 //remove viewing from schedule with viewing details given by user
                 ControlPanelClient.Run_Client(user_inputs);
                 dispose();
