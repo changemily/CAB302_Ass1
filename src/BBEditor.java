@@ -182,8 +182,21 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     ex.printStackTrace();
                 }
 
-                billboardPreview.revalidate();
-                billboardPreview.repaint();
+                PreviewPanel.removeAll();
+                PreviewPanel.revalidate();
+                PreviewPanel.repaint();
+                BillboardViewer bb = null;
+                try {
+                    bb = new BillboardViewer(f, d);
+                } catch (ParserConfigurationException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (SAXException ex) {
+                    ex.printStackTrace();
+                }
+                JPanel billboardPreview = bb.getSizedBillboard();
+                PreviewPanel.add(billboardPreview);
                 PreviewPanel.revalidate();
                 PreviewPanel.repaint();
             }
