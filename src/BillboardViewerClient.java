@@ -2,6 +2,7 @@ import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
@@ -10,8 +11,16 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BillboardViewerClient {
+import java.awt.*;
 
+import static java.awt.Frame.MAXIMIZED_BOTH;
+
+public class BillboardViewerClient {
+    private static boolean firstTime = true;
+    private static String[] billboardArray = {"./1.xml", "./2.xml", "./3.xml", "./4.xml", "./5.xml"}; // only for test
+    private static int arrayNo = 0; // only for test
+    private static JFrame billboardGUI = new JFrame();
+    private static JPanel billboardPanel = new JPanel();
     /**
      * Sends requests to Server
      */
@@ -20,6 +29,10 @@ public class BillboardViewerClient {
         FileInputStream fileIn = null;
         int portNumber;
         try {
+            if(firstTime){
+                billboardGUI.setUndecorated(true);
+                firstTime = false;
+            }
             //read from network props file
             fileIn = new FileInputStream("./network.props");
             props.load(fileIn);
@@ -51,13 +64,18 @@ public class BillboardViewerClient {
             //print what was received from server
             System.out.println("billboard being displayed: "+ billboard_name);
 
-            /*//get xml file name for billboard
-            File file = new File("./"+billboard_name+".xml");
+            //get xml file name for billboard (use this for real thing)
+            //File file = new File("./"+billboard_name+".xml");
 
+            // Test xml file (purely for test)
+            File file = new File(billboardArray[arrayNo]);
+            arrayNo += 1;
 
             //display billboard on viewer
-            BillboardViewer BV = new BillboardViewer(file, true);
-*/
+            ViewerGUI(billboardGUI, billboardPanel, file);
+            billboardGUI.pack();
+            billboardGUI.setVisible(true);
+
             //close streams and connection with server
             oos.close();
             ois.close();
@@ -72,18 +90,27 @@ public class BillboardViewerClient {
             ex.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } /*catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
-        }*/
+        }
+    }
 
+    public static void ViewerGUI(JFrame billboardGUI, JPanel billboardPanel, File file) throws IOException, SAXException, ParserConfigurationException {
+        if(billboardPanel != null){
+            billboardGUI.remove(billboardPanel);
+        }
+        // Find screen size
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // Create new billboard
+        BillboardViewer billboard = new BillboardViewer(file, screenSize);
+
+        // Get Panel
+        billboardPanel = billboard.getSizedBillboard();
+
+        // Add Panel
+        billboardGUI.add(billboardPanel);
     }
 
     public static void main(String args[]) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IOException, IllegalAccessException {
