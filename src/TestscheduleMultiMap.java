@@ -538,33 +538,22 @@ public class TestscheduleMultiMap {
         //get viewings of billboard 1
         ArrayList<Schedule_Info> billboard_viewings = Billboard_schedule.getSchedule("Billboard_1");
 
-        //for each viewing
-        for (Schedule_Info viewing : billboard_viewings)
-        {
-            //if viewing start time is equal to startTime given
-            if (viewing.StartTime_Scheduled.equals(LocalDateTime.parse("2021-01-10T10:00:00.00")))
-            {
-                //retrieve the time the schedule was created
-                LocalDateTime time_scheduled = viewing.Time_Scheduled;
+        //schedule info of viewing being removed
+        Schedule_Info removed_schedule_info= new Schedule_Info(LocalDateTime.parse("2021-01-10T10:00:00.00"),
+                Duration.ofMinutes(10), "none", "emily");
 
-                //schedule info of viewing being removed
-                Schedule_Info removed_schedule_info= new Schedule_Info(LocalDateTime.parse("2021-01-10T10:00:00.00"),
-                        Duration.ofMinutes(10), "none",time_scheduled, "emily");
+        //remove billboard from schedule
+        Billboard_schedule.Schedule_Remove_billboard("Billboard_1",removed_schedule_info);
 
-                //remove billboard from schedule
-                Billboard_schedule.Schedule_Remove_billboard("Billboard_1",removed_schedule_info);
+        //get viewings of billboard 1
+        ArrayList<Schedule_Info> viewings = Billboard_schedule.getSchedule("Billboard_1");
 
-                //get viewings of billboard 1
-                ArrayList<Schedule_Info> viewings = Billboard_schedule.getSchedule("Billboard_1");
+        //check if 1 viewing is in list
+        assertEquals(1, viewings.size());
 
-                //check if 1 viewing is in list
-                assertEquals(1, viewings.size());
+        //check if viewing in list is correct
+        assertEquals(LocalDateTime.parse("2021-05-04T10:00:00.00"), viewings.get(0).StartTime_Scheduled);
 
-                //check if viewing in list is correct
-                assertEquals(LocalDateTime.parse("2021-05-04T10:00:00.00"), viewings.get(0).StartTime_Scheduled);
-
-            }
-        }
 
     }
 
@@ -574,7 +563,7 @@ public class TestscheduleMultiMap {
     public void RemoveSchedule_invalidBillboardName() throws Exception
     {
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
-                Duration.ofMinutes(15),"none", LocalDateTime.now(), "emily");
+                Duration.ofMinutes(15),"none", "emily");
 
 
         assertThrows(Exception.class,() -> {
@@ -600,7 +589,7 @@ public class TestscheduleMultiMap {
 
         //schedule info that does not match bb scheduled
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
-                Duration.ofMinutes(15),"none", LocalDateTime.now(), "emily");
+                Duration.ofMinutes(15),"none", "emily");
 
         assertThrows(Exception.class,() -> {
             //remove viewing from schedule that does not exist

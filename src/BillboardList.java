@@ -148,11 +148,10 @@ public class BillboardList implements java.io.Serializable {
             LocalDateTime startTime_scheduled = viewing.StartTime_Scheduled;
             Duration duration_mins = viewing.duration;
             String recurrence = viewing.Recurrence;
-            LocalDateTime time_scheduled = viewing.Time_Scheduled;
             String billboard_creator = viewing.Billboard_creator;
 
             //create schedule info with viewing details
-            Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins, recurrence,time_scheduled, billboard_creator);
+            Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins, recurrence, billboard_creator);
 
             //remove viewing of billboard
             scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);

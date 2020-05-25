@@ -30,7 +30,7 @@ public class BillboardServer {
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
-                    "Duration varchar (255), recurrence varchar (50), time_scheduled varchar (50), billboard_creator varchar (255));";
+                    "Duration varchar (255), recurrence varchar (50), billboard_creator varchar (255));";
     //Create queue 2D array
     private static String [][] queue = new String [0][0];
 
@@ -406,41 +406,24 @@ public class BillboardServer {
         String duration = ois.readObject().toString();
         String recurrence = ois.readObject().toString();
 
-        //retrieve array list of billboards viewings
-        ArrayList<Schedule_Info> billboard_viewings = billboard_schedule.getSchedule(billboard_name);
+        //retrieve billboard object
+        Billboard billboard = billboard_list.Get_billboard_info(billboard_name);
 
-        //for each viewing
-        for (Schedule_Info viewing : billboard_viewings)
-        {
-            //if viewing start time is equal to startTime given
-            if (viewing.StartTime_Scheduled.equals(startTime))
-            {
-                //retrieve the time the schedule was created
-                LocalDateTime time_scheduled = viewing.Time_Scheduled;
+        //retrieve billboard creator
+        String billboard_creator = billboard.Billboard_creator;
 
-                //retrieve billboard object
-                Billboard billboard = billboard_list.Get_billboard_info(billboard_name);
+        //create schedule info object with client's input
+        Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
+                Duration.ofMinutes(Integer.parseInt(duration)), recurrence, billboard_creator);
 
-                //retrieve billboard creator
-                String billboard_creator = billboard.Billboard_creator;
+        //Clear schedule table in DB
+        billboard_schedule.Clear_DBschedule(connection);
 
-                //create schedule info object with client's input
-                Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
-                        Duration.ofMinutes(Integer.parseInt(duration)), recurrence, time_scheduled, billboard_creator);
+        //remove viewing from schedule
+        billboard_schedule.Schedule_Remove_billboard(billboard_name,schedule_info);
 
-                //Clear schedule table in DB
-                billboard_schedule.Clear_DBschedule(connection);
-
-                //remove viewing from schedule
-                billboard_schedule.Schedule_Remove_billboard(billboard_name,schedule_info);
-
-                //write schedule to DB
-                billboard_schedule.Write_To_DBschedule(connection);
-
-                //update viewer queue
-                populateQueue(connection);
-            }
-        }
+        //write schedule to DB
+        billboard_schedule.Write_To_DBschedule(connection);
     }
 
     public static void populateQueue (Connection connection) throws SQLException {
@@ -471,7 +454,7 @@ public class BillboardServer {
             System.out.println("rows in DB:" +numDB_rows);
         }
         //create 2D array that stores the contents of each row in the DB
-        queue = new String[numDB_rows][6];
+        queue = new String[numDB_rows][5];
 
         int row_no = -1;
 
@@ -485,16 +468,14 @@ public class BillboardServer {
             String Start_TimeScheduled = rs.getString(2);
             String duration = rs.getString(3);
             String recurrence = rs.getString(4);
-            String time_scheduled = rs.getString(5);
-            String billboard_creator = rs.getString(6);
+            String billboard_creator = rs.getString(5);
 
            //add to queue
             queue[row_no][0] = billboard_name;
             queue[row_no][1] = Start_TimeScheduled;
             queue[row_no][2] = duration;
             queue[row_no][3] = recurrence;
-            queue[row_no][4] = time_scheduled;
-            queue[row_no][5] = billboard_creator;
+            queue[row_no][4] = billboard_creator;
         }
 
         //close ResultSet
@@ -515,12 +496,11 @@ public class BillboardServer {
             LocalDateTime next_viewing_time = LocalDateTime.parse(queue[0][1]);
             Duration duration = Duration.parse(queue[0][2]);
             String viewing_recurrence = queue[0][3];
-            LocalDateTime time_scheduled = LocalDateTime.parse(queue[0][4]);
-            String billboard_creator = queue[0][5];
+            String billboard_creator = queue[0][4];
 
             //get schedule info of viewing that has been displayed
             Schedule_Info displayed_schedule = new Schedule_Info(next_viewing_time, duration,
-                    viewing_recurrence, time_scheduled, billboard_creator);
+                    viewing_recurrence, billboard_creator);
 
             LocalDateTime end_time = next_viewing_time.plus(duration);
 

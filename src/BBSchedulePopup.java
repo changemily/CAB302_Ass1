@@ -141,8 +141,9 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         if (buttonClicked== SaveBttn) {
             System.out.println("Save pressed");
 
+            String current_time = LocalDateTime.now().plus(Duration.ofMinutes(1)).toString();
             //FOR TESTING
-            String [] user_inputs = {"Schedule Billboard","2","2021-05-25T10:00:00.00", "1", "none"};
+            String [] user_inputs = {"Schedule Billboard","2",current_time, "1", "none"};
 
             //Schedule billboard with viewing details given by user
             ControlPanelClient.Run_Client(user_inputs);

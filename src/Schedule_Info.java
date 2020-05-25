@@ -12,7 +12,6 @@ public class Schedule_Info implements Serializable {
     LocalDateTime StartTime_Scheduled;
     Duration duration;
     String Recurrence;
-    LocalDateTime Time_Scheduled;
     String Billboard_creator;
 
     /**
@@ -21,14 +20,11 @@ public class Schedule_Info implements Serializable {
      * @param startTime_scheduled start time billboard is scheduled for
      * @param duration_mins duration billboard is scheduled for
      * @param recurrence type of recurrence billboard is scheduled for
-     * @param time_scheduled
      * @param billboard_creator
      * @throws Exception throws exception if recurrence is invalid, duration or start time scheduled is out of range
      */
-    public Schedule_Info(LocalDateTime startTime_scheduled, Duration duration_mins, String recurrence, LocalDateTime time_scheduled, String billboard_creator)throws Exception
+    public Schedule_Info(LocalDateTime startTime_scheduled, Duration duration_mins, String recurrence , String billboard_creator)throws Exception
     {
-        //Set Scheduled_Time of viewing to now.
-        this.Time_Scheduled = time_scheduled;
 
         this.Billboard_creator = billboard_creator;
 
