@@ -181,6 +181,11 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 } catch (TransformerException ex) {
                     ex.printStackTrace();
                 }
+
+                billboardPreview.revalidate();
+                billboardPreview.repaint();
+                PreviewPanel.revalidate();
+                PreviewPanel.repaint();
             }
         });
         SaveBttn.setText("Save");
@@ -278,17 +283,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         MainPanelLayout.setHorizontalGroup(
                 MainPanelLayout.createParallelGroup()
                         .addGroup(MainPanelLayout.createSequentialGroup()
-                                .addGap(337, 337, 337)
-                                .addComponent(PreviewLabel)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(MainPanelLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(MainPanelLayout.createParallelGroup()
-                                        .addComponent(DividerLine)
-                                        .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 345, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(EditLabel)
-                                                .addGap(340, 340, 340))
                                         .addGroup(MainPanelLayout.createSequentialGroup()
                                                 .addGap(19, 19, 19)
                                                 .addGroup(MainPanelLayout.createParallelGroup()
@@ -329,7 +325,13 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                                         .addComponent(ExtraTextColourPickerLabel, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
                                                                         .addComponent(ExtraInfoScrollPanel, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE))
                                                                 .addGap(23, 23, 23))))
-                                        .addComponent(PreviewPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(PreviewPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(DividerLine)
+                                        .addGroup(MainPanelLayout.createSequentialGroup()
+                                                .addGroup(MainPanelLayout.createParallelGroup()
+                                                        .addComponent(PreviewLabel)
+                                                        .addComponent(EditLabel))
+                                                .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
         );
         MainPanelLayout.setVerticalGroup(
@@ -337,13 +339,13 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                         .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(PreviewLabel)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(PreviewPanel, GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(DividerLine, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(PreviewPanel, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(DividerLine, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(EditLabel)
-                                .addGap(1, 1, 1)
+                                .addGap(19, 19, 19)
                                 .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addGroup(MainPanelLayout.createSequentialGroup()
                                                 .addComponent(MessageLabel)
