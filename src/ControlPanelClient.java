@@ -59,7 +59,7 @@ public class ControlPanelClient {
                     break;
 
                 case "Get Billboard info":
-                    getBillboardInfo(oos, request, "Billboard_3");
+                    getBillboardInfo(oos, request, user_inputs);
                     break;
 
                 case "Create edit billboard":
@@ -68,7 +68,7 @@ public class ControlPanelClient {
                     break;
 
                 case "Delete billboard":
-                    deleteBillboard(oos, request, "Billboard_3");
+                    deleteBillboard(oos, request, user_inputs);
                     break;
 
                 case "View schedule":
@@ -207,10 +207,10 @@ public class ControlPanelClient {
      * Sends a get info request to the server
      * @param oos Object output stream of client
      * @param buttonClicked Request given by Contol Panel GUI
-     * @param billboardName Name of the billboard info requested
      * @throws IOException
      */
-    public static void getBillboardInfo(ObjectOutputStream oos, String buttonClicked, String billboardName)throws IOException{
+    public static void getBillboardInfo(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
+        String billboardName = user_inputs[1];
         //Write the request to the server
         oos.writeObject(buttonClicked);
         //Write the billboardname to the server
@@ -221,10 +221,11 @@ public class ControlPanelClient {
      * Sends a delete request to the server
      * @param oos Object output stream of the client
      * @param buttonClicked Request given by control panel GUI
-     * @param billboardName Name of the billboard to be deleted
      * @throws IOException
      */
-    public static void deleteBillboard(ObjectOutputStream oos, String buttonClicked, String billboardName)throws IOException{
+    public static void deleteBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
+        String billboardName = user_inputs[1];
+        //Write the request to the server
         //Write the request to the server
         oos.writeObject(buttonClicked);
         //Write the billboardName to the server
