@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import static javax.swing.JOptionPane.*;
@@ -11,7 +13,8 @@ import static javax.swing.JOptionPane.*;
 
 public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 {
-
+    JButton RemoveBttn;
+    JButton SaveBttn;
     public BBSchedulePopup()
     {
         // Set window title
@@ -55,8 +58,8 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         JComboBox FrequencyPicker = new JComboBox(FrequencyOptions);
 
         // Create Remove Button
-        JButton RemoveBttn = new JButton(
-                ( new AbstractAction("Remove") {
+        RemoveBttn = new JButton();
+                /*( new AbstractAction("Remove") {
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         int a = showConfirmDialog(null, "Are you sure you want to remove this billboard?");
@@ -65,12 +68,14 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                             dispose();
                         }
                     }
-                }));
+                }));*/
+        RemoveBttn.addActionListener(this);
         RemoveBttn.setText("Remove From Schedule");
         RemoveBttn.setAlignmentX(0.5F);
 
         // Create Save Button
-        JButton SaveBttn = new JButton();
+        SaveBttn = new JButton();
+        SaveBttn.addActionListener(this);
         SaveBttn.setText("Save Changes");
         SaveBttn.setAlignmentX(0.5F);
 
@@ -130,7 +135,38 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     @Override
     public void actionPerformed(ActionEvent actionEvent)
     {
+        //Get button that has been clicked - event source
+        Object buttonClicked = actionEvent.getSource();
 
+        if (buttonClicked== SaveBttn) {
+            System.out.println("Save pressed");
+
+            //FOR TESTING
+            String [] user_inputs = {"Schedule Billboard","2","2021-05-25T10:00:00.00", "1", "none"};
+
+            //Schedule billboard with viewing details given by user
+            ControlPanelClient.Run_Client(user_inputs);
+
+            //FOR TESTING
+            System.out.println("request: "+user_inputs[0]);
+            System.out.println("bb name: "+user_inputs[1]);
+            System.out.println("Start time: "+user_inputs[2]);
+            System.out.println("Duration: "+user_inputs[3]);
+            System.out.println("recurrence: "+user_inputs[4]);
+
+        }
+
+        else if (buttonClicked== RemoveBttn) {
+
+            int a = showConfirmDialog(null, "Are you sure you want to remove this billboard?");
+            if(a == YES_OPTION)
+            {
+                String [] user_inputs = {"Remove Schedule","2", "2021-05-25T10:00:00.00", "1", "none"};
+                //remove viewing from schedule with viewing details given by user
+                ControlPanelClient.Run_Client(user_inputs);
+                dispose();
+            }
+        }
     }
 
     @Override

@@ -22,7 +22,7 @@ public class ControlPanelClient {
     /**
      * Sends requests to Server
      */
-    public static void Run_Client(String button_clicked){
+    public static void Run_Client(String [] user_inputs){
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
@@ -45,7 +45,7 @@ public class ControlPanelClient {
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
             //request given by button clicked on GUI screen
-            String request = button_clicked;
+            String request = user_inputs[0];
 
             switch(request)
             {
@@ -78,20 +78,13 @@ public class ControlPanelClient {
 
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
+                    scheduleBillboard(oos, request, user_inputs);
 
-                    String time =LocalDateTime.now().plus(Duration.ofMinutes(1)).toString();
-                    System.out.println("time scheduled: " +time);
-                    scheduleBillboard(oos, request, "2",
-                            time, "1", "none");
-
-                    /*scheduleBillboard(oos, request, "monday",
-                            time, "5", "minute");*/
                     break;
 
                 case "Remove Schedule":
                     //Send details of billboard wanting to be scheduled to server
-                    removeSchedule(oos,request,"monday",
-                            "2020-05-25T10:00:00.00", "5", "none");
+                    removeSchedule(oos, request, user_inputs);
                     break;
 
                 case "List users":
@@ -264,14 +257,16 @@ public class ControlPanelClient {
      * Sends request to schedule billboard to server, and corresponding schedule information
      * @param oos Object output stream of client
      * @param buttonClicked Request given by Control Panel GUI
-     * @param billboardName Name of billboard being scheduled
-     * @param startTime Start Time of billboard being scheduled
-     * @param duration Duration of billboard being scheduled
-     * @param recurrence Recurrence of billboard being scheduled
      * @throws IOException
      */
-    public static void scheduleBillboard(ObjectOutputStream oos, String buttonClicked, String billboardName,
-                       String startTime, String duration, String recurrence) throws IOException {
+    public static void scheduleBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+
+        String  billboardName= user_inputs[1];
+        String startTime = user_inputs[2];
+        String duration = user_inputs[3];
+        String recurrence = user_inputs[4];
+
+
         //Write the Client's request to the server
         oos.writeObject(buttonClicked);
 
@@ -286,14 +281,15 @@ public class ControlPanelClient {
      * Sends request to remove schedule to server, and corresponding schedule information
      * @param oos Object output stream of client
      * @param buttonClicked Request given by Control Panel GUI
-     * @param billboardName Name of billboard being removed from schedule
-     * @param startTime Start Time of viewing being removed from schedule
-     * @param duration Duration of viewing being removed from schedule
-     * @param recurrence Recurrence of viewing being removed from schedule
      * @throws IOException
      */
-    public static void removeSchedule(ObjectOutputStream oos, String buttonClicked, String billboardName,
-                                      String startTime, String duration, String recurrence) throws IOException {
+    public static void removeSchedule(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+        String  billboardName= user_inputs[1];
+        String startTime = user_inputs[2];
+        String duration = user_inputs[3];
+        String recurrence = user_inputs[4];
+
+
         //Write the Client's request to the server
         oos.writeObject(buttonClicked);
 

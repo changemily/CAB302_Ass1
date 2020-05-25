@@ -407,7 +407,7 @@ public class BillboardServer {
         String recurrence = ois.readObject().toString();
 
         //retrieve array list of billboards viewings
-        ArrayList<Schedule_Info> billboard_viewings = billboard_schedule.getSchedule(billboard_name.toString());
+        ArrayList<Schedule_Info> billboard_viewings = billboard_schedule.getSchedule(billboard_name);
 
         //for each viewing
         for (Schedule_Info viewing : billboard_viewings)

@@ -124,8 +124,9 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         else if (buttonClicked == editBillboardScheduleButton)
         {
+            String [] user_input = {"View schedule"};
             //request schedule and run calendar GUI
-            ControlPanelClient.Run_Client("View schedule");
+            ControlPanelClient.Run_Client(user_input);
         }
     }
 
