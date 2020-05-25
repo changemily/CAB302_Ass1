@@ -10,9 +10,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Timer;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.HOURS;
-import static java.time.temporal.ChronoUnit.MINUTES;
 
 /**
  * Billboard server class
@@ -109,7 +106,7 @@ public class BillboardServer {
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
                 //read request sent by client
-                Object clientRequest = ois.readObject();
+                String clientRequest = ois.readObject().toString();
 
                 //print what was received from client
                 System.out.println("received from client: "+clientRequest);
@@ -117,7 +114,7 @@ public class BillboardServer {
                 String return_message;
 
                 //save return message, based on what request was received from the client
-                switch(clientRequest.toString())
+                switch(clientRequest)
                 {
                     case "Login request":
                         return_message = "Login request";
@@ -192,31 +189,15 @@ public class BillboardServer {
 
                         Connection finalConnection = connection;
 
-                        //create new timer
-                        Timer timer = new Timer();
+                        runViewer(oos, billboard_list, billboard_schedule, finalConnection);
 
-                        //create timer task that runs viewer
-                        class runViewer extends TimerTask {
-                            public void run() {
-                                try {
-                                    runViewer(billboard_list, billboard_schedule, finalConnection);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-                        //run viewer every 15 seconds
-                        timer.schedule(new runViewer(), 0, 15000);
-
-                        break;
 
                     default:
                         return_message = "No match";
                 }
-                //Write return message for client's request to client
+                /*//Write return message for client's request to client
                 oos.writeObject(return_message);
-                oos.flush();
+                oos.flush();*/
 
                 oos.close();
                 ois.close();
@@ -523,7 +504,7 @@ public class BillboardServer {
 
     }
 
-    public static void runViewer(BillboardList billboardList, ScheduleMultiMap billboard_schedule, Connection connection) throws Exception {
+    public static void runViewer(ObjectOutputStream oos, BillboardList billboardList, ScheduleMultiMap billboard_schedule, Connection connection) throws Exception {
         //if billboards have been scheduled
         if(queue.length > 0)
         {   //store current time and time of next viewing in local variables
@@ -555,6 +536,13 @@ public class BillboardServer {
                 //Write schedule changes to DB
                 billboard_schedule.Write_To_DBschedule(connection);
 
+                //Send error message to client
+                System.out.println("There are no billboards scheduled for this time");
+
+                //send details of "no billboard to display" xml
+                oos.writeObject("no viewing");
+                oos.flush();;
+
             }
 
             //Check if the next viewing in the queue is before or equal to current time
@@ -562,8 +550,12 @@ public class BillboardServer {
             {
                 System.out.println("\n"+LocalDateTime.now());
 
-                //Send billboard info to client
+                //Send billboard name to client
+                oos.writeObject(billboard_name);
+                oos.flush();;
+
                 System.out.println(billboard_name+" is being displayed");
+
 
                 //clear DB
                 billboard_schedule.Clear_DBschedule(connection);
@@ -607,10 +599,8 @@ public class BillboardServer {
                     billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,viewing_recurrence,
                             billboardList.billboardHashMap, billboard_creator);
                 }
-
                 //Write schedule changes to DB
                 billboard_schedule.Write_To_DBschedule(connection);
-
             }
 
             else
@@ -618,6 +608,10 @@ public class BillboardServer {
                 System.out.println("\n"+LocalDateTime.now());
                 //Send error message to client
                 System.out.println("There are no billboards scheduled for this time");
+
+                //send details of "no billboard to display" xml
+                oos.writeObject("no viewing");
+                oos.flush();;
             }
 
             //update viewer queue
@@ -631,7 +625,10 @@ public class BillboardServer {
             //Send error message to client
             System.out.println("queue is empty");
 
-            //System.out.println("There are no billboards scheduled for this time");
+            //send details of "no billboard to display" xml
+            oos.writeObject("no viewing");
+            oos.flush();;
+
         }
     }
 

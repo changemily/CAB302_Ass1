@@ -70,7 +70,7 @@ public class BillboardList implements java.io.Serializable {
         if(image == ""){
             throw new Exception("There was no image inputted. Please specify an image or opt for 'No Image'.");
         }
-        else if (image != "No Image" && exists == false)
+        else if (!image.equals("No Image") && exists == false)
         {
             throw new Exception ("The image does not exist. Please input a valid image.");
         }else if (bgColour == null) {

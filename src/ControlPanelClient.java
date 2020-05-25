@@ -1,4 +1,7 @@
+import org.xml.sax.SAXException;
+
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -19,7 +22,7 @@ public class ControlPanelClient {
     /**
      * Sends requests to Server
      */
-    public static void Run_Client(){
+    public static void Run_Client(String button_clicked){
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
@@ -41,9 +44,9 @@ public class ControlPanelClient {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-            String request = "Schedule Billboard";
-            //String request = "Run Billboard Viewer";
-            //request given by user saved in local var request
+            //request given by button clicked on GUI screen
+            String request = button_clicked;
+
             switch(request)
             {
                 case "Login request":
@@ -60,7 +63,7 @@ public class ControlPanelClient {
                     break;
 
                 case "Create edit billboard":
-                    createEditBillboard(oos, request, "sun", "Hello", "#000000",
+                    createEditBillboard(oos, request, "2", "Hello", "#000000",
                             "No Image", "jarod");
                     break;
 
@@ -78,7 +81,7 @@ public class ControlPanelClient {
 
                     String time =LocalDateTime.now().plus(Duration.ofMinutes(1)).toString();
                     System.out.println("time scheduled: " +time);
-                    scheduleBillboard(oos, request, "sun",
+                    scheduleBillboard(oos, request, "2",
                             time, "1", "none");
 
                     /*scheduleBillboard(oos, request, "monday",
@@ -101,22 +104,16 @@ public class ControlPanelClient {
                     break;
                 case "Set user password":
                     break;
-                case "Run Billboard Viewer":
-                    //write request to server
-                    oos.writeObject(request);
-                    //retrieve info of currently displayed billboard
-                    //display billboard on viewer
-                    break;
             }
 
             //flush output stream
             oos.flush();
 
-            //read response from server
+            /*//read response from server
             Object o = ois.readObject();
 
             //print what was received from server
-            System.out.println("received from server: "+o);
+            System.out.println("received from server: "+o);*/
 
             //close streams and connection with server
             oos.close();
@@ -134,7 +131,6 @@ public class ControlPanelClient {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -313,8 +309,7 @@ public class ControlPanelClient {
      * @param args
      */
     public static void main(String args[]) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IOException, IllegalAccessException {
-        //SwingUtilities.invokeLater(new ControlPanelGUI());
-
-        Run_Client();
+        SwingUtilities.invokeLater(new ControlPanelGUI());
+        //Run_Client("Schedule Billboard");
     }
 }

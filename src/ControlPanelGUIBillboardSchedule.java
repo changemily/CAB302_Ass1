@@ -17,7 +17,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
  *
  * NOTES: Current version is a basic design; some functionality still needs to be added; further refinement required
  */
-public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, ActionListener {
+public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable {
     MultiMap billboard_schedule;
     final int days_in_week = 7;
     /**
@@ -264,11 +264,6 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
 
         // Returns the JTable
         return table;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 
     @Override
