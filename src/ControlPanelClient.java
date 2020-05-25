@@ -63,8 +63,8 @@ public class ControlPanelClient {
                     break;
 
                 case "Create edit billboard":
-                    createEditBillboard(oos, request, "2", "Hello", "#000000",
-                            "No Image", "jarod");
+                    //Send details of billboard wanting to be created to server
+                    createEditBillboard(oos, request, user_inputs);
                     break;
 
                 case "Delete billboard":
@@ -183,14 +183,16 @@ public class ControlPanelClient {
      * Sends a get info request to the server
      * @param oos Object output stream of client
      * @param buttonClicked Request given by Contol Panel GUI
-     * @param billboardName What the users wants to name the billboard
-     * @param text The text that should be displayed on the billobard
-     * @param bg_colour The background colour the billboard should be
-     * @param image The string name of the image that will be displayed with the billboard
      * @throws IOException
      */
-    public static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String billboardName, String text,
-                                           String bg_colour, String image, String billboard_creator)throws IOException{
+    public static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
+
+        String  billboardName= user_inputs[1];
+        String text = user_inputs[2];
+        String bg_colour = user_inputs[3];
+        String image = user_inputs[4];
+        String billboard_creator = user_inputs[5];
+
         //Write the request to the server
         oos.writeObject(buttonClicked);
         //Write the details to the server
@@ -306,6 +308,15 @@ public class ControlPanelClient {
      */
     public static void main(String args[]) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IOException, IllegalAccessException {
         SwingUtilities.invokeLater(new ControlPanelGUI());
-        //Run_Client("Schedule Billboard");
+
+        String time = LocalDateTime.now().plus(Duration.ofMinutes(1)).toString();
+
+        String [] user_inputs1 = {"Schedule Billboard","3",time, "3", "none"};
+        String [] user_inputs2 = {"Schedule Billboard","2",time, "2", "none"};
+        String [] user_inputs3 = {"Schedule Billboard","1",time, "1", "none"};
+
+        Run_Client(user_inputs1);
+        Run_Client(user_inputs2);
+        Run_Client(user_inputs3);
     }
 }

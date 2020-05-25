@@ -516,13 +516,6 @@ public class BillboardServer {
                 //Write schedule changes to DB
                 billboard_schedule.Write_To_DBschedule(connection);
 
-                //Send error message to client
-                System.out.println("There are no billboards scheduled for this time");
-
-                //send details of "no billboard to display" xml
-                oos.writeObject("no viewing");
-                oos.flush();;
-
             }
 
             //Check if the next viewing in the queue is before or equal to current time

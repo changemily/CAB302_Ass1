@@ -50,11 +50,11 @@ public class BillboardViewerClient {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
+            //String request sent to server
             String request = "Run Billboard Viewer";
 
             //request billboard currently displayed from server
             oos.writeObject(request);
-
             //flush output stream
             oos.flush();
 
@@ -64,12 +64,8 @@ public class BillboardViewerClient {
             //print what was received from server
             System.out.println("billboard being displayed: "+ billboard_name);
 
-            //get xml file name for billboard (use this for real thing)
-            //File file = new File("./"+billboard_name+".xml");
-
-            // Test xml file (purely for test)
-            File file = new File(billboardArray[arrayNo]);
-            arrayNo += 1;
+            //get xml file name for billboard
+            File file = new File("./"+billboard_name+".xml");
 
             //display billboard on viewer
             ViewerGUI(billboardGUI, billboardPanel, file);
