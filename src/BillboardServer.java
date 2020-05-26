@@ -30,8 +30,8 @@ public class BillboardServer {
                     "image_file varchar(255), billboard_creator varchar(255));";
 
     public static final String CREATE_SCHEDULE_TABLE =
-            "CREATE TABLE IF NOT EXISTS Schedule (billboard_name varchar(255), Start_TimeScheduled varchar(50), " +
-                    "Duration varchar (255), recurrence_delay varchar (50), billboard_creator varchar (255));";
+            "CREATE TABLE IF NOT EXISTS Schedule (billboardName varchar(255), startTimeScheduled varchar(50), " +
+                    "Duration varchar (255), recurrenceDelay varchar (50), billboardCreator varchar (255));";
     //Create queue 2D array
     private static String [][] queue = new String [0][0];
 
@@ -79,7 +79,7 @@ public class BillboardServer {
         Check_tables(connection);
 
         //populate schedule, billboard list and user list with data from database
-        billboard_schedule.RetrieveDBschedule(connection);
+        billboard_schedule.retrieveDBschedule(connection);
         billboard_list.RetrieveDBbillboardList(connection);
 
         //populate queue with schedule
@@ -395,7 +395,7 @@ public class BillboardServer {
      * @throws IOException
      */
     public static void viewSchedule(ObjectOutputStream oos, ScheduleMultiMap billboard_schedule) throws IOException {
-        MultiMap<String, Schedule_Info> schedule = billboard_schedule.View_schedule();
+        MultiMap<String, ScheduleInfo> schedule = billboard_schedule.viewSchedule();
         //send schedule to client
         oos.writeObject(schedule);
     }
@@ -420,14 +420,14 @@ public class BillboardServer {
         String billboard_creator = billboard.Billboard_creator;
 
         //Clear schedule table in DB
-        billboard_schedule.Clear_DBschedule(connection);
+        billboard_schedule.clearDBschedule(connection);
 
         //schedule billboard with client input
         billboard_schedule.scheduleBillboard(billboard_name,LocalDateTime.parse(start_time),
                 Duration.ofMinutes(Integer.parseInt(duration)), Integer.parseInt(recurrence_delay), billboard_list.List_Billboards(),billboard_creator);
 
         //write schedule to DB
-        billboard_schedule.Write_To_DBschedule(connection);
+        billboard_schedule.writeToDbschedule(connection);
 
         //update viewer queue
         populateQueue(connection);
@@ -455,17 +455,17 @@ public class BillboardServer {
         String billboard_creator = billboard.Billboard_creator;
 
         //create schedule info object with client's input
-        Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(startTime),
+        ScheduleInfo schedule_info = new ScheduleInfo(LocalDateTime.parse(startTime),
                 Duration.ofMinutes(Integer.parseInt(duration)), Integer.parseInt(recurrence_delay), billboard_creator);
 
         //Clear schedule table in DB
-        billboard_schedule.Clear_DBschedule(connection);
+        billboard_schedule.clearDBschedule(connection);
 
         //remove viewing from schedule
-        billboard_schedule.Schedule_Remove_billboard(billboard_name,schedule_info);
+        billboard_schedule.scheduleRemoveBillboard(billboard_name,schedule_info);
 
         //write schedule to DB
-        billboard_schedule.Write_To_DBschedule(connection);
+        billboard_schedule.writeToDbschedule(connection);
     }
 
     public static void populateQueue (Connection connection) throws SQLException {
@@ -541,7 +541,7 @@ public class BillboardServer {
             String billboard_creator = queue[0][4];
 
             //get schedule info of viewing that has been displayed
-            Schedule_Info displayed_schedule = new Schedule_Info(next_viewing_time, duration,
+            ScheduleInfo displayed_schedule = new ScheduleInfo(next_viewing_time, duration,
                     recurrence_delay, billboard_creator);
 
             LocalDateTime end_time = next_viewing_time.plus(duration);
@@ -550,13 +550,13 @@ public class BillboardServer {
             if(current_time.isAfter(end_time))
             {
                 //clear DB
-                billboard_schedule.Clear_DBschedule(connection);
+                billboard_schedule.clearDBschedule(connection);
 
                 //Remove viewing from schedule
-                billboard_schedule.Schedule_Remove_billboard(billboard_name, displayed_schedule);
+                billboard_schedule.scheduleRemoveBillboard(billboard_name, displayed_schedule);
 
                 //Write schedule changes to DB
-                billboard_schedule.Write_To_DBschedule(connection);
+                billboard_schedule.writeToDbschedule(connection);
 
             }
 
@@ -573,13 +573,13 @@ public class BillboardServer {
 
 
                 //clear DB
-                billboard_schedule.Clear_DBschedule(connection);
+                billboard_schedule.clearDBschedule(connection);
 
                 //if billboard viewing recurs
                 if(recurrence_delay != 0)
                 {
                     //retrieve all viewings of billboard
-                    ArrayList<Schedule_Info> billboard_viewings = billboard_schedule.getSchedule(billboard_name);
+                    ArrayList<ScheduleInfo> billboard_viewings = billboard_schedule.getSchedule(billboard_name);
 
                     //convert recurrence delay to duration
                     Duration duration_recurrence_delay = Duration.ofMinutes(recurrence_delay);
@@ -591,13 +591,13 @@ public class BillboardServer {
                     boolean rescheduled = false;
 
                     //for every viewing of currently displayed billboard
-                    for(Schedule_Info viewing : billboard_viewings)
+                    for(ScheduleInfo viewing : billboard_viewings)
                     {
-                        System.out.println("viewing.StartTime_Scheduled: " + viewing.StartTime_Scheduled);
+                        System.out.println("viewing.StartTime_Scheduled: " + viewing.startTimeScheduled);
                         System.out.println("new_start_time: " + new_start_time);
 
                         //if billboard has been rescheduled
-                        if(viewing.StartTime_Scheduled.equals(new_start_time))
+                        if(viewing.startTimeScheduled.equals(new_start_time))
                         {
                             //set rescheduled to true
                             rescheduled = true;
@@ -617,7 +617,7 @@ public class BillboardServer {
                 }
 
                 //Write schedule changes to DB
-                billboard_schedule.Write_To_DBschedule(connection);
+                billboard_schedule.writeToDbschedule(connection);
             }
 
             else

@@ -139,22 +139,22 @@ public class BillboardList implements java.io.Serializable {
         //The code for deleting the billboard info from the schedule.
 
         //Get the info from schedule for the billboard
-        ArrayList<Schedule_Info> viewings = scheduleMultiMap.getSchedule(billboard_name);
+        ArrayList<ScheduleInfo> viewings = scheduleMultiMap.getSchedule(billboard_name);
 
         //for each scheduled viewing of the billboard
-        for (Schedule_Info viewing : viewings ) {
+        for (ScheduleInfo viewing : viewings ) {
 
             //store schedule info in local vars
-            LocalDateTime startTime_scheduled = viewing.StartTime_Scheduled;
+            LocalDateTime startTime_scheduled = viewing.startTimeScheduled;
             Duration duration_mins = viewing.duration;
-            int recurrence_delay = viewing.Recurrence_delay;
-            String billboard_creator = viewing.Billboard_creator;
+            int recurrence_delay = viewing.recurrenceDelay;
+            String billboard_creator = viewing.billboardCreator;
 
             //create schedule info with viewing details
-            Schedule_Info Schedule_info = new Schedule_Info(startTime_scheduled,duration_mins, recurrence_delay, billboard_creator);
+            ScheduleInfo Schedule_info = new ScheduleInfo(startTime_scheduled,duration_mins, recurrence_delay, billboard_creator);
 
             //remove viewing of billboard
-            scheduleMultiMap.Schedule_Remove_billboard(billboard_name, Schedule_info);
+            scheduleMultiMap.scheduleRemoveBillboard(billboard_name, Schedule_info);
         }
 
         //The code for removing the billboard info from the billboardList.
