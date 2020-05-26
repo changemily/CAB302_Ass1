@@ -82,8 +82,8 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         });
 
         // Create Remove Button
-        RemoveBttn = new JButton(
-                ( new AbstractAction("Remove") {
+        RemoveBttn = new JButton();
+                /*( new AbstractAction("Remove") {
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         int a = showConfirmDialog(null, "Are you sure you want to remove this billboard?");
@@ -92,7 +92,8 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                             dispose();
                         }
                     }
-                }));
+                }));*/
+        RemoveBttn.addActionListener(this);
         RemoveBttn.setText("Remove From Schedule");
         RemoveBttn.setAlignmentX(0.5F);
 
