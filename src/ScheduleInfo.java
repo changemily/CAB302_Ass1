@@ -31,7 +31,7 @@ public class ScheduleInfo implements Serializable {
 
         this.billboardCreator = billboardCreator;
 
-        ////set time billboard is scheduled for showing
+        //set time billboard is scheduled for showing
         this.startTimeScheduled = startTimeScheduled;
 
         //if duration is negative or zero

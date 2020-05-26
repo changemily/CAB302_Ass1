@@ -49,7 +49,16 @@ public class TestScheduleInfo {
     }
 
     @Test
-    // Test 4: construct schedule info object that recurs every 3 mins
+    // Test 5: construct schedule info object that recurs every minute
+    public void recurrence_infinite() throws Exception {
+        schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
+                1, "emily");
+
+        assertEquals(1, schedule_info.recurrenceDelay);
+    }
+
+    @Test
+    // Test 6: construct schedule info object that recurs every 3 mins
     public void recurrence_none() throws Exception {
         schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
                 0, "emily");
@@ -58,7 +67,7 @@ public class TestScheduleInfo {
     }
 
     @Test
-    // Test 5: construct schedule info object with invalid recurrence delay - invalid option, larger than 60 mins and not an hr or day
+    // Test 7: construct schedule info object with invalid recurrence delay - invalid option, larger than 60 mins and not an hr or day
     public void invalid_recurrence() throws Exception {
         assertThrows(Exception.class,() -> {
         schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
@@ -67,7 +76,7 @@ public class TestScheduleInfo {
     }
 
     @Test
-    // Test 6: construct schedule info object with invalid recurrence delay - smaller than duration
+    // Test 8: construct schedule info object with invalid recurrence delay - smaller than duration
     public void invalid_recurrence2() throws Exception {
         assertThrows(Exception.class,() -> {
         schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
@@ -76,7 +85,7 @@ public class TestScheduleInfo {
     }
 
     @Test
-    //Test 7: construct schedule info object with valid duration - Negative duration
+    //Test 9: construct schedule info object with valid duration - Negative duration
     public void Valid_duration() throws Exception {
         schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
                 10, "emily");
@@ -84,7 +93,7 @@ public class TestScheduleInfo {
     }
 
     @Test
-    //Test 8: construct schedule info object with invalid duration - Negative duration
+    //Test 10: construct schedule info object with invalid duration - Negative duration
     public void Neg_duration() throws Exception {
         assertThrows(Exception.class,() -> {
             schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(-5),
@@ -93,7 +102,7 @@ public class TestScheduleInfo {
     }
 
     @Test
-    //Test 9: construct schedule info object with invalid duration - Zero duration
+    //Test 11: construct schedule info object with invalid duration - Zero duration
     public void Zer_duration() throws Exception {
         assertThrows(Exception.class,() -> {
             schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(0),

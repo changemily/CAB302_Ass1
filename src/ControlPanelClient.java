@@ -312,12 +312,17 @@ public class ControlPanelClient {
 
         String time = LocalDateTime.now().plus(Duration.ofMinutes(1)).toString();
 
-        String [] user_inputs1 = {"Schedule Billboard","3",time, "1", "2"};
-        String [] user_inputs2 = {"Schedule Billboard","2","2021-05-10T10:00:00.00", "2", "0"};
-        String [] user_inputs3 = {"Schedule Billboard","1","2021-05-10T10:00:00.00", "1", "0"};
+        String [] user_inputs1 = {"Schedule Billboard","3","2021-05-10T10:00:00.00", "10", "60"};
+        String [] user_inputs2 = {"Schedule Billboard","2","2021-05-10T10:10:00.00", "10", "10"};
+        String [] user_inputs3 = {"Schedule Billboard","1","2021-05-10T10:05:00.00", "10", "0"};
 
-        Run_Client(user_inputs1);
-        /*Run_Client(user_inputs2);
-        Run_Client(user_inputs3);*/
+        String [] user_inputs4 = {"Schedule Billboard","2","2021-05-10T10:10:00.00", "5", "0"};
+        String [] user_inputs5 = {"Schedule Billboard","1","2021-05-10T10:00:00.00", "20", "0"};
+
+        //Run_Client(user_inputs1);
+        Run_Client(user_inputs2);
+        //Run_Client(user_inputs3);
+        //Run_Client(user_inputs4);
+        //Run_Client(user_inputs5);
     }
 }

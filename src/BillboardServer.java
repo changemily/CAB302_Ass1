@@ -471,7 +471,7 @@ public class BillboardServer {
     public static void populateQueue (Connection connection) throws SQLException {
 
         //Read data from DB - sort rows in ascending order by start time of viewing
-        final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled ASC;";
+        final String SELECT = "SELECT * FROM schedule ORDER BY startTimeScheduled ASC;";
         final String GET_NUM_ROWS = "select count(*) from Schedule;";
 
         //create statement

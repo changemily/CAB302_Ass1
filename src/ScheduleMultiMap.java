@@ -159,6 +159,7 @@ public class ScheduleMultiMap {
             }
         }
 
+        //if billboard does not exist in billboardList
         if(billboardExists == false)
         {
             throw new Exception("You cannot schedule a billboard that does not exist");
@@ -177,10 +178,10 @@ public class ScheduleMultiMap {
         else
         {
             outerloop:
-            //For every entry of scheduleMultiMap
-            for (String existingBillboard : scheduleMultiMap.keySet())
+            //For every existing billboard of scheduleMultiMap
+            for (String existingBillboard : new ArrayList<String>(scheduleMultiMap.keySet()))
             {
-                //calculate end time of new billboard viewing
+                //calculate the end time of new billboard viewing
                 LocalDateTime newBBEndTime= newBBStartTime.plus(newBBDuration);
 
                 //create collection to store viewings of billboard
@@ -262,13 +263,6 @@ public class ScheduleMultiMap {
                             scheduleMultiMap.remove(existingBillboard,viewing);
                         }
 
-                        //create new scheduleInfo object for new billboard
-                        ScheduleInfo newScheduleInfo = new ScheduleInfo(newBBStartTime, newBBDuration, existBBRecurrence, existBBCreator);
-
-                        //schedule new billboard for given time
-                        scheduleMultiMap.put(newBillboardName, newScheduleInfo);
-
-                        //break outerloop;
                     }
 
                     // SPLIT EXISTING SCHEDULE - NEW START AND END TIME DURING EXISTING VIEWING
@@ -297,8 +291,6 @@ public class ScheduleMultiMap {
                         //reschedule existing billboard for new times
                         scheduleMultiMap.put(existingBillboard, newScheduleInfo1);
                         scheduleMultiMap.put(existingBillboard, newScheduleInfo2);
-
-                        //break outerloop;
                     }
 
                     // NEW START TIME DURING EXISTING VIEWING
@@ -325,8 +317,6 @@ public class ScheduleMultiMap {
 
                         //reschedule existing billboard for new time
                         scheduleMultiMap.put(existingBillboard, newScheduleInfo);
-
-                        //break outerloop;
                     }
 
                     // NEW END TIME DURING EXISTING VIEWING
@@ -352,8 +342,6 @@ public class ScheduleMultiMap {
 
                         //reschedule existing billboard for new time
                         scheduleMultiMap.put(existingBillboard, newScheduleInfo);
-
-                        //break outerloop;
                     }
                 }
             }
