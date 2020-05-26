@@ -277,8 +277,8 @@ public class BillboardServer {
      */
     public static void listBillboards(ObjectOutputStream oos, BillboardList billboardList) throws Exception{
         //Output to client
-        oos.writeObject(billboardList.List_Billboards());
-        System.out.println("billboard list: "+ billboardList.List_Billboards());
+        oos.writeObject(billboardList.listBillboards());
+        System.out.println("billboard list: "+ billboardList.listBillboards());
     }
 
     /**
@@ -329,7 +329,7 @@ public class BillboardServer {
         billboardList.Clear_DBbillboardList(connection);
 
         //Create the billboard
-        billboardList.Create_edit_Billboard(billboardName, text, bgColour, image, billboardCreator);
+        billboardList.createEditBillboard(billboardName, text, bgColour, image, billboardCreator);
 
         //Write the new billboard to the DB
         billboardList.Write_To_DBbillboard(connection);
@@ -397,7 +397,7 @@ public class BillboardServer {
 
         //schedule billboard with client input
         billboardSchedule.scheduleBillboard(billboardName,LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration)), Integer.parseInt(recurrenceDelay), billboardList.List_Billboards(),billboardCreator);
+                Duration.ofMinutes(Integer.parseInt(duration)), Integer.parseInt(recurrenceDelay), billboardList.listBillboards(),billboardCreator);
 
         //write schedule to DB
         billboardSchedule.writeToDbschedule(connection);

@@ -25,7 +25,7 @@ public class TestBillboard {
     /**
      * Test 2: Constructing a Billboard object without image
      */
-    public void setUpBillboard_img() {
+    public void setUpBillboardImg() {
         Billboard billboard3 = new Billboard("Billboard 2", "Hello World", "red", "No Image","jarod");
     }
 }

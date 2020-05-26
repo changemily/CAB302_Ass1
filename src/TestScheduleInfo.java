@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class TestScheduleInfo {
 
-    ScheduleInfo schedule_info;
-    final int minutes_inDay = 1440;
-    final int minutes_inHour = 60;
+    ScheduleInfo scheduleInfo;
+    final int MINUTES_IN_DAY = 1440;
+    final int MINUTES_IN_HOUR = 60;
 
     /**
      * Test 1: Constructing a Schedule info object with scheduled time
@@ -25,7 +25,7 @@ public class TestScheduleInfo {
     @BeforeEach
     @Test
     public void setUpBillboard() throws Exception {
-        schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
+        scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
                 5, "emily");
     }
 
@@ -34,11 +34,11 @@ public class TestScheduleInfo {
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
-    public void recurrence_day() throws Exception {
-        schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
-                minutes_inDay, "emily");
+    public void recurrenceDay() throws Exception {
+        scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
+                MINUTES_IN_DAY, "emily");
 
-        assertEquals(minutes_inDay, schedule_info.recurrenceDelay);
+        assertEquals(MINUTES_IN_DAY, scheduleInfo.recurrenceDelay);
     }
 
     /**
@@ -46,11 +46,11 @@ public class TestScheduleInfo {
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
-    public void recurrence_hour() throws Exception {
-        schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
-                minutes_inHour, "emily");
+    public void recurrenceHour() throws Exception {
+        scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
+                MINUTES_IN_HOUR, "emily");
 
-        assertEquals(minutes_inHour, schedule_info.recurrenceDelay);
+        assertEquals(MINUTES_IN_HOUR, scheduleInfo.recurrenceDelay);
     }
 
     /**
@@ -58,11 +58,11 @@ public class TestScheduleInfo {
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
-    public void recurrence_min() throws Exception {
-        schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
+    public void recurrenceMin() throws Exception {
+        scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
                 3, "emily");
 
-        assertEquals(3, schedule_info.recurrenceDelay);
+        assertEquals(3, scheduleInfo.recurrenceDelay);
     }
 
     /**
@@ -70,11 +70,11 @@ public class TestScheduleInfo {
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
-    public void recurrence_infinite() throws Exception {
-        schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
+    public void recurrenceInfinite() throws Exception {
+        scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
                 1, "emily");
 
-        assertEquals(1, schedule_info.recurrenceDelay);
+        assertEquals(1, scheduleInfo.recurrenceDelay);
     }
 
     /**
@@ -82,11 +82,11 @@ public class TestScheduleInfo {
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
-    public void recurrence_none() throws Exception {
-        schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
+    public void recurrenceNone() throws Exception {
+        scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
                 0, "emily");
 
-        assertEquals(0, schedule_info.recurrenceDelay);
+        assertEquals(0, scheduleInfo.recurrenceDelay);
     }
 
     /**
@@ -95,9 +95,9 @@ public class TestScheduleInfo {
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
-    public void invalid_recurrence() throws Exception {
+    public void invalidRecurrence() throws Exception {
         assertThrows(Exception.class,() -> {
-        schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
+        scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
                 61, "emily");
         });
     }
@@ -107,9 +107,9 @@ public class TestScheduleInfo {
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
-    public void invalid_recurrence2() throws Exception {
+    public void invalidRecurrence2() throws Exception {
         assertThrows(Exception.class,() -> {
-        schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
+        scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
                 2, "emily");
         });
     }
@@ -119,10 +119,10 @@ public class TestScheduleInfo {
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
-    public void Valid_duration() throws Exception {
-        schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
+    public void validDuration() throws Exception {
+        scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
                 10, "emily");
-        assertEquals(Duration.ofMinutes(5), schedule_info.duration);
+        assertEquals(Duration.ofMinutes(5), scheduleInfo.duration);
     }
 
     /**
@@ -130,9 +130,9 @@ public class TestScheduleInfo {
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
-    public void Neg_duration() throws Exception {
+    public void negDuration() throws Exception {
         assertThrows(Exception.class,() -> {
-            schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(-5),
+            scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(-5),
                     2, "emily");
         });
     }
@@ -142,9 +142,9 @@ public class TestScheduleInfo {
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
-    public void Zer_duration() throws Exception {
+    public void zerDuration() throws Exception {
         assertThrows(Exception.class,() -> {
-            schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(0),
+            scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(0),
                     2, "emily");
         });
     }

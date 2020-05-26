@@ -59,8 +59,8 @@ public class BillboardList implements java.io.Serializable {
      */
 
 
-    public void Create_edit_Billboard(String billboard_name, String text, String bg_colour, String image,
-                                       String billboard_creator) throws Exception {
+    public void createEditBillboard(String billboard_name, String text, String bg_colour, String image,
+                                    String billboard_creator) throws Exception {
         //Check if image exists
         boolean exists = Files.exists(Paths.get(image));
         //Check if bg_colour is valid
@@ -91,7 +91,7 @@ public class BillboardList implements java.io.Serializable {
      * Return type void
      */
 
-    public HashMap<String, Billboard> List_Billboards() {
+    public HashMap<String, Billboard> listBillboards() {
         return billboardHashMap;
     }
 
@@ -296,7 +296,7 @@ public class BillboardList implements java.io.Serializable {
         String billboard_creator = "emily";
 
         //Use the specs retrieved from the XML to create the billboard
-        Create_edit_Billboard(BillboardName, text, bgColour, imageFile, billboard_creator);
+        createEditBillboard(BillboardName, text, bgColour, imageFile, billboard_creator);
     }
 
 
