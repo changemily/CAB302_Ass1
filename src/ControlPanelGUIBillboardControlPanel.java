@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Billboard Control Panel class for Control Panel GUI
@@ -27,6 +28,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     JButton scheduleBillboardButton;
     JButton createBillboardButton;
     String billboardXML="./5.xml";
+    BillboardList billboard_list = new BillboardList();
 
     public ControlPanelGUIBillboardControlPanel() {
         // Set window title
@@ -120,9 +122,35 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * @return Returns JList
      */
     private JList createJList(JPanel panel) {
-        // Create billboard JList, and populate with test data
-        // NOTE: Needs to be changed to populate billboard JList with real billboard data
-        String[] billboards = {"1", "2", "3", "4", "5", "Test 6", "Test 7", "Test 9", "Test 10"};
+        //For Testing
+        //Billboard with no scheduled viewing
+//        try {
+//            billboard_list.Create_edit_Billboard("Billboard1", "new billboard", "#4287f5", "No Image", "jarod");
+//            billboard_list.Create_edit_Billboard("Billboard2", "new billboard", "#4287f5", "No Image", "Is");
+//            billboard_list.Create_edit_Billboard("Billboard3", "new billboard", "#4287f5", "No Image", "The");
+//            billboard_list.Create_edit_Billboard("Billboard4", "new billboard", "#4287f5", "No Image", "Best");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+
+        //Int counter for assigning values in the array
+        int counter = 1;
+
+        //Setup an array to return creator and billboard
+        String[] billboardListWithCreator = new String[billboard_list.billboardHashMap.size()+1];
+
+        //Get the Creator of each billboard in the billboard list
+        for(Map.Entry<String, Billboard> billboardEntry : billboard_list.billboardHashMap.entrySet()){
+            //Initialize array with the new size and repopulate it
+            //billboardListWithCreator = new String[counter];
+            //Assign creator name to position one in the 2D array
+            billboardListWithCreator[counter] = billboardEntry.getValue().Billboard_creator;
+            //Assign billboard name to the second position in the 2D array
+            billboardListWithCreator[counter] = billboardListWithCreator[counter] + ", "
+                    + billboardEntry.getValue().Billboard_name;
+            counter++;
+        }
 
         // Create new JPanel for spacing and formatting
         JPanel panel2 = new JPanel();
@@ -130,7 +158,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         panel2.add(Box.createVerticalStrut(50));
 
         // Create new JList
-        JList list = new JList(billboards);
+        JList list = new JList(billboardListWithCreator);
 
         // Create JScrollPane
         JScrollPane scroll = new JScrollPane(list);

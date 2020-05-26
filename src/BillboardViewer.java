@@ -60,39 +60,32 @@ public class BillboardViewer extends JFrame{
     private String pictureURL;
     private String pictureDataString;
 
-    /**
-     * Empty constructor that creates an error message
-     * @throws ClassNotFoundException (Error)
-     * @throws UnsupportedLookAndFeelException (Error)
-     * @throws InstantiationException (Error)
-     * @throws IllegalAccessException (Error)
-     */
-    public BillboardViewer() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        // Set variables to error settings
-        messageText = "Error found!";
-        messageColourCode = Color.decode(colourRed);
-        messageExists = true;
-        informationText = "No available billboard";
-        informationColourCode = Color.decode(colourBlack);
-        informationExists = true;
-
-        // Set format to message/information
-        billboardVariation = 4;
-
-        // Set components
-        setMessage();
-        setInformation();
-
-        // Display billboard
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        JFrame billboard = createBillboard();
-        displayAllFrame(billboard);
-        billboard.pack();
-        billboard.setExtendedState(MAXIMIZED_BOTH);
-        billboard.setVisible(true);
-    }
+    //    public BillboardViewer() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+//        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//
+//        // Set variables to error settings
+//        messageText = "Error found!";
+//        messageColourCode = Color.decode(colourRed);
+//        messageExists = true;
+//        informationText = "No available billboard";
+//        informationColourCode = Color.decode(colourBlack);
+//        informationExists = true;
+//
+//        // Set format to message/information
+//        billboardVariation = 4;
+//
+//        // Set components
+//        setMessage();
+//        setInformation();
+//
+//        // Display billboard
+//        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//        JFrame billboard = createBillboard();
+//        displayAllFrame(billboard);
+//        billboard.pack();
+//        billboard.setExtendedState(MAXIMIZED_BOTH);
+//        billboard.setVisible(true);
+//    }
 
     /**
      * Constructor creates a GUI on an xml file in full screen
@@ -497,7 +490,13 @@ public class BillboardViewer extends JFrame{
             totalHeight = fontHeight * fontLines;
         }
 
-        double stringLineRound = Math.floor(fontLines); // round down current lines of editorPane
+        double stringLineRound;
+        if(fontLines >= 1) { // don't round down to 0 lines
+            stringLineRound = Math.floor(fontLines); // round down current lines of editorPane
+        }
+        else{
+            stringLineRound = fontLines;
+        }
 
         while(fontLines > stringLineRound){ // reduce font size to fit under rounded line count
             fontSize -= 1;
@@ -508,7 +507,13 @@ public class BillboardViewer extends JFrame{
             fontWidth = textLabel.getFontMetrics(textFont).stringWidth(textLabel.getText());
             fontLines = fontWidth / maxWidth;
         }
-        return((int)(fontHeight * stringLineRound));
+        if(fontLines >= 1) { // don't round down to below 1 lines
+            return((int)(fontHeight * stringLineRound));
+        }
+        else{
+            return fontHeight; // return a full line
+        }
+
     }
 
     /**
@@ -905,31 +910,39 @@ public class BillboardViewer extends JFrame{
     }
 
     /**
+     * Set true if message exists
+     */
+    public void setMessageExists(boolean bool){ messageExists = bool;}
+
+    /**
+     * Set true if information exists
+     */
+    public void setInformationExists(boolean bool){ informationExists = bool;}
+
+    /**
+     * Set true if picture exists
+     */
+    public void setPictureExists(boolean bool){ pictureExists = bool;}
+
+    /**
      * Main program for testing
      * @param args (String[])
      * @throws IOException (error)
      */
-    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        File file = new File("./3.xml");
-        BillboardViewer BV = new BillboardViewer(file, true);
+    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
+        //File file = new File("./3.xml");
+        //BillboardViewer BV = new BillboardViewer(file, true);
         //BV.setInformationText("Changed Text");
         //StreamResult output = new StreamResult("./temp.xml");
         //BV.writeFile(output);
         //new BillboardViewer();
         //BillboardViewer BV = new BillboardViewer(file, true);
-        //JFrame screen = new JFrame();
-        //File file = new File("./3.xml");
-        //File file2 = new File("./5.xml");
-        //BillboardViewer BV = new BillboardViewer(file,new Dimension(1920, 1080));
-        //JPanel fileBB = BV.getSizedBillboard();
-        //BV = new BillboardViewer(file2, new Dimension(1920, 1080));
-        //JPanel file2BB = BV.getSizedBillboard();
-        //screen.add(fileBB);
-        //screen.pack();
-        //screen.setVisible(true);
-        //Thread.sleep(5000);
-        //screen.remove(fileBB);
-        //screen.add(file2BB);
-        //screen.pack();
+        JFrame screen = new JFrame();
+        File file = new File("./5.xml");
+        BillboardViewer BV = new BillboardViewer(file,new Dimension(1920, 1080));
+        JPanel fileBB = BV.getSizedBillboard();
+        screen.add(fileBB);
+        screen.pack();
+        screen.setVisible(true);
     }
 }
