@@ -32,11 +32,9 @@ public class BillboardServer {
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboardName varchar(255), startTimeScheduled varchar(50), " +
                     "Duration varchar (255), recurrenceDelay varchar (50), billboardCreator varchar (255));";
-    //Create queue 2D array
-    private static String [][] queue = new String [0][0];
 
-    final int MINUTES_IN_DAY = 1440;
-    final int MINUTES_IN_HOUR = 60;
+    //queue of billboard viewings - 2D array
+    private static String [][] queue = new String [0][0];
 
     //Setup another hashmap to store an id and hasmap of the token and its timer
     HashMap<Integer, Timer> SessionCombinedHashmap;
@@ -47,21 +45,21 @@ public class BillboardServer {
      * Starts up Billboard server for connection to client
      * Sends and Receives information from client
      */
-    public static void Run_Server() throws Exception {
+    public static void runServer() throws Exception {
         //Setup a default user.
         User DefaultUser = new User("DefaultUserName", "DefaultPassword",
                 "Create Billboards", "Edit All Billboards", "Schedule Billboards", "Edit Users");
 
         //create empty schedule, billboard list and user list
-        ScheduleMultiMap billboard_schedule = new ScheduleMultiMap();
+        ScheduleMultiMap billboardSchedule = new ScheduleMultiMap();
 
         BillboardList billboard_list = new BillboardList();
 
         //create DB connection
         Connection connection = null;
 
-        //A while loop that attempts to connect to the database
-        //Every 15 seconds until a connection is made.
+        //while loop that attempts to connect to the database
+        //runs every 15 seconds until a connection is made.
         boolean connectionMade = false;
         while(connectionMade == false){
             connection = DBconnection.getInstance();
@@ -75,16 +73,17 @@ public class BillboardServer {
             }
         }
 
-        //checks if tables exist in DB, if not adds tables
+        //check if tables exist in DB, if not adds tables
         Check_tables(connection);
 
         //populate schedule, billboard list and user list with data from database
-        billboard_schedule.retrieveDBschedule(connection);
+        billboardSchedule.retrieveDBschedule(connection);
         billboard_list.RetrieveDBbillboardList(connection);
 
         //populate queue with schedule
         populateQueue(connection);
 
+        //Establish new properties file
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
@@ -115,13 +114,10 @@ public class BillboardServer {
                 //print what was received from client
                 System.out.println("received from client: "+clientRequest);
 
-                String return_message;
-
                 //save return message, based on what request was received from the client
                 switch(clientRequest)
                 {
                     case "Login request":
-                        return_message = "Login request";
                         //retrieve username
                         String username = ois.readObject().toString();
                         //retrieve hashed pwd from client
@@ -139,71 +135,54 @@ public class BillboardServer {
                         //else returns error to client
                         break;
                     case "List billboards":
-                        return_message = "returned List of billboards";
                         //write billboard list to client
                         listBillboards(oos, billboard_list);
                         break;
                     case "Get Billboard info":
-                        return_message = "returned Billboard info";
                         //write billboard info to client
                         getBillboardInfo(oos, ois, billboard_list);
                         break;
                     case "Create edit billboard":
-                        return_message = "Created/edited billboard";
                         //Write the new billboard to the DB
                         createEditBillboard(ois, connection, billboard_list);
                         break;
                     case "Delete billboard":
-                        return_message = "billboard has been deleted";
                         //Write the delete to the db
                         deleteBillboard(ois, connection, billboard_list);
                         break;
                     case "View schedule":
-                        return_message = "returned schedule";
-                        viewSchedule(oos,billboard_schedule);
+                        viewSchedule(oos,billboardSchedule);
                         break;
 
                     case "Schedule Billboard":
-                        return_message = "Billboard has been scheduled";
                         //schedule billboard
-                        scheduleBillboard(ois, connection, billboard_list, billboard_schedule);
+                        scheduleBillboard(ois, connection, billboard_list, billboardSchedule);
                         break;
 
                     case "Remove Schedule":
-                        return_message = "billboard has been removed from schedule";
                         //remove viewing from schedule
-                        removeSchedule(ois,connection,billboard_schedule, billboard_list);
+                        removeSchedule(ois,connection,billboardSchedule, billboard_list);
                         break;
 
                     case "List users":
-                        return_message = "returned list of users";
                         break;
                     case "Create user":
-                        return_message = "user has been created";
                         break;
                     case "Get user permissions":
-                        return_message = "returned user permissions";
                         break;
                     case "Set user permissions":
-                        return_message = "user permissions have been set";
                         break;
                     case "Set user password":
-                        return_message = "user password has been set";
                         break;
                     case "Run Billboard Viewer":
-                        return_message = "Running Billboard Viewer";
 
                         Connection finalConnection = connection;
 
-                        runViewer(oos, billboard_list, billboard_schedule, finalConnection);
-
+                        //send details of currently displayed billboard to Viewer client
+                        runViewer(oos, billboard_list, billboardSchedule, finalConnection);
 
                     default:
-                        return_message = "No match";
                 }
-                /*//Write return message for client's request to client
-                oos.writeObject(return_message);
-                oos.flush();*/
 
                 oos.close();
                 ois.close();
@@ -221,7 +200,6 @@ public class BillboardServer {
         connection.close();
     }
 
-
     /**
      * Creates tables if they do not exist in DB
      * @param connection Database connection
@@ -233,8 +211,6 @@ public class BillboardServer {
             Statement st = connection.createStatement();
             st.execute(CREATE_BILLBOARD_TABLE);
             st.close();
-            System.out.println("added billboard table to db");
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -243,8 +219,6 @@ public class BillboardServer {
             Statement st = connection.createStatement();
             st.execute(CREATE_SCHEDULE_TABLE);
             st.close();
-            System.out.println("added schedule table to db");
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -253,9 +227,6 @@ public class BillboardServer {
             Statement st = connection.createStatement();
             st.execute(CREATE_USER_TABLE);
             st.close();
-            System.out.println("added billboard table to db");
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -389,7 +360,7 @@ public class BillboardServer {
     }
 
     /**
-     * Sends schedule to client
+     * Sends schedule to client as a MultiMap
      * @param oos Object Output stream of Server
      * @param billboard_schedule schedule being sent to Client
      * @throws IOException
@@ -400,14 +371,16 @@ public class BillboardServer {
         oos.writeObject(schedule);
     }
 
-   /* *//**
+   /**
      * schedules Billboard sent by client and stores in DB
      * @param ois Object Input stream of Server
      * @param connection Database connection
-     * @param billboard_list
-     * @param billboard_schedule
-     * @throws Exception
+     * @param billboard_list list of created billboards
+     * @param billboard_schedule schedule of billboard viewings
+     * @throws Exception IOException, ClassNotFoundException, SQLException,
+     * Exception - billboard does not exist, viewing does not exist
      */
+
     public static void scheduleBillboard(ObjectInputStream ois, Connection connection, BillboardList billboard_list
             , ScheduleMultiMap billboard_schedule) throws Exception {
         //read parameters sent by client
@@ -433,12 +406,15 @@ public class BillboardServer {
         populateQueue(connection);
     }
 
+
     /**
      * Removes viewing sent by client from schedule
-     * @param ois
-     * @param connection
-     * @param billboard_schedule
-     * @throws Exception
+     * @param ois Object input stream
+     * @param connection Database Connection
+     * @param billboard_schedule schedule of billboard viewings
+     * @param billboard_list list of created billboards
+     * @throws Exception IOException, ClassNotFoundException, SQLException,
+     * Exception - billboard does not exist, viewing does not exist, invalid duration, invalid recurrence delay
      */
     public static void removeSchedule (ObjectInputStream ois, Connection connection,
                                        ScheduleMultiMap billboard_schedule, BillboardList billboard_list) throws Exception {
@@ -468,6 +444,11 @@ public class BillboardServer {
         billboard_schedule.writeToDbschedule(connection);
     }
 
+    /**
+     * populates queue with schedule from database
+     * @param connection database connection
+     * @throws SQLException invalid SQL query
+     */
     public static void populateQueue (Connection connection) throws SQLException {
 
         //Read data from DB - sort rows in ascending order by start time of viewing
@@ -527,6 +508,15 @@ public class BillboardServer {
 
     }
 
+    /**
+     * Sends name of current billboard displayed to viewer
+     * @param oos Object output stream
+     * @param billboardList list of created billboards
+     * @param billboard_schedule schedule of billboard viewings
+     * @param connection Database connection
+     * @throws Exception IOException, SQLException,
+     * Exception - billboard does not exist, viewing does not exist, invalid duration, invalid recurrence delay
+     **/
     public static void runViewer(ObjectOutputStream oos, BillboardList billboardList, ScheduleMultiMap billboard_schedule, Connection connection) throws Exception {
         //if billboards have been scheduled
         if(queue.length > 0)
@@ -742,6 +732,6 @@ public class BillboardServer {
      * @throws Exception
      */
     public static void main(String args[]) throws Exception {
-        Run_Server();
+        runServer();
     }
 }
