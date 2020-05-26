@@ -25,20 +25,6 @@ class MultiMap<K, V> implements Serializable
     }
 
     /**
-     * Associate the specified key with the given value if not
-     * already associated with a value
-     */
-    public void putIfAbsent(K key, V value) {
-        if (map.get(key) == null)
-            map.put(key, new ArrayList<>());
-
-        // if value is absent, insert it
-        if (!map.get(key).contains(value)) {
-            map.get(key).add(value);
-        }
-    }
-
-    /**
      * Returns the ArrayList of values to which the specified key is mapped,
      * or null if this multimap contains no mapping for the key.
      */
@@ -76,29 +62,12 @@ class MultiMap<K, V> implements Serializable
         return map.remove(key);
     }
 
-    /**
-     * Returns the number of key-value mappings in this map.
-     */
-    public int size() {
-        int size = 0;
-        for (ArrayList<V> value: map.values()) {
-            size += value.size();
-        }
-        return size;
-    }
 
     /**
      * Returns true if this map contains no key-value mappings.
      */
     public boolean isEmpty() {
         return map.isEmpty();
-    }
-
-    /**
-     * Removes all of the mappings from this map.
-     */
-    public void clear() {
-        map.clear();
     }
 
     /**
@@ -109,19 +78,6 @@ class MultiMap<K, V> implements Serializable
         if (map.get(key) != null) // key exists
             return map.get(key).remove(value);
 
-        return false;
-    }
-
-    /**
-     * Replaces the entry for the specified key only if currently
-     * mapped to the specified value and return true if replaced
-     */
-    public boolean replace(K key, V oldValue, V newValue) {
-
-        if (map.get(key) != null) {
-            if (map.get(key).remove(oldValue))
-                return map.get(key).add(newValue);
-        }
         return false;
     }
 }
