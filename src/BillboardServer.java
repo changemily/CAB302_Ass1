@@ -539,15 +539,42 @@ public class BillboardServer {
                 //if billboard viewing recurs
                 if(recurrence_delay != 0)
                 {
+                    //retrieve all viewings of billboard
+                    ArrayList<Schedule_Info> billboard_viewings = billboard_schedule.getSchedule(billboard_name);
+
                     //convert recurrence delay to duration
                     Duration duration_recurrence_delay = Duration.ofMinutes(recurrence_delay);
 
-                    //add delay to current time
+                    //add delay to current time to calculate next start time
                     LocalDateTime new_start_time = next_viewing_time.plus(duration_recurrence_delay);
 
-                    //Reschedule start time of viewing for +1 day
-                    billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,recurrence_delay,
-                            billboardList.billboardHashMap, billboard_creator);
+                    //boolean variable to track whether billboard has been rescheduled
+                    boolean rescheduled = false;
+
+                    //for every viewing of currently displayed billboard
+                    for(Schedule_Info viewing : billboard_viewings)
+                    {
+                        System.out.println("viewing.StartTime_Scheduled: " + viewing.StartTime_Scheduled);
+                        System.out.println("new_start_time: " + new_start_time);
+
+                        //if billboard has been rescheduled
+                        if(viewing.StartTime_Scheduled.equals(new_start_time))
+                        {
+                            //set rescheduled to true
+                            rescheduled = true;
+                            break;
+                        }
+                    }
+
+                    System.out.println("rescheduled: " + rescheduled);
+
+                    //if billboard has not been rescheduled
+                    if (rescheduled == false)
+                    {
+                        //Reschedule start time of viewing for +1 day
+                        billboard_schedule.scheduleBillboard(billboard_name,new_start_time,duration,recurrence_delay,
+                                billboardList.billboardHashMap, billboard_creator);
+                    }
                 }
 
                 //Write schedule changes to DB
@@ -567,6 +594,9 @@ public class BillboardServer {
 
             //update viewer queue
             populateQueue(connection);
+            //send details of "no billboard to display" xml
+            oos.writeObject("no viewing");
+            oos.flush();;
         }
 
         else

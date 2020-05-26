@@ -230,7 +230,7 @@ public class ScheduleMultiMap {
 
                     // OVERLAP MATCHING BILLBOARDS
                     //if new and existing schedules match OR if new viewing fully overlaps existing
-                    if((startTimesEqual  == true && endTimesEqual == true) || (existStartIsBetween == true && existEndIsBetween == true))
+                    if((existStartIsBetween || startTimesEqual) == true && (existEndIsBetween || endTimesEqual == true))
                     {
                         //if number of viewings is 1
                         if (viewings.size() == 1)
