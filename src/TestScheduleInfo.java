@@ -70,7 +70,7 @@ public class TestScheduleInfo {
     //Test 7: construct schedule info object with valid duration - Negative duration
     public void Valid_duration() throws Exception {
         schedule_info = new Schedule_Info(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
-                2, "emily");
+                10, "emily");
         assertEquals(Duration.ofMinutes(5), schedule_info.duration);
     }
 

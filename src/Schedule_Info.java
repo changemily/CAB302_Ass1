@@ -47,6 +47,16 @@ public class Schedule_Info implements Serializable {
             this.duration = duration_mins;
         }
 
+        //returns negative if recurrence_delay is less than duration
+        int compare = Duration.ofMinutes(recurrence_delay).compareTo(this.duration);
+
+        //if the recurrence is smaller than duration
+        if (compare < 0)
+        {
+            //throw exception
+            throw new Exception("Recurrence delay cannot be smaller than the duration of the billboard viewing");
+        }
+
         //if the recurrence option is invalid
         if (recurrence_delay != minutes_inDay && recurrence_delay != minutes_inHour && !(recurrence_delay < minutes_inHour) && recurrence_delay != 0)
         {
