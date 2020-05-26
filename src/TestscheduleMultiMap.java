@@ -36,7 +36,7 @@ public class TestscheduleMultiMap {
 
         //schedule a billboard
         Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDateTime.parse("2021-04-22T10:00:00.00"),
-                Duration.ofMinutes(5),"none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(5),0, billboardList.List_Billboards(), "emily");
 
         //extract schedule info of billboard 1 into collection
         ArrayList<Schedule_Info> schedule_info = Billboard_schedule.getSchedule("Billboard_1");
@@ -57,11 +57,11 @@ public class TestscheduleMultiMap {
 
         //schedule billboard
         Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDateTime.parse("2021-04-22T10:00:00.00"),
-                Duration.ofMinutes(5), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(5), 0,billboardList.List_Billboards(), "emily");
 
         //schedule the same billboard for a different time
         Billboard_schedule.scheduleBillboard("Billboard_1",  LocalDateTime.parse("2021-04-15T10:00:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //extract schedule info of billboard 1 into array list
         ArrayList<Schedule_Info>schedule_info = Billboard_schedule.getSchedule("Billboard_1");
@@ -91,11 +91,11 @@ public class TestscheduleMultiMap {
 
         //Schedule billboard 1 in a vacant time slot
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
-                Duration.ofMinutes(10),"none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10),0, billboardList.List_Billboards(), "emily");
 
         //Schedule billboard 2 in a non-vacant time slot
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-01T10:00:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
         ArrayList<Schedule_Info> time_duration_b2 = Billboard_schedule.getSchedule("Billboard_2");
@@ -135,14 +135,14 @@ public class TestscheduleMultiMap {
 
         //Schedule billboard 1 twice in vacant time slots
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
-                Duration.ofMinutes(10),"none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10),0, billboardList.List_Billboards(), "emily");
 
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-06-10T10:00:00.00"),
-                Duration.ofMinutes(10),"none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10),0, billboardList.List_Billboards(), "emily");
 
         //Schedule billboard 2 in a non-vacant time slot
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-01T10:00:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
         ArrayList<Schedule_Info> time_duration_b2 = Billboard_schedule.getSchedule("Billboard_2");
@@ -183,11 +183,11 @@ public class TestscheduleMultiMap {
 
         //Schedule billboard 1 - displayed from 10:00 -10:01
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-06-10T10:00:00.00"),
-                Duration.ofMinutes(1),"none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(1),0, billboardList.List_Billboards(), "emily");
 
         //Schedule billboard 2 to fully overlap billboard 1 in the schedule - displayed from 9:59 - 10:09
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-06-10T09:59:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //-------------------------------------------------------------
         //Test that billboard 1 is NOT in the schedule
@@ -211,11 +211,11 @@ public class TestscheduleMultiMap {
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //Schedule billboard 2 in a non-vacant time slot from 10:00-10:05 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-01T10:00:00.00"),
-                Duration.ofMinutes(5), "none",billboardList.List_Billboards(),"emily");
+                Duration.ofMinutes(5), 0,billboardList.List_Billboards(),"emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
         ArrayList<Schedule_Info> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
@@ -256,11 +256,11 @@ public class TestscheduleMultiMap {
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //Schedule billboard 2 in a non-vacant time slot from 10:05-10:15 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-01T10:05:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
         ArrayList<Schedule_Info> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
@@ -301,11 +301,11 @@ public class TestscheduleMultiMap {
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //Schedule billboard 2 in a non-vacant time slot from 10:05-10:10 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-01T10:05:00.00"),
-                Duration.ofMinutes(5), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(5), 0,billboardList.List_Billboards(), "emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
         ArrayList<Schedule_Info> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
@@ -346,11 +346,11 @@ public class TestscheduleMultiMap {
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //Schedule billboard 2 in a non-vacant time slot from 9:55-10:05 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-01T09:55:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
         ArrayList<Schedule_Info> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
@@ -391,11 +391,11 @@ public class TestscheduleMultiMap {
 
         //Schedule billboard 1 in a non-vacant time slot from 9:55-10:10 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-01T09:55:00.00"),
-                Duration.ofMinutes(15), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(15), 0,billboardList.List_Billboards(), "emily");
 
         //Schedule billboard 2 in a vacant time slot from 10:00-10:05 on 01-05-2021
         Billboard_schedule.scheduleBillboard("Billboard_2",LocalDateTime.parse("2021-05-01T10:00:00.00"),
-                Duration.ofMinutes(5), "none",billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(5), 0,billboardList.List_Billboards(), "emily");
 
 
         //store scheduled time and duration of billboard 2 in an ArrayList
@@ -439,7 +439,7 @@ public class TestscheduleMultiMap {
         assertThrows(Exception.class,() -> {
             //schedule billboard for date in the past
             Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2000-01-01T10:00:00.00"),
-                    Duration.ofMinutes(10), "none",billboardList.List_Billboards(),"emily");
+                    Duration.ofMinutes(10), 0,billboardList.List_Billboards(),"emily");
         });
     }
 
@@ -453,7 +453,7 @@ public class TestscheduleMultiMap {
         assertThrows(Exception.class,() -> {
             //schedule billboard for negative
             Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-01-01T10:00:00.00"),
-                    Duration.ofMinutes(-1),"none", billboardList.List_Billboards(), "emily");
+                    Duration.ofMinutes(-1),0, billboardList.List_Billboards(), "emily");
         });
     }
 
@@ -467,7 +467,7 @@ public class TestscheduleMultiMap {
         assertThrows(Exception.class,() -> {
             //schedule billboard for negative
             Billboard_schedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-01-01T10:00:00.00"),
-                    Duration.ofMinutes(0), "none",billboardList.List_Billboards(),"emily");
+                    Duration.ofMinutes(0), 0,billboardList.List_Billboards(),"emily");
         });
     }
 
@@ -478,7 +478,7 @@ public class TestscheduleMultiMap {
         assertThrows(Exception.class,() -> {
             //schedule billboard that does not exist
             Billboard_schedule.scheduleBillboard("nonexistent",LocalDateTime.parse("01-01-2021T10:00:00.00"),
-                    Duration.ofMinutes(10),"none", billboardList.List_Billboards(), "emily");
+                    Duration.ofMinutes(10),0, billboardList.List_Billboards(), "emily");
         });
     }
 
@@ -505,11 +505,11 @@ public class TestscheduleMultiMap {
 
         //add billboards to schedule
         Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-01-10T10:00:00.00"),
-                Duration.ofMinutes(10), "none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0, billboardList.List_Billboards(), "emily");
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-04T10:00:00.00"),
-                Duration.ofMinutes(15), "none",billboardList.List_Billboards(),"emily");
+                Duration.ofMinutes(15), 0,billboardList.List_Billboards(),"emily");
         Billboard_schedule.scheduleBillboard("Billboard_3", LocalDateTime.parse("2021-05-03T10:00:00.00"),
-                Duration.ofMinutes(5),"none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(5),0, billboardList.List_Billboards(), "emily");
 
         //remove billboard from schedule
         Billboard_schedule.Schedule_Remove_billboard("Billboard_2",Billboard_schedule.getSchedule("Billboard_2").get(0));
@@ -531,16 +531,16 @@ public class TestscheduleMultiMap {
 
         //schedule billboard multiple times
         Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-01-10T10:00:00.00"),
-                Duration.ofMinutes(10), "none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0, billboardList.List_Billboards(), "emily");
         Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-04T10:00:00.00"),
-                Duration.ofMinutes(10), "none",billboardList.List_Billboards(),"emily");
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(),"emily");
 
         //get viewings of billboard 1
         ArrayList<Schedule_Info> billboard_viewings = Billboard_schedule.getSchedule("Billboard_1");
 
         //schedule info of viewing being removed
         Schedule_Info removed_schedule_info= new Schedule_Info(LocalDateTime.parse("2021-01-10T10:00:00.00"),
-                Duration.ofMinutes(10), "none", "emily");
+                Duration.ofMinutes(10), 0, "emily");
 
         //remove billboard from schedule
         Billboard_schedule.Schedule_Remove_billboard("Billboard_1",removed_schedule_info);
@@ -563,7 +563,7 @@ public class TestscheduleMultiMap {
     public void RemoveSchedule_invalidBillboardName() throws Exception
     {
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
-                Duration.ofMinutes(15),"none", "emily");
+                Duration.ofMinutes(15),0, "emily");
 
 
         assertThrows(Exception.class,() -> {
@@ -581,15 +581,15 @@ public class TestscheduleMultiMap {
         billboardList.Create_edit_Billboard("Billboard_1", "hello","#000000","No Image", "emily");
 
         //schedule billboard twice
-        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-10T10:00:00.00"), Duration.ofMinutes(10), "none",
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-10T10:00:00.00"), Duration.ofMinutes(10), 0,
                 billboardList.List_Billboards(), "emily");
 
-        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-11T10:00:00.00"), Duration.ofMinutes(10), "none",
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-11T10:00:00.00"), Duration.ofMinutes(10), 0,
                 billboardList.List_Billboards(), "emily");
 
         //schedule info that does not match bb scheduled
         Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
-                Duration.ofMinutes(15),"none", "emily");
+                Duration.ofMinutes(15),0, "emily");
 
         assertThrows(Exception.class,() -> {
             //remove viewing from schedule that does not exist
@@ -610,11 +610,11 @@ public class TestscheduleMultiMap {
 
         //add billboards to schedule
         Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-05T10:00:00.00"),
-                Duration.ofMinutes(10), "none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(10), 0, billboardList.List_Billboards(), "emily");
         Billboard_schedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-04T10:00:00.00"),
-                Duration.ofMinutes(15), "none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(15), 0, billboardList.List_Billboards(), "emily");
         Billboard_schedule.scheduleBillboard("Billboard_3", LocalDateTime.parse("2021-05-03T10:00:00.00"),
-                Duration.ofMinutes(5), "none", billboardList.List_Billboards(), "emily");
+                Duration.ofMinutes(5), 0, billboardList.List_Billboards(), "emily");
 
         //store billboard schedule in MultiMap
         MultiMap<String, Schedule_Info> viewSchedule_list = Billboard_schedule.View_schedule();

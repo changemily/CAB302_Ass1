@@ -138,7 +138,7 @@ public class TestbillboardList<E> {
 
         //Schedule Billboard1
         billboardList.scheduleMultiMap.scheduleBillboard("Billboard1",  LocalDateTime.parse("2021-04-22T10:00:00.00"),
-                Duration.ofMinutes(5),"none", billboardList.List_Billboards(), "jarod");;
+                Duration.ofMinutes(5),0, billboardList.List_Billboards(), "jarod");;
 
         //Delete Billboard1
         billboardList.Delete_billboard("Billboard1");
