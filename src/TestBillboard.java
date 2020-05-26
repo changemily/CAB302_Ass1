@@ -13,14 +13,18 @@ public class TestBillboard {
 
     Billboard billboard;
 
-    // Test 1: Constructing a Billboard object with scheduled time
+    /**
+     * Test 1: Constructing a Billboard object with scheduled time
+     */
     @BeforeEach @Test
     public void setUpBillboard() {
         billboard = new Billboard("Billboard 1", "Hello World", "blue", "image.jpg", "jarod");
     }
 
     @Test
-    // Test 1.3: Constructing a Billboard object without image
+    /**
+     * Test 2: Constructing a Billboard object without image
+     */
     public void setUpBillboard_img() {
         Billboard billboard3 = new Billboard("Billboard 2", "Hello World", "red", "No Image","jarod");
     }
