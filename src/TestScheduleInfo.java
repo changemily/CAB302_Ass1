@@ -49,6 +49,15 @@ public class TestScheduleInfo {
     }
 
     @Test
+    // Test 4: construct schedule info object that recurs every 3 mins
+    public void recurrence_none() throws Exception {
+        schedule_info = new Schedule_Info(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
+                0, "emily");
+
+        assertEquals(0, schedule_info.Recurrence_delay);
+    }
+
+    @Test
     // Test 5: construct schedule info object with invalid recurrence delay - invalid option, larger than 60 mins and not an hr or day
     public void invalid_recurrence() throws Exception {
         assertThrows(Exception.class,() -> {

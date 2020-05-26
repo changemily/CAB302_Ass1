@@ -11,9 +11,6 @@ import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.Timer;
-
-import static sun.security.krb5.internal.crypto.dk.DkCrypto.bytesToString;
 
 /**
  * Billboard server class
