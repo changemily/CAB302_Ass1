@@ -1,6 +1,8 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,6 +12,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Timer;
+
+import static sun.security.krb5.internal.crypto.dk.DkCrypto.bytesToString;
 
 /**
  * Billboard server class
@@ -125,6 +129,8 @@ public class BillboardServer {
 
                         System.out.println("Username: " +username);
                         System.out.println("Password: " +password);
+
+                        saltAndCheckUserCredentials(oos, ois, connection);
 
                         //retrieve salted pwd from DB
                         //unsalt pwd
@@ -255,6 +261,42 @@ public class BillboardServer {
         }
     }
 
+    /**
+     * Receives a users hashed password, salts it and then check it against the database to decide if the user is
+     * authenticated or not.
+     * @param oos Object output stream of the server
+     * @param ois Object Input stream
+     * @param connection connection to the db
+     * @throws Exception
+     */
+    public static void saltAndCheckUserCredentials(ObjectOutputStream oos, ObjectInputStream ois, Connection connection) throws SQLException, IOException, ClassNotFoundException, NoSuchAlgorithmException {
+        //Setup ready for hashing
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+
+        //Get the inputted username hashed password
+        String userName = ois.readObject().toString();
+        String hashedPassword = ois.readObject().toString();
+
+        //SQL statement for retrieving user details
+        final String SELECT = "SELECT * FROM User WHERE username "+userName;
+        //create statement
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(SELECT);
+
+        //Retrieve the Salt and Salted Hashed Password from the database
+        String saltString = rs.getString(2);
+        String saltedPasswordDB = rs.getString(1);
+
+        //Add a salt to the user inputted hashed password
+        String inputtedPasswordSalted = (messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
+
+        //Compare the two salted and hashed passwords
+        if(inputtedPasswordSalted == saltedPasswordDB){
+            oos.writeObject("Valid");
+        }else{
+            oos.writeObject("In-valid");
+        }
+    }
 
     /**
      * Sends a list of billboards to the client
