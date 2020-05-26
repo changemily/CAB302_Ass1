@@ -35,8 +35,8 @@ public class BillboardServer {
     //Create queue 2D array
     private static String [][] queue = new String [0][0];
 
-    final int minutes_inDay = 1440;
-    final int minutes_inHour = 60;
+    final int MINUTES_IN_DAY = 1440;
+    final int MINUTES_IN_HOUR = 60;
 
     //Setup another hashmap to store an id and hasmap of the token and its timer
     HashMap<Integer, Timer> SessionCombinedHashmap;
