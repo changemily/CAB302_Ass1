@@ -490,7 +490,13 @@ public class BillboardViewer extends JFrame{
             totalHeight = fontHeight * fontLines;
         }
 
-        double stringLineRound = Math.floor(fontLines); // round down current lines of editorPane
+        double stringLineRound;
+        if(fontLines >= 1) { // don't round down to 0 lines
+            stringLineRound = Math.floor(fontLines); // round down current lines of editorPane
+        }
+        else{
+            stringLineRound = fontLines;
+        }
 
         while(fontLines > stringLineRound){ // reduce font size to fit under rounded line count
             fontSize -= 1;
@@ -501,7 +507,13 @@ public class BillboardViewer extends JFrame{
             fontWidth = textLabel.getFontMetrics(textFont).stringWidth(textLabel.getText());
             fontLines = fontWidth / maxWidth;
         }
-        return((int)(fontHeight * stringLineRound));
+        if(fontLines >= 1) { // don't round down to below 1 lines
+            return((int)(fontHeight * stringLineRound));
+        }
+        else{
+            return fontHeight; // return a full line
+        }
+
     }
 
     /**
@@ -917,7 +929,7 @@ public class BillboardViewer extends JFrame{
      * @param args (String[])
      * @throws IOException (error)
      */
-    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, InterruptedException {
+    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
         //File file = new File("./3.xml");
         //BillboardViewer BV = new BillboardViewer(file, true);
         //BV.setInformationText("Changed Text");
@@ -926,18 +938,11 @@ public class BillboardViewer extends JFrame{
         //new BillboardViewer();
         //BillboardViewer BV = new BillboardViewer(file, true);
         JFrame screen = new JFrame();
-        File file = new File("./3.xml");
-        File file2 = new File("./5.xml");
+        File file = new File("./5.xml");
         BillboardViewer BV = new BillboardViewer(file,new Dimension(1920, 1080));
         JPanel fileBB = BV.getSizedBillboard();
-        BV = new BillboardViewer(file2, new Dimension(1920, 1080));
-        JPanel file2BB = BV.getSizedBillboard();
         screen.add(fileBB);
         screen.pack();
         screen.setVisible(true);
-        Thread.sleep(5000);
-        screen.remove(fileBB);
-        screen.add(file2BB);
-        screen.pack();
     }
 }
