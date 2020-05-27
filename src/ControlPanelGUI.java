@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 /**
  * Control Panel GUI class
@@ -10,7 +9,7 @@ import java.io.IOException;
  * @author - Nickhil Nischal
  * @version - under development
  *
- * NOTES: Current version is a basic design; button functionality still needs to be added; further refinement required
+ * NOTES: Some button functionality still needs to be added
  */
 public class ControlPanelGUI extends JFrame implements Runnable, ActionListener {
     /**
@@ -23,7 +22,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
     JButton editUsersButton;
     JButton editBillboardButton;
-    JButton editBillboardScheduleButton;
+    JButton viewBillboardScheduleButton;
 
     public ControlPanelGUI(){
         // Set window title
@@ -51,9 +50,9 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         JPanel editBillboardPanel = createButtonJPanel(editBillboardButton);
 
         // create edit billboard schedule button
-        editBillboardScheduleButton = createButton("View Billboard Schedule");
+        viewBillboardScheduleButton = createButton("View Billboard Schedule");
         //create JPanel that holds button
-        JPanel editBillboardSchedulePanel = createButtonJPanel(editBillboardScheduleButton);
+        JPanel editBillboardSchedulePanel = createButtonJPanel(viewBillboardScheduleButton);
 
         //Add label and buttons to content pane
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -109,11 +108,11 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        //Get button that has been clicked - event source
+        // Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
 
         if (buttonClicked==editUsersButton) {
-            //run User Control Panel GUI
+            // Open User Control Panel GUI
             SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel());
         }
 
@@ -122,9 +121,13 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             String [] user_input = {"List billboards"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
+
+            // Open Billboard Control Panel Screen
+            SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel());
+
         }
 
-        else if (buttonClicked == editBillboardScheduleButton)
+        else if (buttonClicked == viewBillboardScheduleButton)
         {
             String [] user_input = {"View schedule"};
             //request schedule and run calendar GUI
