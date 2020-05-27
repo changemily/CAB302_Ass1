@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import javax.swing.*;
@@ -27,7 +28,8 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // Create DurationSpinner
-        JSpinner DurationSpinner = new JSpinner();
+        SpinnerModel durationModel = new SpinnerNumberModel(0, 0, 1440, 1);
+        JSpinner DurationSpinner = new JSpinner(durationModel);
         DurationSpinner.setFont(DurationSpinner.getFont().deriveFont(DurationSpinner.getFont().getSize() + 7f));
 
         // Create DurationLabel
@@ -38,24 +40,46 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 
         // Create DatePickerLabel
         JLabel DatePickerLabel = new JLabel();
-        DatePickerLabel.setText("Date Scheduled");
+        DatePickerLabel.setText("Date and Time");
         DatePickerLabel.setFont(DatePickerLabel.getFont().deriveFont(DatePickerLabel.getFont().getSize() + 5f));
         DatePickerLabel.setAlignmentX(0.5F);
 
-        // Create Date Picker
-        JLabel DP = new JLabel();
+        // Create lists for frequency, day and hour options for combo boxes
+        String[] FrequencyOptions = { "Every X Minute(s)", "Every Hour", "Every Day" };
+        String[] dayOptions = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+        String[] timeOptions = { "12am", "1am", "2am", "3am", "4am", "5am", "6am", "7am", "8am", "9am", "10am", "11am",
+                "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm",};
+
+        // Create Day Picker
+        JComboBox dayPicker = new JComboBox(dayOptions);
+
+        // Create Time Picker
+        JComboBox timePicker = new JComboBox(timeOptions);
 
         // Create FrequencyLabel
         JLabel FrequencyLabel = new JLabel();
-        FrequencyLabel.setText("Frequency Label");
+        FrequencyLabel.setText("Repeat Frequency");
         FrequencyLabel.setFont(FrequencyLabel.getFont().deriveFont(FrequencyLabel.getFont().getSize() + 5f));
         FrequencyLabel.setAlignmentX(0.5F);
 
-        // Create list of frequency options
-        String[] FrequencyOptions = { "Every Minute", "Every Hour", "Every Day" };
+        // Create frequencySpinner
+        SpinnerModel frequencyModel = new SpinnerNumberModel(0, 0, 59, 1);
+        JSpinner frequencySpinner = new JSpinner(frequencyModel);
+        frequencySpinner.setFont(DurationSpinner.getFont().deriveFont(DurationSpinner.getFont().getSize() + 7f));
 
         // Create FrequencyPicker
         JComboBox FrequencyPicker = new JComboBox(FrequencyOptions);
+        FrequencyPicker.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(FrequencyPicker.getSelectedIndex() == 0) {
+                    frequencySpinner.setVisible(true);
+                } else
+                {
+                    frequencySpinner.setVisible(false);
+                }
+            }
+        });
 
         // Create Remove Button
         RemoveBttn = new JButton();
@@ -84,46 +108,55 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         getContentPane().setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
                 contentPaneLayout.createParallelGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(RemoveBttn, GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(SaveBttn, GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                                .addContainerGap())
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addGap(24, 24, 24)
+                                .addGap(50, 50, 50)
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addComponent(RemoveBttn, GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(SaveBttn, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                                                .addComponent(frequencySpinner, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+                                                .addContainerGap(200, Short.MAX_VALUE))
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addGap(26, 26, 26)
-                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                        .addComponent(dayPicker, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                                                        .addComponent(timePicker, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
                                                         .addComponent(FrequencyPicker, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
-                                                        .addComponent(DP)
                                                         .addComponent(DurationSpinner, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
-                                                .addGap(46, 46, 46)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                                                 .addGroup(contentPaneLayout.createParallelGroup()
                                                         .addComponent(DurationLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(FrequencyLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(DatePickerLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                .addContainerGap(22, Short.MAX_VALUE))
+                                                        .addComponent(DatePickerLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(FrequencyLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGap(18, 18, 18))))
         );
         contentPaneLayout.setVerticalGroup(
                 contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
                                 .addGap(16, 16, 16)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(DurationSpinner, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                                        .addComponent(DurationLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-                                .addGap(29, 29, 29)
+                                        .addComponent(DurationLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                                        .addComponent(DurationSpinner, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(DP, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                                        .addComponent(DatePickerLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-                                .addGap(29, 29, 29)
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(FrequencyPicker, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                                        .addComponent(FrequencyLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                                        .addComponent(dayPicker, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(DatePickerLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(timePicker, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(FrequencyLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                                        .addComponent(FrequencyPicker, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(frequencySpinner, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(RemoveBttn, GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                                         .addComponent(SaveBttn, GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
-                                .addGap(17, 17, 17))
+                                .addContainerGap())
         );
 
         pack();
