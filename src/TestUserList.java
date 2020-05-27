@@ -55,7 +55,6 @@ public class TestUserList {
     public void removeUserNonExist() throws Exception{
         UserList userList = new UserList();
         User newUser = new User("admin", "password");
-        userList.deleteUser(newUser);
         assertThrows(Exception.class, () -> userList.deleteUser(newUser));
     }
 
@@ -63,10 +62,9 @@ public class TestUserList {
     public void modifyUser() throws Exception{
         UserList userList = new UserList();
         User newUser = new User("admin", "password");
-        User newUser2 = new User("admin2", "password");
+        User newUser2 = new User("admin", "password1");
         userList.addUserToList(newUser);
         userList.modifyUser(newUser, newUser2);
-        assertThrows(Exception.class, () -> userList.getUserInformation("admin"));
-        assertEquals(userList.getUserInformation("admin2"), newUser2);
+        assertEquals(userList.getUserInformation("admin"), newUser2);
     }
 }
