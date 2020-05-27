@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  * User Control Panel class for Control Panel GUI
- * This class contains a Main method and method that creates a GUI window for the User Control Panel
+ * This class contains a method that creates a GUI window for the User Control Panel
  * @author - Nickhil Nischal
  * @version - under development
  *
@@ -339,25 +339,60 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         //Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
 
+        String userType = "admin"; // USED FOR TESTING
+
         // Checks if the login button has been clicked
         if (buttonClicked == editUserButton) {
             System.out.println("edit user button clicked with " + userSelectionLabel.getText() + " selected");
             //run user (to check if admin), then if admin open Create/Edit User GUI
-            //SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel());
+
+            if (!userType.equals("admin")) {
+                JOptionPane.showMessageDialog(this,
+                        "You do not have Admin permissions to edit a user.");
+            }
+
+            else if (userSelectionLabel.getText().equals("") || userSelectionLabel.getText() == null) {
+                // Add message dialog, a user has not been selected from the list
+            }
+
+            else {
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
+            }
         }
 
         // Checks if the delete user button has been clicked
         else if (buttonClicked == deleteUserButton) {
             System.out.println("delete user button clicked with " + userSelectionLabel.getText() + " selected");
             //run user (to check if admin), then if admin open dialog double checking if user should be deleted or not
-            //SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel());
+
+            if (!userType.equals("admin")) {
+                JOptionPane.showMessageDialog(this,
+                        "You do not have Admin permissions to delete a user.");
+            }
+
+            else if (userSelectionLabel.getText().equals("") || userSelectionLabel.getText() == null) {
+                // Add message dialog, a user has not been selected from the list
+            }
+
+            else {
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
+            }
         }
 
         // Checks if the create user button has been clicked
         else if (buttonClicked == createUserButton) {
             System.out.println("create user button clicked");
             //run user (to check if admin), then if admin open Create/Edit User GUI
-            //SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel());
+
+            if (userType.equals("admin")) {
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
+            }
+
+            else {
+                // Display an Error Message Dialog, alerting the user that the entered credentials are incorrect
+                JOptionPane.showMessageDialog(this,
+                        "You do not have Admin permissions to create a new user.");
+            }
         }
 
     }
