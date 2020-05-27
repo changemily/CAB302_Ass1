@@ -184,10 +184,10 @@ public class ScheduleMultiMap {
                 LocalDateTime newBBEndTime= newBBStartTime.plus(newBBDuration);
 
                 //create collection to store viewings of billboard
-                Collection<ScheduleInfo>viewings = scheduleMultiMap.get(existingBillboard);
+                ArrayList<ScheduleInfo> viewings = new ArrayList<ScheduleInfo>(scheduleMultiMap.get(existingBillboard));
 
                 //for every viewing of billboard
-                for ( ScheduleInfo viewing : viewings ) {
+                for ( ScheduleInfo viewing : viewings) {
 
                     //store viewing info of existing billboard in local variables
                     Duration existBBDuration = viewing.duration;
