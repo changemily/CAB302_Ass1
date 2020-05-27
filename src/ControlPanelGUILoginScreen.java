@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
  * @author - Nickhil Nischal
  * @version - under development
  *
- * NOTES: Current version is a basic design; button functionality still needs to be added; further refinement required
+ * NOTES: User credentials check to be added
  */
 public class ControlPanelGUILoginScreen extends JFrame implements Runnable, ActionListener {
     JButton loginButton;
@@ -164,16 +164,32 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        //Get button that has been clicked - event source
+        // Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
+
+        // Username and Password variables from JTextFields
+        String usernameText = username.getText();
+        String passwordText = password.getText();
 
         // Checks if the login button has been clicked
         if (buttonClicked==loginButton) {
-            System.out.println("login button clicked");
-            System.out.println(username.getText());
-            System.out.println(password.getText());
-            //run login credentials check with username and password, then if successful open Control Panel GUI
-            //SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel());
+            // Check if the provided credentials are correct, then if successful open Control Panel GUI
+            if (usernameText.equals("user") && passwordText.equals("password")) { // VALUES USED ONLY FOR TESTING
+                // Open Control Panel GUI Screen
+                SwingUtilities.invokeLater(new ControlPanelGUI());
+
+                // Close Login Screen
+                dispose();
+            }
+
+            // Credentials are incorrect
+            else {
+                // Display an Error Message Dialog, alerting the user that the entered credentials are incorrect
+                JOptionPane.showMessageDialog(this,
+                        "The entered username or password is incorrect, please try again.",
+                        "Invalid Credentials",JOptionPane.ERROR_MESSAGE);
+            }
+
         }
     }
 
