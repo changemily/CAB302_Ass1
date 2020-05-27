@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 /**
  * Control Panel GUI class
- * This class contains a Main method and method that creates a GUI window for the Control Panel Menu
+ * This class contains a Main method and method that creates a GUI window for the Control Panel GUI screen
  * @author - Nickhil Nischal
  * @version - under development
  *
@@ -56,7 +56,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         //Add label and buttons to content pane
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-        getContentPane().add(Box.createVerticalStrut(30));
+        getContentPane().add(Box.createVerticalStrut(50));
         getContentPane().add(label);
         getContentPane().add(Box.createVerticalStrut(50));
         getContentPane().add(editUsersPanel);
@@ -64,45 +64,65 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         getContentPane().add(editBillboardPanel);
         getContentPane().add(Box.createVerticalStrut(25));
         getContentPane().add(editBillboardSchedulePanel);
-        getContentPane().add(Box.createVerticalStrut(30));
+        getContentPane().add(Box.createVerticalStrut(50));
 
         // Format window
-        setPreferredSize(new Dimension(600,400));
-        setLocation(new Point(100,100));
         pack();
         setLocationRelativeTo(null); // centers window
         setVisible(true);
     }
 
     private JPanel createLabel(String labelText) {
+        // Create new JPanel
         JPanel labelPanel = new JPanel();
+
+        // Set box layout
         labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
-        labelPanel.add(Box.createHorizontalGlue());
+
+        // Create new JLabel
         JLabel label = new JLabel(labelText);
+
+        // Center align label
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Add JLabel to JPanel
         labelPanel.add(label);
-        labelPanel.add(Box.createHorizontalGlue());
+
+        // Returns a JPanel
         return labelPanel;
     }
 
     private JPanel createButtonJPanel(JButton button) {
-        //create new JPanel to hold button
+        // Create new JPanel to hold button
         JPanel buttonPanel = new JPanel();
-        //set box layout
+
+        // Set box layout
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-        buttonPanel.add(Box.createHorizontalGlue());
-        //add new button to button Panel
+
+        // Add horizontal strut for formatting
+        buttonPanel.add(Box.createHorizontalStrut(150));
+
+        // Add new button to button JPanel
         buttonPanel.add(button);
-        buttonPanel.add(Box.createHorizontalGlue());
+
+        // Add horizontal strut for formatting
+        buttonPanel.add(Box.createHorizontalStrut(150));
+
+        // Returns a JPanel
         return buttonPanel;
     }
 
     private JButton createButton(String buttonLabel) {
-        //Create a JButton object and store it in a local var
+        // Create a JButton object and store it in a local variable
         JButton button = new JButton(buttonLabel);
+
+        // Center align button
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //Add the frame as an actionListener
         button.addActionListener(this);
 
+        // Returns a JButton
         return button;
     }
 
