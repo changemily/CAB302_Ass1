@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
  * @version complete
  */
 public class ScheduleInfo implements Serializable {
-    final int MINUTES_IN_DAY = 1440;
-    final int MINUTES_IN_HOUR = 60;
+    private final int MINUTES_IN_DAY = 1440;
+    private final int MINUTES_IN_HOUR = 60;
 
     LocalDateTime startTimeScheduled;
     Duration duration;

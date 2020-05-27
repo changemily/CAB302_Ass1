@@ -112,11 +112,11 @@ public class TestbillboardList<E> {
 
         //Test if retrieved Billboard variables equal the original requested_billboard info.
         //If the billboards are the same it means the correct billboard info requested is being displayed.
-        assertEquals("Billboard2", temp_billboard.Billboard_name);
-        assertEquals("new billboard", temp_billboard.Billboard_text);
-        assertEquals("#4287f5", temp_billboard.Bg_colour);
-        assertEquals(null, temp_billboard.Image_file);
-        assertEquals("jarod", temp_billboard.Billboard_creator);
+        assertEquals("Billboard2", temp_billboard.BillboardName);
+        assertEquals("new billboard", temp_billboard.BillboardText);
+        assertEquals("#4287f5", temp_billboard.BgColour);
+        assertEquals(null, temp_billboard.ImageFile);
+        assertEquals("jarod", temp_billboard.BillboardCreator);
     }
 
     //Test 7: If Get_billboard_info attempts to retrieve information from a billboard that doesn't exist.

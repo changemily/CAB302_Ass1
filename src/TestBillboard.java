@@ -11,14 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class TestBillboard {
 
-    Billboard billboard;
-
     /**
-     * Test 1: Constructing a Billboard object with scheduled time
+     * Test 1: Constructing a Billboard object with a scheduled time
      */
     @BeforeEach @Test
     public void setUpBillboard() {
-        billboard = new Billboard("Billboard 1", "Hello World", "blue", "image.jpg", "jarod");
+        new Billboard("Billboard 1", "Hello World", "blue", "image.jpg", "jarod");
     }
 
     @Test
@@ -26,6 +24,6 @@ public class TestBillboard {
      * Test 2: Constructing a Billboard object without image
      */
     public void setUpBillboardImg() {
-        Billboard billboard3 = new Billboard("Billboard 2", "Hello World", "red", "No Image","jarod");
+        new Billboard("Billboard 2", "Hello World", "red", "No Image","jarod");
     }
 }

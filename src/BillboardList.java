@@ -220,11 +220,11 @@ public class BillboardList implements java.io.Serializable {
         for (Billboard billboard : billboardHashMap.values() ) {
 
             //Pass the values of each billboard to the SQL statement.
-            String billboard_name = billboard.Billboard_name;
-            String text = billboard.Billboard_text;
-            String bg_colour = billboard.Bg_colour;
-            String image_file = billboard.Image_file;
-            String billboard_creator = billboard.Billboard_creator;
+            String billboard_name = billboard.BillboardName;
+            String text = billboard.BillboardText;
+            String bg_colour = billboard.BgColour;
+            String image_file = billboard.ImageFile;
+            String billboard_creator = billboard.BillboardCreator;
 
             st.executeQuery("INSERT INTO Billboards (billboard_name, text, bg_colour, image_file, billboard_creator) " +
                     "VALUES(\""+billboard_name+"\",\""+text+"\",\""+bg_colour+"\",\""+image_file+"\",\""+billboard_creator+"\");");
@@ -308,7 +308,7 @@ public class BillboardList implements java.io.Serializable {
         Billboard billboardDetails = Get_billboard_info(billboardName);
 
         //Create an xml file to store the information in.
-        String xmlFile = billboardDetails.Billboard_name;
+        String xmlFile = billboardDetails.BillboardName;
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
@@ -318,15 +318,15 @@ public class BillboardList implements java.io.Serializable {
         //Store the text of the billboard in the xml file.
         XPath xPath = XPathFactory.newInstance().newXPath();
         Node billboardText = (Node) xPath.compile("/billboard/message").evaluate(document, XPathConstants.NODE);
-        billboardText.setTextContent(billboardDetails.Billboard_text);
+        billboardText.setTextContent(billboardDetails.BillboardText);
 
         //Store the bg colour of the billboard in the xml file.
         Element bgColour = (Element) document.getElementsByTagName("billboard").item(0);
-        bgColour.setAttribute("background", billboardDetails.Bg_colour);
+        bgColour.setAttribute("background", billboardDetails.BgColour);
 
         //Store the text of the billboard in the xml file.
         xPath = XPathFactory.newInstance().newXPath();
         Node billboardImage = (Node) xPath.compile("/billboard/picture").evaluate(document, XPathConstants.NODE);
-        billboardImage.setTextContent(billboardDetails.Image_file);
+        billboardImage.setTextContent(billboardDetails.ImageFile);
     }
 }

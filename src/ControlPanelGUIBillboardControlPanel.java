@@ -1,13 +1,11 @@
 import org.xml.sax.SAXException;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -146,9 +144,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //Initialize array with the new size and repopulate it
             //billboardListWithCreator = new String[counter];
             //Assign creator name to position one in the 2D array
-            billboardListWithCreator[counter] = billboardEntry.getValue().Billboard_creator;
+            billboardListWithCreator[counter] = billboardEntry.getValue().BillboardCreator;
             //Assign billboard name to the second position in the 2D array
-            billboardListWithCreator[counter] = billboardEntry.getValue().Billboard_name + ", "
+            billboardListWithCreator[counter] = billboardEntry.getValue().BillboardName + ", "
                     + billboardListWithCreator[counter];
             counter++;
         }

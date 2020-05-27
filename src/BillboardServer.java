@@ -296,9 +296,9 @@ public class BillboardServer {
 
         Billboard BillboardInfo = billboardList.Get_billboard_info(billboardName);
         System.out.println("billboard infos: "+ billboardList.Get_billboard_info(billboardName));
-        System.out.println("billboard name: "+BillboardInfo.Billboard_name);
-        System.out.println("billboard bg colour: "+BillboardInfo.Bg_colour);
-        System.out.println("billboard image file: "+BillboardInfo.Image_file);
+        System.out.println("billboard name: "+BillboardInfo.BillboardName);
+        System.out.println("billboard bg colour: "+BillboardInfo.BgColour);
+        System.out.println("billboard image file: "+BillboardInfo.ImageFile);
     }
 
     /**
@@ -390,7 +390,7 @@ public class BillboardServer {
         String recurrenceDelay = ois.readObject().toString();
 
         Billboard billboard = billboardList.Get_billboard_info(billboardName);
-        String billboardCreator = billboard.Billboard_creator;
+        String billboardCreator = billboard.BillboardCreator;
 
         //Clear schedule table in DB
         billboardSchedule.clearDBschedule(connection);
@@ -428,7 +428,7 @@ public class BillboardServer {
         Billboard billboard = billboardList.Get_billboard_info(billboardName);
 
         //retrieve billboard creator
-        String billboardCreator = billboard.Billboard_creator;
+        String billboardCreator = billboard.BillboardCreator;
 
         //create schedule info object with client's input
         ScheduleInfo scheduleInfo = new ScheduleInfo(LocalDateTime.parse(startTime),
