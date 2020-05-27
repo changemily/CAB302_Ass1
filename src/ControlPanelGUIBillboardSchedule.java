@@ -1,11 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -136,19 +133,19 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         for (Object billboard_name : billboard_schedule.keySet() ) {
 
             //create array list to store viewings of billboard
-            ArrayList<Schedule_Info> viewings = billboard_schedule.get(billboard_name);
+            ArrayList<ScheduleInfo> viewings = billboard_schedule.get(billboard_name);
 
             //for every viewing of billboard
-            for ( Schedule_Info viewing : viewings ) {
+            for ( ScheduleInfo viewing : viewings ) {
 
                 //store scheduled date time of billboard in local var
-                LocalDateTime scheduled_date_time = viewing.StartTime_Scheduled;
+                LocalDateTime scheduled_date_time = viewing.startTimeScheduled;
 
                 //store current date time in local var
                 LocalDateTime current_date_time = LocalDateTime.now();
 
                 //round scheduled date time up in days
-                LocalDateTime ceiling_scheduled_date_time = viewing.StartTime_Scheduled.truncatedTo(DAYS).plusDays(1);
+                LocalDateTime ceiling_scheduled_date_time = viewing.startTimeScheduled.truncatedTo(DAYS).plusDays(1);
 
                 //round current date time up in days
                 LocalDateTime ceiling_current_date_time = LocalDateTime.now().truncatedTo(DAYS).plusDays(1);
@@ -188,7 +185,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
                     String temp_cell_string = data[billboard_hour][day_int];
 
                     //add billboard name and creator to string in cell
-                    temp_cell_string += billboard_name + " by " + viewing.Billboard_creator + "\n";
+                    temp_cell_string += billboard_name + " by " + viewing.billboardCreator + "\n";
 
                     //replace all instances of null with empty string
                     String cell_string = temp_cell_string.replaceAll("null", "");

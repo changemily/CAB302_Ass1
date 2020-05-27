@@ -39,10 +39,10 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(5),0, billboardList.List_Billboards(), "emily");
 
         //extract schedule info of billboard 1 into collection
-        ArrayList<Schedule_Info> schedule_info = Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ScheduleInfo> schedule_info = Billboard_schedule.getSchedule("Billboard_1");
 
         //Test if schedule information matches info entered
-        assertEquals(LocalDateTime.parse("2021-04-22T10:00:00.00"), schedule_info.get(0).StartTime_Scheduled);
+        assertEquals(LocalDateTime.parse("2021-04-22T10:00:00.00"), schedule_info.get(0).startTimeScheduled);
         assertEquals(Duration.ofMinutes(5), schedule_info.get(0).duration);
 
     }
@@ -64,15 +64,15 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //extract schedule info of billboard 1 into array list
-        ArrayList<Schedule_Info>schedule_info = Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ScheduleInfo>schedule_info = Billboard_schedule.getSchedule("Billboard_1");
 
         //Test if both entries have been saved
         //Test if schedule information matches info entered
-        assertEquals(LocalDateTime.parse("2021-04-15T10:00:00.00"), schedule_info.get(1).StartTime_Scheduled);
+        assertEquals(LocalDateTime.parse("2021-04-15T10:00:00.00"), schedule_info.get(1).startTimeScheduled);
         assertEquals(Duration.ofMinutes(10), schedule_info.get(1).duration);
 
         //Test if schedule information matches info entered
-        assertEquals(LocalDateTime.parse("2021-04-22T10:00:00.00"), schedule_info.get(0).StartTime_Scheduled);
+        assertEquals(LocalDateTime.parse("2021-04-22T10:00:00.00"), schedule_info.get(0).startTimeScheduled);
         assertEquals(Duration.ofMinutes(5), schedule_info.get(0).duration);
     }
 
@@ -98,10 +98,10 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
-        ArrayList<Schedule_Info> time_duration_b2 = Billboard_schedule.getSchedule("Billboard_2");
+        ArrayList<ScheduleInfo> time_duration_b2 = Billboard_schedule.getSchedule("Billboard_2");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).startTimeScheduled;
         Duration durationB2 = time_duration_b2.get(0).duration;
 
         //check if time scheduled and duration pair match for Billboard 2
@@ -145,10 +145,10 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
-        ArrayList<Schedule_Info> time_duration_b2 = Billboard_schedule.getSchedule("Billboard_2");
+        ArrayList<ScheduleInfo> time_duration_b2 = Billboard_schedule.getSchedule("Billboard_2");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).startTimeScheduled;
         Duration durationB2 = time_duration_b2.get(0).duration;
 
         //check if time scheduled and duration pair match for Billboard 2
@@ -158,10 +158,10 @@ public class TestscheduleMultiMap {
         //-------------------------------------------------------------
         //Test that billboard 1 is NOT scheduled for 01-05-2021 for 10 mins
         //store scheduled time and duration of billboard 1 in an ArrayList
-        ArrayList<Schedule_Info>  time_duration_b1 = Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ScheduleInfo>  time_duration_b1 = Billboard_schedule.getSchedule("Billboard_1");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).startTimeScheduled;
         Duration durationB1 = time_duration_b1.get(0).duration;
 
         //check if Billboard 1 is not scheduled for that time
@@ -191,10 +191,10 @@ public class TestscheduleMultiMap {
 
         //-------------------------------------------------------------
         //Test that billboard 1 is NOT in the schedule
-        assertEquals(false, Billboard_schedule.Schedule_MultiMap.containsKey("Billboard_1"));
+        assertEquals(false, Billboard_schedule.scheduleMultiMap.containsKey("Billboard_1"));
 
         //Test that billboard 2 is in the schedule
-        assertEquals(true, Billboard_schedule.Schedule_MultiMap.containsKey("Billboard_2"));
+        assertEquals(true, Billboard_schedule.scheduleMultiMap.containsKey("Billboard_2"));
     }
 
     //Test 2.4: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
@@ -218,10 +218,10 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(5), 0,billboardList.List_Billboards(),"emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
-        ArrayList<Schedule_Info> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
+        ArrayList<ScheduleInfo> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).startTimeScheduled;
         Duration durationB2 = time_duration_b2.get(0).duration;
 
         //check if time scheduled and duration pair match for Billboard 2
@@ -231,10 +231,10 @@ public class TestscheduleMultiMap {
         //-------------------------------------------------------------
         //Test that billboard 1 is scheduled correctly
         //store scheduled time and duration of billboard 1 in an ArrayList
-        ArrayList<Schedule_Info>  time_duration_b1 =Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ScheduleInfo>  time_duration_b1 =Billboard_schedule.getSchedule("Billboard_1");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).startTimeScheduled;
         Duration durationB1 = time_duration_b1.get(0).duration;
 
         //check if Billboard 1 is scheduled for 10:05 - 10:10 on 01-05-2021 for 5 mins
@@ -263,10 +263,10 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
-        ArrayList<Schedule_Info> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
+        ArrayList<ScheduleInfo> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).startTimeScheduled;
         Duration durationB2 = time_duration_b2.get(0).duration;
 
         //check if time scheduled and duration pair match for Billboard 2
@@ -276,10 +276,10 @@ public class TestscheduleMultiMap {
         //-------------------------------------------------------------
         //Test that billboard 1 is scheduled correctly
         //store scheduled time and duration of billboard 1 in an ArrayList
-        ArrayList<Schedule_Info>  time_duration_b1 = Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ScheduleInfo>  time_duration_b1 = Billboard_schedule.getSchedule("Billboard_1");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).startTimeScheduled;
         Duration durationB1 = time_duration_b1.get(0).duration;
 
         //check if Billboard 1 is scheduled for 10:00 - 10:05 on 01-05-2021 for 5 mins
@@ -308,10 +308,10 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(5), 0,billboardList.List_Billboards(), "emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
-        ArrayList<Schedule_Info> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
+        ArrayList<ScheduleInfo> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).startTimeScheduled;
         Duration durationB2 = time_duration_b2.get(0).duration;
 
         //check if time scheduled and duration pair match for Billboard 2
@@ -321,10 +321,10 @@ public class TestscheduleMultiMap {
         //-------------------------------------------------------------
         //Test that billboard 1 is scheduled correctly
         //store scheduled time and duration of billboard 1 in an ArrayList
-        ArrayList<Schedule_Info>  time_duration_b1 =Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ScheduleInfo>  time_duration_b1 =Billboard_schedule.getSchedule("Billboard_1");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).startTimeScheduled;
         Duration durationB1 = time_duration_b1.get(0).duration;
 
         //check if Billboard 1 is scheduled for 10:00 - 10:05 on 01-05-2021 for 5 mins
@@ -353,10 +353,10 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
 
         //store scheduled time and duration of billboard 2 in an ArrayList
-        ArrayList<Schedule_Info> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
+        ArrayList<ScheduleInfo> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).startTimeScheduled;
         Duration durationB2 = time_duration_b2.get(0).duration;
 
         //check if time scheduled and duration pair match for Billboard 2
@@ -366,10 +366,10 @@ public class TestscheduleMultiMap {
         //-------------------------------------------------------------
         //Test that billboard 1 is scheduled correctly
         //store scheduled time and duration of billboard 1 in an ArrayList
-        ArrayList<Schedule_Info>  time_duration_b1 =Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ScheduleInfo>  time_duration_b1 =Billboard_schedule.getSchedule("Billboard_1");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).startTimeScheduled;
         Duration durationB1 = time_duration_b1.get(0).duration;
 
         //check if Billboard 1 is scheduled for 10:05 - 10:10 on 01-05-2021 for 5 mins
@@ -399,10 +399,10 @@ public class TestscheduleMultiMap {
 
 
         //store scheduled time and duration of billboard 2 in an ArrayList
-        ArrayList<Schedule_Info> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
+        ArrayList<ScheduleInfo> time_duration_b2 =  Billboard_schedule.getSchedule("Billboard_2");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).startTimeScheduled;
         Duration durationB2 = time_duration_b2.get(0).duration;
 
         //check if time scheduled and duration pair match for Billboard 2
@@ -412,10 +412,10 @@ public class TestscheduleMultiMap {
         //-------------------------------------------------------------
         //Test that billboard 1 is now scheduled correctly
         //store scheduled time and duration of billboard 1 in an ArrayList
-        ArrayList<Schedule_Info>  time_duration_b1 =Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ScheduleInfo>  time_duration_b1 =Billboard_schedule.getSchedule("Billboard_1");
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B1_1 = time_duration_b1.get(0).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B1_1 = time_duration_b1.get(0).startTimeScheduled;
         Duration durationB1_1 = time_duration_b1.get(0).duration;
 
         //check if Billboard 1 is scheduled for 9:55 - 10:00 on 01-05-2021 for 5 mins
@@ -423,13 +423,81 @@ public class TestscheduleMultiMap {
         assertEquals(Duration.ofMinutes(5), durationB1_1);
 
         //extract time scheduled and duration from array list
-        LocalDateTime startTimeScheduled_B1_2 = time_duration_b1.get(1).StartTime_Scheduled;
+        LocalDateTime startTimeScheduled_B1_2 = time_duration_b1.get(1).startTimeScheduled;
         Duration durationB1_2 = time_duration_b1.get(1).duration;
 
         //check if Billboard 1 is scheduled for 10:05 - 10:10 on 01-05-2021 for 5 mins
         assertEquals(LocalDateTime.parse("2021-05-01T10:05:00.00"),startTimeScheduled_B1_2);
         assertEquals(Duration.ofMinutes(5), durationB1_2);
     }
+
+    //Test 2.6: Schedule billboard that overlaps 2 non-vacant time slot - should take precedence over existing billboard scheduled
+    //Start and end time between start and end of existing viewing scheduled
+    @Test
+    public void Overlap2_Viewings() throws Exception
+    {
+        //add billboards to billboardList
+        billboardList.Create_edit_Billboard("Billboard_1", "new billboard", "#000000",
+                "No Image", "emily");
+
+        billboardList.Create_edit_Billboard("Billboard_2", "hello world", "#000000",
+                "No Image", "emily");
+
+        billboardList.Create_edit_Billboard("Billboard_3", "hello world", "#000000",
+                "No Image", "emily");
+
+        //Schedule billboard 1 in a non-vacant time slot from 10:00-10:10 on 01-05-2021
+        Billboard_schedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-01T10:00:00.00"),
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
+
+        //Schedule billboard 2 in a vacant time slot from 10:10-10:20 on 01-05-2021
+        Billboard_schedule.scheduleBillboard("Billboard_2",LocalDateTime.parse("2021-05-01T10:10:00.00"),
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
+
+        //Schedule billboard 2 in a vacant time slot from 10:05-10:15 on 01-05-2021
+        Billboard_schedule.scheduleBillboard("Billboard_3",LocalDateTime.parse("2021-05-01T10:05:00.00"),
+                Duration.ofMinutes(10), 0,billboardList.List_Billboards(), "emily");
+
+
+        //store scheduled time and duration of billboard 2 in an ArrayList
+        ArrayList<ScheduleInfo> time_duration_b3 =  Billboard_schedule.getSchedule("Billboard_3");
+
+        //extract time scheduled and duration from array list
+        LocalDateTime startTimeScheduled_B3 = time_duration_b3.get(0).startTimeScheduled;
+        Duration durationB3 = time_duration_b3.get(0).duration;
+
+        //check if time scheduled and duration pair match for Billboard 2
+        assertEquals(LocalDateTime.parse("2021-05-01T10:05:00.00"), startTimeScheduled_B3);
+        assertEquals(Duration.ofMinutes(10), durationB3);
+
+        //-------------------------------------------------------------
+        //Test that billboard 1 is now scheduled correctly
+        //store scheduled time and duration of billboard 1 in an ArrayList
+        ArrayList<ScheduleInfo>  time_duration_b1 =Billboard_schedule.getSchedule("Billboard_1");
+
+        //extract time scheduled and duration from array list
+        LocalDateTime startTimeScheduled_B1 = time_duration_b1.get(0).startTimeScheduled;
+        Duration durationB1 = time_duration_b1.get(0).duration;
+
+        //check if Billboard 1 is scheduled for 10:00 - 10:05 on 01-05-2021 for 5 mins
+        assertEquals(LocalDateTime.parse("2021-05-01T10:00:00.00"),startTimeScheduled_B1);
+        assertEquals(Duration.ofMinutes(5), durationB1);
+
+        //-------------------------------------------------------------
+        //Test that billboard 2 is now scheduled correctly
+        //store scheduled time and duration of billboard 1 in an ArrayList
+        ArrayList<ScheduleInfo>  time_duration_b2 =Billboard_schedule.getSchedule("Billboard_2");
+
+        //extract time scheduled and duration from array list
+        LocalDateTime startTimeScheduled_B2 = time_duration_b2.get(0).startTimeScheduled;
+        Duration durationB2 = time_duration_b2.get(0).duration;
+
+        //check if Billboard 1 is scheduled for 10:15 - 10:20 on 01-05-2021 for 5 mins
+        assertEquals(LocalDateTime.parse("2021-05-01T10:15:00.00"),startTimeScheduled_B2);
+        assertEquals(Duration.ofMinutes(5), durationB2);
+
+    }
+
 
     //Test 2.6: Schedule billboard for an invalid time
     //
@@ -512,7 +580,7 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(5),0, billboardList.List_Billboards(), "emily");
 
         //remove billboard from schedule
-        Billboard_schedule.Schedule_Remove_billboard("Billboard_2",Billboard_schedule.getSchedule("Billboard_2").get(0));
+        Billboard_schedule.scheduleRemoveBillboard("Billboard_2",Billboard_schedule.getSchedule("Billboard_2").get(0));
 
         //check if billboard has been removed
         //exception is thrown when retrieving info of non-existent billboard
@@ -536,23 +604,23 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(10), 0,billboardList.List_Billboards(),"emily");
 
         //get viewings of billboard 1
-        ArrayList<Schedule_Info> billboard_viewings = Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ScheduleInfo> billboard_viewings = Billboard_schedule.getSchedule("Billboard_1");
 
         //schedule info of viewing being removed
-        Schedule_Info removed_schedule_info= new Schedule_Info(LocalDateTime.parse("2021-01-10T10:00:00.00"),
+        ScheduleInfo removed_schedule_info= new ScheduleInfo(LocalDateTime.parse("2021-01-10T10:00:00.00"),
                 Duration.ofMinutes(10), 0, "emily");
 
         //remove billboard from schedule
-        Billboard_schedule.Schedule_Remove_billboard("Billboard_1",removed_schedule_info);
+        Billboard_schedule.scheduleRemoveBillboard("Billboard_1",removed_schedule_info);
 
         //get viewings of billboard 1
-        ArrayList<Schedule_Info> viewings = Billboard_schedule.getSchedule("Billboard_1");
+        ArrayList<ScheduleInfo> viewings = Billboard_schedule.getSchedule("Billboard_1");
 
         //check if 1 viewing is in list
         assertEquals(1, viewings.size());
 
         //check if viewing in list is correct
-        assertEquals(LocalDateTime.parse("2021-05-04T10:00:00.00"), viewings.get(0).StartTime_Scheduled);
+        assertEquals(LocalDateTime.parse("2021-05-04T10:00:00.00"), viewings.get(0).startTimeScheduled);
 
 
     }
@@ -562,13 +630,13 @@ public class TestscheduleMultiMap {
     @Test
     public void RemoveSchedule_invalidBillboardName() throws Exception
     {
-        Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
+        ScheduleInfo schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-04T10:00:00.00"),
                 Duration.ofMinutes(15),0, "emily");
 
 
         assertThrows(Exception.class,() -> {
             //remove billboard from schedule that does not exist
-            Billboard_schedule.Schedule_Remove_billboard("nonexistent", schedule_info);
+            Billboard_schedule.scheduleRemoveBillboard("nonexistent", schedule_info);
         });
     }
 
@@ -588,12 +656,12 @@ public class TestscheduleMultiMap {
                 billboardList.List_Billboards(), "emily");
 
         //schedule info that does not match bb scheduled
-        Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse("2021-05-04T10:00:00.00"),
+        ScheduleInfo schedule_info = new ScheduleInfo(LocalDateTime.parse("2021-05-04T10:00:00.00"),
                 Duration.ofMinutes(15),0, "emily");
 
         assertThrows(Exception.class,() -> {
             //remove viewing from schedule that does not exist
-            Billboard_schedule.Schedule_Remove_billboard("Billboard_1", schedule_info);
+            Billboard_schedule.scheduleRemoveBillboard("Billboard_1", schedule_info);
         });
     }
 
@@ -617,7 +685,7 @@ public class TestscheduleMultiMap {
                 Duration.ofMinutes(5), 0, billboardList.List_Billboards(), "emily");
 
         //store billboard schedule in MultiMap
-        MultiMap<String, Schedule_Info> viewSchedule_list = Billboard_schedule.View_schedule();
+        MultiMap<String, ScheduleInfo> viewSchedule_list = Billboard_schedule.viewSchedule();
 
         //check if billboards are in viewSchedule_list View_schedule output
         assertTrue(viewSchedule_list.containsKey("Billboard_1"));
@@ -625,9 +693,9 @@ public class TestscheduleMultiMap {
         assertTrue(viewSchedule_list.containsKey("Billboard_3"));
 
         //check if time scheduled of viewings, associated with each Billboard, are correct
-        assertEquals(LocalDateTime.parse("2021-05-05T10:00:00.00"), viewSchedule_list.get("Billboard_1").get(0).StartTime_Scheduled);
-        assertEquals(LocalDateTime.parse("2021-05-04T10:00:00.00"), viewSchedule_list.get("Billboard_2").get(0).StartTime_Scheduled);
-        assertEquals(LocalDateTime.parse("2021-05-03T10:00:00.00"), viewSchedule_list.get("Billboard_3").get(0).StartTime_Scheduled);
+        assertEquals(LocalDateTime.parse("2021-05-05T10:00:00.00"), viewSchedule_list.get("Billboard_1").get(0).startTimeScheduled);
+        assertEquals(LocalDateTime.parse("2021-05-04T10:00:00.00"), viewSchedule_list.get("Billboard_2").get(0).startTimeScheduled);
+        assertEquals(LocalDateTime.parse("2021-05-03T10:00:00.00"), viewSchedule_list.get("Billboard_3").get(0).startTimeScheduled);
 
         //check if duration of viewings, associated with each Billboard, are correct
         assertEquals(Duration.ofMinutes(10), viewSchedule_list.get("Billboard_1").get(0).duration);

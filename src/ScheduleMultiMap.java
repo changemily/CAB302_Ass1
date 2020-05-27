@@ -15,23 +15,25 @@ import java.util.Map;
  */
 public class ScheduleMultiMap {
 
-    MultiMap<String, Schedule_Info> Schedule_MultiMap;
+    //
+    MultiMap<String, ScheduleInfo> scheduleMultiMap;
 
     /**
      * constructor that creates a scheduleMultiMap object
      */
     public ScheduleMultiMap() {
-        Schedule_MultiMap = new MultiMap<>();
+        scheduleMultiMap = new MultiMap<>();
     }
 
     /**
-     * extracts schedule data from database and stores it in Billboard_schedule
-     * @throws SQLException throws exception if billboard does not exist or combination of billboard &
+     * Retrieves schedule data from database and stores it in scheduleMultiMap
+     * @param connection Database Connection
+     * @throws SQLException throws exception if SQL query is invalid, billboard does not exist or combination of billboard &
      * schedule information does not exist
      */
-    public void RetrieveDBschedule(Connection connection) throws Exception {
+    public void retrieveDBschedule(Connection connection) throws Exception {
 
-        final String SELECT = "SELECT * FROM schedule ORDER BY Start_TimeScheduled desc";
+        final String SELECT = "SELECT * FROM schedule ORDER BY startTimeScheduled desc";
 
         //create statement
         Statement st = connection.createStatement();
@@ -42,18 +44,18 @@ public class ScheduleMultiMap {
         while (rs.next())
         {
             //store database info in local variables
-            String billboard_name = rs.getString(1);
-            String Start_TimeScheduled = rs.getString(2);
+            String billboardName = rs.getString(1);
+            String startTimeScheduled = rs.getString(2);
             String duration = rs.getString(3);
             String recurrence = rs.getString(4);
-            String billboard_creator = rs.getString(5);
+            String billboardCreator = rs.getString(5);
 
             //store time scheduled and duration pair in array schedule_info
-            Schedule_Info schedule_info = new Schedule_Info(LocalDateTime.parse(Start_TimeScheduled),
-                    Duration.parse(duration), Integer.parseInt(recurrence), billboard_creator);
+            ScheduleInfo schedule_info = new ScheduleInfo(LocalDateTime.parse(startTimeScheduled),
+                    Duration.parse(duration), Integer.parseInt(recurrence), billboardCreator);
 
             //store billboard name with corresponding times scheduled and durations
-            Schedule_MultiMap.put(billboard_name, schedule_info);
+            scheduleMultiMap.put(billboardName, schedule_info);
         }
 
         //close ResultSet
@@ -62,37 +64,50 @@ public class ScheduleMultiMap {
         st.close();
     }
 
-    public void Clear_DBschedule(Connection connection) throws SQLException {
+    /**
+     * Clears Schedule table of database
+     * @param connection Database connection
+     * @throws SQLException throws exception if SQL query is invalid
+     */
+    public void clearDBschedule(Connection connection) throws SQLException {
         //create statement
         Statement st = connection.createStatement();
 
         //for all entries in schedule
-        for (String billboard_name : Schedule_MultiMap.keySet())
+        for (String billboardName : scheduleMultiMap.keySet())
         {
             //remove entry from DB
-            st.execute("DELETE FROM Schedule WHERE billboard_name=\""+billboard_name+"\";");
+            st.execute("DELETE FROM Schedule WHERE billboardName=\""+billboardName+"\";");
         }
     }
-    public void Write_To_DBschedule(Connection connection) throws SQLException {
+
+    /**
+     * Writes schedule data in scheduleMultiMap to database
+     * @param connection Database Connection
+     * @throws SQLException throws exception if SQL query is invalid
+     */
+    public void writeToDbschedule(Connection connection) throws SQLException {
         //create statement
         Statement st = connection.createStatement();
 
         //for every billboard name in Billboard_schedule
-        for (String billboard_name : Schedule_MultiMap.keySet() ) {
+        for (String billboardName : scheduleMultiMap.keySet() ) {
 
             //create array list to store viewings of billboard
-            ArrayList<Schedule_Info> viewings = Schedule_MultiMap.get(billboard_name);
+            ArrayList<ScheduleInfo> viewings = scheduleMultiMap.get(billboardName);
 
             //for every viewing of billboard
-            for ( Schedule_Info viewing : viewings ) {
-                //store Billboard_schedule info in local variables
-                String Start_TimeScheduled = viewing.StartTime_Scheduled.toString();
-                String duration = viewing.duration.toString();
-                String recurrence = String.valueOf(viewing.Recurrence_delay);
-                String billboard_creator = viewing.Billboard_creator;
+            for ( ScheduleInfo viewing : viewings ) {
 
-                st.executeQuery("INSERT INTO Schedule (billboard_name,Start_TimeScheduled, Duration,recurrence_delay, billboard_creator) " +
-                        "VALUES(\""+billboard_name+"\",\""+Start_TimeScheduled+"\",\""+duration+"\",\""+recurrence+"\",\""+billboard_creator+"\");");
+                //store scheduleMultiMap info in local variables
+                String startTimeScheduled = viewing.startTimeScheduled.toString();
+                String duration = viewing.duration.toString();
+                String recurrenceDelay = String.valueOf(viewing.recurrenceDelay);
+                String billboardCreator = viewing.billboardCreator;
+
+                //execute SQL query
+                st.executeQuery("INSERT INTO Schedule (billboardName,startTimeScheduled, Duration,recurrenceDelay, billboardCreator) " +
+                        "VALUES(\""+billboardName+"\",\""+startTimeScheduled+"\",\""+duration+"\",\""+recurrenceDelay+"\",\""+billboardCreator+"\");");
             }
         }
 
@@ -102,128 +117,133 @@ public class ScheduleMultiMap {
 
     /**
      * Lists billboards that have been scheduled
-     * @return MultiMap containing billboard name and an array list storing time scheduled and duration
+     * @return MultiMap containing billboard name and an array list storing schedule info
      */
 
-    public MultiMap<String, Schedule_Info> View_schedule()
+    public MultiMap<String, ScheduleInfo> viewSchedule()
     {
-        return Schedule_MultiMap;
+        return scheduleMultiMap;
     }
 
     /**
-     *
-     * @param NewBB_duration Duration (minutes) Billboard is displayed for
-     * @param NewBB_startTime Time (date) Billboard is scheduled for showing
+     * Schedules billboards and accounts for overlapping viewings
+     * @param newBillboardName name of billboard being scheduled
+     * @param newBBStartTime Time (date) Billboard is scheduled for showing
+     * @param newBBDuration Duration (minutes) Billboard is displayed for
+     * @param recurrenceDelay recurrence delay of billboard being scheduled
+     * @param billboardList list that contains all billboards created
+     * @param billboardCreator creator of billboard
      * @throws Exception if Billboard does not exist & if duration is out of range or the time scheduled is in the past
      */
-    public void scheduleBillboard(String new_billboard, LocalDateTime NewBB_startTime, Duration NewBB_duration,
-                                  int recurrence_delay, HashMap<String, Billboard> billboardList, String billboard_creator) throws Exception{
+    public void scheduleBillboard(String newBillboardName, LocalDateTime newBBStartTime, Duration newBBDuration,
+                                  int recurrenceDelay, HashMap<String, Billboard> billboardList, String billboardCreator) throws Exception{
 
         //if the time scheduled is in the past
-        if (NewBB_startTime.isBefore(LocalDateTime.now()))
+        if (newBBStartTime.isBefore(LocalDateTime.now()))
         {
             //throw exception
             throw new Exception("Time scheduled must be after"+ LocalDateTime.now());
         }
 
         //boolean variable to track whether billboard is in billboard list
-        boolean billboard_exists = false;
+        boolean billboardExists = false;
 
         //For every billboard in billboardList
         for (Map.Entry<String, Billboard> billboardListEntry : billboardList.entrySet()){
 
             //if billboard name is in billboard list
-            if(billboardListEntry.getKey().equals(new_billboard))
+            if(billboardListEntry.getKey().equals(newBillboardName))
             {
-                billboard_exists = true;
+                billboardExists = true;
                 break;
             }
         }
 
-        if(billboard_exists == false)
+        //if billboard does not exist in billboardList
+        if(billboardExists == false)
         {
             throw new Exception("You cannot schedule a billboard that does not exist");
         }
 
         //if Billboard_schedule is empty
-        if(Schedule_MultiMap.isEmpty())
+        if(scheduleMultiMap.isEmpty())
         {
             //create schedule info for billboard
-            Schedule_Info schedule_info = new Schedule_Info(NewBB_startTime, NewBB_duration, recurrence_delay, billboard_creator);
+            ScheduleInfo scheduleInfo = new ScheduleInfo(newBBStartTime, newBBDuration, recurrenceDelay, billboardCreator);
 
             //add billboard to schedule
-            Schedule_MultiMap.put(new_billboard, schedule_info);
+            scheduleMultiMap.put(newBillboardName, scheduleInfo);
         }
 
         else
         {
             outerloop:
-            //For every entry of Billboard_schedule
-            for (String existing_billboard : Schedule_MultiMap.keySet())
+            //For every existing billboard of scheduleMultiMap
+            for (String existingBillboard : new ArrayList<String>(scheduleMultiMap.keySet()))
             {
-                //calculate end time of new billboard viewing
-                LocalDateTime NewBB_endTime= NewBB_startTime.plus(NewBB_duration);
+                //calculate the end time of new billboard viewing
+                LocalDateTime newBBEndTime= newBBStartTime.plus(newBBDuration);
 
                 //create collection to store viewings of billboard
-                Collection<Schedule_Info>viewings = Schedule_MultiMap.get(existing_billboard);
+                Collection<ScheduleInfo>viewings = scheduleMultiMap.get(existingBillboard);
 
                 //for every viewing of billboard
-                for ( Schedule_Info viewing : viewings ) {
+                for ( ScheduleInfo viewing : viewings ) {
 
                     //store viewing info of existing billboard in local variables
-                    Duration ExistBB_duration = viewing.duration;
-                    LocalDateTime ExistBB_startTime = viewing.StartTime_Scheduled;
+                    Duration existBBDuration = viewing.duration;
+                    LocalDateTime existBBStartTime = viewing.startTimeScheduled;
 
                     //get recurrence and creator of existing bb
-                    int ExistBB_recurrence = viewing.Recurrence_delay;
-                    String ExistBB_creator = viewing.Billboard_creator;
+                    int existBBRecurrence = viewing.recurrenceDelay;
+                    String existBBCreator = viewing.billboardCreator;
 
                     //calculate end time of new billboard viewing
-                    LocalDateTime ExistBB_endTime = ExistBB_startTime.plus(ExistBB_duration);
+                    LocalDateTime existBBEndTime = existBBStartTime.plus(existBBDuration);
 
                     //---------------------------------------------------------------------------------------
                     // OVERLAPPING BILLBOARDS
                     //check if new billboard start time is after existing billboard start time
-                    boolean startIsAfter = NewBB_startTime.isAfter(ExistBB_startTime);
+                    boolean startIsAfter = newBBStartTime.isAfter(existBBStartTime);
 
                     //check if new billboard start time is before existing billboard end time
-                    boolean startIsBefore = NewBB_startTime.isBefore(ExistBB_endTime);
+                    boolean startIsBefore = newBBStartTime.isBefore(existBBEndTime);
 
                     //check if new billboard start time is between existing billboard start and end time
                     boolean startIsBetween = startIsAfter && startIsBefore;
 
                     //check if new billboard start time is equal to existing billboard start time
-                    boolean startTimesEqual = (NewBB_startTime.isEqual(ExistBB_startTime));
+                    boolean startTimesEqual = (newBBStartTime.isEqual(existBBStartTime));
 
 
                     //check if new billboard end time is after existing billboard start time
-                    boolean endtIsAfter = NewBB_endTime.isAfter(ExistBB_startTime);
+                    boolean endtIsAfter = newBBEndTime.isAfter(existBBStartTime);
 
                     //check if new billboard end time is before existing billboard end time
-                    boolean endIsBefore = NewBB_endTime.isBefore(ExistBB_endTime);
+                    boolean endIsBefore = newBBEndTime.isBefore(existBBEndTime);
 
                     //check if new billboard start time is between existing billboard start and end time
                     boolean endIsBetween = endtIsAfter && endIsBefore;
 
                     //check if new billboard start time is equal to existing billboard start time
-                    boolean endTimesEqual = (NewBB_endTime.isEqual(ExistBB_endTime));
+                    boolean endTimesEqual = (newBBEndTime.isEqual(existBBEndTime));
 
 
                     //check if existing billboard start time is after new billboard start time
-                    boolean existStartIsAfter = ExistBB_startTime.isAfter(NewBB_startTime);
+                    boolean existStartIsAfter = existBBStartTime.isAfter(newBBStartTime);
 
                     //check if existing billboard start time is before new billboard end time
-                    boolean existStartIsBefore = ExistBB_startTime.isBefore(NewBB_endTime);
+                    boolean existStartIsBefore = existBBStartTime.isBefore(newBBEndTime);
 
                     //check if new billboard start time is between existing billboard start and end time
                     boolean existStartIsBetween = existStartIsAfter && existStartIsBefore;
 
 
                     //check if existing billboard end time is after new billboard start time
-                    boolean existEndIsAfter = ExistBB_endTime.isAfter(NewBB_startTime);
+                    boolean existEndIsAfter = existBBEndTime.isAfter(newBBStartTime);
 
                     //check if existing billboard end time is before new billboard end time
-                    boolean existEndIsBefore = ExistBB_endTime.isBefore(NewBB_endTime);
+                    boolean existEndIsBefore = existBBEndTime.isBefore(newBBEndTime);
 
                     //check if new billboard start time is between existing billboard start and end time
                     boolean existEndIsBetween = existEndIsAfter && existEndIsBefore;
@@ -236,20 +256,13 @@ public class ScheduleMultiMap {
                         if (viewings.size() == 1)
                         {
                             //remove entry from schedule
-                            Schedule_MultiMap.remove(existing_billboard);
+                            scheduleMultiMap.remove(existingBillboard);
                         }
                         else{
                             //remove existing viewing from schedule
-                            Schedule_MultiMap.remove(existing_billboard,viewing);
+                            scheduleMultiMap.remove(existingBillboard,viewing);
                         }
 
-                        //create new schedule_info object for new billboard
-                        Schedule_Info new_schedule_info = new Schedule_Info(NewBB_startTime, NewBB_duration, ExistBB_recurrence, ExistBB_creator);
-
-                        //schedule new billboard for given time
-                        Schedule_MultiMap.put(new_billboard, new_schedule_info);
-
-                        break outerloop;
                     }
 
                     // SPLIT EXISTING SCHEDULE - NEW START AND END TIME DURING EXISTING VIEWING
@@ -260,26 +273,24 @@ public class ScheduleMultiMap {
                         if (viewings.size() == 1)
                         {
                             //remove entry from schedule
-                            Schedule_MultiMap.remove(existing_billboard);
+                            scheduleMultiMap.remove(existingBillboard);
                         }
                         else{
                             //remove existing viewing from schedule
-                            Schedule_MultiMap.remove(existing_billboard,viewing);
+                            scheduleMultiMap.remove(existingBillboard,viewing);
                         }
 
                         //calculate the new durations of existing billboard split viewing
-                        Duration new_duration1 = Duration.between(ExistBB_startTime, NewBB_startTime);
-                        Duration new_duration2 = Duration.between(NewBB_endTime, ExistBB_endTime);
+                        Duration newDuration1 = Duration.between(existBBStartTime, newBBStartTime);
+                        Duration newDuration2 = Duration.between(newBBEndTime, existBBEndTime);
 
-                        //create new schedule_info object for existing billboard
-                        Schedule_Info new_schedule_info1 = new Schedule_Info(ExistBB_startTime,new_duration1, ExistBB_recurrence, ExistBB_creator);
-                        Schedule_Info new_schedule_info2 = new Schedule_Info(NewBB_endTime,new_duration2, ExistBB_recurrence, ExistBB_creator);
+                        //create new scheduleInfo object for existing billboard
+                        ScheduleInfo newScheduleInfo1 = new ScheduleInfo(existBBStartTime,newDuration1, existBBRecurrence, existBBCreator);
+                        ScheduleInfo newScheduleInfo2 = new ScheduleInfo(newBBEndTime,newDuration2, existBBRecurrence, existBBCreator);
 
                         //reschedule existing billboard for new times
-                        Schedule_MultiMap.put(existing_billboard, new_schedule_info1);
-                        Schedule_MultiMap.put(existing_billboard, new_schedule_info2);
-
-                        break outerloop;
+                        scheduleMultiMap.put(existingBillboard, newScheduleInfo1);
+                        scheduleMultiMap.put(existingBillboard, newScheduleInfo2);
                     }
 
                     // NEW START TIME DURING EXISTING VIEWING
@@ -290,24 +301,22 @@ public class ScheduleMultiMap {
                         if (viewings.size() == 1)
                         {
                             //remove entry from schedule
-                            Schedule_MultiMap.remove(existing_billboard);
+                            scheduleMultiMap.remove(existingBillboard);
                         }
                         else{
                             //remove existing viewing from schedule
-                            Schedule_MultiMap.remove(existing_billboard,viewing);
+                            scheduleMultiMap.remove(existingBillboard,viewing);
                         }
 
                         //calculate new duration of existing billboard
 
-                        Duration new_duration = Duration.between(ExistBB_startTime, NewBB_startTime);
+                        Duration newDuration = Duration.between(existBBStartTime, newBBStartTime);
 
-                        //create new schedule_info object for existing billboard
-                        Schedule_Info new_schedule_info = new Schedule_Info(ExistBB_startTime,new_duration, ExistBB_recurrence, ExistBB_creator);
+                        //create new scheduleInfo object for existing billboard
+                        ScheduleInfo newScheduleInfo = new ScheduleInfo(existBBStartTime,newDuration, existBBRecurrence, existBBCreator);
 
                         //reschedule existing billboard for new time
-                        Schedule_MultiMap.put(existing_billboard, new_schedule_info);
-
-                        break outerloop;
+                        scheduleMultiMap.put(existingBillboard, newScheduleInfo);
                     }
 
                     // NEW END TIME DURING EXISTING VIEWING
@@ -318,82 +327,80 @@ public class ScheduleMultiMap {
                         if (viewings.size() == 1)
                         {
                             //remove entry from schedule
-                            Schedule_MultiMap.remove(existing_billboard);
+                            scheduleMultiMap.remove(existingBillboard);
                         }
                         else{
                             //remove existing viewing from schedule
-                            Schedule_MultiMap.remove(existing_billboard,viewing);
+                            scheduleMultiMap.remove(existingBillboard,viewing);
                         }
 
                         //calculate new duration of existing billboard
-                        Duration new_duration = Duration.between(NewBB_endTime, ExistBB_endTime);
+                        Duration newDuration = Duration.between(newBBEndTime, existBBEndTime);
 
-                        //create new schedule_info object for existing billboard
-                        Schedule_Info new_schedule_info = new Schedule_Info(NewBB_endTime,new_duration, ExistBB_recurrence, ExistBB_creator);
+                        //create new scheduleInfo object for existing billboard
+                        ScheduleInfo newScheduleInfo = new ScheduleInfo(newBBEndTime,newDuration, existBBRecurrence, existBBCreator);
 
                         //reschedule existing billboard for new time
-                        Schedule_MultiMap.put(existing_billboard, new_schedule_info);
-
-                        break outerloop;
+                        scheduleMultiMap.put(existingBillboard, newScheduleInfo);
                     }
                 }
             }
 
             //Schedule new billboard
             //create schedule info for billboard
-            Schedule_Info schedule_info = new Schedule_Info(NewBB_startTime, NewBB_duration, recurrence_delay, billboard_creator);
+            ScheduleInfo scheduleInfo = new ScheduleInfo(newBBStartTime, newBBDuration, recurrenceDelay, billboardCreator);
 
             //add viewing to schedule
-            Schedule_MultiMap.put(new_billboard, schedule_info);
+            scheduleMultiMap.put(newBillboardName, scheduleInfo);
         }
     }
 
     /**
-     *
-     * @param billboard_name Name of billboard being removed from schedule
-     * @param schedule_info info of scheduled viewing being removed
+     * Removes viewing from Billboard schedule multimap
+     * @param billboardName Name of billboard being removed from schedule
+     * @param scheduleInfo info of scheduled viewing being removed
      * @throws Exception throws exception if the billboard does not exist in the schedule & if the
      */
 
-    public void Schedule_Remove_billboard(String billboard_name, Schedule_Info schedule_info) throws Exception
+    public void scheduleRemoveBillboard(String billboardName, ScheduleInfo scheduleInfo) throws Exception
     {
         //boolean variable to track whether billboard is in schedule
-        boolean billboard_exists = false;
+        boolean billboardExists = false;
 
         //boolean variable to track whether given viewing is in schedule
-        boolean viewing_exists = false;
+        boolean viewingExists = false;
 
         outerloop:
-        //For every entry of Billboard_schedule
-        for (String BillboardName : Schedule_MultiMap.keySet())
+        //For every entry of scheduleMultiMap
+        for (String BillboardName : scheduleMultiMap.keySet())
         {
             //create collection to store viewings of billboard
-            Collection<Schedule_Info>viewings = Schedule_MultiMap.get(billboard_name);
+            Collection<ScheduleInfo>viewings = scheduleMultiMap.get(billboardName);
 
             //for every viewing of billboard
-            for ( Schedule_Info viewing : viewings ) {
+            for ( ScheduleInfo viewing : viewings ) {
 
                 //if billboard name is listed in schedule
-                if(BillboardName.equals(billboard_name))
+                if(BillboardName.equals(billboardName))
                 {
-                    billboard_exists = true;
+                    billboardExists = true;
 
                     //if number of viewings is 1
                     if (viewings.size() == 1)
                     {
-                        viewing_exists = true;
+                        viewingExists = true;
                         //remove entry from schedule
-                        Schedule_MultiMap.remove(billboard_name);
+                        scheduleMultiMap.remove(billboardName);
                         break outerloop;
                     }
 
                     //if combination of billboard name, and schedule info is listed in schedule
-                    else if(viewing.StartTime_Scheduled.equals(schedule_info.StartTime_Scheduled))
+                    else if(viewing.startTimeScheduled.equals(scheduleInfo.startTimeScheduled))
                     {
-                        viewing_exists = true;
+                        viewingExists = true;
 
                         //remove scheduled viewing from Billboard key
-                        Schedule_MultiMap.remove(billboard_name,viewing);
+                        scheduleMultiMap.remove(billboardName,viewing);
                         break outerloop;
                     }
                 }
@@ -401,50 +408,50 @@ public class ScheduleMultiMap {
         }
 
         //if billboard name is not listed in schedule
-        if(billboard_exists == false)
+        if(billboardExists == false)
         {
             //throw exception
             throw new Exception("The billboard does not exist in the schedule");
         }
 
         //else if combination of billboard name, and schedule info is not in schedule
-        else if(viewing_exists == false)
+        else if(viewingExists == false)
         {
             //throw exception
-            throw new Exception("The given schedule information for " + billboard_name +
+            throw new Exception("The given schedule information for " + billboardName +
                     " does not exist");
         }
     }
 
     /**
-     *
-     * @param billboard_name name of the billboard schedule information is being retrieved from
-     * @return an array list of the times & durations the billboard is scheduled for
+     * Returns array list of scheduled viewings for the given billboard
+     * @param billboardName name of the billboard schedule information is being retrieved from
+     * @return an array list of the schedule information for each of the billboard's viewing
      */
 
-    public ArrayList<Schedule_Info> getSchedule(String billboard_name) throws Exception
+    public ArrayList<ScheduleInfo> getSchedule(String billboardName) throws Exception
     {
         //array list to store scheduled times of single billboard
-        ArrayList<Schedule_Info> singleBBschedule = new ArrayList<>();
+        ArrayList<ScheduleInfo> singleBBschedule = new ArrayList<>();
 
         //boolean variable to track whether billboard exists in schedule
-        boolean billboard_exists = false;
+        boolean billboardExists = false;
 
-        //For every entry of Billboard_schedule
-        for (String BillboardName : Schedule_MultiMap.keySet())
+        //For every entry of scheduleMultiMap
+        for (String BillboardName : scheduleMultiMap.keySet())
         {
             //if given billboard name matches billboard name in schedule
-            if (BillboardName.equals(billboard_name))
+            if (BillboardName.equals(billboardName))
             {
                 //store viewings of billboard in singleBBschedule collection
-                singleBBschedule = Schedule_MultiMap.get(billboard_name);
-                billboard_exists = true;
+                singleBBschedule = scheduleMultiMap.get(billboardName);
+                billboardExists = true;
                 break;
             }
         }
 
         //if billboard is not scheduled
-        if (billboard_exists == false)
+        if (billboardExists == false)
         {
             throw new Exception("The billboard does not exist in the schedule");
         }
