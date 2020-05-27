@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,6 +21,18 @@ import java.util.Map;
  *        contains some code used during testing which will be removed
  */
 public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener {
+    HashMap<String, Billboard> billboardListH;
+
+    /**
+     * Method used to create a GUI window for the Billboard edit Screen
+     */
+    public ControlPanelGUIBillboardControlPanel(HashMap<String, Billboard> BillboardList) {
+        // Set window title
+        //super("Billboard Schedule");
+
+        billboardListH = BillboardList;
+    }
+
     // Clickable buttons and list
     private JList billboardList;
     private JButton editBillboardButton;
@@ -124,10 +137,10 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         //For Testing
         //Billboard with no scheduled viewing
 //        try {
-//            BillboardList.billboardHashMap.Create_edit_Billboard("Billboard1", "new billboard", "#4287f5", "No Image", "jarod");
-//            BillboardList.billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "#4287f5", "No Image", "Is");
-//            BillboardList.billboardHashMap.Create_edit_Billboard("Billboard3", "new billboard", "#4287f5", "No Image", "The");
-//            BillboardList.billboardHashMap.Create_edit_Billboard("Billboard4", "new billboard", "#4287f5", "No Image", "Best");
+//            BillboardList.Create_edit_Billboard("Billboard1", "new billboard", "#4287f5", "No Image", "jarod");
+//            BillboardList.Create_edit_Billboard("Billboard2", "new billboard", "#4287f5", "No Image", "Is");
+//            BillboardList.Create_edit_Billboard("Billboard3", "new billboard", "#4287f5", "No Image", "The");
+//            BillboardList.Create_edit_Billboard("Billboard4", "new billboard", "#4287f5", "No Image", "Best");
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
@@ -137,10 +150,10 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         int counter = 1;
 
         //Setup an array to return creator and billboard
-        String[] billboardListWithCreator = new String[BillboardList.billboardHashMap.size()+1];
+        String[] billboardListWithCreator = new String[billboardListH.size()+1];
 
         //Get the Creator of each billboard in the billboard list
-        for(Map.Entry<String, Billboard> billboardEntry : BillboardList.billboardHashMap.entrySet()){
+        for(Map.Entry<String, Billboard> billboardEntry : billboardListH.entrySet()){
             //Initialize array with the new size and repopulate it
             //billboardListWithCreator = new String[counter];
             //Assign creator name to position one in the 2D array
