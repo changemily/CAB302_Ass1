@@ -42,7 +42,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // Create DurationSpinner
-        SpinnerModel durationModel = new SpinnerNumberModel(0, 0, 1440, 1);
+        SpinnerModel durationModel = new SpinnerNumberModel(1, 1, 1440, 1);
         DurationSpinner = new JSpinner(durationModel);
         DurationSpinner.setFont(DurationSpinner.getFont().deriveFont(DurationSpinner.getFont().getSize() + 7f));
 
@@ -76,6 +76,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         SpinnerModel frequencyModel = new SpinnerNumberModel(0, 0, 59, 1);
         frequencySpinner = new JSpinner(frequencyModel);
         frequencySpinner.setFont(DurationSpinner.getFont().deriveFont(DurationSpinner.getFont().getSize() + 7f));
+        frequencySpinner.setVisible(false);
 
         // Create FrequencyPicker
         RecurrencePicker = new JComboBox(FrequencyOptions);
