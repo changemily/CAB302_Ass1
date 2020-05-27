@@ -1,6 +1,9 @@
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.Socket;
@@ -19,6 +22,11 @@ import java.util.Properties;
  * @version - under development
  */
 public class ControlPanelClient {
+    public static final String xmlFile = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <picture url=\"https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download\" />\n" +
+            "    <information>Billboard with picture (with URL attribute) and information text only. The picture is now centred within the top 2/3 of the image and the information text is centred in the remaining space below the image.</information>\n" +
+            "</billboard>";
 
     /**
      * Sends requests to Server
@@ -192,20 +200,16 @@ public class ControlPanelClient {
      */
     public static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
 
-        String  billboardName= user_inputs[1];
-        String text = user_inputs[2];
-        String bg_colour = user_inputs[3];
-        String image = user_inputs[4];
-        String billboard_creator = user_inputs[5];
+        String  billboardName = user_inputs[1];
+        String billboardCreator = user_inputs[2];
+        String xmlFile = user_inputs[3];
 
         //Write the request to the server
         oos.writeObject(buttonClicked);
         //Write the details to the server
         oos.writeObject(billboardName);
-        oos.writeObject(text);
-        oos.writeObject(bg_colour);
-        oos.writeObject(image);
-        oos.writeObject(billboard_creator);
+        oos.writeObject(billboardCreator);
+        oos.writeObject(xmlFile);
     }
 
     /**
@@ -308,6 +312,7 @@ public class ControlPanelClient {
         oos.writeObject(recurrence);
     }
 
+
     /**
      * Runs client
      * @param args
@@ -324,11 +329,12 @@ public class ControlPanelClient {
         String [] user_inputs4 = {"Schedule Billboard","2","2021-05-10T10:10:00.00", "5", "0"};
         String [] user_inputs5 = {"Schedule Billboard","1","2021-05-10T10:00:00.00", "20", "0"};
 
-        String[] user_inputs6 = {"Create edit billboard", "name", "sdfgwdg", "#eb4034", "No Image", "Jarod"};
+
+        String[] user_inputs6 = {"Create edit billboard", "Billboard1",  "Jarod", xmlFile};
         String[] user_inputs7 = {"List billboards"};
 
         //Run_Client(user_inputs1);
-        Run_Client(user_inputs7);
+        Run_Client(user_inputs6);
         //Run_Client(user_inputs3);
         //Run_Client(user_inputs4);
         //Run_Client(user_inputs5);

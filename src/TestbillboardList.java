@@ -9,6 +9,11 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestbillboardList<E> {
+    public static final String xmlFile = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <picture url=\"https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download\" />\n" +
+            "    <information>Billboard with picture (with URL attribute) and information text only. The picture is now centred within the top 2/3 of the image and the information text is centred in the remaining space below the image.</information>\n" +
+            "</billboard>";
 
     ArrayList<E> billboardValues;
     BillboardList billboardList = new BillboardList();
@@ -26,46 +31,15 @@ public class TestbillboardList<E> {
     public void add_Billboard() throws Exception
     {
         //Billboard with no scheduled viewing
-        billboardList.createEditBillboard("Billboard1", "new billboard", "#4287f5", "No Image", "jarod");
+        billboardList.createEditBillboard("Billboard1", "jarod", xmlFile);
 
         assertEquals(true, billboardList.billboardHashMap.containsKey("Billboard1"));
 
         //Billboard with scheduled viewing and image
-        billboardList.createEditBillboard("Billboard2", "new billboard", "#4287f5",
-                "No Image","jarod");
+        billboardList.createEditBillboard("Billboard2", "jarod", xmlFile);
 
         assertEquals(true, billboardList.billboardHashMap.containsKey("Billboard2"));
 
-    }
-
-    //Test 3.4: Check if img exists.
-    @Test
-    public void img_exists()
-    {
-        assertThrows(Exception.class, () -> {
-            billboardList.createEditBillboard("Billboard2", "new billboard", "#4287f5",
-                    "lmao.jpg", "jarod");
-        });
-    }
-
-    //Test 3.5: Check if bg_colour is valid.
-    @Test
-    public void bg_valid()
-    {
-        assertThrows(Exception.class, () -> {
-            billboardList.createEditBillboard("Billboard2", "new billboard", "lmao",
-                    "image.jpg", "jarod");
-        });
-    }
-
-    //Test 3.6: Checks if there's no image.
-    @Test
-    public void img_doesnt_exists()
-    {
-        assertThrows(Exception.class, () -> {
-            billboardList.createEditBillboard("Billboard2", "new billboard", "#4287f5",
-                    "", "jarod");
-        });
     }
 
     //Test 4: Checks if a billboard can be edited.
@@ -73,10 +47,10 @@ public class TestbillboardList<E> {
     public void Edit_Billboard() throws Exception {
 
         //Create Billboard1
-        billboardList.createEditBillboard("Billboard1", "new billboard", "#4287f5", "No Image","jarod");
+        billboardList.createEditBillboard("Billboard1", "jarod", xmlFile);
 
         //edit billboard 1
-        billboardList.createEditBillboard("Billboard1", "edited", "#42f55d", "No Image","jarod");
+        billboardList.createEditBillboard("Billboard1", "jarod", xmlFile);
 
         //test if all variables have changed
         assertEquals("Billboard1", "Billboard1");
@@ -105,18 +79,15 @@ public class TestbillboardList<E> {
     public void Get_billboard_info() throws Exception
     {
         //Create a billboard to check
-        billboardList.createEditBillboard("Billboard2", "new billboard", "#4287f5",
-                "No Image", "jarod");
+        billboardList.createEditBillboard("Billboard2", "jarod", xmlFile);
         //Store billboard info sourced in a temp billboard object
-        Billboard temp_billboard = billboardList.Get_billboard_info("Billboard2");
+        Billboard temp_billboard = billboardList.GetBillboardInfo("Billboard2");
 
         //Test if retrieved Billboard variables equal the original requested_billboard info.
         //If the billboards are the same it means the correct billboard info requested is being displayed.
         assertEquals("Billboard2", temp_billboard.BillboardName);
-        assertEquals("new billboard", temp_billboard.BillboardText);
-        assertEquals("#4287f5", temp_billboard.BgColour);
-        assertEquals(null, temp_billboard.ImageFile);
         assertEquals("jarod", temp_billboard.BillboardCreator);
+        assertEquals(xmlFile, temp_billboard.XMLFile);
     }
 
     //Test 7: If Get_billboard_info attempts to retrieve information from a billboard that doesn't exist.
@@ -124,7 +95,7 @@ public class TestbillboardList<E> {
     public void no_info()
     {
         assertThrows(Exception.class, () -> {
-            billboardList.Get_billboard_info("Billboard_1");
+            billboardList.GetBillboardInfo("Billboard_1");
         });
     }
 
@@ -133,15 +104,14 @@ public class TestbillboardList<E> {
     public void Delete_billboard() throws Exception
     {
         //Create Billboard1
-        billboardList.createEditBillboard("Billboard1", "new billboard", "#4287f5",
-                "No Image", "jarod");
+        billboardList.createEditBillboard("Billboard1", "jarod", xmlFile);
 
         //Schedule Billboard1
         billboardList.scheduleMultiMap.scheduleBillboard("Billboard1",  LocalDateTime.parse("2021-04-22T10:00:00.00"),
                 Duration.ofMinutes(5),0, billboardList.listBillboards(), "jarod");;
 
         //Delete Billboard1
-        billboardList.Delete_billboard("Billboard1");
+        billboardList.DeleteBillboard("Billboard1");
 
         //Check if the billboard was deleted
         assertFalse(billboardList.billboardHashMap.containsKey("Billboard1"));
@@ -153,7 +123,7 @@ public class TestbillboardList<E> {
     public void no_billboard()
     {
         assertThrows(Exception.class, () -> {
-            billboardList.Delete_billboard("Billboard_1");
+            billboardList.DeleteBillboard("Billboard_1");
         });
     }
 

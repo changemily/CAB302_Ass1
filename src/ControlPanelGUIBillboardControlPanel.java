@@ -83,9 +83,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         //create new viewer to display xml
         File file = new File(billboardXML);
-        BillboardViewer Billboard = new BillboardViewer(file, new Dimension(400,200));
-        JPanel billboardPreview = Billboard.getSizedBillboard();
-        previewPanel.add(billboardPreview);
+        //BillboardViewer Billboard = new BillboardViewer(file, new Dimension(400,200));
+        //JPanel billboardPreview = Billboard.getSizedBillboard();
+        //previewPanel.add(billboardPreview);
 
 
         // Create button JPanel
@@ -231,7 +231,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         if (buttonClicked==editBillboardButton || buttonClicked == createBillboardButton) {
             //run Billboard editor/creator GUI
-            SwingUtilities.invokeLater(new BBEditor());
+            //SwingUtilities.invokeLater(new BBEditor());
         }
 
         else if (buttonClicked==scheduleBillboardButton) {

@@ -111,10 +111,10 @@ public class BillboardViewerClient {
         // Find screen size
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         // Create new billboard
-        BillboardViewer billboard = new BillboardViewer(file, screenSize);
+        //BillboardViewer billboard = new BillboardViewer(file, screenSize);
 
         // Get Panel
-        billboardPanel = billboard.getSizedBillboard();
+        //billboardPanel = billboard.getSizedBillboard();
 
         // Add Panel
         billboardGUI.add(billboardPanel);

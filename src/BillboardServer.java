@@ -25,9 +25,7 @@ public class BillboardServer {
             "CREATE TABLE IF NOT EXISTS Users (username varchar(255),password varchar(255));";
 
     public static final String CREATE_BILLBOARD_TABLE =
-            "CREATE TABLE IF NOT EXISTS Billboards (billboard_name varchar(255)," +
-                    "text varchar(1000),bg_colour varchar (255)," +
-                    "image_file varchar(255), billboard_creator varchar(255));";
+            "CREATE TABLE IF NOT EXISTS Billboards (billboardName varchar(255), billboardCreator varchar (255), xmlFile varchar (225));";
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboardName varchar(255), startTimeScheduled varchar(50), " +
@@ -292,13 +290,13 @@ public class BillboardServer {
         //Read Parameters sent by client
         String billboardName = ois.readObject().toString();
         //Output results to the client
-        oos.writeObject(billboardList.Get_billboard_info(billboardName));
+        oos.writeObject(billboardList.GetBillboardInfo(billboardName));
 
-        Billboard BillboardInfo = billboardList.Get_billboard_info(billboardName);
-        System.out.println("billboard infos: "+ billboardList.Get_billboard_info(billboardName));
+        Billboard BillboardInfo = billboardList.GetBillboardInfo(billboardName);
+        System.out.println("billboard infos: "+ billboardList.GetBillboardInfo(billboardName));
         System.out.println("billboard name: "+BillboardInfo.BillboardName);
-        System.out.println("billboard bg colour: "+BillboardInfo.BgColour);
-        System.out.println("billboard image file: "+BillboardInfo.ImageFile);
+        System.out.println("billboard creator: "+BillboardInfo.BillboardCreator);
+        System.out.println("billboard xml: "+BillboardInfo.XMLFile);
     }
 
     /**
@@ -311,28 +309,25 @@ public class BillboardServer {
     public static void createEditBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList) throws Exception {
         //Read parameters sent by the client
         String billboardName = ois.readObject().toString();
-        String text = ois.readObject().toString();
-        String bgColour = ois.readObject().toString();
-        String image = ois.readObject().toString();
         String billboardCreator = ois.readObject().toString();
+        String xmlFile = ois.readObject().toString();
 
         //For testing purposes
         //print bb list
         System.out.println("billboard list: "+ billboardList);
         //print what was received from client
         System.out.println("billboard name: "+ billboardName + "\n" +
-                "text: "+text+"\n"+
-                "bgColour: "+bgColour+"\n"+
-                "image: "+image+"\n");
+                "creator: "+billboardCreator+"\n"+
+                "xml file: "+xmlFile+"\n");
 
         //Clear the db with the billboard information
-        billboardList.Clear_DBbillboardList(connection);
+        billboardList.ClearDBbillboardList(connection);
 
         //Create the billboard
-        billboardList.createEditBillboard(billboardName, text, bgColour, image, billboardCreator);
+        billboardList.createEditBillboard(billboardName, billboardCreator, xmlFile);
 
         //Write the new billboard to the DB
-        billboardList.Write_To_DBbillboard(connection);
+        billboardList.WriteToDBbillboard(connection);
     }
 
     /**
@@ -349,14 +344,14 @@ public class BillboardServer {
         System.out.println("billboard name: "+ billboardName);
 
         //Clear the db with the billboard information
-        billboardList.Clear_DBbillboardList(connection);
+        billboardList.ClearDBbillboardList(connection);
 
         //Now that the db is empty remove the billboard from the billboard list
-        billboardList.Delete_billboard(billboardName);
+        billboardList.DeleteBillboard(billboardName);
 
         //Now that the billboard has been removed from the list of billboards
         //Write the updated list to the db
-        billboardList.Write_To_DBbillboard(connection);
+        billboardList.WriteToDBbillboard(connection);
     }
 
     /**
@@ -389,7 +384,7 @@ public class BillboardServer {
         String duration = ois.readObject().toString();
         String recurrenceDelay = ois.readObject().toString();
 
-        Billboard billboard = billboardList.Get_billboard_info(billboardName);
+        Billboard billboard = billboardList.GetBillboardInfo(billboardName);
         String billboardCreator = billboard.BillboardCreator;
 
         //Clear schedule table in DB
@@ -425,7 +420,7 @@ public class BillboardServer {
         String recurrenceDelay = ois.readObject().toString();
 
         //retrieve billboard object
-        Billboard billboard = billboardList.Get_billboard_info(billboardName);
+        Billboard billboard = billboardList.GetBillboardInfo(billboardName);
 
         //retrieve billboard creator
         String billboardCreator = billboard.BillboardCreator;
