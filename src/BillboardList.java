@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
 public class BillboardList implements java.io.Serializable {
 
     //Setup a hashmap for tracking billboards.
-    HashMap<String, Billboard> billboardHashMap;
+    static HashMap<String, Billboard> billboardHashMap;
 
     //Setup a schedule multimap
     ScheduleMultiMap scheduleMultiMap = new ScheduleMultiMap();
