@@ -169,7 +169,4 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             e.printStackTrace();
         }
     }
-    public static void main(String args[]){
-        SwingUtilities.invokeLater(new ControlPanelGUI());
-    }
 }
