@@ -24,7 +24,7 @@ public class TestScheduleInfo {
      */
     @BeforeEach
     @Test
-    public void setUpBillboard() throws Exception {
+    public void setUpScheduleInfo() throws Exception {
         scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
                 5, "emily");
     }
@@ -91,7 +91,7 @@ public class TestScheduleInfo {
 
     /**
      * Test 7: construct schedule info object with invalid recurrence delay
-     *      *     - invalid option, larger than 60 mins and not an hr or day
+     * - invalid option, larger than 60 mins and not an hr or day
      * @throws Exception invalid duration, invalid recurrence delay
      */
     @Test
