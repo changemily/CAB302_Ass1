@@ -5,10 +5,10 @@ import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//*
+/**
  /* This class contains methods that test the functionality of billboardManager class methods
  /*  * @author — Harry Estreich
- /*  * @version - Draft, All Current Test Have Passed
+ /*  * @version - Final
   */
 
 

@@ -8,12 +8,13 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestbillboardList<E> {
+public class TestBillboardList<E> {
     public static final String xmlFile = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
             "    <picture url=\"https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download\" />\n" +
             "    <information>Billboard with picture (with URL attribute) and information text only. The picture is now centred within the top 2/3 of the image and the information text is centred in the remaining space below the image.</information>\n" +
             "</billboard>";
+
 
     ArrayList<E> billboardValues;
     BillboardList billboardList = new BillboardList();

@@ -43,6 +43,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     public BBEditor(String billboardName){
         super("Billboard Editor");
         this.billboardName = billboardName;
+        tempXMLString = "<billboard></billboard>";
     }
 
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, SAXException, ParserConfigurationException {
@@ -667,6 +668,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
     public static void main(String[] args)
     {
-        SwingUtilities.invokeLater(new BBEditor("9","<billboard></billboard>"));
+        SwingUtilities.invokeLater(new BBEditor("9"));
     }
 }
