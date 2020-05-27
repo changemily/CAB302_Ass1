@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author - Nickhil Nischal
  * @version - under development
  *
- * NOTES: Current version is a basic design; some functionality still needs to be added; further refinement required
+ * NOTES: Some button functionality still needs to be added
  */
 public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener {
     // Search JTextField
@@ -62,8 +62,8 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         // Set look and feel of GUI to resemble operating system look and feel
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-        // Default close operation, so window does not continue running after it is closed
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // Create left JPanel, with Y axis Box Layout
         JPanel leftPanel = newPanel('Y');
@@ -402,13 +402,5 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Main method which creates a GUI window for the User Control Panel
-     * @param args This method takes no arguments
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel());
     }
 }
