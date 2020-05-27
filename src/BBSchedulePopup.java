@@ -18,19 +18,22 @@ import static javax.swing.JOptionPane.*;
 
 public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 {
-    JButton RemoveBttn;
-    JButton ScheduleBttn;
-    JSpinner DurationSpinner;
-    JSpinner dateTimePicker;
-    JComboBox RecurrencePicker;
-    JSpinner frequencySpinner;
-    final String MINUTES_IN_DAY = "1440";
-    final String MINUTES_IN_HOUR = "60";
+    private JButton RemoveBttn;
+    private JButton ScheduleBttn;
+    private JSpinner DurationSpinner;
+    private JSpinner dateTimePicker;
+    private JComboBox RecurrencePicker;
+    private JSpinner frequencySpinner;
+    private String BillboardName;
+    private final String MINUTES_IN_DAY = "1440";
+    private final String MINUTES_IN_HOUR = "60";
 
-    public BBSchedulePopup()
+    public BBSchedulePopup(String billboardName)
     {
         // Set window title
         super("Billboard Viewer");
+
+        BillboardName = billboardName;
     }
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException
     {
@@ -250,7 +253,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
             System.out.println("Save pressed");
 
             //change user inputs to GUI inputs
-            String [] user_inputs = {"Schedule Billboard","3",localDateTimeString, duration, recurrenceDelay};
+            String [] user_inputs = {"Schedule Billboard",BillboardName,localDateTimeString, duration, recurrenceDelay};
 
             //Schedule billboard with viewing details given by user
             ControlPanelClient.Run_Client(user_inputs);
@@ -271,7 +274,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
             if(a == YES_OPTION)
             {
                 //change user inputs to GUI inputs
-                String [] user_inputs = {"Remove Schedule","3",localDateTimeString, duration, recurrenceDelay};
+                String [] user_inputs = {"Remove Schedule",BillboardName,localDateTimeString, duration, recurrenceDelay};
 
                 //remove viewing from schedule with viewing details given by user
                 ControlPanelClient.Run_Client(user_inputs);
@@ -303,7 +306,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 
     public static void main(String[] args)
     {
-        SwingUtilities.invokeLater(new BBSchedulePopup());
+        //SwingUtilities.invokeLater(new BBSchedulePopup(BillboardName));
     }
 
 }

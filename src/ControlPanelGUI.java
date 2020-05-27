@@ -119,7 +119,11 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         else if (buttonClicked==editBillboardButton) {
             //run Billboard Control Panel GUI
-            SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel());
+            try {
+                SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         else if (buttonClicked == editBillboardScheduleButton)

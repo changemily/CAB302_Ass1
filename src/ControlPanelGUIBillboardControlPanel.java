@@ -23,16 +23,24 @@ import java.util.Map;
  */
 public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener {
     // Clickable buttons and list
-    JList billboardList;
-    JButton editBillboardButton;
-    JButton scheduleBillboardButton;
-    JButton createBillboardButton;
-    String billboardXML="./5.xml";
-    BillboardList billboard_list = new BillboardList();
+    private JList billboardList;
+    private JButton editBillboardButton;
+    private JButton scheduleBillboardButton;
+    private JButton createBillboardButton;
+    private String billboardXML="./5.xml"; //CHANGE TO DEFAULT NOTHING TO DISPLAY XML
+    private BillboardList billboard_list = new BillboardList();
+    private String billboardName;
 
-    public ControlPanelGUIBillboardControlPanel() {
+    public ControlPanelGUIBillboardControlPanel() throws Exception {
         // Set window title
         super("Billboard Control Panel");
+
+        //FOR TESTING
+        billboard_list.createEditBillboard("1", "hello", "#000000", "No Image", "jarod");
+        billboard_list.createEditBillboard("2", "hello", "#000000", "No Image", "jarod");
+        billboard_list.createEditBillboard("3", "hello", "#000000", "No Image", "jarod");
+
+
     }
 
     /**
@@ -181,10 +189,19 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
     // Changes billboard XML when a user selects a billboard from the list
     public void valueChanged(ListSelectionEvent event) {
-        String billboardSelected = billboardList.getSelectedValue().toString();
+        //get string stored in current cell of list
+        String cellSelected = billboardList.getSelectedValue().toString();
+
+        //remove creator from list
+        String billboardSelected = cellSelected.replaceAll(".*, ", "");
+
+        //get billboard xml file name
         billboardXML = "./"+billboardSelected+".xml";
 
-        System.out.println(billboardXML);
+        //store billboard name of selected cell
+        billboardName = billboardSelected;
+        System.out.println("bb xml: "+billboardXML);
+        System.out.println("bb name: "+billboardName);
     }
 
     /**
@@ -215,7 +232,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         else if (buttonClicked==scheduleBillboardButton) {
             //run schedule billboard GUI pop up
-            SwingUtilities.invokeLater(new BBSchedulePopup());
+            SwingUtilities.invokeLater(new BBSchedulePopup(billboardName));
         }
 
     }
@@ -235,6 +252,10 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel());
     }
 
 }
