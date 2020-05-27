@@ -28,7 +28,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     JButton scheduleBillboardButton;
     JButton createBillboardButton;
     String billboardXML="./5.xml";
-    BillboardList billboard_list = new BillboardList();
 
     public ControlPanelGUIBillboardControlPanel() {
         // Set window title
@@ -121,14 +120,14 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * This method creates a JList, returns a JList
      * @return Returns JList
      */
-    private JList createJList(JPanel panel) {
+    public JList createJList(JPanel panel) {
         //For Testing
         //Billboard with no scheduled viewing
 //        try {
-//            billboard_list.Create_edit_Billboard("Billboard1", "new billboard", "#4287f5", "No Image", "jarod");
-//            billboard_list.Create_edit_Billboard("Billboard2", "new billboard", "#4287f5", "No Image", "Is");
-//            billboard_list.Create_edit_Billboard("Billboard3", "new billboard", "#4287f5", "No Image", "The");
-//            billboard_list.Create_edit_Billboard("Billboard4", "new billboard", "#4287f5", "No Image", "Best");
+//            BillboardList.billboardHashMap.Create_edit_Billboard("Billboard1", "new billboard", "#4287f5", "No Image", "jarod");
+//            BillboardList.billboardHashMap.Create_edit_Billboard("Billboard2", "new billboard", "#4287f5", "No Image", "Is");
+//            BillboardList.billboardHashMap.Create_edit_Billboard("Billboard3", "new billboard", "#4287f5", "No Image", "The");
+//            BillboardList.billboardHashMap.Create_edit_Billboard("Billboard4", "new billboard", "#4287f5", "No Image", "Best");
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
@@ -138,17 +137,17 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         int counter = 1;
 
         //Setup an array to return creator and billboard
-        String[] billboardListWithCreator = new String[billboard_list.billboardHashMap.size()+1];
+        String[] billboardListWithCreator = new String[BillboardList.billboardHashMap.size()+1];
 
         //Get the Creator of each billboard in the billboard list
-        for(Map.Entry<String, Billboard> billboardEntry : billboard_list.billboardHashMap.entrySet()){
+        for(Map.Entry<String, Billboard> billboardEntry : BillboardList.billboardHashMap.entrySet()){
             //Initialize array with the new size and repopulate it
             //billboardListWithCreator = new String[counter];
             //Assign creator name to position one in the 2D array
             billboardListWithCreator[counter] = billboardEntry.getValue().Billboard_creator;
             //Assign billboard name to the second position in the 2D array
-            billboardListWithCreator[counter] = billboardListWithCreator[counter] + ", "
-                    + billboardEntry.getValue().Billboard_name;
+            billboardListWithCreator[counter] = billboardEntry.getValue().Billboard_name + ", "
+                    + billboardListWithCreator[counter];
             counter++;
         }
 
