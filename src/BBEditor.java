@@ -363,19 +363,49 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         JButton exportBttn = new JButton(( new AbstractAction("Export") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(bb.getMessageExists())
+                if(!MessageField.getText().equals(""))
                 {
                     bb.setMessageText(MessageField.getText());
+                    bb.setMessageExists(true);
+                }
+                else{
+                    bb.setMessageExists(false);
                 }
 
-                if(bb.getInformationExists())
+                if(!ExtraInfoText.getText().equals(""))
                 {
                     bb.setInformationText(ExtraInfoText.getText());
+                    bb.setInformationExists(true);
+                }
+                else{
+                    bb.setInformationExists(false);
                 }
 
-                if(bb.getPictureExists())
+                if(!ImageURL.getText().equals(""))
                 {
-                    bb.setPictureURL(ImageURL.getText());
+                    bb.setPictureExists(true);
+                    try{
+                        URL urlString = new URL(ImageURL.getText());
+                        bb.setUrlExists(true);
+                        bb.setDataExists(false);
+                        bb.setPictureURL(ImageURL.getText());
+                    } catch(MalformedURLException m){
+                        bb.setDataExists(true);
+                        bb.setUrlExists(false);
+                        File f = new File(ImageURL.getText());
+                        try {
+                            FileInputStream imageFile = new FileInputStream(f);
+                            byte[] imageData = imageFile.readAllBytes();
+                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                        } catch (IOException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                        }
+
+
+                    }
+                }
+                else{
+                    bb.setPictureExists(false);
                 }
 
                 try {
