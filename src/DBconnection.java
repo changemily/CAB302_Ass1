@@ -56,15 +56,9 @@ public class DBconnection {
      */
     public static Connection getInstance() {
         if (instance == null) {
+            //create new instance of DB connection
             new DBconnection();
         }
         return instance;
-    }
-
-    /**
-     * Closes singleton instance of the database connection
-     */
-    public static void Close_connection() throws SQLException {
-        instance.close();
     }
 }
