@@ -277,8 +277,8 @@ public class BillboardServer {
      */
     public static void listBillboards(ObjectOutputStream oos, BillboardList billboardList) throws Exception{
         //Output to client
-        oos.writeObject(billboardList.List_Billboards());
-        System.out.println("billboard list: "+ billboardList.List_Billboards());
+        oos.writeObject(billboardList.listBillboards());
+        System.out.println("billboard list: "+ billboardList.listBillboards());
     }
 
     /**
@@ -296,9 +296,9 @@ public class BillboardServer {
 
         Billboard BillboardInfo = billboardList.Get_billboard_info(billboardName);
         System.out.println("billboard infos: "+ billboardList.Get_billboard_info(billboardName));
-        System.out.println("billboard name: "+BillboardInfo.Billboard_name);
-        System.out.println("billboard bg colour: "+BillboardInfo.Bg_colour);
-        System.out.println("billboard image file: "+BillboardInfo.Image_file);
+        System.out.println("billboard name: "+BillboardInfo.BillboardName);
+        System.out.println("billboard bg colour: "+BillboardInfo.BgColour);
+        System.out.println("billboard image file: "+BillboardInfo.ImageFile);
     }
 
     /**
@@ -329,7 +329,7 @@ public class BillboardServer {
         billboardList.Clear_DBbillboardList(connection);
 
         //Create the billboard
-        billboardList.Create_edit_Billboard(billboardName, text, bgColour, image, billboardCreator);
+        billboardList.createEditBillboard(billboardName, text, bgColour, image, billboardCreator);
 
         //Write the new billboard to the DB
         billboardList.Write_To_DBbillboard(connection);
@@ -390,14 +390,14 @@ public class BillboardServer {
         String recurrenceDelay = ois.readObject().toString();
 
         Billboard billboard = billboardList.Get_billboard_info(billboardName);
-        String billboardCreator = billboard.Billboard_creator;
+        String billboardCreator = billboard.BillboardCreator;
 
         //Clear schedule table in DB
         billboardSchedule.clearDBschedule(connection);
 
         //schedule billboard with client input
         billboardSchedule.scheduleBillboard(billboardName,LocalDateTime.parse(startTime),
-                Duration.ofMinutes(Integer.parseInt(duration)), Integer.parseInt(recurrenceDelay), billboardList.List_Billboards(),billboardCreator);
+                Duration.ofMinutes(Integer.parseInt(duration)), Integer.parseInt(recurrenceDelay), billboardList.listBillboards(),billboardCreator);
 
         //write schedule to DB
         billboardSchedule.writeToDbschedule(connection);
@@ -428,7 +428,7 @@ public class BillboardServer {
         Billboard billboard = billboardList.Get_billboard_info(billboardName);
 
         //retrieve billboard creator
-        String billboardCreator = billboard.Billboard_creator;
+        String billboardCreator = billboard.BillboardCreator;
 
         //create schedule info object with client's input
         ScheduleInfo scheduleInfo = new ScheduleInfo(LocalDateTime.parse(startTime),

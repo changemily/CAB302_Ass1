@@ -4,35 +4,37 @@ import java.time.LocalDateTime;
 
 /**
  * ScheduleInfo class
- * This class contains methods that construct Schedule_Info objects
+ * This class contains methods that construct ScheduleInfo objects
  * @author Emily Chang
  * @version complete
  */
 public class ScheduleInfo implements Serializable {
-    final int MINUTES_IN_DAY = 1440;
-    final int MINUTES_IN_HOUR = 60;
+    //initialize final variables that store the number of minutes in a day and hour
+    private final int MINUTES_IN_DAY = 1440;
+    private final int MINUTES_IN_HOUR = 60;
 
+    //class attributes
     LocalDateTime startTimeScheduled;
     Duration duration;
     int recurrenceDelay;
     String billboardCreator;
 
     /**
-     *Constructor that is used to create Schedule_info object. Schedule_info object is assigned a start time scheduled,
-     * duration (mins) & recurrence type
+     * Constructor that is used to create a ScheduleInfo object. ScheduleInfo object is assigned a start time scheduled,
+     * duration (mins), recurrence delay(mins) and the creator of the billboard scheduled
      * @param startTimeScheduled start time billboard is scheduled for
      * @param durationMins duration billboard is scheduled for
-     * @param recurrenceDelay time till next recurrence billboard is scheduled for
-     * @param billboardCreator creator of billboard
-     * @throws Exception throws exception if recurrence is invalid, duration or start time scheduled is out of range
+     * @param recurrenceDelay time till next recurrence of billboard viewing - 0 if there is no recurrence
+     * @param billboardCreator creator of billboard that is being scheduled
+     * @throws Exception throws exception if recurrence is invalid or if duration is out of range
      */
     public ScheduleInfo(LocalDateTime startTimeScheduled, Duration durationMins, int recurrenceDelay , String billboardCreator) throws Exception
     {
-
-        this.billboardCreator = billboardCreator;
-
-        //set time billboard is scheduled for showing
+        //set start time of billboard viewing
         this.startTimeScheduled = startTimeScheduled;
+
+        //set billboard creator of billboard being displayed
+        this.billboardCreator = billboardCreator;
 
         //if duration is negative or zero
         if (durationMins.isNegative() || durationMins.isZero())
@@ -41,13 +43,15 @@ public class ScheduleInfo implements Serializable {
             throw new Exception("Duration out of range");
         }
 
+        //if valid duration
         else
         {
             //set duration billboard is displayed for
             this.duration = durationMins;
         }
 
-        //returns negative if recurrenceDelay is less than duration
+        //compare duration of recurrence delay to duration of billboard viewing
+        //returns negative int if recurrenceDelay is less than duration
         int compare = Duration.ofMinutes(recurrenceDelay).compareTo(this.duration);
 
         //if the recurrence is smaller than duration
@@ -57,7 +61,7 @@ public class ScheduleInfo implements Serializable {
             throw new Exception("Recurrence delay cannot be smaller than the duration of the billboard viewing");
         }
 
-        //if the recurrence option is invalid
+        //if the recurrence option is invalid - not day, hour or not under 60 mins
         if (recurrenceDelay != MINUTES_IN_DAY && recurrenceDelay != MINUTES_IN_HOUR && !(recurrenceDelay < MINUTES_IN_HOUR) && recurrenceDelay != 0)
         {
             //throw exception
@@ -65,6 +69,7 @@ public class ScheduleInfo implements Serializable {
                     "every day, hour, minute or none");
         }
 
+        //if valid recurrence option
         else
         {
             //set recurrence of billboard

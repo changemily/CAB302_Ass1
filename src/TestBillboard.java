@@ -1,27 +1,26 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * This class contains methods that test the functionality of Billboard class methods
+ * This class contains methods that test the functionality of the Billboard class
  *  * @author — Emily Chang
  *  * @version - 2
  */
 public class TestBillboard {
 
-    Billboard billboard;
-
-    // Test 1: Constructing a Billboard object with scheduled time
+    /**
+     * Test 1: Constructing a Billboard object with an image
+     */
     @BeforeEach @Test
     public void setUpBillboard() {
-        billboard = new Billboard("Billboard 1", "Hello World", "blue", "image.jpg", "jarod");
+        new Billboard("Billboard 1", "Hello World", "blue", "image.jpg", "jarod");
     }
 
     @Test
-    // Test 1.3: Constructing a Billboard object without image
-    public void setUpBillboard_img() {
-        Billboard billboard3 = new Billboard("Billboard 2", "Hello World", "red", "No Image","jarod");
+    /**
+     * Test 2: Constructing a Billboard object without image
+     */
+    public void setUpBillboardImg() {
+        new Billboard("Billboard 2", "Hello World", "red", "No Image","jarod");
     }
 }

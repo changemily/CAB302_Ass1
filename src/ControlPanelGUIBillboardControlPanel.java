@@ -1,13 +1,11 @@
 import org.xml.sax.SAXException;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,11 +34,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
     // Clickable buttons and list
-    JList billboardList;
-    JButton editBillboardButton;
-    JButton scheduleBillboardButton;
-    JButton createBillboardButton;
-    String billboardXML="./5.xml";
+    private JList billboardList;
+    private JButton editBillboardButton;
+    private JButton scheduleBillboardButton;
+    private JButton createBillboardButton;
+    private String billboardXML="./5.xml"; //CHANGE TO DEFAULT NOTHING TO DISPLAY XML
+    private BillboardList billboard_list = new BillboardList();
+    private String billboardName;
 
     public ControlPanelGUIBillboardControlPanel() {
         // Set window title
@@ -157,9 +157,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //Initialize array with the new size and repopulate it
             //billboardListWithCreator = new String[counter];
             //Assign creator name to position one in the 2D array
-            billboardListWithCreator[counter] = billboardEntry.getValue().Billboard_creator;
+            billboardListWithCreator[counter] = billboardEntry.getValue().BillboardCreator;
             //Assign billboard name to the second position in the 2D array
-            billboardListWithCreator[counter] = billboardEntry.getValue().Billboard_name + ", "
+            billboardListWithCreator[counter] = billboardEntry.getValue().BillboardName + ", "
                     + billboardListWithCreator[counter];
             counter++;
         }
@@ -193,10 +193,19 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
     // Changes billboard XML when a user selects a billboard from the list
     public void valueChanged(ListSelectionEvent event) {
-        String billboardSelected = billboardList.getSelectedValue().toString();
+        //get string stored in current cell of list
+        String cellSelected = billboardList.getSelectedValue().toString();
+
+        //remove creator from list
+        String billboardSelected = cellSelected.replaceAll(".*, ", "");
+
+        //get billboard xml file name
         billboardXML = "./"+billboardSelected+".xml";
 
-        System.out.println(billboardXML);
+        //store billboard name of selected cell
+        billboardName = billboardSelected;
+        System.out.println("bb xml: "+billboardXML);
+        System.out.println("bb name: "+billboardName);
     }
 
     /**
@@ -227,7 +236,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         else if (buttonClicked==scheduleBillboardButton) {
             //run schedule billboard GUI pop up
-            SwingUtilities.invokeLater(new BBSchedulePopup());
+            SwingUtilities.invokeLater(new BBSchedulePopup(billboardName));
         }
 
     }
