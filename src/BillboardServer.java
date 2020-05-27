@@ -22,7 +22,7 @@ import java.util.*;
 public class BillboardServer {
 
     public static final String CREATE_USER_TABLE =
-            "CREATE TABLE IF NOT EXISTS Users (username varchar(255),password varchar(255));";
+            "CREATE TABLE IF NOT EXISTS Users (username varchar(255) PRIMARY KEY,password varchar(255), createBillboard INT, editBillboards INT, scheduleBillboards INT, editUsers INT)";
 
     public static final String CREATE_BILLBOARD_TABLE =
             "CREATE TABLE IF NOT EXISTS Billboards (billboard_name varchar(255)," +
@@ -32,6 +32,11 @@ public class BillboardServer {
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboardName varchar(255), startTimeScheduled varchar(50), " +
                     "Duration varchar (255), recurrenceDelay varchar (50), billboardCreator varchar (255));";
+
+    public static final String ADD_DEFAULT_USER =
+            "INSERT INTO Users (username, password, createBillboard, editBillboards, scheduleBillboards, editUsers)"  +
+            "VALUES(\""+"AdminUser"+"\",\""+"Password1"+"\",\""+1+"\",\""+1+"\",\""+1+"\",\""+1+"\")" +
+                    "ON DUPLICATE KEY UPDATE username = \""+"AdminUser"+"\";";
 
     //queue of billboard viewings - 2D array
     private static String [][] queue = new String [0][0];
@@ -46,9 +51,6 @@ public class BillboardServer {
      * Sends and Receives information from client
      */
     public static void runServer() throws Exception {
-        //Setup a default user.
-        User DefaultUser = new User("DefaultUserName", "DefaultPassword",
-                "Create Billboards", "Edit All Billboards", "Schedule Billboards", "Edit Users");
 
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboardSchedule = new ScheduleMultiMap();
@@ -226,6 +228,14 @@ public class BillboardServer {
         try {
             Statement st = connection.createStatement();
             st.execute(CREATE_USER_TABLE);
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Statement st = connection.createStatement();
+            st.execute(ADD_DEFAULT_USER);
             st.close();
         } catch (SQLException e) {
             e.printStackTrace();
