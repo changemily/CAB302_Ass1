@@ -18,9 +18,12 @@ class MultiMap<K, V> implements Serializable
      * Add the specified value with the specified key in this multimap.
      */
     public void put(K key, V value) {
+        //if key does not exist in map
         if (map.get(key) == null)
+            //add key and empty array list that holds values to map
             map.put(key, new ArrayList<>());
 
+        //add value to key in map
         map.get(key).add(value);
     }
 
@@ -40,13 +43,6 @@ class MultiMap<K, V> implements Serializable
     }
 
     /**
-     * Returns a Set view of the mappings contained in this multimap.
-     */
-    public Set<Map.Entry<K, ArrayList<V>>> entrySet() {
-        return map.entrySet();
-    }
-
-    /**
      * Returns true if this multimap contains a mapping for the specified key.
      */
     public boolean containsKey(Object key) {
@@ -62,7 +58,6 @@ class MultiMap<K, V> implements Serializable
         return map.remove(key);
     }
 
-
     /**
      * Returns true if this map contains no key-value mappings.
      */
@@ -75,7 +70,9 @@ class MultiMap<K, V> implements Serializable
      * mapped to the specified value and return true if removed
      */
     public boolean remove(K key, V value) {
-        if (map.get(key) != null) // key exists
+        // if the key exists
+        if (map.get(key) != null)
+            //remove the value from the key
             return map.get(key).remove(value);
 
         return false;
