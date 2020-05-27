@@ -57,116 +57,107 @@ public class BillboardViewer extends JFrame{
     private BufferedImage resizedPicture;
     private boolean pictureExists;
     private boolean urlExists;
+    private boolean dataExists;
     private String pictureURL;
     private String pictureDataString;
 
-    //    public BillboardViewer() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+        public BillboardViewer() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Set variables to error settings
+        messageText = "Error found!";
+        messageColourCode = Color.decode(colourRed);
+        messageExists = true;
+        informationText = "No available billboard";
+        informationColourCode = Color.decode(colourBlack);
+        informationExists = true;
+
+        // Set format to message/information
+        billboardVariation = 4;
+
+        // Set components
+        setMessage();
+        setInformation();
+
+        // Display billboard
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        JFrame billboard = createBillboard();
+        displayAllFrame(billboard);
+        billboard.pack();
+        billboard.setExtendedState(MAXIMIZED_BOTH);
+        billboard.setVisible(true);
+    }
+
+    //    public BillboardViewer(File xml_file, boolean fullScreen) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+//        // Find screen size
 //        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//        // Parse File
+//        parseFile(xml_file);
 //
-//        // Set variables to error settings
-//        messageText = "Error found!";
-//        messageColourCode = Color.decode(colourRed);
-//        messageExists = true;
-//        informationText = "No available billboard";
-//        informationColourCode = Color.decode(colourBlack);
-//        informationExists = true;
+//        //// Find Elements from xml_file
+//        findBillboardCode(parsedFile);
+//        // Billboard Details
+//        findMessageDetails(parsedFile);
+//        findInformationDetails(parsedFile);
+//        findPictureDetails(parsedFile);
 //
-//        // Set format to message/information
-//        billboardVariation = 4;
+//        // Create frame, and set basic settings
 //
-//        // Set components
-//        setMessage();
-//        setInformation();
+//        billboardVariation = calculateVariation();
 //
-//        // Display billboard
-//        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//        JFrame billboard = createBillboard();
-//        displayAllFrame(billboard);
-//        billboard.pack();
-//        billboard.setExtendedState(MAXIMIZED_BOTH);
-//        billboard.setVisible(true);
+//        switch(billboardVariation){
+//            case 1:
+//                setMessage();
+//                break;
+//            case 2:
+//                setInformation();
+//                break;
+//            case 3:
+//                setPicture();
+//                break;
+//            case 4:
+//                setMessage();
+//                setInformation();
+//                break;
+//            case 5:
+//                setMessage();
+//                setPicture();
+//                break;
+//            case 6:
+//                setInformation();
+//                setPicture();
+//                break;
+//            case 7:
+//                setMessage();
+//                setInformation();
+//                setPicture();
+//                break;
+//        }
+//
+//        // Display and pack billboard
+//        if(fullScreen) {
+//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//            JFrame billboard = createBillboard();
+//            displayAllFrame(billboard);
+//            billboard.pack();
+//            billboard.setExtendedState(MAXIMIZED_BOTH);
+//            billboard.setVisible(true);
+//        }
 //    }
 
     /**
-     * Constructor creates a GUI on an xml file in full screen
-     * @param xml_file (File)
-     * @throws ParserConfigurationException (error)
-     * @throws IOException (error)
-     * @throws SAXException (error)
-     * @throws ClassNotFoundException (error)
-     * @throws UnsupportedLookAndFeelException (error)
-     * @throws InstantiationException (error)
-     * @throws IllegalAccessException (error)
-     */
-    public BillboardViewer(File xml_file, boolean fullScreen) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        // Find screen size
-        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        // Parse File
-        parseFile(xml_file);
-
-        //// Find Elements from xml_file
-        findBillboardCode(parsedFile);
-        // Billboard Details
-        findMessageDetails(parsedFile);
-        findInformationDetails(parsedFile);
-        findPictureDetails(parsedFile);
-
-        // Create frame, and set basic settings
-
-        billboardVariation = calculateVariation();
-
-        switch(billboardVariation){
-            case 1:
-                setMessage();
-                break;
-            case 2:
-                setInformation();
-                break;
-            case 3:
-                setPicture();
-                break;
-            case 4:
-                setMessage();
-                setInformation();
-                break;
-            case 5:
-                setMessage();
-                setPicture();
-                break;
-            case 6:
-                setInformation();
-                setPicture();
-                break;
-            case 7:
-                setMessage();
-                setInformation();
-                setPicture();
-                break;
-        }
-
-        // Display and pack billboard
-        if(fullScreen) {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            JFrame billboard = createBillboard();
-            displayAllFrame(billboard);
-            billboard.pack();
-            billboard.setExtendedState(MAXIMIZED_BOTH);
-            billboard.setVisible(true);
-        }
-    }
-
-    /**
      * Constructor creates a GUI on an xml file in set size
-     * @param xml_file (File)
+     * @param file (String)
      * @param size (Dimension)
      * @throws ParserConfigurationException (error)
      * @throws IOException (error)
      * @throws SAXException (error)
      */
-    public BillboardViewer(File xml_file, Dimension size) throws ParserConfigurationException, IOException, SAXException{
+    public BillboardViewer(String file, Dimension size) throws ParserConfigurationException, IOException, SAXException{
         // Find screen size
         screenSize = size;
         // Parse File
+        InputStream xml_file = new ByteArrayInputStream(file.getBytes());
         parseFile(xml_file);
 
         //// Find Elements from xml_file
@@ -217,7 +208,7 @@ public class BillboardViewer extends JFrame{
      * Method for parsing the xml_file
      * @param xml_file (File)
      */
-    private void parseFile(File xml_file) throws ParserConfigurationException, IOException, SAXException {
+    private void parseFile(InputStream xml_file) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); // create a new instance
         DocumentBuilder build = factory.newDocumentBuilder(); // create a new factory builder
         parsedFile = build.parse(xml_file); // parse xml_file into file and return
@@ -270,8 +261,60 @@ public class BillboardViewer extends JFrame{
 
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("omit-xml-declaration", "yes");
         transformer.transform(new DOMSource(file), output);
 
+    }
+
+    public String updateXMLString() throws ParserConfigurationException, TransformerException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); // create a new instance
+        DocumentBuilder build = factory.newDocumentBuilder(); // create a new factory builder
+        Document file = build.newDocument(); // create a new file
+        file.setXmlStandalone(true);
+
+        // Write to file
+        Element billboardElement = file.createElement("billboard");
+        billboardElement.setAttribute("background", billboardColourString);
+        file.appendChild(billboardElement);
+
+        // Add message
+        if(messageExists) {
+            Element messageElement = file.createElement("message");
+            if(messageColourString != null) {
+                messageElement.setAttribute("colour", messageColourString);
+            }
+            messageElement.appendChild(file.createTextNode(messageText));
+            billboardElement.appendChild(messageElement);
+        }
+
+        // Add picture
+        if(pictureExists) {
+            Element pictureElement = file.createElement("picture");
+            if(urlExists){
+                pictureElement.setAttribute("url", pictureURL);
+            }
+            else{ // !urlExists
+                pictureElement.setAttribute("data", pictureDataString);
+            }
+            billboardElement.appendChild(pictureElement);
+        }
+
+        // Add information
+        if(informationExists) {
+            Element informationElement = file.createElement("information");
+            if(informationColourString != null) {
+                informationElement.setAttribute("colour", informationColourString);
+            }
+            informationElement.appendChild(file.createTextNode(informationText));
+            billboardElement.appendChild(informationElement);
+        }
+
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "no");
+
+        StringWriter write = new StringWriter();
+        transformer.transform(new DOMSource(file), new StreamResult(write));
+        return write.getBuffer().toString();
     }
 
     /**
@@ -415,8 +458,11 @@ public class BillboardViewer extends JFrame{
         else if(!messageExists && informationExists){ // picture must be true
             return 6; // information/picture
         }
-        else{ // all true
+        else if(messageExists){ // all true
             return 7; // message/information/picture
+        }
+        else{ // all false
+            return 8;
         }
     }
 
@@ -424,11 +470,12 @@ public class BillboardViewer extends JFrame{
      * Method for setting the maximum font size
      * @param textLabel (JLabel)
      */
-    private int setMessageFontSize(JLabel textLabel){
+    private int setMessageFontSize(JLabel textLabel, double heightBuffer){
         // Calculate dimensions
         // Percent size limit for message text
         double messageBuffer = 0.95;
         double maxWidth = (screenSize.width * messageBuffer);
+        double maxHeight = (screenSize.height * heightBuffer);
 
         // Set Font to 1
         textLabel.setFont(new Font(textLabel.getFont().getName(), Font.PLAIN, 1));
@@ -436,14 +483,16 @@ public class BillboardViewer extends JFrame{
         Font textFont = textLabel.getFont(); // Font
         int fontSize = textFont.getSize(); // Font Size
         int stringSize = textLabel.getFontMetrics(textFont).stringWidth(messageText); // Calculate string width
+        int stringHeight = textLabel.getFontMetrics(textFont).getHeight();
 
-        while(stringSize < maxWidth){ // While stringWidth is within maximum width
+        while((stringSize < maxWidth) && (stringHeight < maxHeight)){ // While stringWidth is within maximum width
             fontSize += 1;
             textLabel.setFont(new Font(textFont.getName(), Font.PLAIN, fontSize));
 
             // Calculate font metrics again
             textFont = textLabel.getFont();
             stringSize = textLabel.getFontMetrics(textFont).stringWidth(messageText);
+            stringHeight = textLabel.getFontMetrics(textFont).getHeight();
         }
         return textLabel.getFontMetrics(textFont).getHeight();
     }
@@ -466,7 +515,7 @@ public class BillboardViewer extends JFrame{
 
         // Calculate max width if message exists
         // ratio for maximum size of information text compared to message text
-        double informationRatio = 0.75;
+        double informationRatio = 0.70;
         double messageMax = messageLabel.getFont().getSize() * informationRatio;
 
         // Calculate font metrics
@@ -547,6 +596,17 @@ public class BillboardViewer extends JFrame{
             newHeight = (int)(currentHeight * ratioIncrease);
         }
 
+        if(newHeight > maxHeight){
+            double ratioDecrease = (double)maxHeight / (double)currentHeight;
+            newHeight = maxHeight;
+            newWidth = (int)(currentWidth * ratioDecrease);
+        }
+        else if(newWidth > maxWidth){
+            double ratioDecrease = (double)maxWidth / (double)currentWidth;
+            newWidth = maxWidth;
+            newHeight = (int)(currentHeight * ratioDecrease);
+        }
+
         // Scale new image with new size
         Image tempImage = picture.getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT);
         BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
@@ -564,7 +624,28 @@ public class BillboardViewer extends JFrame{
         // Define messageLabel
         messageLabel.setText(messageText);
         messageLabel.setForeground(messageColourCode);
-        messageFontHeight = setMessageFontSize(messageLabel); // set font to fit buffer
+        double heightBuffer;
+        double oneBufferHeight = 2.0 / 3.0;
+        double twoBufferHeight = 1.0 / 3.0;
+        double threeBufferHeight = 2.0 / 9.0;
+
+        // Calculate height, depending on which other items exist
+        // Percent height limit for info/message text, that is 1/3 of screen
+        if(!informationExists && !pictureExists){
+            // Percent height limit for info/message text, this is full screen
+            heightBuffer = oneBufferHeight;
+        }
+        else if(!pictureExists){
+            heightBuffer = twoBufferHeight;
+        }
+        else if(!informationExists){
+            // Percent height limit for info/message text, that is 1/2 of screen
+            heightBuffer = threeBufferHeight;
+        }
+        else{
+            heightBuffer = threeBufferHeight;
+        }
+        messageFontHeight = setMessageFontSize(messageLabel, heightBuffer); // set font to fit buffer
     }
 
     /**
@@ -924,6 +1005,10 @@ public class BillboardViewer extends JFrame{
      */
     public void setPictureExists(boolean bool){ pictureExists = bool;}
 
+    public void setUrlExists(boolean bool){ urlExists = bool;}
+
+    public void setDataExists(boolean bool){ dataExists = bool;}
+
     /**
      * Main program for testing
      * @param args (String[])
@@ -937,8 +1022,9 @@ public class BillboardViewer extends JFrame{
         //BV.writeFile(output);
         //new BillboardViewer();
         //BillboardViewer BV = new BillboardViewer(file, true);
+
         JFrame screen = new JFrame();
-        File file = new File("./5.xml");
+        String file = "<billboard><message>Default-coloured message</message><picture url=\"https://cloudstor.aarnet.edu.au/plus/s/X79GyWIbLEWG4Us/download\"/><information colour=\"#60B9FF\">Custom-coloured information text</information></billboard>";
         BillboardViewer BV = new BillboardViewer(file,new Dimension(1920, 1080));
         JPanel fileBB = BV.getSizedBillboard();
         screen.add(fileBB);
