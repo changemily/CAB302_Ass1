@@ -400,7 +400,7 @@ public class BillboardServer {
                 Duration.ofMinutes(Integer.parseInt(duration)), Integer.parseInt(recurrenceDelay), billboardList.listBillboards(),billboardCreator);
 
         //write schedule to DB
-        billboardSchedule.writeToDbschedule(connection);
+        billboardSchedule.writeToDBschedule(connection);
 
         //update viewer queue
         populateQueue(connection);
@@ -441,7 +441,7 @@ public class BillboardServer {
         billboardSchedule.scheduleRemoveBillboard(billboardName,scheduleInfo);
 
         //write schedule to DB
-        billboardSchedule.writeToDbschedule(connection);
+        billboardSchedule.writeToDBschedule(connection);
     }
 
     /**
@@ -546,7 +546,7 @@ public class BillboardServer {
                 billboardSchedule.scheduleRemoveBillboard(billboardName, displayedSchedule);
 
                 //Write schedule changes to DB
-                billboardSchedule.writeToDbschedule(connection);
+                billboardSchedule.writeToDBschedule(connection);
 
             }
 
@@ -604,7 +604,7 @@ public class BillboardServer {
                 }
 
                 //Write schedule changes to DB
-                billboardSchedule.writeToDbschedule(connection);
+                billboardSchedule.writeToDBschedule(connection);
             }
 
             else
