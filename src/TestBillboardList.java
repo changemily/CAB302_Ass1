@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestbillboardList<E> {
+public class TestBillboardList<E> {
 
     ArrayList<E> billboardValues;
     BillboardList billboardList = new BillboardList();
