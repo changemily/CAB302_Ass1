@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -55,7 +56,7 @@ public class ControlPanelClient {
                     break;
 
                 case "List billboards":
-                    listBillboards(oos, request);
+                    listBillboards(oos, ois, request);
                     break;
 
                 case "Get Billboard info":
@@ -174,9 +175,13 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by the control panel GUI
      * @throws IOException
      */
-    public static void listBillboards(ObjectOutputStream oos, String buttonClicked)throws IOException{
+    public static void listBillboards(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws IOException, ClassNotFoundException {
         //Output clients request to the server
         oos.writeObject(buttonClicked);
+
+        HashMap<String, Billboard> BillboardList = (HashMap) ois.readObject();
+
+        SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel(BillboardList));
     }
 
     /**
@@ -319,8 +324,11 @@ public class ControlPanelClient {
         String [] user_inputs4 = {"Schedule Billboard","2","2021-05-10T10:10:00.00", "5", "0"};
         String [] user_inputs5 = {"Schedule Billboard","1","2021-05-10T10:00:00.00", "20", "0"};
 
+        String[] user_inputs6 = {"Create edit billboard", "name", "sdfgwdg", "#eb4034", "No Image", "Jarod"};
+        String[] user_inputs7 = {"List billboards"};
+
         //Run_Client(user_inputs1);
-        Run_Client(user_inputs2);
+        Run_Client(user_inputs7);
         //Run_Client(user_inputs3);
         //Run_Client(user_inputs4);
         //Run_Client(user_inputs5);

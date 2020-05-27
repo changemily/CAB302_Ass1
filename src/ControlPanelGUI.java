@@ -119,7 +119,9 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         else if (buttonClicked==editBillboardButton) {
             //run Billboard Control Panel GUI
-            SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel());
+            String [] user_input = {"List billboards"};
+            //request schedule and run calendar GUI
+            ControlPanelClient.Run_Client(user_input);
         }
 
         else if (buttonClicked == editBillboardScheduleButton)
