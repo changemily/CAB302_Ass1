@@ -111,27 +111,31 @@ public class BillboardList implements java.io.Serializable {
 
         //The code for deleting the billboard info from the schedule.
 
-        //Get the info from schedule for the billboard
-        ArrayList<ScheduleInfo> viewings = scheduleMultiMap.getSchedule(billboardName);
+        try{
+            //Get the info from schedule for the billboard
+            ArrayList<ScheduleInfo> viewings = scheduleMultiMap.getSchedule(billboardName);
 
-        //for each scheduled viewing of the billboard
-        for (ScheduleInfo viewing : viewings ) {
+            //for each scheduled viewing of the billboard
+            for (ScheduleInfo viewing : viewings ) {
 
-            //store schedule info in local vars
-            LocalDateTime startTimeScheduled = viewing.startTimeScheduled;
-            Duration durationMins = viewing.duration;
-            int recurrenceDelay = viewing.recurrenceDelay;
-            String billboardCreator = viewing.billboardCreator;
+                //store schedule info in local vars
+                LocalDateTime startTimeScheduled = viewing.startTimeScheduled;
+                Duration durationMins = viewing.duration;
+                int recurrenceDelay = viewing.recurrenceDelay;
+                String billboardCreator = viewing.billboardCreator;
 
-            //create schedule info with viewing details
-            ScheduleInfo scheduleInfo = new ScheduleInfo(startTimeScheduled,durationMins, recurrenceDelay, billboardCreator);
+                //create schedule info with viewing details
+                ScheduleInfo scheduleInfo = new ScheduleInfo(startTimeScheduled,durationMins, recurrenceDelay, billboardCreator);
 
-            //remove viewing of billboard
-            scheduleMultiMap.scheduleRemoveBillboard(billboardName, scheduleInfo);
+                //remove viewing of billboard
+                scheduleMultiMap.scheduleRemoveBillboard(billboardName, scheduleInfo);
+            }
+            //The code for removing the billboard info from the billboardList.
+            billboardHashMap.remove(billboardName);
+        }catch(Exception e){
+            //The code for removing the billboard info from the billboardList.
+            billboardHashMap.remove(billboardName);
         }
-
-        //The code for removing the billboard info from the billboardList.
-        billboardHashMap.remove(billboardName);
     }
 
     public void RetrieveDBbillboardList(Connection connection) throws Exception {
