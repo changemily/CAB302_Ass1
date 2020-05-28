@@ -314,7 +314,8 @@ public class BillboardViewer extends JFrame{
 
         StringWriter write = new StringWriter();
         transformer.transform(new DOMSource(file), new StreamResult(write));
-        return write.getBuffer().toString();
+        String output = write.getBuffer().toString();
+        return output.replace("\"","'");
     }
 
     /**
