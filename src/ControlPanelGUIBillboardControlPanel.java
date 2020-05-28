@@ -148,6 +148,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             billboard_list.createEditBillboard("Billboard5", "liam", xmlFiles);
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(getContentPane(), e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         }
 
 
@@ -243,6 +245,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), e,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
             }
             System.out.println("xmlFile: "+xmlFile);
             //run Billboard editor/creator GUI
@@ -262,14 +266,24 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             createGUI();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (InstantiationException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 
