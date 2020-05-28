@@ -23,6 +23,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
     JButton editUsersButton;
     JButton editBillboardButton;
     JButton viewBillboardScheduleButton;
+    JButton passwordChangeButton;
     String username;
     String sessionToken;
 
@@ -58,6 +59,12 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         //create JPanel that holds button
         JPanel editBillboardSchedulePanel = createButtonJPanel(viewBillboardScheduleButton);
 
+        // create edit password button
+        passwordChangeButton = createButton("Edit Password");
+        // create JPanel that holds button
+        JPanel editPasswordChangePanel = createButtonJPanel(passwordChangeButton);
+
+
         //Add label and buttons to content pane
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().add(Box.createVerticalStrut(50));
@@ -68,6 +75,8 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         getContentPane().add(editBillboardPanel);
         getContentPane().add(Box.createVerticalStrut(25));
         getContentPane().add(editBillboardSchedulePanel);
+        getContentPane().add(Box.createVerticalStrut(25));
+        getContentPane().add(editPasswordChangePanel);
         getContentPane().add(Box.createVerticalStrut(50));
 
         // Format window
@@ -138,7 +147,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         if (buttonClicked==editUsersButton) {
             // Open User Control Panel GUI
-            String[] user_input = {"List users"};
+            String[] user_input = {"List users", "Admin"};
             ControlPanelClient.Run_Client(user_input);
         }
 
@@ -152,6 +161,13 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         else if (buttonClicked == viewBillboardScheduleButton)
         {
             String [] user_input = {"View schedule"};
+            //request schedule and run calendar GUI
+            ControlPanelClient.Run_Client(user_input);
+        }
+
+        else if (buttonClicked == passwordChangeButton)
+        {
+            String [] user_input = {"List users", "Password"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
         }

@@ -22,15 +22,18 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
     JCheckBox editUsersBox;
     String username;
     String sessionToken;
+    boolean adminUser;
 
     /**
      * Method used to create a GUI window for the Create/Edit User Screen
      */
-    public ControlPanelGUICreateEditUser(String username, String sessionToken) {
+    public ControlPanelGUICreateEditUser(String username, String sessionToken, boolean adminUser) {
         // Set window title
         super("Create/Edit User");
         this.username = username;
-        this.sessionToken = sessionToken;    }
+        this.sessionToken = sessionToken;
+        this.adminUser = adminUser;
+    }
 
     /**
      * Method used to create a GUI window for the Create/Edit User screen
@@ -55,6 +58,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Create username JTextField, add to left JPanel
         usernameField = newTextField(leftPanel);
+        usernameField.setEditable(false);
 
         // Create password JLabel, add to left JPanel
         newLabel("Password", leftPanel);
@@ -104,11 +108,18 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Window formatting
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
-        getContentPane().add(Box.createHorizontalStrut(100)); // boundary
+        if(adminUser) {
+            getContentPane().add(Box.createHorizontalStrut(100)); // boundary
+        }
+        else{
+            getContentPane().add(Box.createHorizontalStrut(40)); // boundary
+        }
         getContentPane().add(leftPanel);
         getContentPane().add(Box.createHorizontalStrut(40));
-        getContentPane().add(rightPanel);
-        getContentPane().add(Box.createHorizontalStrut(100)); // boundary
+        if(adminUser) {
+            getContentPane().add(rightPanel);
+            getContentPane().add(Box.createHorizontalStrut(100)); // boundary
+        }
 
         // Display window
         setLocation(new Point(100,100));

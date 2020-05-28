@@ -192,7 +192,7 @@ public class TestUserManager {
     public void delete_own_user() throws Exception{
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         userManager admin = new userManager(adminUser, adminUser);
-        assertThrows(Exception.class, () -> admin.delete_user());
+        assertFalse(admin.delete_user());
     }
 
     // Test 7.2 Delete other user, with admin, pass
@@ -201,7 +201,7 @@ public class TestUserManager {
         User adminUser = new User("Admin", "1234", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
-        admin.delete_user();
+        assertTrue(admin.delete_user());
     }
 
     // Test 8.1 Delete other user, without admin, fail
@@ -210,7 +210,7 @@ public class TestUserManager {
         User adminUser = new User("Admin", "1234", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Edit All Billboards");
         userManager admin = new userManager(adminUser, otherUser);
-        assertThrows(Exception.class, () -> admin.delete_user());
+        assertFalse(admin.delete_user());
     }
 }
 

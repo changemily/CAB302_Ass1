@@ -6,6 +6,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 
 /**
@@ -373,26 +374,40 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             }
 
             else {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken));
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true));
             }
         }
 
         // Checks if the delete user button has been clicked
         else if (buttonClicked == deleteUserButton) {
             System.out.println("delete user button clicked with " + userSelectionLabel.getText() + " selected");
-            //run user (to check if admin), then if admin open dialog double checking if user should be deleted or not
-
-            if (!userType.equals("admin")) {
+            if (userSelectionLabel.getText().equals("") || userSelectionLabel.getText() == null) {
                 JOptionPane.showMessageDialog(this,
-                        "You do not have Admin permissions to delete a user.");
+                        "You have not selected a user");
             }
-
-            else if (userSelectionLabel.getText().equals("") || userSelectionLabel.getText() == null) {
-                // Add message dialog, a user has not been selected from the list
-            }
-
             else {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken));
+                try {
+                    User baseUser = UserList.getUserInformation(userList, "AdminUser");
+                    User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
+                    userManager deleteUser = new userManager(baseUser, intendedUser);
+                    if(deleteUser.delete_user()){
+                        String[] user_inputs = {"Delete User", intendedUser.Username};
+                        ControlPanelClient.Run_Client(user_inputs);
+                        user_inputs = new String[]{"List users", "Admin"};
+                        ControlPanelClient.Run_Client(user_inputs);
+                        getContentPane().setVisible(false);
+                        dispose();
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this,
+                                "You can't delete yourself!");
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                //ControlPanelClient.Run_Client();
             }
         }
 
@@ -402,7 +417,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             //run user (to check if admin), then if admin open Create/Edit User GUI
 
             if (userType.equals("admin")) {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken));
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true));
             }
 
             else {
