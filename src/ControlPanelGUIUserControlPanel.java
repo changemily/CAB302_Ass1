@@ -19,29 +19,29 @@ import java.util.HashMap;
  */
 public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener {
     // Search JTextField
-    JTextField search;
+    private JTextField search;
 
     // User JList
-    JList list;
+    private JList list;
 
     // User Selection JLabel
-    JLabel userSelectionLabel;
-    String userSelected;
+    private JLabel userSelectionLabel;
+    private String userSelected;
 
     // Edit User JButton
-    JButton editUserButton;
+    private JButton editUserButton;
 
     // Delete User JButton
-    JButton deleteUserButton;
+    private JButton deleteUserButton;
 
     // Create User JButton
-    JButton createUserButton;
+    private JButton createUserButton;
 
     // Master Array of Users, used in user search checking
-    String[] usersMasterArray;
+    private String[] usersMasterArray;
 
     // Variable list used to populate JList when user is searching
-    DefaultListModel userListModel = new DefaultListModel();
+    private DefaultListModel userListModel = new DefaultListModel();
 
     String username;
     String sessionToken;

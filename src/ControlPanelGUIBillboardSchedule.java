@@ -15,10 +15,10 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * NOTES: Current version is a basic design; some functionality still needs to be added; further refinement required
  */
 public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable {
-    MultiMap billboard_schedule;
+    private MultiMap billboard_schedule;
+    private final int days_in_week = 7;
     String username;
     String sessionToken;
-    final int days_in_week = 7;
     /**
      * Method used to create a GUI window for the Billboard Schedule Screen
      */

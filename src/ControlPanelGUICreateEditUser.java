@@ -12,14 +12,14 @@ import java.awt.event.ActionListener;
  * NOTES: Some functionality still needs to be added
  */
 public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener {
-    JTextField usernameField;
-    JTextField password;
-    JButton saveExitButton;
-    JButton exitWithoutSaving;
-    JCheckBox createBillboardsBox;
-    JCheckBox scheduleBillboardsBox;
-    JCheckBox editAllBillboardsBox;
-    JCheckBox editUsersBox;
+    private JTextField usernameField;
+    private JTextField password;
+    private JButton saveExitButton;
+    private JButton exitWithoutSaving;
+    private JCheckBox createBillboardsBox;
+    private JCheckBox scheduleBillboardsBox;
+    private JCheckBox editAllBillboardsBox;
+    private JCheckBox editUsersBox;
     String username;
     String sessionToken;
     boolean adminUser;

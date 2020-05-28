@@ -12,6 +12,13 @@ import java.awt.event.ActionListener;
  * NOTES: Some button functionality still needs to be added
  */
 public class ControlPanelGUI extends JFrame implements Runnable, ActionListener {
+    private JButton editUsersButton;
+    private JButton editBillboardButton;
+    private JButton viewBillboardScheduleButton;
+    private JButton passwordChangeButton;
+    String username;
+    String sessionToken;
+
     /**
      * Method used to create a GUI window for the Control Panel Menu
      * @throws ClassNotFoundException Exception handling
@@ -19,14 +26,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
      * @throws InstantiationException Exception handling
      * @throws IllegalAccessException Exception handling
      */
-
-    JButton editUsersButton;
-    JButton editBillboardButton;
-    JButton viewBillboardScheduleButton;
-    JButton passwordChangeButton;
-    String username;
-    String sessionToken;
-
     public ControlPanelGUI(String username, String sessionToken){
         // Set window title
         super("Control Panel Menu");
