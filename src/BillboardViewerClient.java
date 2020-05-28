@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Properties;
 import java.util.Timer;
@@ -21,7 +22,16 @@ public class BillboardViewerClient {
     private static boolean firstTime = true;
     private static JFrame billboardGUI = new JFrame();
     private static JPanel billboardPanel = new JPanel();
+    private final static String serverErrorXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <message>The viewer cannot connect to the server</message>\n" +
+            "</billboard>\n";
 
+
+    private final static String TestFIle = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <message>Billboard displaying</message>\n" +
+            "</billboard>\n";
     /**
      * Sends request to server for currently displayed billboard
      */
@@ -46,52 +56,53 @@ public class BillboardViewerClient {
 
             String hostname = props.getProperty("host");
 
-            Socket socket = new Socket(hostname,portNumber);
+            //try connecting to server
+            try{
+                //establish connection with server
+                Socket socket = new Socket(hostname,portNumber);
+                //Create Object input and output streams for server
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());//String request sent to server
+                String request = "Run Billboard Viewer";
 
-            //Create Object input and output streams for server
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                //request billboard currently displayed from server
+                oos.writeObject(request);
+                //flush output stream
+                oos.flush();
 
-            //String request sent to server
-            String request = "Run Billboard Viewer";
+                //retrieve name of currently displayed billboard
+                String billboardName = ois.readObject().toString();
 
-            //request billboard currently displayed from server
-            oos.writeObject(request);
-            //flush output stream
-            oos.flush();
+                //print what was received from server
+                System.out.println("billboard being displayed: "+ billboardName);
 
-            //retrieve name of currently displayed billboard
-            String billboardName = ois.readObject().toString();
+                //get xml file name for billboard
+                File file = new File("./"+billboardName+".xml");
 
-            //print what was received from server
-            System.out.println("billboard being displayed: "+ billboardName);
+                //display billboard on viewer
+                ViewerGUI(billboardGUI, billboardPanel, TestFIle);
+                billboardGUI.pack();
+                billboardGUI.setVisible(true);
 
-            //get xml file name for billboard
-            File file = new File("./"+billboardName+".xml");
-
-            //display billboard on viewer
-            ViewerGUI(billboardGUI, billboardPanel, file);
-            billboardGUI.pack();
-            billboardGUI.setVisible(true);
-
-            //close streams and connection with server
-            oos.close();
-            ois.close();
-            socket.close();
-
+                //close streams and connection with server
+                oos.close();
+                ois.close();
+                socket.close();
+            }
+            catch(ConnectException e)
+            {
+                //display "unable to connect to server" error screen
+                ViewerGUI(billboardGUI, billboardPanel, serverErrorXML);
+                billboardGUI.pack();
+                billboardGUI.setVisible(true);
+            }
 
         } catch (
                 FileNotFoundException fnfe) {
             System.err.println(fnfe);
         } catch (
-                IOException ex) {
+                IOException | ClassNotFoundException | SAXException | ParserConfigurationException ex) {
             ex.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
         }
     }
 
@@ -99,22 +110,22 @@ public class BillboardViewerClient {
      *
      * @param billboardGUI
      * @param billboardPanel
-     * @param file
+     * @param xmlString
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public static void ViewerGUI(JFrame billboardGUI, JPanel billboardPanel, File file) throws IOException, SAXException, ParserConfigurationException {
+    public static void ViewerGUI(JFrame billboardGUI, JPanel billboardPanel, String xmlString) throws IOException, SAXException, ParserConfigurationException {
         if(billboardPanel != null){
             billboardGUI.remove(billboardPanel);
         }
         // Find screen size
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         // Create new billboard
-        //BillboardViewer billboard = new BillboardViewer(file, screenSize);
+        BillboardViewer billboard = new BillboardViewer(xmlString, screenSize);
 
         // Get Panel
-        //billboardPanel = billboard.getSizedBillboard();
+        billboardPanel = billboard.getSizedBillboard();
 
         // Add Panel
         billboardGUI.add(billboardPanel);
