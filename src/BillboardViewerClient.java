@@ -3,6 +3,10 @@ import org.xml.sax.SAXException;
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
@@ -126,6 +130,45 @@ public class BillboardViewerClient {
 
         // Add Panel
         billboardGUI.add(billboardPanel);
+
+        //add listener to detect if a key is pressed on the keyboard
+        billboardGUI.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //close viewer
+                System.exit(0);
+            }
+        });
+
+        //add listener to detect mouse clicks
+        billboardGUI.addMouseListener(new MouseListener() {
+            //when mouse is clicked
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //close viewer
+                System.exit(0);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
     }
 
     /**
