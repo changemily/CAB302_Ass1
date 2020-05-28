@@ -3,6 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static javax.swing.JOptionPane.YES_OPTION;
+import static javax.swing.JOptionPane.showConfirmDialog;
+
 /**
  * Control Panel GUI class
  * This class contains a Main method and method that creates a GUI window for the Control Panel GUI screen
@@ -16,6 +19,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
     private JButton editBillboardButton;
     private JButton viewBillboardScheduleButton;
     private JButton passwordChangeButton;
+    private JButton removeBillboardButton;
     String username;
     String sessionToken;
 
@@ -53,6 +57,10 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         //create JPanel that holds button
         JPanel editBillboardPanel = createButtonJPanel(editBillboardButton);
 
+        // Create Remove Billboard button and panel
+        removeBillboardButton = createButton("Remove Billboards");
+        JPanel removeBillboardPanel = createButtonJPanel(removeBillboardButton);
+
         // create edit billboard schedule button
         viewBillboardScheduleButton = createButton("View Billboard Schedule");
         //create JPanel that holds button
@@ -72,6 +80,8 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         getContentPane().add(editUsersPanel);
         getContentPane().add(Box.createVerticalStrut(25));
         getContentPane().add(editBillboardPanel);
+        getContentPane().add(Box.createVerticalStrut(25));
+        getContentPane().add(removeBillboardPanel);
         getContentPane().add(Box.createVerticalStrut(25));
         getContentPane().add(editBillboardSchedulePanel);
         getContentPane().add(Box.createVerticalStrut(25));
@@ -174,6 +184,15 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             ControlPanelClient.Run_Client(user_input);
             dispose();
         }
+
+        else if(buttonClicked == removeBillboardButton)
+        {
+            int a = showConfirmDialog(null, "Are you sure you want to remove this billboard?");
+            if(a == YES_OPTION)
+            {
+
+            }
+        }
     }
 
     @Override
@@ -197,5 +216,9 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    public static void main(String[] args)
+    {
+        SwingUtilities.invokeLater(new ControlPanelGUI("admin", "124"));
     }
 }
