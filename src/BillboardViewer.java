@@ -61,31 +61,24 @@ public class BillboardViewer extends JFrame{
     private String pictureURL;
     private String pictureDataString;
 
-        public BillboardViewer() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+    public BillboardViewer() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         // Set variables to error settings
-        messageText = "Error found!";
+        messageText = "Can't Connect to Server!";
         messageColourCode = Color.decode(colourRed);
         messageExists = true;
-        informationText = "No available billboard";
-        informationColourCode = Color.decode(colourBlack);
-        informationExists = true;
 
-        // Set format to message/information
-        billboardVariation = 4;
+        // Set format to message
+        billboardVariation = 1;
 
         // Set components
         setMessage();
-        setInformation();
+        // Display billboard
 
         // Display billboard
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        JFrame billboard = createBillboard();
-        displayAllFrame(billboard);
-        billboard.pack();
-        billboard.setExtendedState(MAXIMIZED_BOTH);
-        billboard.setVisible(true);
+        setBillboardPanel();
+        addAllPanel(sizedBillboard);
     }
 
     //    public BillboardViewer(File xml_file, boolean fullScreen) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
@@ -1015,7 +1008,7 @@ public class BillboardViewer extends JFrame{
      * @param args (String[])
      * @throws IOException (error)
      */
-    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
+    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         //File file = new File("./3.xml");
         //BillboardViewer BV = new BillboardViewer(file, true);
         //BV.setInformationText("Changed Text");
@@ -1026,10 +1019,11 @@ public class BillboardViewer extends JFrame{
 
         JFrame screen = new JFrame();
         String file = "<billboard><message>Default-coloured message</message><picture url=\"https://cloudstor.aarnet.edu.au/plus/s/X79GyWIbLEWG4Us/download\"/><information colour=\"#60B9FF\">Custom-coloured information text</information></billboard>";
-        BillboardViewer BV = new BillboardViewer(file,new Dimension(1920, 1080));
+        BillboardViewer BV = new BillboardViewer();
         JPanel fileBB = BV.getSizedBillboard();
         screen.add(fileBB);
         screen.pack();
         screen.setVisible(true);
+
     }
 }
