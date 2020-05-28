@@ -269,12 +269,20 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
             createGUI();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (InstantiationException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         }
 
     }

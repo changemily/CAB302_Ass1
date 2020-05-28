@@ -327,6 +327,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                             bb = new BillboardViewer(tempXMLString, d);
                         } catch (ParserConfigurationException | IOException | SAXException ex) {
                             ex.printStackTrace();
+                            JOptionPane.showMessageDialog(getContentPane(), ex,
+                                    "ERROR", JOptionPane.ERROR_MESSAGE);
                         }
                         assert bb != null;
                         JPanel billboardPreview = bb.getSizedBillboard();
@@ -349,6 +351,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
                     } catch (IOException fileNotFoundException) {
                         fileNotFoundException.printStackTrace();
+                        JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
 
                 }
@@ -400,6 +404,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                             bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
                         } catch (IOException fileNotFoundException) {
                             fileNotFoundException.printStackTrace();
+                            JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                                    "ERROR", JOptionPane.ERROR_MESSAGE);
                         }
 
 
@@ -461,6 +467,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                             bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
                         } catch (IOException fileNotFoundException) {
                             fileNotFoundException.printStackTrace();
+                            JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                                    "ERROR", JOptionPane.ERROR_MESSAGE);
                         }
 
 
@@ -475,6 +483,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     String a = "b";
                 } catch (ParserConfigurationException | TransformerException ex) {
                     ex.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), ex,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
 
                 PreviewPanel.removeAll();
@@ -485,6 +495,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     bb = new BillboardViewer(tempXMLString, d);
                 } catch (ParserConfigurationException | IOException | SAXException ex) {
                     ex.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), ex,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
                 assert bb != null;
                 JPanel billboardPreview = bb.getSizedBillboard();
@@ -633,24 +645,38 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         } catch (ClassNotFoundException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (InstantiationException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalAccessException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (UnsupportedLookAndFeelException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (SAXException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (ParserConfigurationException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 

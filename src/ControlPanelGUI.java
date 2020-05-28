@@ -155,6 +155,8 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
                 bblistTest.createEditBillboard("Billboard4", "sdfgh", "xmlFile3");
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), e,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
             }
 
             // Open Billboard Control Panel Screen
@@ -176,12 +178,20 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             createGUI();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (InstantiationException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
