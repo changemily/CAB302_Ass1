@@ -33,7 +33,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     public BBSchedulePopup(String username, String sessionToken, String billboardName)
     {
         // Set window title
-        super("Billboard Viewer");
+        super("Schedule Billboard");
 
         BillboardName = billboardName;
         this.username = username;
@@ -43,7 +43,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     {
         // Set default look and feel & window properties
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // Create DurationSpinner
         SpinnerModel durationModel = new SpinnerNumberModel(1, 1, 1440, 1);
