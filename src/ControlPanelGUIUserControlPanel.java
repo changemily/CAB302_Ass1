@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.HashMap;
 
 /**
@@ -17,7 +18,7 @@ import java.util.HashMap;
  *
  * NOTES: Some button functionality still needs to be added
  */
-public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener {
+public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener, WindowListener {
     // Search JTextField
     JTextField search;
 
@@ -131,6 +132,9 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         getContentPane().add(Box.createHorizontalStrut(50));
         getContentPane().add(rightPanel);
         getContentPane().add(Box.createHorizontalStrut(100)); // boundary
+
+        // Add Window Listener, used for when window is closed
+        addWindowListener(this);
 
         // Display window
         setLocation(new Point(100,100));
@@ -478,5 +482,41 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
+        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
     }
 }
