@@ -371,8 +371,8 @@ public class ControlPanelClient {
         //Run_Client(user_inputs3);
         //Run_Client(user_inputs4);
         //Run_Client(user_inputs5);
-        Run_Client(user_inputs6);
-        Run_Client(user_inputs7);
+        //Run_Client(user_inputs6);
+        //Run_Client(user_inputs7);
 
     }
 }

@@ -269,7 +269,7 @@ public class BillboardList implements java.io.Serializable {
 
 
     //A method that accepts an xml file and creates a billboard using it
-    public void exportXML(String billboardName) throws Exception {
+    public Document exportXML(String billboardName) throws Exception {
         //Use the billboard name provided to find the correct info
         //to store in the xml file
         //Find billboard info and store it in a billboard
@@ -282,5 +282,7 @@ public class BillboardList implements java.io.Serializable {
 
         //Store the billboard name as the file name.
         Document document = documentBuilder.parse(new File(xmlFile));
+
+        return document;
     }
 }
