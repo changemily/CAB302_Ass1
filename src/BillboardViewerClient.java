@@ -131,12 +131,19 @@ public class BillboardViewerClient {
         // Add Panel
         billboardGUI.add(billboardPanel);
 
-        //add listener to detect if a key is pressed on the keyboard
+        //add listener to detect which key is pressed on the keyboard
         billboardGUI.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                //close viewer
-                System.exit(0);
+            public void keyPressed(KeyEvent actionEvent) {
+                //Get key that has been pressed - event source
+                int keyPressed = actionEvent.getKeyCode();
+
+                //if escape key is hit
+                if(keyPressed == KeyEvent.VK_ESCAPE)
+                {
+                    //close viewer
+                    System.exit(0);
+                }
             }
         });
 
