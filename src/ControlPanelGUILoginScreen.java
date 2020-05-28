@@ -175,8 +175,10 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
         if (buttonClicked==loginButton) {
             // Check if the provided credentials are correct, then if successful open Control Panel GUI
             if (usernameText.equals("user") && passwordText.equals("password")) { // VALUES USED ONLY FOR TESTING
+
                 // Open Control Panel GUI Screen
-                SwingUtilities.invokeLater(new ControlPanelGUI());
+                String sessionToken = "123456";
+                SwingUtilities.invokeLater(new ControlPanelGUI(usernameText, sessionToken));
 
                 // Close Login Screen
                 dispose();
@@ -189,7 +191,6 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
                         "The entered username or password is incorrect, please try again.",
                         "Invalid Credentials",JOptionPane.ERROR_MESSAGE);
             }
-
         }
     }
 
