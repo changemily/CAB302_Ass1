@@ -415,8 +415,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
                     } catch (IOException fileNotFoundException) {
                         fileNotFoundException.printStackTrace();
-                        JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(getContentPane(),"File could not be found, please check the filepath and try again. ", "Error", JOptionPane.ERROR_MESSAGE);
                     }
 
                 }

@@ -39,6 +39,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     // Clickable buttons and list
     private JList billboardList;
     private JButton editBillboardButton;
+    private JButton deleteBillboardButton;
     private JButton scheduleBillboardButton;
     private JButton createBillboardButton;
     private String billboardXML="./5.xml"; //CHANGE TO DEFAULT NOTHING TO DISPLAY XML
@@ -115,6 +116,12 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         createBillboardButton = createButton("Create Billboard");
         createBillboardPanel.add(Box.createVerticalStrut(30));
         createBillboardPanel.add(createBillboardButton);
+        createBillboardPanel.add(Box.createVerticalStrut(100));
+
+        // Create and add Create Delete button
+        deleteBillboardButton = createButton("Delete Billboard");
+        createBillboardPanel.add(Box.createVerticalStrut(30));
+        createBillboardPanel.add(deleteBillboardButton);
         createBillboardPanel.add(Box.createVerticalStrut(100));
 
         // Add create billboard JPanel to preview panel JPanel
@@ -275,6 +282,27 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             System.out.println("xmlFile: "+xmlFile);
             //run Billboard editor/and assign the current users username to be the creator
             SwingUtilities.invokeLater(new BBEditor("admin", "1234", billboardName));
+        }
+
+        else if (buttonClicked == deleteBillboardButton) {
+            //Open the editor with a new file
+            try {
+                //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
+                xmlFile = xmlTemplate;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), e,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+            System.out.println("xmlFile: "+xmlFile);
+
+            //run Billboard editor/and assign the current users username to be the creator
+            String [] user_inputs = {"Delete billboard", billboardName};
+            //Schedule billboard with viewing details given by user
+            ControlPanelClient.Run_Client(user_inputs);
+            //Close after saving so they know it has been done
+            dispose();
         }
 
         else if (buttonClicked==scheduleBillboardButton) {

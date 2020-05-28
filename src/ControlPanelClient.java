@@ -364,11 +364,12 @@ public class ControlPanelClient {
         String [] user_inputs5 = {"Schedule Billboard","1","2021-05-10T10:00:00.00", "20", "0"};
         String[] user_inputs6 = {"Create edit billboard", "Billboard1",  "Jarod", xmlFile1};
         String[] user_inputs7 = {"Create edit billboard", "Billboard2",  "em", xmlFile2};
+        String [] user_inputs8 = {"Delete billboard", "Billboard1"};
 
 
         //Run_Client(user_inputs1);
-        //Run_Client(user_inputs6);
-        //Run_Client(user_inputs3);
+        Run_Client(user_inputs6);
+        Run_Client(user_inputs7);
         //Run_Client(user_inputs4);
         //Run_Client(user_inputs5);
         //Run_Client(user_inputs6);
