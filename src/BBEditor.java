@@ -2,13 +2,10 @@ import org.xml.sax.SAXException;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
-import javax.imageio.ImageIO;
-import javax.management.MalformedObjectNameException;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle;
@@ -24,7 +21,7 @@ import static javax.swing.JOptionPane.showConfirmDialog;
 
 /**
  * @author Liam
- * To do: complete button functionaity, make preview panel dislplay actual preview
+ *
  */
 
 public class BBEditor extends JFrame implements Runnable, ActionListener, ChangeListener
@@ -35,6 +32,38 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private String sessionToken;
     private BillboardViewer bb = null;
     private boolean createdBillboard = false;
+    private JPanel mainPanel;
+    private JPanel previewPanel;
+    private JPanel billboardPreview;
+    private JSeparator dividerLine;
+    private JLabel previewLabel;
+    private JLabel editLabel;
+    private JLabel messageLabel;
+    private JLabel imageLabel;
+    private JLabel backgroundColourPickerLabel;
+    private JLabel messageColourPickerLabel;
+    private JLabel extraTextColourPickerLabel;
+    private JLabel extraInfoLabel;
+    private JLabel nameLabel;
+    private JTextField imageURL;
+    private JTextField messageField;
+    private JTextField nameField;
+    private JTextArea extraInfoText;
+    private JTextArea backgroundColourDisplay;
+    private JTextArea messageTextColourDisplay;
+    private JTextArea extraTextColourDisplay;
+    private JButton imageBrowseBttn;
+    private JButton exitBttn;
+    private JButton backgroundColourBttn;
+    private JButton messageTextColourBttn;
+    private JButton extraTextColourBttn;
+    private JButton importBttn;
+    private JButton exportBttn;
+    private JButton previewBttn;
+    private JButton saveBttn;
+    private GroupLayout mainPanelLayout;
+    private StreamResult o;
+    private Dimension d;
 
     BillboardList billboardList = new BillboardList();
 
@@ -62,105 +91,51 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Create MainPanel
-        JPanel MainPanel = new JPanel();
-
-        // Create DividerLine
-        JSeparator DividerLine = new JSeparator();
-
-        // Create PreviewLabel
-        JLabel PreviewLabel = new JLabel();
-        PreviewLabel.setText("Preview");
-        PreviewLabel.setBackground(Color.white);
-        PreviewLabel.setForeground(Color.black);
-        PreviewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        PreviewLabel.setFont(PreviewLabel.getFont().deriveFont(PreviewLabel.getFont().getStyle() | Font.BOLD));
-
-        // Create EditLabel
-        JLabel EditLabel = new JLabel();
-        EditLabel.setText("Edit");
-        EditLabel.setBackground(Color.white);
-        EditLabel.setForeground(Color.black);
-        EditLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        EditLabel.setFont(EditLabel.getFont().deriveFont(EditLabel.getFont().getStyle() | Font.BOLD));
-
-        // Create MessageField
-        JTextField MessageField = new JTextField();
-        MessageField.setBackground(Color.white);
-        MessageField.setForeground(Color.black);
-
-        // Create MessageLabel
-        JLabel MessageLabel = new JLabel();
-        MessageLabel.setText("Message Text");
-        MessageLabel.setBackground(Color.white);
-        MessageLabel.setForeground(Color.black);
-        MessageLabel.setHorizontalAlignment(SwingConstants.LEFT);
-
-        // Create ImageLabel
-        JLabel ImageLabel = new JLabel();
-        ImageLabel.setText("Image File");
-        ImageLabel.setBackground(Color.white);
-        ImageLabel.setForeground(Color.black);
-        ImageLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        // Create mainPanel
+        mainPanel = new JPanel();
 
         // Create Billboard Preview Panel
-        JPanel PreviewPanel = new JPanel();
+        previewPanel = new JPanel();
 
         // Initialise and add Billboard to Preview Panel
-        Dimension d = new Dimension(600, 350);
+        d = new Dimension(600, 350);
         bb = new BillboardViewer(tempXMLString, d);
-        JPanel billboardPreview = bb.getSizedBillboard();
-        PreviewPanel.add(billboardPreview);
+        billboardPreview = bb.getSizedBillboard();
+        previewPanel.add(billboardPreview);
 
-        // Create BackgroundColourPickerLabel
-        JLabel BackgroundColourPickerLabel = new JLabel();
-        BackgroundColourPickerLabel.setText("Background Colour");
-        BackgroundColourPickerLabel.setBackground(Color.white);
-        BackgroundColourPickerLabel.setForeground(Color.black);
-        BackgroundColourPickerLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        // Create dividerLine
+        dividerLine = new JSeparator();
 
-        // Create MessageColourPickerLabel
-        JLabel MessageColourPickerLabel = new JLabel();
-        MessageColourPickerLabel.setText("Message Text Colour");
-        MessageColourPickerLabel.setBackground(Color.white);
-        MessageColourPickerLabel.setForeground(Color.black);
-        MessageColourPickerLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        // Create previewLabel
+        previewLabel = createLabel("Preview");
+        previewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        previewLabel.setFont(previewLabel.getFont().deriveFont(previewLabel.getFont().getStyle() | Font.BOLD));
 
-        // Create ExtraTextColourPickerLabel
-        JLabel ExtraTextColourPickerLabel = new JLabel();
-        ExtraTextColourPickerLabel.setText("Extra Information Text Colour");
-        ExtraTextColourPickerLabel.setBackground(Color.white);
-        ExtraTextColourPickerLabel.setForeground(Color.black);
-        ExtraTextColourPickerLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        // Create editLabel
+        editLabel = createLabel("Edit");
+        editLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        editLabel.setFont(editLabel.getFont().deriveFont(editLabel.getFont().getStyle() | Font.BOLD));
 
-        // Create ImageURL
-        JTextField ImageURL = new JTextField();
-        ImageURL.setMaximumSize(new Dimension(230, 10));
-        ImageURL.setBackground(Color.white);
-        ImageURL.setForeground(Color.black);
+        // Create messageLabel
+        messageLabel = createLabel("Message Text");
 
-        //Create ExtraInfoLabel
-        JLabel ExtraInfoLabel = new JLabel();
-        ExtraInfoLabel.setText("Extra Information Text");
-        ExtraInfoLabel.setBackground(Color.white);
-        ExtraInfoLabel.setForeground(Color.black);
-        ExtraInfoLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        // Create imageLabel
+        imageLabel = createLabel("Image File");
 
-        // Create ExtraInfoScrollPanel and ExtraInfoText
-        JTextArea ExtraInfoText = new JTextArea();
-        JScrollPane ExtraInfoScrollPanel;
-        {
-            ExtraInfoScrollPanel = new JScrollPane();
-            ExtraInfoText.setBackground(Color.white);
-            ExtraInfoText.setForeground(Color.black);
-            ExtraInfoScrollPanel.setViewportView(ExtraInfoText);
-        }
+        // Create backgroundColourPickerLabel
+        backgroundColourPickerLabel = createLabel("Background Colour");
+
+        // Create messageColourPickerLabel
+        messageColourPickerLabel = createLabel("Message Text Colour");
+
+        // Create extraTextColourPickerLabel
+        extraTextColourPickerLabel = createLabel("Extra Information Text Colour");
+
+        //Create extraInfoLabel
+        extraInfoLabel = createLabel("Extra Information Text");
+
         // Create nameLabel
-        JLabel nameLabel = new JLabel();
-        nameLabel.setText("Billboard Name");
-        nameLabel.setBackground(Color.white);
-        nameLabel.setForeground(Color.black);
-        nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        nameLabel = createLabel("Billboard Name");
         if(!createdBillboard)
         {
             nameLabel.setVisible(false);
@@ -169,10 +144,15 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             nameLabel.setVisible(true);
         }
 
+        // Create messageField
+        messageField = createTextField();
+
+        // Create imageURL
+        imageURL = createTextField();
+        imageURL.setMaximumSize(new Dimension(230, 10));
+
         // Create nameField
-        JTextField nameField = new JTextField();
-        nameField.setBackground(Color.white);
-        nameField.setForeground(Color.black);
+        nameField = createTextField();
         if(!createdBillboard)
         {
             nameField.setVisible(false);
@@ -181,569 +161,237 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             nameField.setVisible(true);
         }
 
+        // Create extraInfoScrollPanel and extraInfoText
+        extraInfoText = new JTextArea();
+        JScrollPane extraInfoScrollPanel;
+        {
+            extraInfoScrollPanel = new JScrollPane();
+            extraInfoText.setBackground(Color.white);
+            extraInfoText.setForeground(Color.black);
+            extraInfoScrollPanel.setViewportView(extraInfoText);
+        }
+
         // Initialise field values
-        MessageField.setText(bb.getMessageText());
-        ExtraInfoText.setText(bb.getInformationText());
+        messageField.setText(bb.getMessageText());
+        extraInfoText.setText(bb.getInformationText());
         if(bb.getPictureURL() != null) {
-            ImageURL.setText(bb.getPictureURL());
+            imageURL.setText(bb.getPictureURL());
         }
         else if(bb.getPictureDataString() != null){
-            ImageURL.setText("Encoded Image");
+            imageURL.setText("Encoded Image");
         }
 
-        // Create ImageBrowseBttn
-        JButton ImageBrowseBttn = new JButton(( new AbstractAction("Browse Image") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser FileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-                int returnValue = FileChooser.showOpenDialog(null);
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = FileChooser.getSelectedFile();
-                    ImageURL.setText(selectedFile.getAbsolutePath());
-                }
-            }
-        }));
-        ImageBrowseBttn.setText("Browse");
-        ImageBrowseBttn.setBackground(new Color(230, 230, 230));
-        ImageBrowseBttn.setForeground(Color.black);
-
-        // Create SaveBttn
-        JButton SaveBttn = new JButton( new AbstractAction("Save")
-        {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                //Variables to store for the billboard later
-                if(createdBillboard){
-                    billboardName = nameField.getText();
-                }
-                System.out.println(nameField.getText());
-                String usernameOfCreator = username;
-
-                //Get what the user has inputted and put it into the file.
-                if(!MessageField.getText().equals(""))
-                {
-                    bb.setMessageText(MessageField.getText());
-                    bb.setMessageExists(true);
-                }
-                else{
-                    bb.setMessageExists(false);
-                }
-
-                if(!ExtraInfoText.getText().equals(""))
-                {
-                    bb.setInformationText(ExtraInfoText.getText());
-                    bb.setInformationExists(true);
-                }
-                else{
-                    bb.setInformationExists(false);
-                }
-
-                if(!ImageURL.getText().equals(""))
-                {
-                    bb.setPictureExists(true);
-                    try{
-                        URL urlString = new URL(ImageURL.getText());
-                        bb.setUrlExists(true);
-                        bb.setDataExists(false);
-                        bb.setPictureURL(ImageURL.getText());
-                    } catch(MalformedURLException m){
-                        bb.setDataExists(true);
-                        bb.setUrlExists(false);
-                        File f = new File(ImageURL.getText());
-                        try {
-                            FileInputStream imageFile = new FileInputStream(f);
-                            byte[] imageData = imageFile.readAllBytes();
-                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
-                        } catch (IOException fileNotFoundException) {
-                            fileNotFoundException.printStackTrace();
-                            JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                                    "ERROR", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-                else{
-                    bb.setPictureExists(false);
-                }
-
-                try {
-                    tempXMLString = bb.updateXMLString();
-                } catch (ParserConfigurationException | TransformerException ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(getContentPane(), ex,
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
-                }
-
-                //Test if it worked
-                System.out.println(tempXMLString);
-
-                //Store the information for the billboard
-                try {
-                    //billboardList.createEditBillboard(billboardName, usernameOfCreator, tempXMLString);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-                String [] user_inputs = {"Create edit billboard",billboardName,usernameOfCreator, tempXMLString};
-
-                //Schedule billboard with viewing details given by user
-                ControlPanelClient.Run_Client(user_inputs);
-
-                // all frames to a array
-                Frame[] allFrames = Frame.getFrames();
-                for(Frame fr : allFrames){
-                    if(fr.getClass().getName() == "ControlPanelGUIBillboardControlPanel"){
-                        fr.dispose();
-                    }
-                }
-
-                //run Billboard Control Panel GUI
-                String [] user_input = {"List billboards"};
-                //request schedule and run calendar GUI
-                ControlPanelClient.Run_Client(user_input);
-
-
-                //Close after saving so they know it has been done
-                dispose();
-            }
-        });
-        SaveBttn.setText("Save");
-        SaveBttn.setBackground(new Color(230, 230, 230));
-        SaveBttn.setForeground(Color.black);
-
-        // Create ExitBttn
-        JButton ExitBttn = new JButton(( new AbstractAction("Exit")
-        {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                int a = showConfirmDialog(null, "Have you saved any changes?");
-                if(a == YES_OPTION)
-                {
-                    dispose();
-                }
-            }
-        }));
-        ExitBttn.setText("Exit");
-        ExitBttn.setBackground(new Color(230, 230, 230));
-        ExitBttn.setForeground(Color.black);
-
         // Create BackgroundColourDisplay
-        JTextArea BackgroundColourDisplay = new JTextArea();
-        BackgroundColourDisplay.setEditable(false);
-        BackgroundColourDisplay.setBackground(bb.getBillboardColour());
+        backgroundColourDisplay = createColourDiplay();
+        backgroundColourDisplay.setBackground(bb.getBillboardColour());
 
         // Create MessageTextColourDisplay
-        JTextArea MessageTextColourDisplay = new JTextArea();
-        MessageTextColourDisplay.setEditable(false);
-        MessageTextColourDisplay.setBackground(bb.getMessageColour());
+        messageTextColourDisplay = createColourDiplay();
+        messageTextColourDisplay.setBackground(bb.getMessageColour());
 
         // Create ExtraTextColourDisplay
-        JTextArea ExtraTextColourDisplay = new JTextArea();
-        ExtraTextColourDisplay.setEditable(false);
-        ExtraTextColourDisplay.setBackground(bb.getInformationColour());
+        extraTextColourDisplay = createColourDiplay();
+        extraTextColourDisplay.setBackground(bb.getInformationColour());
+
+        // Create imageBrowseBttn
+        imageBrowseBttn = createButton("Browse");
+
+        // Create SaveBttn
+        saveBttn = createButton("Save");
+
+        // Create ExitBttn
+        exitBttn = createButton("Exit");
 
         // Create BackgroundColourBttn
-        JButton BackgroundColourBttn = new JButton(
-                ( new AbstractAction("Colour") {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                Color originalColour = bb.getBillboardColour();
-                Color colour = JColorChooser.showDialog(null,
-                        "Select a color", bb.getBillboardColour());
-                BackgroundColourDisplay.setBackground(colour);
-                try {
-                    bb.setBillboardColour(colour);
-                    BackgroundColourDisplay.setBackground(colour);
-                }catch (Exception f){
-                    bb.setBillboardColour(originalColour);
-                    BackgroundColourDisplay.setBackground(originalColour);
-                }
-            }
-        }));
-        BackgroundColourBttn.setText("Browse");
-        BackgroundColourBttn.setBackground(new Color(230, 230, 230));
-        BackgroundColourBttn.setForeground(Color.black);
+        backgroundColourBttn = createButton("Browse");
 
         //Create MessageTextColourBttn
-        JButton MessageTextColourBttn = new JButton(
-                ( new AbstractAction("Colour") {
-                    @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        Color originalColour = bb.getMessageColour();
-                        Color colour = JColorChooser.showDialog(null,
-                                "Select a color", bb.getMessageColour());
-                        try {
-                            bb.setMessageColour(colour);
-                            MessageTextColourDisplay.setBackground(colour);
-                        } catch (Exception f){
-                            bb.setMessageColour(originalColour);
-                            MessageTextColourDisplay.setBackground(originalColour);
-                        }
-                    }
-                }));
-        MessageTextColourBttn.setText("Browse");
-        MessageTextColourBttn.setBackground(new Color(230, 230, 230));
-        MessageTextColourBttn.setForeground(Color.black);
+        messageTextColourBttn = createButton("Browse");
 
         //Create ExtraTextColourBttn
-        JButton ExtraTextColourBttn = new JButton(
-                ( new AbstractAction("Colour") {
-                    @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        Color originalColour = bb.getInformationColour();
-                        Color colour = JColorChooser.showDialog(null,
-                                "Select a color", bb.getInformationColour());
-                        ExtraTextColourDisplay.setBackground(colour);
-                        try {
-                            bb.setInformationColour(colour);
-                            ExtraTextColourDisplay.setBackground(colour);
-                        }catch (Exception f){
-                            bb.setInformationColour(originalColour);
-                            ExtraTextColourDisplay.setBackground(originalColour);
-                        }
-                    }
-                }));
-        ExtraTextColourBttn.setText("Browse");
-        ExtraTextColourBttn.setBackground(new Color(230, 230, 230));
-        ExtraTextColourBttn.setForeground(Color.black);
+        extraTextColourBttn = createButton("Browse");
 
         // Create importBttn
-        JButton importBttn = new JButton(( new AbstractAction("Import") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser FileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-                int returnValue = FileChooser.showOpenDialog(null);
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = FileChooser.getSelectedFile();
-                    File f = new File(selectedFile.getAbsolutePath());
-                    Reader fileReader;
-                    try {
-                        fileReader = new FileReader(f);
-                        BufferedReader bufferedReader = new BufferedReader(fileReader);
-                        StringBuilder output = new StringBuilder();
-                        String stringXML;
-                        while((stringXML = bufferedReader.readLine()) != null){
-                            output.append(stringXML);
-                        }
-                        tempXMLString = output.toString();
-                        bufferedReader.close();
-
-                        PreviewPanel.removeAll();
-                        PreviewPanel.revalidate();
-                        PreviewPanel.repaint();
-                        try {
-                            bb = new BillboardViewer(tempXMLString, d);
-                        } catch (ParserConfigurationException | IOException | SAXException ex) {
-                            ex.printStackTrace();
-                            JOptionPane.showMessageDialog(getContentPane(), ex,
-                                    "ERROR", JOptionPane.ERROR_MESSAGE);
-                        }
-                        JPanel billboardPreview = bb.getSizedBillboard();
-                        PreviewPanel.add(billboardPreview);
-                        PreviewPanel.revalidate();
-                        PreviewPanel.repaint();
-
-                        MessageField.setText(bb.getMessageText());
-                        ExtraInfoText.setText(bb.getInformationText());
-                        if(bb.getPictureURL() != null){
-                            ImageURL.setText(bb.getPictureURL());
-                        }
-                        else{
-                            ImageURL.setText("Encoded Image");
-                        }
-                        BackgroundColourDisplay.setBackground(bb.getBillboardColour());
-                        MessageTextColourDisplay.setBackground(bb.getMessageColour());
-                        ExtraTextColourDisplay.setBackground(bb.getInformationColour());
-
-
-                    } catch (IOException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
-                        JOptionPane.showMessageDialog(getContentPane(),"File could not be found, please check the filepath and try again. ", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                }
-            }
-        }));
-        importBttn.setText("Import");
-        importBttn.setBackground(new Color(230, 230, 230));
-        importBttn.setForeground(Color.black);
+        importBttn = createButton("Import");
 
         // Create exportBttn
         String outPath = "./" + billboardName + ".xml";
-        StreamResult o = new StreamResult(outPath);
-        JButton exportBttn = new JButton(( new AbstractAction("Export") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!MessageField.getText().equals(""))
-                {
-                    bb.setMessageText(MessageField.getText());
-                    bb.setMessageExists(true);
-                }
-                else{
-                    bb.setMessageExists(false);
-                }
-
-                if(!ExtraInfoText.getText().equals(""))
-                {
-                    bb.setInformationText(ExtraInfoText.getText());
-                    bb.setInformationExists(true);
-                }
-                else{
-                    bb.setInformationExists(false);
-                }
-
-                if(!ImageURL.getText().equals(""))
-                {
-                    bb.setPictureExists(true);
-                    try{
-                        URL urlString = new URL(ImageURL.getText());
-                        bb.setUrlExists(true);
-                        bb.setDataExists(false);
-                        bb.setPictureURL(ImageURL.getText());
-                    } catch(MalformedURLException m){
-                        bb.setDataExists(true);
-                        bb.setUrlExists(false);
-                        File f = new File(ImageURL.getText());
-                        try {
-                            FileInputStream imageFile = new FileInputStream(f);
-                            byte[] imageData = imageFile.readAllBytes();
-                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
-                        } catch (IOException fileNotFoundException) {
-                            fileNotFoundException.printStackTrace();
-                            JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                                    "ERROR", JOptionPane.ERROR_MESSAGE);
-                        }
-
-                    }
-                }
-                else{
-                    bb.setPictureExists(false);
-                }
-
-                try {
-                    bb.writeFile(o);
-                } catch (ParserConfigurationException | TransformerException ex) {
-                    ex.printStackTrace();
-                }
-
-            }
-        }));
-        exportBttn.setText("Export");
-        exportBttn.setBackground(new Color(230, 230, 230));
-        exportBttn.setForeground(Color.black);
+        o = new StreamResult(outPath);
+        exportBttn = createButton("Export");
 
         // Create previewBttn
-        JButton previewBttn = new JButton(( new AbstractAction("Preview") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!MessageField.getText().equals(""))
-                {
-                    bb.setMessageText(MessageField.getText());
-                    bb.setMessageExists(true);
-                }
-                else{
-                    bb.setMessageExists(false);
-                }
+        previewBttn = createButton("Preview");
 
-                if(!ExtraInfoText.getText().equals(""))
-                {
-                    bb.setInformationText(ExtraInfoText.getText());
-                    bb.setInformationExists(true);
-                }
-                else{
-                    bb.setInformationExists(false);
-                }
-
-                if(!ImageURL.getText().equals(""))
-                {
-                    bb.setPictureExists(true);
-                    try{
-                        URL urlString = new URL(ImageURL.getText());
-                        bb.setUrlExists(true);
-                        bb.setDataExists(false);
-                        bb.setPictureURL(ImageURL.getText());
-                    } catch(MalformedURLException m){
-                        bb.setDataExists(true);
-                        bb.setUrlExists(false);
-                        File f = new File(ImageURL.getText());
-                        try {
-                            FileInputStream imageFile = new FileInputStream(f);
-                            byte[] imageData = imageFile.readAllBytes();
-                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
-                        } catch (IOException fileNotFoundException) {
-                            fileNotFoundException.printStackTrace();
-                            JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                                    "ERROR", JOptionPane.ERROR_MESSAGE);
-                        }
-
-
-                    }
-                }
-                else{
-                    bb.setPictureExists(false);
-                }
-
-                try {
-                    tempXMLString = bb.updateXMLString();
-                } catch (ParserConfigurationException | TransformerException ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(getContentPane(), ex,
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
-                }
-
-                PreviewPanel.removeAll();
-                PreviewPanel.revalidate();
-                PreviewPanel.repaint();
-                try {
-                    bb = new BillboardViewer(tempXMLString, d);
-                } catch (ParserConfigurationException | IOException | SAXException ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(getContentPane(), ex,
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
-                }
-                JPanel billboardPreview = bb.getSizedBillboard();
-                PreviewPanel.add(billboardPreview);
-                PreviewPanel.revalidate();
-                PreviewPanel.repaint();
-            }
-        }));
-        previewBttn.setText("Preview");
-        previewBttn.setBackground(new Color(230, 230, 230));
-        previewBttn.setForeground(Color.black);
         // Set Layout for EVERYTHING
-        GroupLayout MainPanelLayout = new GroupLayout(MainPanel);
-        MainPanel.setLayout(MainPanelLayout);
-        MainPanelLayout.setHorizontalGroup(
-                MainPanelLayout.createParallelGroup()
-                        .addGroup(MainPanelLayout.createSequentialGroup()
+        mainPanelLayout = new GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+                mainPanelLayout.createParallelGroup()
+                        .addGroup(mainPanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(MainPanelLayout.createParallelGroup()
-                                        .addGroup(MainPanelLayout.createSequentialGroup()
+                                .addGroup(mainPanelLayout.createParallelGroup()
+                                        .addGroup(mainPanelLayout.createSequentialGroup()
                                                 .addGap(19, 19, 19)
-                                                .addGroup(MainPanelLayout.createParallelGroup()
-                                                        .addGroup(MainPanelLayout.createSequentialGroup()
+                                                .addGroup(mainPanelLayout.createParallelGroup()
+                                                        .addGroup(mainPanelLayout.createSequentialGroup()
                                                                 .addComponent(previewBttn, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(ExitBttn)
+                                                                .addComponent(exitBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(importBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(exportBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(SaveBttn)
+                                                                .addComponent(saveBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE))
-                                                        .addGroup(MainPanelLayout.createSequentialGroup()
-                                                                .addGroup(MainPanelLayout.createParallelGroup()
-                                                                        .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                                                .addComponent(MessageLabel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                                                                                .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
-                                                                                        .addComponent(ImageURL)
+                                                        .addGroup(mainPanelLayout.createSequentialGroup()
+                                                                .addGroup(mainPanelLayout.createParallelGroup()
+                                                                        .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                                                .addComponent(messageLabel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                                .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                                                                                        .addComponent(imageURL)
                                                                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                        .addComponent(ImageBrowseBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
-                                                                                .addComponent(MessageField, GroupLayout.PREFERRED_SIZE, 328, GroupLayout.PREFERRED_SIZE)
-                                                                                .addComponent(ImageLabel, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
+                                                                                        .addComponent(imageBrowseBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
+                                                                                .addComponent(messageField, GroupLayout.PREFERRED_SIZE, 328, GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
                                                                         .addComponent(nameLabel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
                                                                         .addComponent(nameField, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE))
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                                                                .addGroup(MainPanelLayout.createParallelGroup()
-                                                                        .addComponent(ExtraInfoLabel)
-                                                                        .addComponent(BackgroundColourPickerLabel, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                                                                        .addGroup(MainPanelLayout.createSequentialGroup()
-                                                                                .addGroup(MainPanelLayout.createParallelGroup()
-                                                                                        .addComponent(BackgroundColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(ExtraTextColourDisplay, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+                                                                .addGroup(mainPanelLayout.createParallelGroup()
+                                                                        .addComponent(extraInfoLabel)
+                                                                        .addComponent(backgroundColourPickerLabel, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+                                                                        .addGroup(mainPanelLayout.createSequentialGroup()
+                                                                                .addGroup(mainPanelLayout.createParallelGroup()
+                                                                                        .addComponent(backgroundColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(extraTextColourDisplay, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
                                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                .addGroup(MainPanelLayout.createParallelGroup()
-                                                                                        .addGroup(MainPanelLayout.createSequentialGroup()
-                                                                                                .addComponent(BackgroundColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                                                                .addGroup(mainPanelLayout.createParallelGroup()
+                                                                                        .addGroup(mainPanelLayout.createSequentialGroup()
+                                                                                                .addComponent(backgroundColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
                                                                                                 .addGap(18, 18, 18)
-                                                                                                .addGroup(MainPanelLayout.createParallelGroup()
-                                                                                                        .addComponent(MessageColourPickerLabel, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addGroup(MainPanelLayout.createSequentialGroup()
-                                                                                                                .addComponent(MessageTextColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                                                                                .addGroup(mainPanelLayout.createParallelGroup()
+                                                                                                        .addComponent(messageColourPickerLabel, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addGroup(mainPanelLayout.createSequentialGroup()
+                                                                                                                .addComponent(messageTextColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                                                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                                .addComponent(MessageTextColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))))
-                                                                                        .addComponent(ExtraTextColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)))
-                                                                        .addComponent(ExtraTextColourPickerLabel, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(ExtraInfoScrollPanel, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE))
+                                                                                                                .addComponent(messageTextColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))))
+                                                                                        .addComponent(extraTextColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)))
+                                                                        .addComponent(extraTextColourPickerLabel, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
+                                                                        .addComponent(extraInfoScrollPanel, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE))
                                                                 .addGap(23, 23, 23))))
-                                        .addComponent(PreviewPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(DividerLine)
-                                        .addGroup(MainPanelLayout.createSequentialGroup()
-                                                .addGroup(MainPanelLayout.createParallelGroup()
-                                                        .addComponent(PreviewLabel)
-                                                        .addComponent(EditLabel))
+                                        .addComponent(previewPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(dividerLine)
+                                        .addGroup(mainPanelLayout.createSequentialGroup()
+                                                .addGroup(mainPanelLayout.createParallelGroup()
+                                                        .addComponent(previewLabel)
+                                                        .addComponent(editLabel))
                                                 .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
         );
-        MainPanelLayout.setVerticalGroup(
-                MainPanelLayout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
+        mainPanelLayout.setVerticalGroup(
+                mainPanelLayout.createParallelGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(PreviewLabel)
+                                .addComponent(previewLabel)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(PreviewPanel, GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+                                .addComponent(previewPanel, GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(DividerLine, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(dividerLine, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(EditLabel)
+                                .addComponent(editLabel)
                                 .addGap(19, 19, 19)
-                                .addGroup(MainPanelLayout.createParallelGroup()
-                                        .addGroup(MainPanelLayout.createSequentialGroup()
-                                                .addComponent(ExtraInfoLabel)
+                                .addGroup(mainPanelLayout.createParallelGroup()
+                                        .addGroup(mainPanelLayout.createSequentialGroup()
+                                                .addComponent(extraInfoLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(ExtraInfoScrollPanel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(MainPanelLayout.createSequentialGroup()
-                                                .addComponent(MessageLabel)
+                                                .addComponent(extraInfoScrollPanel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(mainPanelLayout.createSequentialGroup()
+                                                .addComponent(messageLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(MessageField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(messageField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(ImageLabel)
+                                                .addComponent(imageLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(ImageBrowseBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(ImageURL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-                                .addGroup(MainPanelLayout.createParallelGroup()
-                                        .addGroup(MainPanelLayout.createSequentialGroup()
+                                                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(imageBrowseBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(imageURL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(mainPanelLayout.createParallelGroup()
+                                        .addGroup(mainPanelLayout.createSequentialGroup()
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                                                .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(BackgroundColourPickerLabel)
-                                                        .addComponent(MessageColourPickerLabel))
+                                                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(backgroundColourPickerLabel)
+                                                        .addComponent(messageColourPickerLabel))
                                                 .addGap(4, 4, 4)
-                                                .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(BackgroundColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(BackgroundColourBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(MessageTextColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(MessageTextColourBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(backgroundColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(backgroundColourBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(messageTextColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(messageTextColourBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED))
-                                        .addGroup(MainPanelLayout.createSequentialGroup()
+                                        .addGroup(mainPanelLayout.createSequentialGroup()
                                                 .addGap(12, 12, 12)
                                                 .addComponent(nameLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)))
-                                .addGroup(MainPanelLayout.createParallelGroup()
-                                        .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
-                                                .addComponent(ExtraTextColourPickerLabel)
+                                .addGroup(mainPanelLayout.createParallelGroup()
+                                        .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                                                .addComponent(extraTextColourPickerLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(ExtraTextColourBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(ExtraTextColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(extraTextColourBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(extraTextColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(66, 66, 66))
-                                        .addGroup(GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
-                                                .addGroup(MainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(ExitBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(SaveBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                                                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(exitBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(saveBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(importBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(exportBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(previewBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(20, 20, 20))))
         );
 
-        getContentPane().add(MainPanel);
+        getContentPane().add(mainPanel);
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    private JLabel createLabel(String labelText)
+    {
+        JLabel label = new JLabel();
+        label.setText(labelText);
+        label.setBackground(Color.white);
+        label.setForeground(Color.black);
+        label.setHorizontalAlignment(SwingConstants.LEFT);
+        return label;
+    }
+
+    private JTextField createTextField()
+    {
+        JTextField text = new JTextField();
+        text.setBackground(Color.white);
+        text.setForeground(Color.black);
+        return text;
+    }
+
+    private JTextArea createColourDiplay()
+    {
+        JTextArea colourDisplay = new JTextArea();
+        colourDisplay.setEditable(false);
+        return colourDisplay;
+    }
+
+    private JButton createButton(String buttonName)
+    {
+        JButton button = new JButton();
+        button.setText(buttonName);
+        button.setBackground(new Color(230, 230, 230));
+        button.setForeground(Color.black);
+        button.addActionListener(this);
+        return button;
     }
 
     @SuppressWarnings("TryWithIdenticalCatches")
@@ -800,6 +448,341 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     @Override
     public void actionPerformed(ActionEvent e)
     {
+        Object buttonClicked = e.getSource();
+
+        if(buttonClicked == imageBrowseBttn)
+        {
+            JFileChooser FileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            int returnValue = FileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = FileChooser.getSelectedFile();
+                imageURL.setText(selectedFile.getAbsolutePath());
+            }
+        } else if(buttonClicked == saveBttn)
+        {
+            //Variables to store for the billboard later
+            if(createdBillboard){
+                billboardName = nameField.getText();
+            }
+            System.out.println(nameField.getText());
+            String usernameOfCreator = username;
+
+            //Get what the user has inputted and put it into the file.
+            if(!messageField.getText().equals(""))
+            {
+                bb.setMessageText(messageField.getText());
+                bb.setMessageExists(true);
+            }
+            else{
+                bb.setMessageExists(false);
+            }
+
+            if(!extraInfoText.getText().equals(""))
+            {
+                bb.setInformationText(extraInfoText.getText());
+                bb.setInformationExists(true);
+            }
+            else{
+                bb.setInformationExists(false);
+            }
+
+            if(!imageURL.getText().equals(""))
+            {
+                bb.setPictureExists(true);
+                try{
+                    URL urlString = new URL(imageURL.getText());
+                    bb.setUrlExists(true);
+                    bb.setDataExists(false);
+                    bb.setPictureURL(imageURL.getText());
+                } catch(MalformedURLException m){
+                    bb.setDataExists(true);
+                    bb.setUrlExists(false);
+                    File f = new File(imageURL.getText());
+                    try {
+                        FileInputStream imageFile = new FileInputStream(f);
+                        byte[] imageData = imageFile.readAllBytes();
+                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                    } catch (IOException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                        JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+            else{
+                bb.setPictureExists(false);
+            }
+
+            try {
+                tempXMLString = bb.updateXMLString();
+                JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Saved to Database");
+            } catch (ParserConfigurationException | TransformerException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), ex,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+
+            //Test if it worked
+            System.out.println(tempXMLString);
+
+            //Store the information for the billboard
+            try {
+                //billboardList.createEditBillboard(billboardName, usernameOfCreator, tempXMLString);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            String [] user_inputs = {"Create edit billboard",billboardName,usernameOfCreator, tempXMLString};
+
+            //Schedule billboard with viewing details given by user
+            ControlPanelClient.Run_Client(user_inputs);
+
+            // all frames to a array
+            Frame[] allFrames = Frame.getFrames();
+            for(Frame fr : allFrames){
+                if(fr.getClass().getName() == "ControlPanelGUIBillboardControlPanel"){
+                    fr.dispose();
+                }
+            }
+
+            //run Billboard Control Panel GUI
+            String [] user_input = {"List billboards"};
+            //request schedule and run calendar GUI
+            ControlPanelClient.Run_Client(user_input);
+
+
+            //Close after saving so they know it has been done
+            dispose();
+        } else if (buttonClicked == exitBttn)
+        {
+            int a = showConfirmDialog(null, "Have you saved any changes?");
+            if(a == YES_OPTION)
+            {
+                dispose();
+            }
+        } else if(buttonClicked == backgroundColourBttn)
+        {
+            Color originalColour = bb.getBillboardColour();
+            Color colour = JColorChooser.showDialog(null,
+                    "Select a color", bb.getBillboardColour());
+            backgroundColourDisplay.setBackground(colour);
+            try {
+                bb.setBillboardColour(colour);
+                backgroundColourDisplay.setBackground(colour);
+            }catch (Exception f){
+                bb.setBillboardColour(originalColour);
+                backgroundColourDisplay.setBackground(originalColour);
+            }
+        } else if(buttonClicked == messageTextColourBttn)
+        {
+            Color originalColour = bb.getMessageColour();
+            Color colour = JColorChooser.showDialog(null,
+                    "Select a color", bb.getMessageColour());
+            try {
+                bb.setMessageColour(colour);
+                messageTextColourDisplay.setBackground(colour);
+            } catch (Exception f){
+                bb.setMessageColour(originalColour);
+                messageTextColourDisplay.setBackground(originalColour);
+            }
+        } else if(buttonClicked == extraTextColourBttn)
+        {
+            Color originalColour = bb.getInformationColour();
+            Color colour = JColorChooser.showDialog(null,
+                    "Select a color", bb.getInformationColour());
+            extraTextColourDisplay.setBackground(colour);
+            try {
+                bb.setInformationColour(colour);
+                extraTextColourDisplay.setBackground(colour);
+            }catch (Exception f){
+                bb.setInformationColour(originalColour);
+                extraTextColourDisplay.setBackground(originalColour);
+            }
+        } else if(buttonClicked == importBttn)
+        {
+            JFileChooser FileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            int returnValue = FileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = FileChooser.getSelectedFile();
+                File f = new File(selectedFile.getAbsolutePath());
+                Reader fileReader;
+                try {
+                    fileReader = new FileReader(f);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    StringBuilder output = new StringBuilder();
+                    String stringXML;
+                    while((stringXML = bufferedReader.readLine()) != null){
+                        output.append(stringXML);
+                    }
+                    tempXMLString = output.toString();
+                    bufferedReader.close();
+
+                    previewPanel.removeAll();
+                    previewPanel.revalidate();
+                    previewPanel.repaint();
+                    try {
+                        bb = new BillboardViewer(tempXMLString, d);
+                    } catch (ParserConfigurationException | IOException | SAXException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(getContentPane(), ex,
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                    JPanel billboardPreview = bb.getSizedBillboard();
+                    previewPanel.add(billboardPreview);
+                    previewPanel.revalidate();
+                    previewPanel.repaint();
+
+                    messageField.setText(bb.getMessageText());
+                    extraInfoText.setText(bb.getInformationText());
+                    if(bb.getPictureURL() != null){
+                        imageURL.setText(bb.getPictureURL());
+                    }
+                    else{
+                        imageURL.setText("Encoded Image");
+                    }
+                    backgroundColourDisplay.setBackground(bb.getBillboardColour());
+                    messageTextColourDisplay.setBackground(bb.getMessageColour());
+                    extraTextColourDisplay.setBackground(bb.getInformationColour());
+                    JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Imported");
+
+
+                } catch (IOException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(),"File could not be found, please check the filepath and try again. ", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+            }
+        } else if(buttonClicked == exportBttn)
+        {
+            if(!messageField.getText().equals(""))
+            {
+                bb.setMessageText(messageField.getText());
+                bb.setMessageExists(true);
+            }
+            else{
+                bb.setMessageExists(false);
+            }
+
+            if(!extraInfoText.getText().equals(""))
+            {
+                bb.setInformationText(extraInfoText.getText());
+                bb.setInformationExists(true);
+            }
+            else{
+                bb.setInformationExists(false);
+            }
+
+            if(!imageURL.getText().equals(""))
+            {
+                bb.setPictureExists(true);
+                try{
+                    URL urlString = new URL(imageURL.getText());
+                    bb.setUrlExists(true);
+                    bb.setDataExists(false);
+                    bb.setPictureURL(imageURL.getText());
+                } catch(MalformedURLException m){
+                    bb.setDataExists(true);
+                    bb.setUrlExists(false);
+                    File f = new File(imageURL.getText());
+                    JOptionPane.showMessageDialog(getContentPane(), m,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    try {
+                        FileInputStream imageFile = new FileInputStream(f);
+                        byte[] imageData = imageFile.readAllBytes();
+                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                    } catch (IOException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                        JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                }
+            }
+            else{
+                bb.setPictureExists(false);
+            }
+
+            try {
+                bb.writeFile(o);
+                JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Exported");
+            } catch (ParserConfigurationException | TransformerException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), ex,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if(buttonClicked == previewBttn)
+        {
+            if(!messageField.getText().equals(""))
+            {
+                bb.setMessageText(messageField.getText());
+                bb.setMessageExists(true);
+            }
+            else{
+                bb.setMessageExists(false);
+            }
+
+            if(!extraInfoText.getText().equals(""))
+            {
+                bb.setInformationText(extraInfoText.getText());
+                bb.setInformationExists(true);
+            }
+            else{
+                bb.setInformationExists(false);
+            }
+
+            if(!imageURL.getText().equals(""))
+            {
+                bb.setPictureExists(true);
+                try{
+                    URL urlString = new URL(imageURL.getText());
+                    bb.setUrlExists(true);
+                    bb.setDataExists(false);
+                    bb.setPictureURL(imageURL.getText());
+                } catch(MalformedURLException m){
+                    bb.setDataExists(true);
+                    bb.setUrlExists(false);
+                    File f = new File(imageURL.getText());
+                    try {
+                        FileInputStream imageFile = new FileInputStream(f);
+                        byte[] imageData = imageFile.readAllBytes();
+                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                    } catch (IOException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                        JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+            else{
+                bb.setPictureExists(false);
+            }
+
+            try {
+                tempXMLString = bb.updateXMLString();
+            } catch (ParserConfigurationException | TransformerException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), ex,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+
+            previewPanel.removeAll();
+            previewPanel.revalidate();
+            previewPanel.repaint();
+
+            try {
+                bb = new BillboardViewer(tempXMLString, d);
+            } catch (ParserConfigurationException | IOException | SAXException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), ex,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+
+            JPanel billboardPreview = bb.getSizedBillboard();
+            previewPanel.add(billboardPreview);
+            previewPanel.revalidate();
+            previewPanel.repaint();
+        }
+
 
     }
 
