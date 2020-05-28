@@ -22,11 +22,16 @@ import java.util.Properties;
  * @version - under development
  */
 public class ControlPanelClient {
-    public static final String xmlFile = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
-            "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download'/><information>Billboard with " +
-            "picture (with URL attribute) and information text only. The picture is now centred within the top" +
-            " 2/3 of the image and the information text is centred in the remaining space below the image." +
-            "</information></billboard>";
+    public static final String xmlFile1 = "<?xml version='1.0' encoding='UTF-8'?>" +
+            "<billboard>" +
+            "    <message>Billboard 1</message>" +
+            "</billboard>";
+
+    public static final String xmlFile2 = "<?xml version='1.0' encoding='UTF-8'?>" +
+            "<billboard>" +
+            "    <message>Billboard 2</message>" +
+            "</billboard>";
+
 
     /**
      * Sends requests to Server
@@ -357,14 +362,17 @@ public class ControlPanelClient {
 
         String [] user_inputs4 = {"Schedule Billboard","2","2021-05-10T10:10:00.00", "5", "0"};
         String [] user_inputs5 = {"Schedule Billboard","1","2021-05-10T10:00:00.00", "20", "0"};
-        String[] user_inputs6 = {"Create edit billboard", "Billboard1",  "Jarod", xmlFile};
-        String[] user_inputs7 = {"List billboards"};
+        String[] user_inputs6 = {"Create edit billboard", "Billboard1",  "Jarod", xmlFile1};
+        String[] user_inputs7 = {"Create edit billboard", "Billboard2",  "em", xmlFile2};
+
 
         //Run_Client(user_inputs1);
         //Run_Client(user_inputs6);
         //Run_Client(user_inputs3);
         //Run_Client(user_inputs4);
         //Run_Client(user_inputs5);
-        Run_Client(user_inputs6);
+        //Run_Client(user_inputs6);
+        //Run_Client(user_inputs7);
+
     }
 }

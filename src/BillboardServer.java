@@ -4,10 +4,7 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -39,6 +36,11 @@ public class BillboardServer {
     //queue of billboard viewings - 2D array
     private static String [][] queue = new String [0][0];
 
+    private static final String noViewingXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <message>There are no billboards displayed at this time</message>\n" +
+            "</billboard>";
+
     //Setup another hashmap to store an id and hasmap of the token and its timer
     HashMap<Integer, Timer> SessionCombinedHashmap;
     //Setup a hashmap to store each hasmap with a timer
@@ -58,20 +60,7 @@ public class BillboardServer {
         //create DB connection
         Connection connection = null;
 
-        //while loop that attempts to connect to the database
-        //runs every 15 seconds until a connection is made.
-        boolean connectionMade = false;
-        while(connectionMade == false){
-            connection = DBconnection.getInstance();
-            if(connection != null){
-                connectionMade = true;
-                System.out.println("Connection made, resuming.");
-            }
-            else {
-                System.out.println("Connection cannot be made. Attempting connection again in 15 seconds...");
-                Thread.sleep(15000);
-            }
-        }
+        connection = DBconnection.getInstance();
 
         //check if tables exist in DB, if not adds tables
         checkTables(connection);
@@ -113,8 +102,8 @@ public class BillboardServer {
                 //read request sent by client
                 String clientRequest = ois.readObject().toString();
 
-                //print what was received from client
-                System.out.println("received from client: "+clientRequest);
+                //print what was received from client in server command line
+                System.out.println("request received from client: "+clientRequest);
 
                 //save return message, based on what request was received from the client
                 switch(clientRequest)
@@ -292,6 +281,9 @@ public class BillboardServer {
     public static void listBillboards(ObjectOutputStream oos, BillboardList billboardList) throws Exception{
         //Output to client
         oos.writeObject(billboardList.listBillboards());
+
+        //Print billboard list sent to client
+        System.out.println("Sent to client:\n");
         System.out.println("billboard list: "+ billboardList.listBillboards());
     }
 
@@ -309,10 +301,12 @@ public class BillboardServer {
         oos.writeObject(billboardList.GetBillboardInfo(billboardName));
 
         Billboard BillboardInfo = billboardList.GetBillboardInfo(billboardName);
-        System.out.println("billboard infos: "+ billboardList.GetBillboardInfo(billboardName));
-        System.out.println("billboard name: "+BillboardInfo.BillboardName);
-        System.out.println("billboard creator: "+BillboardInfo.BillboardCreator);
-        System.out.println("billboard xml: "+BillboardInfo.XMLFile);
+
+        //Print billboard variables received from client
+        System.out.println("Sent to client:\n");
+        System.out.println("billboard name: "+BillboardInfo.BillboardName + "\n");
+        System.out.println("billboard creator: "+BillboardInfo.BillboardCreator + "\n");
+        System.out.println("billboard xml: "+BillboardInfo.XMLFile + "\n");
     }
 
     /**
@@ -328,12 +322,10 @@ public class BillboardServer {
         String billboardCreator = ois.readObject().toString();
         String xmlFile = ois.readObject().toString();
 
-        //For testing purposes
-        //print bb list
-        System.out.println("billboard list: "+ billboardList);
-        //print what was received from client
-        System.out.println("billboard name: "+ billboardName + "\n" +
-                "creator: "+billboardCreator+"\n"+
+        //Print billboard variables received from client
+        System.out.println("Received from client:\n");
+        System.out.println("billboard name : "+ billboardName + "\n" +
+                "billboard creator: "+billboardCreator+"\n"+
                 "xml file: "+xmlFile+"\n");
 
         //Clear the db with the billboard information
@@ -356,7 +348,9 @@ public class BillboardServer {
     public static void deleteBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList) throws Exception {
         //Read the parameters given by the client
         String billboardName = ois.readObject().toString();
-        //Display the name of the billboard for ease of testing
+
+        //Print name of billboard being deleted
+        System.out.println("Received from client:\n");
         System.out.println("billboard name: "+ billboardName);
 
         //Clear the db with the billboard information
@@ -378,8 +372,14 @@ public class BillboardServer {
      */
     public static void viewSchedule(ObjectOutputStream oos, ScheduleMultiMap billboardSchedule) throws IOException {
         MultiMap<String, ScheduleInfo> schedule = billboardSchedule.viewSchedule();
+
         //send schedule to client
         oos.writeObject(schedule);
+
+        //print schedule that was sent to client
+        System.out.println("Sent to client:\n");
+        System.out.println("Schedule: "+schedule+"\n");
+
     }
 
    /**
@@ -399,6 +399,13 @@ public class BillboardServer {
         String startTime = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrenceDelay = ois.readObject().toString();
+
+        //print schedule variables received from client
+        System.out.println("Received to client:\n");
+        System.out.println("Billboard Name: "+billboardName+"\n");
+        System.out.println("Start Time: "+startTime+"\n");
+        System.out.println("Duration (mins): "+duration+"\n");
+        System.out.println("Recurrence delay (mins): "+recurrenceDelay+"\n");
 
         Billboard billboard = billboardList.GetBillboardInfo(billboardName);
         String billboardCreator = billboard.BillboardCreator;
@@ -434,6 +441,13 @@ public class BillboardServer {
         String startTime = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrenceDelay = ois.readObject().toString();
+
+        //print schedule variables received from client
+        System.out.println("Received to client:\n");
+        System.out.println("Billboard Name: "+billboardName+"\n");
+        System.out.println("Start Time: "+startTime+"\n");
+        System.out.println("Duration (mins): "+duration+"\n");
+        System.out.println("Recurrence delay (mins): "+recurrenceDelay+"\n");
 
         //retrieve billboard object
         Billboard billboard = billboardList.GetBillboardInfo(billboardName);
@@ -559,18 +573,37 @@ public class BillboardServer {
                 //Write schedule changes to DB
                 billboardSchedule.writeToDBschedule(connection);
 
+                //repopulate queue
+                populateQueue(connection);
+
+                //if there are remaining viewings
+                if(queue.length > 0){
+                    //update schedule info for next viewing
+                    billboardName = queue[0][0];
+                    nextViewingTime = LocalDateTime.parse(queue[0][1]);
+                    duration = Duration.parse(queue[0][2]);
+                    recurrenceDelay = Integer.parseInt(queue[0][3]);
+                    billboardCreator = queue[0][4];
+                }
             }
 
             //Check if the next viewing in the queue is before or equal to current time
-            else if(nextViewingTime.isBefore(currentTime) || nextViewingTime.isEqual(currentTime))
+            if((nextViewingTime.isBefore(currentTime) || nextViewingTime.isEqual(currentTime)) && queue.length > 0)
             {
                 System.out.println("\n"+LocalDateTime.now());
 
-                //Send billboard name to client
-                oos.writeObject(billboardName);
+                //retrieve information of currently displayed billboard
+                Billboard billboard = billboardList.GetBillboardInfo(billboardName);
+
+                //retrieve xml from billboard
+                String xmlFile = billboard.XMLFile;
+
+                //Send billboard xml to client
+                oos.writeObject(xmlFile);
                 oos.flush();;
 
-                System.out.println(billboardName+" is being displayed");
+                //print currently displaying billboard
+                System.out.println("Currently displayed billboard: "+billboardName);
 
 
                 //clear DB
@@ -608,7 +641,7 @@ public class BillboardServer {
                     //if billboard has not been rescheduled
                     if (rescheduled == false)
                     {
-                        //Reschedule start time of viewing for +1 day
+                        //Reschedule start time of viewing for next recurring
                         billboardSchedule.scheduleBillboard(billboardName,newStartTime,duration,recurrenceDelay,
                                 billboardList.billboardHashMap, billboardCreator);
                     }
@@ -625,15 +658,10 @@ public class BillboardServer {
                 System.out.println("There are no billboards scheduled for this time");
 
                 //send details of "no billboard to display" xml
-                oos.writeObject("no viewing");
+                oos.writeObject(noViewingXML);
                 oos.flush();;
             }
 
-            //update viewer queue
-            populateQueue(connection);
-            //send details of "no billboard to display" xml
-            oos.writeObject("no viewing");
-            oos.flush();;
         }
 
         else
@@ -644,7 +672,7 @@ public class BillboardServer {
             System.out.println("queue is empty");
 
             //send details of "no billboard to display" xml
-            oos.writeObject("no viewing");
+            oos.writeObject(noViewingXML);
             oos.flush();;
 
         }

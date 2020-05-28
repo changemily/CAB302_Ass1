@@ -233,19 +233,32 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         Object buttonClicked = actionEvent.getSource();
 
         if (buttonClicked==editBillboardButton) {
-            //Retrieve the xml file associated with the name
-            try {
-                //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
-                xmlFile = billboardListH.get(billboardXML).XMLFile;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(getContentPane(), e,
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            //if billboard has not been selected in list
+            if(billboardName == null)
+            {
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "You must select a billboard in the list to edit");
             }
-            System.out.println("xmlFile: "+xmlFile);
-            //run Billboard editor/creator GUI
-            SwingUtilities.invokeLater(new BBEditor("admin", "1234",billboardName, xmlFile));
+
+            //if billboard has been selected
+
+            else
+            {
+                //Retrieve the xml file associated with the name
+                try {
+                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
+                    xmlFile = billboardListH.get(billboardXML).XMLFile;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), e,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+                System.out.println("xmlFile: "+xmlFile);
+                //run Billboard editor/creator GUI
+                SwingUtilities.invokeLater(new BBEditor("admin", "1234",billboardName, xmlFile));
+            }
         }
 
         else if (buttonClicked == createBillboardButton) {
@@ -265,8 +278,20 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         }
 
         else if (buttonClicked==scheduleBillboardButton) {
-            //run schedule billboard GUI pop up
-            SwingUtilities.invokeLater(new BBSchedulePopup("admin", "1234",billboardName));
+            //if billboard has not been selected in list
+            if(billboardName == null)
+            {
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "You must select a billboard in the list to schedule");
+            }
+
+            //if billboard has been selected
+            else
+            {
+                //run schedule billboard GUI pop up
+                SwingUtilities.invokeLater(new BBSchedulePopup("admin", "1234",billboardName));
+            }
         }
     }
 
