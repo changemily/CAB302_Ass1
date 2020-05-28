@@ -101,8 +101,8 @@ public class BillboardServer {
                 //read request sent by client
                 String clientRequest = ois.readObject().toString();
 
-                //print what was received from client
-                System.out.println("received from client: "+clientRequest);
+                //print what was received from client in server command line
+                System.out.println("request received from client: "+clientRequest);
 
                 //save return message, based on what request was received from the client
                 switch(clientRequest)
@@ -275,6 +275,9 @@ public class BillboardServer {
     public static void listBillboards(ObjectOutputStream oos, BillboardList billboardList) throws Exception{
         //Output to client
         oos.writeObject(billboardList.listBillboards());
+
+        //Print billboard list sent to client
+        System.out.println("Sent to client:\n");
         System.out.println("billboard list: "+ billboardList.listBillboards());
     }
 
@@ -292,10 +295,12 @@ public class BillboardServer {
         oos.writeObject(billboardList.GetBillboardInfo(billboardName));
 
         Billboard BillboardInfo = billboardList.GetBillboardInfo(billboardName);
-        System.out.println("billboard infos: "+ billboardList.GetBillboardInfo(billboardName));
-        System.out.println("billboard name: "+BillboardInfo.BillboardName);
-        System.out.println("billboard creator: "+BillboardInfo.BillboardCreator);
-        System.out.println("billboard xml: "+BillboardInfo.XMLFile);
+
+        //Print billboard variables received from client
+        System.out.println("Sent to client:\n");
+        System.out.println("billboard name: "+BillboardInfo.BillboardName + "\n");
+        System.out.println("billboard creator: "+BillboardInfo.BillboardCreator + "\n");
+        System.out.println("billboard xml: "+BillboardInfo.XMLFile + "\n");
     }
 
     /**
@@ -311,12 +316,10 @@ public class BillboardServer {
         String billboardCreator = ois.readObject().toString();
         String xmlFile = ois.readObject().toString();
 
-        //For testing purposes
-        //print bb list
-        System.out.println("billboard list: "+ billboardList);
-        //print what was received from client
-        System.out.println("billboard name: "+ billboardName + "\n" +
-                "creator: "+billboardCreator+"\n"+
+        //Print billboard variables received from client
+        System.out.println("Received from client:\n");
+        System.out.println("billboard name : "+ billboardName + "\n" +
+                "billboard creator: "+billboardCreator+"\n"+
                 "xml file: "+xmlFile+"\n");
 
         //Clear the db with the billboard information
@@ -339,7 +342,9 @@ public class BillboardServer {
     public static void deleteBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList) throws Exception {
         //Read the parameters given by the client
         String billboardName = ois.readObject().toString();
-        //Display the name of the billboard for ease of testing
+
+        //Print name of billboard being deleted
+        System.out.println("Received from client:\n");
         System.out.println("billboard name: "+ billboardName);
 
         //Clear the db with the billboard information
@@ -361,8 +366,14 @@ public class BillboardServer {
      */
     public static void viewSchedule(ObjectOutputStream oos, ScheduleMultiMap billboardSchedule) throws IOException {
         MultiMap<String, ScheduleInfo> schedule = billboardSchedule.viewSchedule();
+
         //send schedule to client
         oos.writeObject(schedule);
+
+        //print schedule that was sent to client
+        System.out.println("Sent to client:\n");
+        System.out.println("Schedule: "+schedule+"\n");
+
     }
 
    /**
@@ -382,6 +393,13 @@ public class BillboardServer {
         String startTime = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrenceDelay = ois.readObject().toString();
+
+        //print schedule variables received from client
+        System.out.println("Received to client:\n");
+        System.out.println("Billboard Name: "+billboardName+"\n");
+        System.out.println("Start Time: "+startTime+"\n");
+        System.out.println("Duration (mins): "+duration+"\n");
+        System.out.println("Recurrence delay (mins): "+recurrenceDelay+"\n");
 
         Billboard billboard = billboardList.GetBillboardInfo(billboardName);
         String billboardCreator = billboard.BillboardCreator;
@@ -417,6 +435,13 @@ public class BillboardServer {
         String startTime = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrenceDelay = ois.readObject().toString();
+
+        //print schedule variables received from client
+        System.out.println("Received to client:\n");
+        System.out.println("Billboard Name: "+billboardName+"\n");
+        System.out.println("Start Time: "+startTime+"\n");
+        System.out.println("Duration (mins): "+duration+"\n");
+        System.out.println("Recurrence delay (mins): "+recurrenceDelay+"\n");
 
         //retrieve billboard object
         Billboard billboard = billboardList.GetBillboardInfo(billboardName);
@@ -571,7 +596,8 @@ public class BillboardServer {
                 oos.writeObject(xmlFile);
                 oos.flush();;
 
-                System.out.println(billboardName+" is being displayed");
+                //print currently displaying billboard
+                System.out.println("Currently displayed billboard: "+billboardName);
 
 
                 //clear DB
@@ -609,7 +635,7 @@ public class BillboardServer {
                     //if billboard has not been rescheduled
                     if (rescheduled == false)
                     {
-                        //Reschedule start time of viewing for +1 day
+                        //Reschedule start time of viewing for next recurring
                         billboardSchedule.scheduleBillboard(billboardName,newStartTime,duration,recurrenceDelay,
                                 billboardList.billboardHashMap, billboardCreator);
                     }
