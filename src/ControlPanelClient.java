@@ -85,7 +85,7 @@ public class ControlPanelClient {
                     break;
 
                 case "List users":
-                    listUsers(oos, ois, user_inputs);
+                    listUsersScreen(oos, ois, user_inputs);
                     break;
                 case "Delete User":
                     deleteUser(oos, request, user_inputs);
@@ -333,7 +333,7 @@ public class ControlPanelClient {
         }
     }
 
-    private static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws Exception {
+    private static void listUsersScreen(ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws Exception {
         //Output clients request to the server
         oos.writeObject(user_inputs[0]);
         HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
