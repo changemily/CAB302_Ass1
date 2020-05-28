@@ -4,10 +4,7 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -63,20 +60,7 @@ public class BillboardServer {
         //create DB connection
         Connection connection = null;
 
-        //while loop that attempts to connect to the database
-        //runs every 15 seconds until a connection is made.
-        boolean connectionMade = false;
-        while(connectionMade == false){
-            connection = DBconnection.getInstance();
-            if(connection != null){
-                connectionMade = true;
-                System.out.println("Connection made, resuming.");
-            }
-            else {
-                System.out.println("Connection cannot be made. Attempting connection again in 15 seconds...");
-                Thread.sleep(15000);
-            }
-        }
+        connection = DBconnection.getInstance();
 
         //check if tables exist in DB, if not adds tables
         checkTables(connection);
