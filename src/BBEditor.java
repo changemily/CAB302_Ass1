@@ -267,15 +267,18 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
                 //Store the information for the billboard
                 try {
-                    billboardList.createEditBillboard(billboardName, usernameOfCreator, tempXMLString);
+                    //billboardList.createEditBillboard(billboardName, usernameOfCreator, tempXMLString);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
                 PreviewPanel.removeAll();
 
-                //Reload the main page with the new list of billboards
-                SwingUtilities.invokeLater(new ControlPanelGUI("user", "1234"));
+                String [] user_inputs = {"Create edit billboard",billboardName,usernameOfCreator, tempXMLString};
+
+                //Schedule billboard with viewing details given by user
+                ControlPanelClient.Run_Client(user_inputs);
+
                 //Close after saving so they know it has been done
                 dispose();
             }
