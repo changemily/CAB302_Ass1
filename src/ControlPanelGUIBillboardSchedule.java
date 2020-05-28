@@ -39,8 +39,8 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         // Set look and feel of GUI to resemble operating system look and feel
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-        // Default close operation, so window does not continue running after it is closed
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // Create and add the Billboards this Week label, inside of a JPanel
         JPanel title = addLabel();
@@ -269,12 +269,20 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
             createGUI();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (InstantiationException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         }
 
     }

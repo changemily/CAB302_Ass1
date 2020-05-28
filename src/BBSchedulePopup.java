@@ -178,6 +178,8 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
             cal.setTime(sdf.parse(dateTime));
         } catch (ParseException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(getContentPane(), e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         }
 
         //convert calendar to LocalDateTime
@@ -293,15 +295,23 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         } catch (ClassNotFoundException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (InstantiationException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalAccessException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (UnsupportedLookAndFeelException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 

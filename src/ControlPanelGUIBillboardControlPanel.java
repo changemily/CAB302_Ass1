@@ -57,8 +57,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // Set look and feel of GUI to resemble operating system look and feel
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-        // Default close operation, so window does not continue running after it is closed
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // Create billboards JPanel
         JPanel billboardPanel = new JPanel();
@@ -230,6 +230,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), e,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
             }
             System.out.println("xmlFile: "+xmlFile);
             //run Billboard editor/creator GUI
@@ -249,14 +251,24 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             createGUI();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (InstantiationException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 
