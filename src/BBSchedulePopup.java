@@ -243,8 +243,11 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         //get date time string
         String dateTime = dateTimePicker.getValue().toString();
 
-        //format to LocalDateTimes
-        String localDateTimeString = calendarToLocalDateTime(dateTime);
+        //format to LocalDateTime as string
+        String startTimeString = calendarToLocalDateTime(dateTime);
+
+        //convert to type LocalDateTime
+        LocalDateTime startTime = LocalDateTime.parse(startTimeString);
 
         //get duration from spinner
         String duration = DurationSpinner.getValue().toString();
@@ -260,32 +263,61 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
             System.out.println("Save pressed");
 
             //change user inputs to GUI inputs
-            String [] user_inputs = {"Schedule Billboard",BillboardName,localDateTimeString, duration, recurrenceDelay};
+            String [] user_inputs = {"Schedule Billboard",BillboardName,startTimeString, duration, recurrenceDelay};
 
-            //Schedule billboard with viewing details given by user
-            ControlPanelClient.Run_Client(user_inputs);
+            //get current time
+            LocalDateTime currentTime = LocalDateTime.now();
 
-            //FOR TESTING
-            System.out.println("request: "+user_inputs[0]);
-            System.out.println("bb name: "+user_inputs[1]);
-            System.out.println("Start time: "+user_inputs[2]);
-            System.out.println("Duration: "+user_inputs[3]);
-            System.out.println("recurrence: "+user_inputs[4]);
+            //if start time is in the past
+            if(startTime.isBefore(currentTime))
+            {
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "You cannot schedule a billboard to display in the past");
+            }
+
+            //if start time is valid
+            else{
+                //Schedule billboard with viewing details given by user
+                ControlPanelClient.Run_Client(user_inputs);
+
+                //FOR TESTING
+                System.out.println("request: "+user_inputs[0]);
+                System.out.println("bb name: "+user_inputs[1]);
+                System.out.println("Start time: "+user_inputs[2]);
+                System.out.println("Duration: "+user_inputs[3]);
+                System.out.println("recurrence: "+user_inputs[4]);
+            }
 
         }
 
         //if remove schedule button is selected
         else if (buttonClicked== RemoveBttn) {
 
-            int a = showConfirmDialog(null, "Are you sure you want to remove this billboard?");
-            if(a == YES_OPTION)
-            {
-                //change user inputs to GUI inputs
-                String [] user_inputs = {"Remove Schedule",BillboardName,localDateTimeString, duration, recurrenceDelay};
+            //get current time
+            LocalDateTime currentTime = LocalDateTime.now();
 
-                //remove viewing from schedule with viewing details given by user
-                ControlPanelClient.Run_Client(user_inputs);
-                dispose();
+            //if start time is in the past
+            if(startTime.isBefore(currentTime))
+            {
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "You cannot remove a billboard viewing that is in the past");
+            }
+            //if start time is valid
+            else{
+                //display check window to confirm removal of viewing
+                int a = showConfirmDialog(null, "Are you sure you want to remove this viewing?");
+                //if yes is selected in check window
+                if(a == YES_OPTION)
+                {
+                    //change user inputs to GUI inputs
+                    String [] user_inputs = {"Remove Schedule",BillboardName, startTimeString, duration, recurrenceDelay};
+
+                    //remove viewing from schedule with viewing details given by user
+                    ControlPanelClient.Run_Client(user_inputs);
+                    dispose();
+                }
             }
         }
     }
