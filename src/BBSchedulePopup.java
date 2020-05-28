@@ -23,7 +23,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     private JSpinner DurationSpinner;
     private JSpinner dateTimePicker;
     private JComboBox RecurrencePicker;
-    private JSpinner frequencySpinner;
+    private JSpinner recurrencMins;
     private String BillboardName;
     private final String MINUTES_IN_DAY = "1440";
     private final String MINUTES_IN_HOUR = "60";
@@ -46,67 +46,47 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // Create DurationSpinner
-        SpinnerModel durationModel = new SpinnerNumberModel(1, 1, 1440, 1);
-        DurationSpinner = new JSpinner(durationModel);
-        DurationSpinner.setFont(DurationSpinner.getFont().deriveFont(DurationSpinner.getFont().getSize() + 7f));
+        DurationSpinner = createNumberJSpinner(1, 1, 1440);
 
-        // Create DurationLabel
-        JLabel DurationLabel = new JLabel();
-        DurationLabel.setText("Duration (Minutes)");
-        DurationLabel.setFont(DurationLabel.getFont().deriveFont(DurationLabel.getFont().getSize() + 5f));
-        DurationLabel.setAlignmentX(0.5F);
+        // Create durationLabel
+        JLabel durationLabel = createLabel("Duration (Minutes)");
 
         // Create DatePickerLabel
-        JLabel DatePickerLabel = new JLabel();
-        DatePickerLabel.setText("Date and Time");
-        DatePickerLabel.setFont(DatePickerLabel.getFont().deriveFont(DatePickerLabel.getFont().getSize() + 5f));
-        DatePickerLabel.setAlignmentX(0.5F);
+        JLabel datePickerLabel = createLabel("Date and Time");
 
         // Create Day Time Spinner
-        SpinnerModel dayTimePickerModel = new SpinnerDateModel();
-        dateTimePicker = new JSpinner(dayTimePickerModel);
-        dateTimePicker.setFont(DurationSpinner.getFont().deriveFont(DurationSpinner.getFont().getSize() + 7f));
+        dateTimePicker = createDateJSpinner();
 
         // Create lists for frequency, day and hour options for combo boxes
-        String[] FrequencyOptions = { "No Recurrence","Every X Minute(s)", "Every Hour", "Every Day" };
+        String[] recurrenceOptions = { "No Recurrence","Every X Minute(s)", "Every Hour", "Every Day" };
 
-        // Create FrequencyLabel
-        JLabel FrequencyLabel = new JLabel();
-        FrequencyLabel.setText("Recurrence");
-        FrequencyLabel.setFont(FrequencyLabel.getFont().deriveFont(FrequencyLabel.getFont().getSize() + 5f));
-        FrequencyLabel.setAlignmentX(0.5F);
+        // Create recurrenceOptionLabel
+        JLabel recurrenceOptionLabel = createLabel("Recurrence");
 
         // Create frequencySpinner
-        SpinnerModel frequencyModel = new SpinnerNumberModel(0, 0, 59, 1);
-        frequencySpinner = new JSpinner(frequencyModel);
-        frequencySpinner.setFont(DurationSpinner.getFont().deriveFont(DurationSpinner.getFont().getSize() + 7f));
-        frequencySpinner.setVisible(false);
+        recurrencMins = createNumberJSpinner(0,0,59);
 
         // Create FrequencyPicker
-        RecurrencePicker = new JComboBox(FrequencyOptions);
+        RecurrencePicker = new JComboBox(recurrenceOptions);
         RecurrencePicker.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if(RecurrencePicker.getSelectedIndex() == 1) {
-                    frequencySpinner.setVisible(true);
+                    //resize GUI to fit recurrencMins spinner
+                    pack();
+                    recurrencMins.setVisible(true);
                 } else
                 {
-                    frequencySpinner.setVisible(false);
+                    recurrencMins.setVisible(false);
                 }
             }
         });
 
         // Create Remove Button
-        RemoveBttn = new JButton();
-        RemoveBttn.addActionListener(this);
-        RemoveBttn.setText("Remove From Schedule");
-        RemoveBttn.setAlignmentX(0.5F);
+        RemoveBttn = createButton("Remove From Schedule");
 
         // Create Save Button
-        ScheduleBttn = new JButton();
-        ScheduleBttn.addActionListener(this);
-        ScheduleBttn.setText("Schedule Billboard");
-        ScheduleBttn.setAlignmentX(0.5F);
+        ScheduleBttn = createButton("Schedule Billboard");
 
         // Set Group Layout
         GroupLayout contentPaneLayout = new GroupLayout(getContentPane());
@@ -123,7 +103,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                                 .addGap(50, 50, 50)
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addComponent(frequencySpinner, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(recurrencMins, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
                                                 .addContainerGap(200, Short.MAX_VALUE))
                                         .addGroup(contentPaneLayout.createSequentialGroup()
                                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
@@ -132,9 +112,9 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                                                         .addComponent(DurationSpinner, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                                                 .addGroup(contentPaneLayout.createParallelGroup()
-                                                        .addComponent(DurationLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(DatePickerLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(FrequencyLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                        .addComponent(durationLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(datePickerLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(recurrenceOptionLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                                 .addGap(18, 18, 18))))
         );
         contentPaneLayout.setVerticalGroup(
@@ -142,19 +122,19 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                         .addGroup(contentPaneLayout.createSequentialGroup()
                                 .addGap(16, 16, 16)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(DurationLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                                        .addComponent(durationLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                                         .addComponent(DurationSpinner, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(dateTimePicker, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(DatePickerLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(datePickerLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGap(18, 18, 18)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(FrequencyLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                                        .addComponent(recurrenceOptionLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                                         .addComponent(RecurrencePicker, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(frequencySpinner, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(recurrencMins, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(RemoveBttn, GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
@@ -165,15 +145,68 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-
     }
 
+    private JSpinner createNumberJSpinner(int value, int min, int max) {
+        SpinnerModel spinnerModel;
+
+        //set spinner model to number
+        spinnerModel = new SpinnerNumberModel(value, min, max, 1);
+
+        //create new JSpinner
+        JSpinner jspinner = new JSpinner(spinnerModel);
+
+        //set font and size of JSpinner
+        jspinner.setFont(jspinner.getFont().deriveFont(jspinner.getFont().getSize() + 7f));
+        return jspinner;
+    }
+
+    private JSpinner createDateJSpinner() {
+        SpinnerModel spinnerModel;
+
+        //set spinner model to dayTime
+        spinnerModel = new SpinnerDateModel();
+
+        //create new JSpinner
+        JSpinner jspinner = new JSpinner(spinnerModel);
+
+        //set font and size of JSpinner
+        jspinner.setFont(DurationSpinner.getFont().deriveFont(DurationSpinner.getFont().getSize() + 7f));
+        return jspinner;
+    }
+
+    private JLabel createLabel(String labelText)
+    {
+        //create new JLabel
+        JLabel label = new JLabel();
+
+        //set text of label
+        label.setText(labelText);
+
+        //format label's font, size and alignment
+        label.setFont(label.getFont().deriveFont(label.getFont().getSize() + 5f));
+        label.setAlignmentX(0.5F);
+        return label;
+    }
+
+    private JButton createButton(String buttonLabel)
+    {
+        // Create new button
+        JButton button = new JButton();
+        //add action listener to button
+        button.addActionListener(this);
+        //set text of button
+        button.setText(buttonLabel);
+        //set alignment of button
+        button.setAlignmentX(0.5F);
+        return button;
+    }
     /**
      *
      * @param dateTime
      * @return
      */
-    public String calendarToLocalDateTime (String dateTime)
+    private String calendarToLocalDateTime (String dateTime)
     {
         //create calendar and add date time of viewing to it
         Calendar cal = Calendar.getInstance();
@@ -200,7 +233,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
      * @param recurrenceOption
      * @return
      */
-    public String getReccurrenceDelay(String recurrenceOption){
+    private String getReccurrenceDelay(String recurrenceOption){
 
         //initialize variable that stores recurrence delay
         String recurrenceDelay ="";
@@ -216,7 +249,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         else if (recurrenceOption == "Every X Minute(s)")
         {
             //retrieve recurrence X minutes recurrence delay
-            recurrenceDelay = frequencySpinner.getValue().toString();
+            recurrenceDelay = recurrencMins.getValue().toString();
         }
 
         //if billboard viewing recurs every hour
