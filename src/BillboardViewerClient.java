@@ -39,7 +39,7 @@ public class BillboardViewerClient {
     /**
      * Sends request to server for currently displayed billboard
      */
-    public static void runClient(){
+    private static void runClient(){
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
@@ -116,7 +116,7 @@ public class BillboardViewerClient {
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public static void ViewerGUI(JFrame billboardGUI, JPanel billboardPanel, String xmlString) throws IOException, SAXException, ParserConfigurationException {
+    private static void ViewerGUI(JFrame billboardGUI, JPanel billboardPanel, String xmlString) throws IOException, SAXException, ParserConfigurationException {
         if(billboardPanel != null){
             billboardGUI.remove(billboardPanel);
         }

@@ -6,6 +6,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,7 +22,7 @@ import java.util.Map;
  * NOTES: Current version is a basic design; button functionality still needs to be added; further refinement required;
  *        contains some code used during testing which will be removed
  */
-public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener {
+public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener {
     HashMap<String, Billboard> billboardListH;
     String username;
     String sessionToken;
@@ -135,6 +137,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         getContentPane().add(previewPanel);
         getContentPane().add(Box.createHorizontalStrut(100));
 
+        // Add Window Listener, used for when window is closed
+        addWindowListener(this);
+
         // Display window
         setLocation(new Point(100,100));
         pack();
@@ -143,7 +148,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
 
-    public static final String xmlFiles = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
+    private static final String xmlFiles = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
             "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download%27/%3E<information>Billboard" +
             " with picture (with URL attribute) and information text only. The picture is now centred within" +
             " the top 2/3 of the image and the information text is centred in the remaining space below the" +
@@ -152,7 +157,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * This method creates a JList, returns a JList
      * @return Returns JList
      */
-    public JList createJList(JPanel panel) {
+    private JList createJList(JPanel panel) {
         //Int counter for assigning values in the array
         int counter = 1;
 
@@ -199,7 +204,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
     // Changes billboard XML when a user selects a billboard from the list
-    public void valueChanged(ListSelectionEvent event) {
+    private void valueChanged(ListSelectionEvent event) {
         //get string stored in current cell of list
         String cellSelected = billboardList.getSelectedValue().toString();
 
@@ -281,7 +286,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             }
             System.out.println("xmlFile: "+xmlFile);
             //run Billboard editor/and assign the current users username to be the creator
-            SwingUtilities.invokeLater(new BBEditor("admin", "1234", billboardName));
+            SwingUtilities.invokeLater(new BBEditor("admin", "1234", true));
         }
 
         else if (buttonClicked == deleteBillboardButton) {
@@ -350,4 +355,39 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         }
     }
 
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
+        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
 }

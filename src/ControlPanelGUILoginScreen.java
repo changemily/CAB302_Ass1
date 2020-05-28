@@ -12,9 +12,9 @@ import java.awt.event.ActionListener;
  * NOTES: User credentials check to be added
  */
 public class ControlPanelGUILoginScreen extends JFrame implements Runnable, ActionListener {
-    JButton loginButton;
-    JTextField username;
-    JTextField password;
+    private JButton loginButton;
+    private JTextField username;
+    private JTextField password;
 
     /**
      * Method used to create a GUI window for the Login screen

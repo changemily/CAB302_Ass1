@@ -34,6 +34,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private String username;
     private String sessionToken;
     private BillboardViewer bb = null;
+    private boolean createdBillboard = false;
 
     BillboardList billboardList = new BillboardList();
 
@@ -47,10 +48,11 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         this.sessionToken = sessionToken;
     }
 
-    public BBEditor(String username, String sessionToken, String billboardName){
+    public BBEditor(String username, String sessionToken, boolean createdBillboard){
         super("Billboard Editor");
-        this.billboardName = billboardName;
+        this.billboardName = null;
         tempXMLString = "<billboard></billboard>";
+        this.createdBillboard = createdBillboard;
         this.username = username;
         this.sessionToken = sessionToken;
     }
@@ -153,6 +155,31 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             ExtraInfoText.setForeground(Color.black);
             ExtraInfoScrollPanel.setViewportView(ExtraInfoText);
         }
+        // Create nameLabel
+        JLabel nameLabel = new JLabel();
+        nameLabel.setText("Billboard Name");
+        nameLabel.setBackground(Color.white);
+        nameLabel.setForeground(Color.black);
+        nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        if(!createdBillboard)
+        {
+            nameLabel.setVisible(false);
+        } else
+        {
+            nameLabel.setVisible(true);
+        }
+
+        // Create nameField
+        JTextField nameField = new JTextField();
+        nameField.setBackground(Color.white);
+        nameField.setForeground(Color.black);
+        if(!createdBillboard)
+        {
+            nameField.setVisible(false);
+        } else
+        {
+            nameField.setVisible(true);
+        }
 
         // Initialise field values
         MessageField.setText(bb.getMessageText());
@@ -186,7 +213,10 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             @Override
             public void actionPerformed( ActionEvent e ) {
                 //Variables to store for the billboard later
-                String billboardName = bb.getName();
+                if(createdBillboard){
+                    billboardName = nameField.getText();
+                }
+                System.out.println(nameField.getText());
                 String usernameOfCreator = username;
 
                 //Get what the user has inputted and put it into the file.
@@ -253,12 +283,24 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     ex.printStackTrace();
                 }
 
-                PreviewPanel.removeAll();
-
                 String [] user_inputs = {"Create edit billboard",billboardName,usernameOfCreator, tempXMLString};
 
                 //Schedule billboard with viewing details given by user
                 ControlPanelClient.Run_Client(user_inputs);
+
+                // all frames to a array
+                Frame[] allFrames = Frame.getFrames();
+                for(Frame fr : allFrames){
+                    if(fr.getClass().getName() == "ControlPanelGUIBillboardControlPanel"){
+                        fr.dispose();
+                    }
+                }
+
+                //run Billboard Control Panel GUI
+                String [] user_input = {"List billboards"};
+                //request schedule and run calendar GUI
+                ControlPanelClient.Run_Client(user_input);
+
 
                 //Close after saving so they know it has been done
                 dispose();
@@ -567,36 +609,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         previewBttn.setText("Preview");
         previewBttn.setBackground(new Color(230, 230, 230));
         previewBttn.setForeground(Color.black);
-
-        // BB Create/Edit Test
-        Boolean newBillboard = Boolean.TRUE;
-
-        // Create nameLabel
-        JLabel nameLabel = new JLabel();
-        nameLabel.setText("Billboard Name");
-        nameLabel.setBackground(Color.white);
-        nameLabel.setForeground(Color.black);
-        nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        if(newBillboard == Boolean.FALSE)
-        {
-            nameLabel.setVisible(Boolean.FALSE);
-        } else
-        {
-            nameLabel.setVisible(Boolean.TRUE);
-        }
-
-        // Create nameField
-        JTextField nameField = new JTextField();
-        nameField.setBackground(Color.white);
-        nameField.setForeground(Color.black);
-        if(newBillboard == Boolean.FALSE)
-        {
-            nameField.setVisible(Boolean.FALSE);
-        } else
-        {
-            nameField.setVisible(Boolean.TRUE);
-        }
-
         // Set Layout for EVERYTHING
         GroupLayout MainPanelLayout = new GroupLayout(MainPanel);
         MainPanel.setLayout(MainPanelLayout);
@@ -793,6 +805,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
     public static void main(String[] args)
     {
-        SwingUtilities.invokeLater(new BBEditor("admin", "124", "9"));
+        SwingUtilities.invokeLater(new BBEditor("admin", "124", true));
     }
 }
