@@ -25,7 +25,7 @@ public class BillboardServer {
             "CREATE TABLE IF NOT EXISTS Users (username varchar(255) PRIMARY KEY,password varchar(255), createBillboard INT, editBillboards INT, scheduleBillboards INT, editUsers INT)";
 
     public static final String CREATE_BILLBOARD_TABLE =
-            "CREATE TABLE IF NOT EXISTS Billboards (billboardName varchar(255), billboardCreator varchar (255), xmlFile varchar (225));";
+            "CREATE TABLE IF NOT EXISTS Billboards (billboardName varchar(255), billboardCreator varchar (255), xmlFile text);";
 
     public static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboardName varchar(255), startTimeScheduled varchar(50), " +

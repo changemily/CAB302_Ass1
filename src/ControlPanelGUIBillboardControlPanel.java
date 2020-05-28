@@ -128,29 +128,16 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
 
-    public static final String xmlFiles = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<billboard>\n" +
-            "    <picture url=\"https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download\" />\n" +
-            "    <information>Billboard with picture (with URL attribute) and information text only. The picture is now centred within the top 2/3 of the image and the information text is centred in the remaining space below the image.</information>\n" +
-            "</billboard>";
+    public static final String xmlFiles = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
+            "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download%27/%3E<information>Billboard" +
+            " with picture (with URL attribute) and information text only. The picture is now centred within" +
+            " the top 2/3 of the image and the information text is centred in the remaining space below the" +
+            " image.</information></billboard>";
     /**
      * This method creates a JList, returns a JList
      * @return Returns JList
      */
     public JList createJList(JPanel panel) {
-        //For Testing
-        //Billboard with no scheduled viewing
-        try {
-            billboard_list.createEditBillboard("Billboard1", "jarod", xmlFiles);
-            billboard_list.createEditBillboard("Billboard2", "emily", xmlFiles);
-            billboard_list.createEditBillboard("Billboard3","nick", xmlFiles);
-            billboard_list.createEditBillboard("Billboard4","harry", xmlFiles);
-            billboard_list.createEditBillboard("Billboard5", "liam", xmlFiles);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
         //Int counter for assigning values in the array
         int counter = 1;
 
