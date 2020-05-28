@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.HashMap;
 
 /**
  * Create/Edit User class for Control Panel GUI
@@ -11,7 +14,7 @@ import java.awt.event.ActionListener;
  *
  * NOTES: Some functionality still needs to be added
  */
-public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener {
+public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener, WindowListener {
     private JTextField usernameField;
     private JTextField password;
     private JButton saveExitButton;
@@ -22,6 +25,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
     private JCheckBox editUsersBox;
     String username;
     String sessionToken;
+    HashMap<String, User> userList;
     boolean adminUser;
 
     /**
@@ -120,6 +124,9 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
             getContentPane().add(rightPanel);
             getContentPane().add(Box.createHorizontalStrut(100)); // boundary
         }
+
+        // Add Window Listener, used for when window is closed
+        addWindowListener(this);
 
         // Display window
         setLocation(new Point(100,100));
@@ -304,6 +311,48 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        if(adminUser) {
+            // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
+            //SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken, userList));
+        }
+        else {
+            // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
+            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
     }
 }
 
