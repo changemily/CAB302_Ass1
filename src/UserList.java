@@ -1,6 +1,9 @@
-import javax.swing.plaf.metal.MetalIconFactory;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class UserList {
     static HashMap<String, User> userHashMap;
@@ -9,8 +12,102 @@ public class UserList {
         userHashMap = new HashMap<>();
     }
 
-    public void retrieveUsersFromDB(Connection connection){
+    public void retrieveUsersFromDB(Connection connection) throws Exception {
+        final String SELECT = "SELECT * FROM Users ORDER BY username desc";
 
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(SELECT);
+
+        while (rs.next())
+        {
+            String username = rs.getString(1);
+            String password = rs.getString(2);
+            int createBillboard = Integer.parseInt(rs.getString(3));
+            int editBillboards = Integer.parseInt(rs.getString(4));
+            int scheduleBillboards = Integer.parseInt(rs.getString(5));
+            int editUsers = Integer.parseInt(rs.getString(6));
+            HashSet<String> permissions = new HashSet<>();
+
+            if(createBillboard == 1){
+                permissions.add("Create Billboards");
+            }
+            if(editBillboards == 1){
+                permissions.add("Edit All Billboards");
+            }
+            if(scheduleBillboards == 1){
+                permissions.add("Schedule Billboards");
+            }
+            if(editUsers == 1){
+                permissions.add("Edit Users");
+            }
+            User newUser = new User(username, password);
+            newUser.Permissions = permissions;
+            userHashMap.put(username, newUser);
+        }
+        //close ResultSet
+        rs.close();
+        //close statement
+        st.close();
+
+    }
+
+    public void ClearUsersFromDB(Connection connection) throws SQLException {
+        //create statement to connect to db
+        Statement st = connection.createStatement();
+
+        //for all entries in billboardHashMap
+        for (String username : userHashMap.keySet())
+        {
+            //remove each entry from DB using billboard_name
+            st.execute("DELETE FROM Users WHERE username=\""+username+"\";");
+        }
+    }
+
+    public void sendUsersToDB(Connection connection) throws SQLException {
+        //create statement
+        Statement st = connection.createStatement();
+
+        //for every billboard name in billboardHashMap
+        for (User user : userHashMap.values() ) {
+
+            //Pass the values of each billboard to the SQL statement.
+            String username = user.Username;
+            String password = user.Password;
+            int createBillboard;
+            int editBillboards;
+            int scheduleBillboards;
+            int editUsers;
+
+            if(user.Permissions.contains("Create Billboards")){
+                createBillboard = 1;
+            }
+            else{
+                createBillboard = 0;
+            }
+            if(user.Permissions.contains("Edit All Billboards")){
+                editBillboards = 1;
+            }
+            else{
+                editBillboards = 0;
+            }
+            if(user.Permissions.contains("Schedule Billboards")){
+                scheduleBillboards = 1;
+            }
+            else{
+                scheduleBillboards = 0;
+            }
+            if(user.Permissions.contains("Edit Users")){
+                editUsers = 1;
+            }
+            else{
+                editUsers = 0;
+            }
+
+            st.executeQuery("INSERT INTO Users (username, password, createBillboard, editBillboards, scheduleBillboards, editUsers) " +
+                    "VALUES(\""+username+"\",\""+password+"\",\""+createBillboard+"\",\""+editBillboards+"\",\""+scheduleBillboards+"\",\""+editUsers+"\");");
+        }
+        //close statement
+        st.close();
     }
 
     public void addUserToList(User newUser) throws Exception {
@@ -20,10 +117,6 @@ public class UserList {
             }
         }
         userHashMap.put(newUser.Username, newUser);
-    }
-
-    public void addUserToDB(User newUser){
-
     }
 
     public void deleteUser(User oldUser) throws Exception {
@@ -44,9 +137,6 @@ public class UserList {
 
     }
 
-    public void deleteUserToDB(User oldUser){
-
-    }
 
     public User getUserInformation(String userName) throws Exception {
         for(String username : userHashMap.keySet()){
@@ -69,10 +159,5 @@ public class UserList {
             throw new Exception("Original user doesn't exist");
         }
     }
-
-    public void modifyUserToDB(User oldUser, User newUser){
-
-    }
-
 }
 
