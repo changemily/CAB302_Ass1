@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
  *
  * NOTES: Current version is a basic design; some functionality still needs to be added; further refinement required
  */
-public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable {
+public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, WindowListener {
     private MultiMap billboard_schedule;
     private final int days_in_week = 7;
     String username;
@@ -59,6 +61,9 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         getContentPane().add(Box.createVerticalStrut(40));
         getContentPane().add(table);
         getContentPane().add(Box.createVerticalStrut(50)); // boundary
+
+        // Add Window Listener, used for when window is closed
+        addWindowListener(this);
 
         // Display window
         pack();
@@ -291,4 +296,39 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
 
     }
 
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
+        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
 }
