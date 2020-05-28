@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static javax.swing.JOptionPane.YES_OPTION;
+import static javax.swing.JOptionPane.showConfirmDialog;
+
 /**
  * Billboard Control Panel class for Control Panel GUI
  * This class contains a Main method and method that creates a GUI window for the Billboard Control Panel
@@ -293,7 +296,11 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //Open the editor with a new file
             try {
                 //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
-                xmlFile = xmlTemplate;
+                int a = showConfirmDialog(null, "Are you sure you want to delete this billboard?");
+                if(a == YES_OPTION)
+                {
+                    xmlFile = xmlTemplate;
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -390,4 +397,5 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     public void windowDeactivated(WindowEvent e) {
 
     }
+
 }

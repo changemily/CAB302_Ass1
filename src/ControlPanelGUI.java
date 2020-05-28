@@ -19,7 +19,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
     private JButton editBillboardButton;
     private JButton viewBillboardScheduleButton;
     private JButton passwordChangeButton;
-    private JButton removeBillboardButton;
     String username;
     String sessionToken;
 
@@ -57,10 +56,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         //create JPanel that holds button
         JPanel editBillboardPanel = createButtonJPanel(editBillboardButton);
 
-        // Create Remove Billboard button and panel
-        removeBillboardButton = createButton("Remove Billboards");
-        JPanel removeBillboardPanel = createButtonJPanel(removeBillboardButton);
-
         // create edit billboard schedule button
         viewBillboardScheduleButton = createButton("View Billboard Schedule");
         //create JPanel that holds button
@@ -80,8 +75,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         getContentPane().add(editUsersPanel);
         getContentPane().add(Box.createVerticalStrut(25));
         getContentPane().add(editBillboardPanel);
-        getContentPane().add(Box.createVerticalStrut(25));
-        getContentPane().add(removeBillboardPanel);
         getContentPane().add(Box.createVerticalStrut(25));
         getContentPane().add(editBillboardSchedulePanel);
         getContentPane().add(Box.createVerticalStrut(25));
@@ -185,14 +178,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             dispose();
         }
 
-        else if(buttonClicked == removeBillboardButton)
-        {
-            int a = showConfirmDialog(null, "Are you sure you want to remove this billboard?");
-            if(a == YES_OPTION)
-            {
-
-            }
-        }
     }
 
     @Override
