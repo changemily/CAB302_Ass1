@@ -18,8 +18,8 @@ public class TestUserList {
     public void addUser() throws Exception {
         UserList userList = new UserList();
         User newUser = new User("admin", "password");
-        userList.addUserToList(newUser);
-        assertEquals(userList.getUserInformation("admin"), newUser);
+        userList.addUserToList(userList.listUsers(), newUser);
+        assertEquals(userList.getUserInformation(userList.listUsers(), "admin"), newUser);
     }
 
     @Test
@@ -27,10 +27,10 @@ public class TestUserList {
         UserList userList = new UserList();
         User newUser = new User("admin", "password");
         User newUser2 = new User("admin2", "password");
-        userList.addUserToList(newUser);
-        userList.addUserToList(newUser2);
-        assertEquals(userList.getUserInformation("admin"), newUser);
-        assertEquals(userList.getUserInformation("admin2"), newUser2);
+        userList.addUserToList(userList.listUsers(), newUser);
+        userList.addUserToList(userList.listUsers(), newUser2);
+        assertEquals(userList.getUserInformation(userList.listUsers(), "admin"), newUser);
+        assertEquals(userList.getUserInformation(userList.listUsers(), "admin2"), newUser2);
     }
 
     @Test
@@ -38,24 +38,24 @@ public class TestUserList {
         UserList userList = new UserList();
         User newUser = new User("admin", "password");
         User newUser2 = new User("admin", "password");
-        userList.addUserToList(newUser);
-        assertThrows(Exception.class, () -> userList.addUserToList(newUser2));
+        userList.addUserToList(userList.listUsers(), newUser);
+        assertThrows(Exception.class, () -> userList.addUserToList(userList.listUsers(), newUser2));
     }
 
     @Test
     public void removeUser() throws Exception{
         UserList userList = new UserList();
         User newUser = new User("admin", "password");
-        userList.addUserToList(newUser);
-        userList.deleteUser(newUser);
-        assertThrows(Exception.class, () -> userList.getUserInformation("admin"));
+        userList.addUserToList(userList.listUsers(), newUser);
+        userList.deleteUser(userList.listUsers(), newUser);
+        assertThrows(Exception.class, () -> userList.getUserInformation(userList.listUsers(), "admin"));
     }
 
     @Test
     public void removeUserNonExist() throws Exception{
         UserList userList = new UserList();
         User newUser = new User("admin", "password");
-        assertThrows(Exception.class, () -> userList.deleteUser(newUser));
+        assertThrows(Exception.class, () -> userList.deleteUser(userList.listUsers(), newUser));
     }
 
     @Test
@@ -63,8 +63,8 @@ public class TestUserList {
         UserList userList = new UserList();
         User newUser = new User("admin", "password");
         User newUser2 = new User("admin", "password1");
-        userList.addUserToList(newUser);
-        userList.modifyUser(newUser, newUser2);
-        assertEquals(userList.getUserInformation("admin"), newUser2);
+        userList.addUserToList(userList.listUsers(), newUser);
+        userList.modifyUser(userList.listUsers(), newUser, newUser2);
+        assertEquals(userList.getUserInformation(userList.listUsers(), "admin"), newUser2);
     }
 }

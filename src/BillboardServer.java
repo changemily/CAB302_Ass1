@@ -730,10 +730,10 @@ public class BillboardServer {
 
     public static void updateUsers(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
         //Clear the db with the user information
-        userList.clearUsersFromDB(connection);
+        //userList.clearUsersFromDB(connection);
 
         // Write the new users to the DB
-        userList.sendUsersToDB(connection);
+        //userList.sendUsersToDB(connection);
     }
 
     public static void listUsers(ObjectOutputStream oos, UserList userList) throws Exception {
