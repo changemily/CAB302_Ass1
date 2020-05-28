@@ -272,7 +272,6 @@ public class ControlPanelClient {
         String duration = user_inputs[3];
         String recurrence = user_inputs[4];
 
-
         //Write the Client's request to the server
         oos.writeObject(buttonClicked);
 
@@ -290,7 +289,7 @@ public class ControlPanelClient {
      * @throws IOException
      */
     private static void removeSchedule(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
-        String  billboardName= user_inputs[1];
+        String billboardName= user_inputs[1];
         String startTime = user_inputs[2];
         String duration = user_inputs[3];
         String recurrence = user_inputs[4];
@@ -304,6 +303,34 @@ public class ControlPanelClient {
         oos.writeObject(startTime);
         oos.writeObject(duration);
         oos.writeObject(recurrence);
+    }
+
+    /**
+     * checks if billboard exists in schedule
+     * @param billboardName Name of billboard being checked
+     * @param oos Object output stream of client
+     * @return boolean value - true if billboard exists in schedule, false if not
+     * @throws IOException
+     */
+    private static boolean billboardScheduleCheck (String billboardName, ObjectOutputStream oos, ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        //send server request
+        oos.writeObject("Billboard Schedule Check");
+        oos.writeObject(billboardName);
+
+        //read server's response
+        String billboardExists = ois.readObject().toString();
+
+        //if billboard exists in schedule
+        if(billboardExists == "true")
+        {
+            return true;
+        }
+
+        //if billboard does not exist in schedule
+        else
+        {
+            return false;
+        }
     }
 
     private static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws Exception {
