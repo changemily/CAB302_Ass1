@@ -24,13 +24,13 @@ public class BillboardViewerClient {
     private static JPanel billboardPanel = new JPanel();
     private final static String serverErrorXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
-            "    <message>The viewer cannot connect to the server</message>\n" +
+            "<message>The viewer cannot connect to the server</message>\n" +
             "</billboard>\n";
 
 
     private final static String TestFIle = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
-            "    <message>Billboard displaying</message>\n" +
+            "<message>Billboard displaying</message>\n" +
             "</billboard>\n";
     /**
      * Sends request to server for currently displayed billboard
@@ -71,16 +71,13 @@ public class BillboardViewerClient {
                 oos.flush();
 
                 //retrieve name of currently displayed billboard
-                String billboardName = ois.readObject().toString();
+                String xmlFile = ois.readObject().toString();
 
                 //print what was received from server
-                System.out.println("billboard being displayed: "+ billboardName);
-
-                //get xml file name for billboard
-                File file = new File("./"+billboardName+".xml");
+                System.out.println("billboard xml: "+ xmlFile);
 
                 //display billboard on viewer
-                ViewerGUI(billboardGUI, billboardPanel, TestFIle);
+                ViewerGUI(billboardGUI, billboardPanel, xmlFile);
                 billboardGUI.pack();
                 billboardGUI.setVisible(true);
 

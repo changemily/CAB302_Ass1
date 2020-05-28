@@ -39,6 +39,11 @@ public class BillboardServer {
     //queue of billboard viewings - 2D array
     private static String [][] queue = new String [0][0];
 
+    private static final String noViewingXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <message>There are no billboards displayed at this time</message>\n" +
+            "</billboard>";
+
     //Setup another hashmap to store an id and hasmap of the token and its timer
     HashMap<Integer, Timer> SessionCombinedHashmap;
     //Setup a hashmap to store each hasmap with a timer
@@ -553,15 +558,33 @@ public class BillboardServer {
                 //Write schedule changes to DB
                 billboardSchedule.writeToDBschedule(connection);
 
+                //repopulate queue
+                populateQueue(connection);
+
+                //if there are remaining viewings
+                if(queue.length > 0){
+                    //update schedule info for next viewing
+                    billboardName = queue[0][0];
+                    nextViewingTime = LocalDateTime.parse(queue[0][1]);
+                    duration = Duration.parse(queue[0][2]);
+                    recurrenceDelay = Integer.parseInt(queue[0][3]);
+                    billboardCreator = queue[0][4];
+                }
             }
 
             //Check if the next viewing in the queue is before or equal to current time
-            else if(nextViewingTime.isBefore(currentTime) || nextViewingTime.isEqual(currentTime))
+            if((nextViewingTime.isBefore(currentTime) || nextViewingTime.isEqual(currentTime)) && queue.length > 0)
             {
                 System.out.println("\n"+LocalDateTime.now());
 
-                //Send billboard name to client
-                oos.writeObject(billboardName);
+                //retrieve information of currently displayed billboard
+                Billboard billboard = billboardList.GetBillboardInfo(billboardName);
+
+                //retrieve xml from billboard
+                String xmlFile = billboard.XMLFile;
+
+                //Send billboard xml to client
+                oos.writeObject(xmlFile);
                 oos.flush();;
 
                 System.out.println(billboardName+" is being displayed");
@@ -619,15 +642,10 @@ public class BillboardServer {
                 System.out.println("There are no billboards scheduled for this time");
 
                 //send details of "no billboard to display" xml
-                oos.writeObject("no viewing");
+                oos.writeObject(noViewingXML);
                 oos.flush();;
             }
 
-            //update viewer queue
-            populateQueue(connection);
-            //send details of "no billboard to display" xml
-            oos.writeObject("no viewing");
-            oos.flush();;
         }
 
         else
@@ -638,7 +656,7 @@ public class BillboardServer {
             System.out.println("queue is empty");
 
             //send details of "no billboard to display" xml
-            oos.writeObject("no viewing");
+            oos.writeObject(noViewingXML);
             oos.flush();;
 
         }
