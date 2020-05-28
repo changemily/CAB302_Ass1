@@ -57,8 +57,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // Set look and feel of GUI to resemble operating system look and feel
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-        // Default close operation, so window does not continue running after it is closed
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // Create billboards JPanel
         JPanel billboardPanel = new JPanel();
