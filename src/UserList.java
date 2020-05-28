@@ -52,7 +52,7 @@ public class UserList extends HashMap implements java.io.Serializable {
 
     public HashMap<String, User> listUsers(){return userHashMap;}
 
-    public void clearUsersFromDB(HashMap<String, User> userHashMap, Connection connection) throws SQLException {
+    public static void clearUsersFromDB(HashMap<String, User> userHashMap, Connection connection) throws SQLException {
         //create statement to connect to db
         Statement st = connection.createStatement();
 
@@ -64,7 +64,7 @@ public class UserList extends HashMap implements java.io.Serializable {
         }
     }
 
-    public void sendUsersToDB(HashMap<String, User> userHashMap, Connection connection) throws SQLException {
+    public static void sendUsersToDB(HashMap<String, User> userHashMap, Connection connection) throws SQLException {
         //create statement
         Statement st = connection.createStatement();
 

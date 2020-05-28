@@ -116,17 +116,17 @@ public class userManager
     /**
      * Method for deleting user
      */
-    public void delete_user() throws Exception{
+    public boolean delete_user(){
         if(!current.equals(target)){
             if(current.Permissions.contains("Edit Users")){
-                // delete user from database
+                return true;
             }
             else{
-                throw new Exception("User needs edit users to delete another user");
+                return false;
             }
         }
         else{
-            throw new Exception("Can't delete your own user");
+            return false;
         }
     }
 }

@@ -97,9 +97,10 @@ public class ControlPanelClient {
                     break;
 
                 case "List users":
-                    listUsers(oos, ois, request);
+                    listUsers(oos, ois, user_inputs);
                     break;
-                case "Create user":
+                case "Delete User":
+                    deleteUser(oos, request, user_inputs);
                     break;
                 case "Get user permissions":
                     break;
@@ -317,20 +318,30 @@ public class ControlPanelClient {
         oos.writeObject(recurrence);
     }
 
-    public static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws Exception {
+    public static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws Exception {
         //Output clients request to the server
-        oos.writeObject(buttonClicked);
+        oos.writeObject(user_inputs[0]);
         HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
-        String username = "otheruser";
+        String username = "AdminUser";
         User userDetails = UserList.getUserInformation(userList, username);
-        if(userDetails.Permissions.contains("Edit Users")) {
-            SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, "1234", userList));
+        if(user_inputs[1] != "Password") {
+            if (userDetails.Permissions.contains("Edit Users")) {
+                SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, "1234", userList));
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(),
+                        "User doesn't have Edit Users permission");
+            }
         }
         else{
             SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", false));
         }
     }
 
+    public static void deleteUser(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException{
+        String deletedUsername = user_inputs[1];
+        oos.writeObject(buttonClicked);
+        oos.writeObject(deletedUsername);
+    }
     /**
      * Runs client
      * @param args

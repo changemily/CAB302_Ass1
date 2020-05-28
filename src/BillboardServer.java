@@ -102,6 +102,7 @@ public class BillboardServer {
             ServerSocket serverSocket = new ServerSocket(portNumber);
 
             for (;;) {
+
                 Socket socket = serverSocket.accept();
                 System.out.println("connected to"+ socket.getInetAddress());
 
@@ -167,13 +168,18 @@ public class BillboardServer {
 
                     case "List users":
                     case "Get user permissions":
+                        userList.retrieveUsersFromDB(connection);
                         listUsers(oos, userList);
                         break;
                     case "Update user details":
                     case "Set user permissions":
                     case "Set user password":
+                        userList.retrieveUsersFromDB(connection);
                         updateUsers(ois, connection, userList);
                         break;
+                    case "Delete User":
+                        userList.retrieveUsersFromDB(connection);
+                        deleteUser(ois, connection, userList);
                     case "Run Billboard Viewer":
 
                         Connection finalConnection = connection;
@@ -734,6 +740,24 @@ public class BillboardServer {
 
         // Write the new users to the DB
         //userList.sendUsersToDB(connection);
+    }
+
+    public static void deleteUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
+        //Read the parameters given by the client
+        String username = ois.readObject().toString();
+        User user = UserList.getUserInformation(userList.listUsers(), username);
+        //Display the name of the billboard for ease of testing
+        System.out.println("username: "+ username);
+
+        //Clear the db with the billboard information
+        UserList.clearUsersFromDB(userList.listUsers(), connection);
+
+        //Now that the db is empty remove the billboard from the billboard list
+        UserList.deleteUser(userList.listUsers(), user);
+
+        //Now that the billboard has been removed from the list of billboards
+        //Write the updated list to the db
+        UserList.sendUsersToDB(userList.listUsers(), connection);
     }
 
     public static void listUsers(ObjectOutputStream oos, UserList userList) throws Exception {
