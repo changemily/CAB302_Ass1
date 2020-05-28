@@ -422,6 +422,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
             if (userType.equals("admin")) {
                 SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true));
+                //dispose();
             }
 
             else {
