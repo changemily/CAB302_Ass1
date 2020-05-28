@@ -283,16 +283,23 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     ex.printStackTrace();
                 }
 
-                PreviewPanel.removeAll();
-
                 String [] user_inputs = {"Create edit billboard",billboardName,usernameOfCreator, tempXMLString};
 
                 //Schedule billboard with viewing details given by user
                 ControlPanelClient.Run_Client(user_inputs);
 
-                //user_inputs = new String[]{"List billboards"};
+                // all frames to a array
+                Frame[] allFrames = Frame.getFrames();
+                for(Frame fr : allFrames){
+                    if(fr.getClass().getName() == "ControlPanelGUIBillboardControlPanel"){
+                        fr.dispose();
+                    }
+                }
 
-                //ControlPanelClient.Run_Client(user_inputs);
+                //run Billboard Control Panel GUI
+                String [] user_input = {"List billboards"};
+                //request schedule and run calendar GUI
+                ControlPanelClient.Run_Client(user_input);
 
 
                 //Close after saving so they know it has been done

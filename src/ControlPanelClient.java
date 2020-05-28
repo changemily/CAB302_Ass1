@@ -102,7 +102,7 @@ public class ControlPanelClient {
                     break;
 
                 case "List users":
-                    listUsers(oos, ois, user_inputs);
+                    listUsersScreen(oos, ois, user_inputs);
                     break;
                 case "Delete User":
                     deleteUser(oos, request, user_inputs);
@@ -323,7 +323,7 @@ public class ControlPanelClient {
         oos.writeObject(recurrence);
     }
 
-    public static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws Exception {
+    public static void listUsersScreen(ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws Exception {
         //Output clients request to the server
         oos.writeObject(user_inputs[0]);
         HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
@@ -362,8 +362,8 @@ public class ControlPanelClient {
 
         String [] user_inputs4 = {"Schedule Billboard","2","2021-05-10T10:10:00.00", "5", "0"};
         String [] user_inputs5 = {"Schedule Billboard","1","2021-05-10T10:00:00.00", "20", "0"};
-        String[] user_inputs6 = {"Create edit billboard", "Billboard1",  "Jarod", xmlFile1};
-        String[] user_inputs7 = {"Create edit billboard", "Billboard2",  "em", xmlFile2};
+        //String[] user_inputs6 = {"Create edit billboard", "Billboard1",  "Jarod", xmlFile1};
+        //String[] user_inputs7 = {"Create edit billboard", "Billboard2",  "em", xmlFile2};
 
 
         //Run_Client(user_inputs1);

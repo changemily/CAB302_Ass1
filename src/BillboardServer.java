@@ -127,6 +127,7 @@ public class BillboardServer {
                         break;
                     case "List billboards":
                         //write billboard list to client
+                        billboardList.RetrieveDBbillboardList(connection);
                         listBillboards(oos, billboardList);
                         break;
                     case "Get Billboard info":
