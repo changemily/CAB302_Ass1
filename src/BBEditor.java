@@ -33,6 +33,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private String tempXMLString;
     private String username;
     private String sessionToken;
+    private BillboardViewer bb = null;
 
     public BBEditor(String username, String sessionToken, String billboardName, String XMLString)
     {
@@ -103,7 +104,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
         // Initialise and add Billboard to Preview Panel
         Dimension d = new Dimension(600, 350);
-        BillboardViewer bb = new BillboardViewer(tempXMLString, d);
+        bb = new BillboardViewer(tempXMLString, d);
         JPanel billboardPreview = bb.getSizedBillboard();
         PreviewPanel.add(billboardPreview);
 
@@ -197,18 +198,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     bb.setPictureURL(ImageURL.getText());
                 }
 
-//                try {
-//                    bb.writeFile(o);
-//                 } catch (ParserConfigurationException ex) {
-//                    ex.printStackTrace();
-//                } catch (TransformerException ex) {
-//                    ex.printStackTrace();
-//                }
-
                 PreviewPanel.removeAll();
                 PreviewPanel.revalidate();
                 PreviewPanel.repaint();
-                BillboardViewer bb = null;
                 try {
                     bb = new BillboardViewer(tempXMLString, d);
                 } catch (ParserConfigurationException | IOException | SAXException ex1) {
@@ -261,11 +253,17 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 ( new AbstractAction("Colour") {
             @Override
             public void actionPerformed( ActionEvent e ) {
-                Color initialcolour = Color.RED;
+                Color originalColour = bb.getBillboardColour();
                 Color colour = JColorChooser.showDialog(null,
-                        "Select a color", initialcolour);
+                        "Select a color", bb.getBillboardColour());
                 BackgroundColourDisplay.setBackground(colour);
-                bb.setBillboardColour(colour);
+                try {
+                    bb.setBillboardColour(colour);
+                    BackgroundColourDisplay.setBackground(colour);
+                }catch (Exception f){
+                    bb.setBillboardColour(originalColour);
+                    BackgroundColourDisplay.setBackground(originalColour);
+                }
             }
         }));
         BackgroundColourBttn.setText("Browse");
@@ -277,11 +275,16 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 ( new AbstractAction("Colour") {
                     @Override
                     public void actionPerformed( ActionEvent e ) {
-                        Color initialcolour = Color.RED;
+                        Color originalColour = bb.getMessageColour();
                         Color colour = JColorChooser.showDialog(null,
-                                "Select a color", initialcolour);
-                        MessageTextColourDisplay.setBackground(colour);
-                        bb.setMessageColour(colour);
+                                "Select a color", bb.getMessageColour());
+                        try {
+                            bb.setMessageColour(colour);
+                            MessageTextColourDisplay.setBackground(colour);
+                        } catch (Exception f){
+                            bb.setMessageColour(originalColour);
+                            MessageTextColourDisplay.setBackground(originalColour);
+                        }
                     }
                 }));
         MessageTextColourBttn.setText("Browse");
@@ -293,11 +296,17 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 ( new AbstractAction("Colour") {
                     @Override
                     public void actionPerformed( ActionEvent e ) {
-                        Color initialcolour = Color.RED;
+                        Color originalColour = bb.getInformationColour();
                         Color colour = JColorChooser.showDialog(null,
-                                "Select a color", initialcolour);
+                                "Select a color", bb.getInformationColour());
                         ExtraTextColourDisplay.setBackground(colour);
-                        bb.setInformationColour(colour);
+                        try {
+                            bb.setInformationColour(colour);
+                            ExtraTextColourDisplay.setBackground(colour);
+                        }catch (Exception f){
+                            bb.setInformationColour(originalColour);
+                            ExtraTextColourDisplay.setBackground(originalColour);
+                        }
                     }
                 }));
         ExtraTextColourBttn.setText("Browse");
@@ -328,7 +337,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                         PreviewPanel.removeAll();
                         PreviewPanel.revalidate();
                         PreviewPanel.repaint();
-                        BillboardViewer bb = null;
                         try {
                             bb = new BillboardViewer(tempXMLString, d);
                         } catch (ParserConfigurationException | IOException | SAXException ex) {
@@ -336,7 +344,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                             JOptionPane.showMessageDialog(getContentPane(), ex,
                                     "ERROR", JOptionPane.ERROR_MESSAGE);
                         }
-                        assert bb != null;
                         JPanel billboardPreview = bb.getSizedBillboard();
                         PreviewPanel.add(billboardPreview);
                         PreviewPanel.revalidate();
@@ -413,7 +420,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                             JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
                                     "ERROR", JOptionPane.ERROR_MESSAGE);
                         }
-
 
                     }
                 }
@@ -496,7 +502,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 PreviewPanel.removeAll();
                 PreviewPanel.revalidate();
                 PreviewPanel.repaint();
-                BillboardViewer bb = null;
                 try {
                     bb = new BillboardViewer(tempXMLString, d);
                 } catch (ParserConfigurationException | IOException | SAXException ex) {
@@ -504,7 +509,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     JOptionPane.showMessageDialog(getContentPane(), ex,
                             "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
-                assert bb != null;
                 JPanel billboardPreview = bb.getSizedBillboard();
                 PreviewPanel.add(billboardPreview);
                 PreviewPanel.revalidate();
@@ -556,7 +560,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addGap(19, 19, 19)
                                                 .addGroup(MainPanelLayout.createParallelGroup()
                                                         .addGroup(MainPanelLayout.createSequentialGroup()
-                                                                .addComponent(SaveBttn, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(previewBttn, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(ExitBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -564,7 +568,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(exportBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(previewBttn)
+                                                                .addComponent(SaveBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE))
                                                         .addGroup(MainPanelLayout.createSequentialGroup()
                                                                 .addGroup(MainPanelLayout.createParallelGroup()
