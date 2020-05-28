@@ -126,6 +126,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         return button;
     }
 
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         // Get button that has been clicked - event source
@@ -142,8 +143,22 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
 
+            BillboardList bblistTest = new BillboardList();
+            try {
+                bblistTest.createEditBillboard("Billboard1", "jarod", "\"<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"?>\\n\" +\n" +
+                        "            \"<billboard>\\n\" +\n" +
+                        "            \"    <picture url=\\\"https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download\\\" />\\n\" +\n" +
+                        "            \"    <information>Billboard with picture (with URL attribute) and information text only. The picture is now centred within the top 2/3 of the image and the information text is centred in the remaining space below the image.</information>\\n\" +\n" +
+                        "            \"</billboard>\";");
+                bblistTest.createEditBillboard("Billboard2", "dfgh", "xmlFile1");
+                bblistTest.createEditBillboard("Billboard3", "sfdgh", "xmlFile2");
+                bblistTest.createEditBillboard("Billboard4", "sdfgh", "xmlFile3");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             // Open Billboard Control Panel Screen
-            SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel());
+            SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel(BillboardList.billboardHashMap));
 
         }
 

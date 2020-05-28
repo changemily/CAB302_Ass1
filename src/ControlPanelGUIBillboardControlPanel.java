@@ -28,7 +28,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      */
     public ControlPanelGUIBillboardControlPanel(HashMap<String, Billboard> BillboardList) {
         // Set window title
-        //super("Billboard Schedule");
+        super("Billboard Control Panel");
+
 
         billboardListH = BillboardList;
     }
@@ -41,11 +42,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     private String billboardXML="./5.xml"; //CHANGE TO DEFAULT NOTHING TO DISPLAY XML
     private BillboardList billboard_list = new BillboardList();
     private String billboardName;
-
-    public ControlPanelGUIBillboardControlPanel() {
-        // Set window title
-        super("Billboard Control Panel");
-    }
+    private String xmlFile;
+    private Billboard tempBillboard;
 
     /**
      * Method used to create a GUI window for the Billboard Control Panel
@@ -129,6 +127,12 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         setVisible(true);
     }
 
+
+    public static final String xmlFiles = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <picture url=\"https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download\" />\n" +
+            "    <information>Billboard with picture (with URL attribute) and information text only. The picture is now centred within the top 2/3 of the image and the information text is centred in the remaining space below the image.</information>\n" +
+            "</billboard>";
     /**
      * This method creates a JList, returns a JList
      * @return Returns JList
@@ -136,14 +140,15 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     public JList createJList(JPanel panel) {
         //For Testing
         //Billboard with no scheduled viewing
-//        try {
-//            BillboardList.Create_edit_Billboard("Billboard1", "new billboard", "#4287f5", "No Image", "jarod");
-//            BillboardList.Create_edit_Billboard("Billboard2", "new billboard", "#4287f5", "No Image", "Is");
-//            BillboardList.Create_edit_Billboard("Billboard3", "new billboard", "#4287f5", "No Image", "The");
-//            BillboardList.Create_edit_Billboard("Billboard4", "new billboard", "#4287f5", "No Image", "Best");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            billboard_list.createEditBillboard("Billboard1", "jarod", xmlFiles);
+            billboard_list.createEditBillboard("Billboard2", "emily", xmlFiles);
+            billboard_list.createEditBillboard("Billboard3","nick", xmlFiles);
+            billboard_list.createEditBillboard("Billboard4","harry", xmlFiles);
+            billboard_list.createEditBillboard("Billboard5", "liam", xmlFiles);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         //Int counter for assigning values in the array
@@ -197,13 +202,16 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         String cellSelected = billboardList.getSelectedValue().toString();
 
         //remove creator from list
-        String billboardSelected = cellSelected.replaceAll(".*, ", "");
+        String billboardSelected = cellSelected.replaceAll(",.*", "");
 
         //get billboard xml file name
-        billboardXML = "./"+billboardSelected+".xml";
+        billboardXML = billboardSelected;
+
+
 
         //store billboard name of selected cell
         billboardName = billboardSelected;
+
         System.out.println("bb xml: "+billboardXML);
         System.out.println("bb name: "+billboardName);
     }
@@ -230,8 +238,15 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         Object buttonClicked = actionEvent.getSource();
 
         if (buttonClicked==editBillboardButton || buttonClicked == createBillboardButton) {
+            //Retrieve the xml file associated with the name
+            try {
+                xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("xmlFile: "+xmlFile);
             //run Billboard editor/creator GUI
-            //SwingUtilities.invokeLater(new BBEditor());
+            SwingUtilities.invokeLater(new BBEditor(billboardName, xmlFile));
         }
 
         else if (buttonClicked==scheduleBillboardButton) {
