@@ -210,6 +210,8 @@ public class ControlPanelClient {
         oos.writeObject(billboardName);
         oos.writeObject(billboardCreator);
         oos.writeObject(xmlFile);
+
+        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
     }
 
     /**
@@ -318,7 +320,7 @@ public class ControlPanelClient {
      * @param args
      */
     public static void main(String args[]) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IOException, IllegalAccessException {
-        //SwingUtilities.invokeLater(new ControlPanelGUI());
+        SwingUtilities.invokeLater(new ControlPanelGUI());
 
         String time = LocalDateTime.now().plus(Duration.ofMinutes(1)).toString();
 
@@ -334,7 +336,7 @@ public class ControlPanelClient {
         String[] user_inputs7 = {"List billboards"};
 
         //Run_Client(user_inputs1);
-        Run_Client(user_inputs6);
+        //Run_Client(user_inputs6);
         //Run_Client(user_inputs3);
         //Run_Client(user_inputs4);
         //Run_Client(user_inputs5);
