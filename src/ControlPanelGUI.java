@@ -148,6 +148,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             // Open User Control Panel GUI
             String[] user_input = {"List users", "Admin"};
             ControlPanelClient.Run_Client(user_input);
+            dispose();
         }
 
         else if (buttonClicked==editBillboardButton) {
@@ -155,6 +156,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             String [] user_input = {"List billboards"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
+            dispose();
         }
 
         else if (buttonClicked == viewBillboardScheduleButton)
@@ -162,6 +164,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             String [] user_input = {"View schedule"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
+            dispose();
         }
 
         else if (buttonClicked == passwordChangeButton)
@@ -169,6 +172,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             String [] user_input = {"List users", "Password"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
+            dispose();
         }
     }
 
