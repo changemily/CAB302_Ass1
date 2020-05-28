@@ -22,7 +22,11 @@ import java.util.Properties;
  * @version - under development
  */
 public class ControlPanelClient {
-    public static final String xmlFile = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url='https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download'/><information>Billboard with picture (with URL attribute) and information text only. The picture is now centred within the top 2/3 of the image and the information text is centred in the remaining space below the image.</information></billboard>";
+    public static final String xmlFile = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
+            "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download'/><information>Billboard with " +
+            "picture (with URL attribute) and information text only. The picture is now centred within the top" +
+            " 2/3 of the image and the information text is centred in the remaining space below the image." +
+            "</information></billboard>";
 
     /**
      * Sends requests to Server

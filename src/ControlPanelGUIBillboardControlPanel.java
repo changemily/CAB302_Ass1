@@ -47,6 +47,12 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     private String xmlFile;
     private Billboard tempBillboard;
 
+    //Default xml file to be used for ceating a new xml file.
+    public static final String xmlTemplate = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
+            "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download'/><information>Default text, delete or change." +
+            "To use an image link it in the URL section."+
+            "</information></billboard>";
+
     /**
      * Method used to create a GUI window for the Billboard Control Panel
      * @throws ClassNotFoundException Exception handling
@@ -226,7 +232,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         //Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
 
-        if (buttonClicked==editBillboardButton || buttonClicked == createBillboardButton) {
+        if (buttonClicked==editBillboardButton) {
             //Retrieve the xml file associated with the name
             try {
                 //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
@@ -242,11 +248,26 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             SwingUtilities.invokeLater(new BBEditor("admin", "1234",billboardName, xmlFile));
         }
 
+        else if (buttonClicked == createBillboardButton) {
+            //Open the editor with a new file
+            try {
+                //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
+                xmlFile = xmlTemplate;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), e,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+            System.out.println("xmlFile: "+xmlFile);
+            //run Billboard editor/and assign the current users username to be the creator
+            SwingUtilities.invokeLater(new BBEditor("admin", "1234", billboardName));
+        }
+
         else if (buttonClicked==scheduleBillboardButton) {
             //run schedule billboard GUI pop up
             SwingUtilities.invokeLater(new BBSchedulePopup("admin", "1234",billboardName));
         }
-
     }
 
     @Override
