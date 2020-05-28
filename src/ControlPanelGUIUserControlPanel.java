@@ -6,7 +6,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * User Control Panel class for Control Panel GUI
@@ -25,6 +25,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
     // User Selection JLabel
     JLabel userSelectionLabel;
+    String userSelected;
 
     // Edit User JButton
     JButton editUserButton;
@@ -43,16 +44,18 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
     String username;
     String sessionToken;
+    HashMap<String, User> userList;
 
 
     /**
      * Method used to create a GUI window for the User Control Panel
      */
-    public ControlPanelGUIUserControlPanel(String username, String sessionToken) {
+    public ControlPanelGUIUserControlPanel(String username, String sessionToken, HashMap<String, User> userList) {
         // Set window title
         super("User Control Panel");
         this.username = username;
         this.sessionToken = sessionToken;
+        this.userList = userList;
     }
 
     /**
@@ -90,7 +93,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         leftPanel.add(Box.createVerticalStrut(20));
 
         // Populate the master array of users, with user information
-        usersMasterArray = populateUserArray();
+        usersMasterArray = populateUserArray(userList);
 
         // Create user JList which is linked to the User List Model, populated with data from Users Master Array, inside of left JPanel
         list = newList(userListModel, usersMasterArray, leftPanel);
@@ -184,13 +187,22 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
      * This method populates an array with real user information
      * @return Returns a String array
      */
-    private String[] populateUserArray() {
+    private String[] populateUserArray(HashMap<String, User> userList) {
 
         // String array with all users
         // NOTE: NEEDS TO BE CHANGED TO FETCH REAL USER INFORMATION
-        String[] array = {"User 1", "User 2", "User 3", "User 4", "User 5", "User 6", "User 7", "User 9", "User 10"};
 
-        return array;
+        String[] users = userList.keySet().toArray(new String[userList.size()]);
+        for(int i = 0; i < users.length; i++){
+            for(int j = i + 1; j < users.length; j++){
+                if(users[i].compareTo(users[j]) > 0){
+                    String temp = users[i];
+                    users[i] = users[j];
+                    users[j] = temp;
+                }
+            }
+        }
+        return users;
     }
 
     /**
@@ -408,6 +420,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         if (!list.isSelectionEmpty()) {
             // Set the user selection label text to be the value selected in the JList
             userSelectionLabel.setText(list.getSelectedValue().toString());
+            userSelected = list.getSelectedValue().toString();
         }
     }
 

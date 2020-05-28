@@ -93,6 +93,7 @@ public class ControlPanelClient {
                     break;
 
                 case "List users":
+                    listUsers(oos, ois, request);
                     break;
                 case "Create user":
                     break;
@@ -310,6 +311,14 @@ public class ControlPanelClient {
         oos.writeObject(recurrence);
     }
 
+    public static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws IOException, ClassNotFoundException {
+        //Output clients request to the server
+        oos.writeObject(buttonClicked);
+        HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
+        String username = "AdminUser";
+
+        SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, "1234", userList));
+    }
 
     /**
      * Runs client

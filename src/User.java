@@ -10,7 +10,7 @@ import java.util.HashSet;
  *
  * TO DO: 1) Database interface with the User Class
  */
-public class User {
+public class User implements java.io.Serializable {
     // Variables used for each User
     String Username;
     String Password;

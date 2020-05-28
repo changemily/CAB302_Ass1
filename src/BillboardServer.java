@@ -52,8 +52,8 @@ public class BillboardServer {
 
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboardSchedule = new ScheduleMultiMap();
-
         BillboardList billboardList = new BillboardList();
+        UserList userList = new UserList();
 
         //create DB connection
         Connection connection = null;
@@ -79,6 +79,7 @@ public class BillboardServer {
         //populate schedule, billboard list and user list with data from database
         billboardSchedule.retrieveDBschedule(connection);
         billboardList.RetrieveDBbillboardList(connection);
+        userList.retrieveUsersFromDB(connection);
 
         //populate queue with schedule
         populateQueue(connection);
@@ -165,14 +166,13 @@ public class BillboardServer {
                         break;
 
                     case "List users":
-                        break;
-                    case "Create user":
-                        break;
                     case "Get user permissions":
+                        listUsers(oos, userList);
                         break;
+                    case "Update user details":
                     case "Set user permissions":
-                        break;
                     case "Set user password":
+                        updateUsers(ois, connection, userList);
                         break;
                     case "Run Billboard Viewer":
 
@@ -726,6 +726,18 @@ public class BillboardServer {
         if(tokenExists == false){
             oos.writeChars("Token has expired.");
         }
+    }
+
+    public static void updateUsers(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
+        //Clear the db with the user information
+        userList.clearUsersFromDB(connection);
+
+        // Write the new users to the DB
+        userList.sendUsersToDB(connection);
+    }
+
+    public static void listUsers(ObjectOutputStream oos, UserList userList) throws Exception {
+        oos.writeObject(userList.listUsers());
     }
 
     /**

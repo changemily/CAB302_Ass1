@@ -5,8 +5,8 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class UserList {
-    static HashMap<String, User> userHashMap;
+public class UserList extends HashMap implements java.io.Serializable {
+    public static HashMap<String, User> userHashMap;
 
     public UserList(){
         userHashMap = new HashMap<>();
@@ -48,10 +48,11 @@ public class UserList {
         rs.close();
         //close statement
         st.close();
-
     }
 
-    public void ClearUsersFromDB(Connection connection) throws SQLException {
+    public HashMap<String, User> listUsers(){return userHashMap;}
+
+    public void clearUsersFromDB(Connection connection) throws SQLException {
         //create statement to connect to db
         Statement st = connection.createStatement();
 
