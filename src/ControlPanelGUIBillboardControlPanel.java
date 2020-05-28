@@ -22,15 +22,17 @@ import java.util.Map;
  */
 public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener {
     HashMap<String, Billboard> billboardListH;
-
+    String username;
+    String sessionToken;
     /**
      * Method used to create a GUI window for the Billboard edit Screen
      */
-    public ControlPanelGUIBillboardControlPanel(HashMap<String, Billboard> BillboardList) {
+    public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList) {
         // Set window title
         super("Billboard Control Panel");
 
-
+        this.username = username;
+        this.sessionToken = sessionToken;
         billboardListH = BillboardList;
     }
 
@@ -235,12 +237,12 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             }
             System.out.println("xmlFile: "+xmlFile);
             //run Billboard editor/creator GUI
-            SwingUtilities.invokeLater(new BBEditor(billboardName, xmlFile));
+            SwingUtilities.invokeLater(new BBEditor("admin", "1234",billboardName, xmlFile));
         }
 
         else if (buttonClicked==scheduleBillboardButton) {
             //run schedule billboard GUI pop up
-            SwingUtilities.invokeLater(new BBSchedulePopup(billboardName));
+            SwingUtilities.invokeLater(new BBSchedulePopup("admin", "1234",billboardName));
         }
 
     }

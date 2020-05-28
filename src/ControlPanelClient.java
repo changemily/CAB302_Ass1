@@ -22,11 +22,7 @@ import java.util.Properties;
  * @version - under development
  */
 public class ControlPanelClient {
-    public static final String xmlFile = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<billboard>\n" +
-            "    <picture url=\"https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download\" />\n" +
-            "    <information>Billboard with picture (with URL attribute) and information text only. The picture is now centred within the top 2/3 of the image and the information text is centred in the remaining space below the image.</information>\n" +
-            "</billboard>";
+    public static final String xmlFile = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url='https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download'/><information>Billboard with picture (with URL attribute) and information text only. The picture is now centred within the top 2/3 of the image and the information text is centred in the remaining space below the image.</information></billboard>";
 
     /**
      * Sends requests to Server
@@ -189,7 +185,7 @@ public class ControlPanelClient {
 
         HashMap<String, Billboard> BillboardList = (HashMap) ois.readObject();
 
-        SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel(BillboardList));
+        SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel("user", "1234", BillboardList));
     }
 
     /**
@@ -211,7 +207,7 @@ public class ControlPanelClient {
         oos.writeObject(billboardCreator);
         oos.writeObject(xmlFile);
 
-        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
+        //SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
     }
 
     /**
@@ -264,7 +260,7 @@ public class ControlPanelClient {
         //read schedule sent by server
         MultiMap schedule = (MultiMap) ois.readObject();
 
-        SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(schedule));
+        SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule("user", "1234",schedule));
     }
 
     /**
@@ -320,7 +316,7 @@ public class ControlPanelClient {
      * @param args
      */
     public static void main(String args[]) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IOException, IllegalAccessException {
-        SwingUtilities.invokeLater(new ControlPanelGUI());
+        SwingUtilities.invokeLater(new ControlPanelGUI("user", "1234"));
 
         String time = LocalDateTime.now().plus(Duration.ofMinutes(1)).toString();
 
@@ -330,8 +326,6 @@ public class ControlPanelClient {
 
         String [] user_inputs4 = {"Schedule Billboard","2","2021-05-10T10:10:00.00", "5", "0"};
         String [] user_inputs5 = {"Schedule Billboard","1","2021-05-10T10:00:00.00", "20", "0"};
-
-
         String[] user_inputs6 = {"Create edit billboard", "Billboard1",  "Jarod", xmlFile};
         String[] user_inputs7 = {"List billboards"};
 
@@ -340,5 +334,6 @@ public class ControlPanelClient {
         //Run_Client(user_inputs3);
         //Run_Client(user_inputs4);
         //Run_Client(user_inputs5);
+        Run_Client(user_inputs6);
     }
 }

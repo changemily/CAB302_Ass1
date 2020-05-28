@@ -41,13 +41,18 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
     // Variable list used to populate JList when user is searching
     DefaultListModel userListModel = new DefaultListModel();
 
+    String username;
+    String sessionToken;
+
 
     /**
      * Method used to create a GUI window for the User Control Panel
      */
-    public ControlPanelGUIUserControlPanel() {
+    public ControlPanelGUIUserControlPanel(String username, String sessionToken) {
         // Set window title
         super("User Control Panel");
+        this.username = username;
+        this.sessionToken = sessionToken;
     }
 
     /**
@@ -356,7 +361,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             }
 
             else {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken));
             }
         }
 
@@ -375,7 +380,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             }
 
             else {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken));
             }
         }
 
@@ -385,7 +390,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             //run user (to check if admin), then if admin open Create/Edit User GUI
 
             if (userType.equals("admin")) {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken));
             }
 
             else {

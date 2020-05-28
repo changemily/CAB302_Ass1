@@ -16,15 +16,19 @@ import static java.time.temporal.ChronoUnit.DAYS;
  */
 public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable {
     MultiMap billboard_schedule;
+    String username;
+    String sessionToken;
     final int days_in_week = 7;
     /**
      * Method used to create a GUI window for the Billboard Schedule Screen
      */
-    public ControlPanelGUIBillboardSchedule(MultiMap schedule) {
+    public ControlPanelGUIBillboardSchedule(String username, String sessionToken, MultiMap schedule) {
         // Set window title
         super("Billboard Schedule");
 
         billboard_schedule = schedule;
+        this.username = username;
+        this.sessionToken = sessionToken;
     }
 
     /**

@@ -23,10 +23,14 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
     JButton editUsersButton;
     JButton editBillboardButton;
     JButton viewBillboardScheduleButton;
+    String username;
+    String sessionToken;
 
-    public ControlPanelGUI(){
+    public ControlPanelGUI(String username, String sessionToken){
         // Set window title
         super("Control Panel Menu");
+        this.username = username;
+        this.sessionToken = sessionToken;
     }
 
     private void createGUI() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
@@ -134,7 +138,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         if (buttonClicked==editUsersButton) {
             // Open User Control Panel GUI
-            SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel());
+            SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken));
         }
 
         else if (buttonClicked==editBillboardButton) {

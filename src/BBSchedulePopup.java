@@ -27,13 +27,17 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     private String BillboardName;
     private final String MINUTES_IN_DAY = "1440";
     private final String MINUTES_IN_HOUR = "60";
+    private String username;
+    private String sessionToken;
 
-    public BBSchedulePopup(String billboardName)
+    public BBSchedulePopup(String username, String sessionToken, String billboardName)
     {
         // Set window title
         super("Billboard Viewer");
 
         BillboardName = billboardName;
+        this.username = username;
+        this.sessionToken = sessionToken;
     }
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException
     {

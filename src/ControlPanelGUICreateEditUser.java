@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  * NOTES: Current version is a basic design; some functionality still needs to be added; further refinement required
  */
 public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener {
-    JTextField username;
+    JTextField usernameField;
     JTextField password;
     JButton saveExitButton;
     JButton exitWithoutSaving;
@@ -20,14 +20,17 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
     JCheckBox scheduleBillboardsBox;
     JCheckBox editAllBillboardsBox;
     JCheckBox editUsersBox;
+    String username;
+    String sessionToken;
 
     /**
      * Method used to create a GUI window for the Create/Edit User Screen
      */
-    public ControlPanelGUICreateEditUser() {
+    public ControlPanelGUICreateEditUser(String username, String sessionToken) {
         // Set window title
         super("Create/Edit User");
-    }
+        this.username = username;
+        this.sessionToken = sessionToken;    }
 
     /**
      * Method used to create a GUI window for the Create/Edit User screen
@@ -51,7 +54,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         newLabel("Username", leftPanel);
 
         // Create username JTextField, add to left JPanel
-        username = newTextField(leftPanel);
+        usernameField = newTextField(leftPanel);
 
         // Create password JLabel, add to left JPanel
         newLabel("Password", leftPanel);
@@ -253,7 +256,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         // Checks if the Save and Exit button has been clicked
         if (buttonClicked == saveExitButton) {
             System.out.println("save and exit clicked");
-            System.out.println(username.getText());
+            System.out.println(usernameField.getText());
             System.out.println(password.getText());
             System.out.println(createBillboardsBox.isSelected());
             System.out.println(scheduleBillboardsBox.isSelected());
@@ -291,12 +294,6 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    /**
-     * Main method which creates a GUI window for the Create/Edit User Screen
-     * @param args This method takes no arguments
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
-    }
 }
+
+
