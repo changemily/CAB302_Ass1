@@ -202,8 +202,5 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
-    public static void main(String[] args)
-    {
-        SwingUtilities.invokeLater(new ControlPanelGUI("admin", "124"));
-    }
+
 }
