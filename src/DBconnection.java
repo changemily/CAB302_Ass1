@@ -41,7 +41,9 @@ public class DBconnection {
             instance = DriverManager.getConnection(url + "/" + schema,
                     username, password);
         } catch (SQLException sqle) {
-            System.err.println(sqle);
+            System.err.println("Server could not connect to Database");
+            //terminate server
+            System.exit(1);
         } catch (FileNotFoundException fnfe) {
             System.err.println(fnfe);
         } catch (IOException ex) {

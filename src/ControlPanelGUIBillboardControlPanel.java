@@ -136,7 +136,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
 
-    public static final String xmlFiles = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
+    private static final String xmlFiles = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
             "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download%27/%3E<information>Billboard" +
             " with picture (with URL attribute) and information text only. The picture is now centred within" +
             " the top 2/3 of the image and the information text is centred in the remaining space below the" +
@@ -145,7 +145,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * This method creates a JList, returns a JList
      * @return Returns JList
      */
-    public JList createJList(JPanel panel) {
+    private JList createJList(JPanel panel) {
         //Int counter for assigning values in the array
         int counter = 1;
 
@@ -192,7 +192,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
     // Changes billboard XML when a user selects a billboard from the list
-    public void valueChanged(ListSelectionEvent event) {
+    private void valueChanged(ListSelectionEvent event) {
         //get string stored in current cell of list
         String cellSelected = billboardList.getSelectedValue().toString();
 
@@ -233,19 +233,32 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         Object buttonClicked = actionEvent.getSource();
 
         if (buttonClicked==editBillboardButton) {
-            //Retrieve the xml file associated with the name
-            try {
-                //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
-                xmlFile = billboardListH.get(billboardXML).XMLFile;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(getContentPane(), e,
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            //if billboard has not been selected in list
+            if(billboardName == null)
+            {
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "You must select a billboard in the list to edit");
             }
-            System.out.println("xmlFile: "+xmlFile);
-            //run Billboard editor/creator GUI
-            SwingUtilities.invokeLater(new BBEditor("admin", "1234",billboardName, xmlFile));
+
+            //if billboard has been selected
+
+            else
+            {
+                //Retrieve the xml file associated with the name
+                try {
+                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
+                    xmlFile = billboardListH.get(billboardXML).XMLFile;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), e,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+                System.out.println("xmlFile: "+xmlFile);
+                //run Billboard editor/creator GUI
+                SwingUtilities.invokeLater(new BBEditor("admin", "1234",billboardName, xmlFile));
+            }
         }
 
         else if (buttonClicked == createBillboardButton) {
@@ -261,12 +274,24 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             }
             System.out.println("xmlFile: "+xmlFile);
             //run Billboard editor/and assign the current users username to be the creator
-            SwingUtilities.invokeLater(new BBEditor("admin", "1234", billboardName));
+            SwingUtilities.invokeLater(new BBEditor("admin", "1234", true));
         }
 
         else if (buttonClicked==scheduleBillboardButton) {
-            //run schedule billboard GUI pop up
-            SwingUtilities.invokeLater(new BBSchedulePopup("admin", "1234",billboardName));
+            //if billboard has not been selected in list
+            if(billboardName == null)
+            {
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "You must select a billboard in the list to schedule");
+            }
+
+            //if billboard has been selected
+            else
+            {
+                //run schedule billboard GUI pop up
+                SwingUtilities.invokeLater(new BBSchedulePopup("admin", "1234",billboardName));
+            }
         }
     }
 

@@ -4,10 +4,7 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -21,17 +18,17 @@ import java.util.*;
 
 public class BillboardServer {
 
-    public static final String CREATE_USER_TABLE =
+    private static final String CREATE_USER_TABLE =
             "CREATE TABLE IF NOT EXISTS Users (username varchar(255) PRIMARY KEY,password varchar(255), createBillboard INT, editBillboards INT, scheduleBillboards INT, editUsers INT)";
 
-    public static final String CREATE_BILLBOARD_TABLE =
+    private static final String CREATE_BILLBOARD_TABLE =
             "CREATE TABLE IF NOT EXISTS Billboards (billboardName varchar(255), billboardCreator varchar (255), xmlFile text);";
 
-    public static final String CREATE_SCHEDULE_TABLE =
+    private static final String CREATE_SCHEDULE_TABLE =
             "CREATE TABLE IF NOT EXISTS Schedule (billboardName varchar(255), startTimeScheduled varchar(50), " +
                     "Duration varchar (255), recurrenceDelay varchar (50), billboardCreator varchar (255));";
 
-    public static final String ADD_DEFAULT_USER =
+    private static final String ADD_DEFAULT_USER =
             "INSERT INTO Users (username, password, createBillboard, editBillboards, scheduleBillboards, editUsers)"  +
             "VALUES(\""+"AdminUser"+"\",\""+"Password1"+"\",\""+1+"\",\""+1+"\",\""+1+"\",\""+1+"\")" +
                     "ON DUPLICATE KEY UPDATE username = \""+"AdminUser"+"\";";
@@ -39,16 +36,21 @@ public class BillboardServer {
     //queue of billboard viewings - 2D array
     private static String [][] queue = new String [0][0];
 
+    private static final String noViewingXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <message>There are no billboards displayed at this time</message>\n" +
+            "</billboard>";
+
     //Setup another hashmap to store an id and hasmap of the token and its timer
-    HashMap<Integer, Timer> SessionCombinedHashmap;
+    private HashMap<Integer, Timer> SessionCombinedHashmap;
     //Setup a hashmap to store each hasmap with a timer
-    HashMap<Integer, String> SessionTokenListHashmap;
+    private HashMap<Integer, String> SessionTokenListHashmap;
 
     /**
      * Starts up Billboard server for connection to client
      * Sends and Receives information from client
      */
-    public static void runServer() throws Exception {
+    private static void runServer() throws Exception {
 
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboardSchedule = new ScheduleMultiMap();
@@ -58,20 +60,7 @@ public class BillboardServer {
         //create DB connection
         Connection connection = null;
 
-        //while loop that attempts to connect to the database
-        //runs every 15 seconds until a connection is made.
-        boolean connectionMade = false;
-        while(connectionMade == false){
-            connection = DBconnection.getInstance();
-            if(connection != null){
-                connectionMade = true;
-                System.out.println("Connection made, resuming.");
-            }
-            else {
-                System.out.println("Connection cannot be made. Attempting connection again in 15 seconds...");
-                Thread.sleep(15000);
-            }
-        }
+        connection = DBconnection.getInstance();
 
         //check if tables exist in DB, if not adds tables
         checkTables(connection);
@@ -113,8 +102,8 @@ public class BillboardServer {
                 //read request sent by client
                 String clientRequest = ois.readObject().toString();
 
-                //print what was received from client
-                System.out.println("received from client: "+clientRequest);
+                //print what was received from client in server command line
+                System.out.println("request received from client: "+clientRequest);
 
                 //save return message, based on what request was received from the client
                 switch(clientRequest)
@@ -138,6 +127,7 @@ public class BillboardServer {
                         break;
                     case "List billboards":
                         //write billboard list to client
+                        billboardList.RetrieveDBbillboardList(connection);
                         listBillboards(oos, billboardList);
                         break;
                     case "Get Billboard info":
@@ -165,7 +155,9 @@ public class BillboardServer {
                         //remove viewing from schedule
                         removeSchedule(ois,connection,billboardSchedule, billboardList);
                         break;
-
+                    case "Billboard Schedule Check":
+                        billboardScheduleCheck(ois,oos,billboardSchedule);
+                        break;
                     case "List users":
                     case "Get user permissions":
                         userList.retrieveUsersFromDB(connection);
@@ -210,7 +202,7 @@ public class BillboardServer {
      * Creates tables if they do not exist in DB
      * @param connection Database connection
      */
-    public static void checkTables(Connection connection) {
+    private static void checkTables(Connection connection) {
         //Adds tables to database if they do not exist
 
         try {
@@ -254,7 +246,7 @@ public class BillboardServer {
      * @param connection connection to the db
      * @throws Exception
      */
-    public static void saltAndCheckUserCredentials(ObjectOutputStream oos, ObjectInputStream ois, Connection connection) throws SQLException, IOException, ClassNotFoundException, NoSuchAlgorithmException {
+    private static void saltAndCheckUserCredentials(ObjectOutputStream oos, ObjectInputStream ois, Connection connection) throws SQLException, IOException, ClassNotFoundException, NoSuchAlgorithmException {
         //Setup ready for hashing
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
@@ -289,9 +281,12 @@ public class BillboardServer {
      * @param billboardList the list being sent to the client
      * @throws Exception
      */
-    public static void listBillboards(ObjectOutputStream oos, BillboardList billboardList) throws Exception{
+    private static void listBillboards(ObjectOutputStream oos, BillboardList billboardList) throws Exception{
         //Output to client
         oos.writeObject(billboardList.listBillboards());
+
+        //Print billboard list sent to client
+        System.out.println("Sent to client:\n");
         System.out.println("billboard list: "+ billboardList.listBillboards());
     }
 
@@ -302,17 +297,19 @@ public class BillboardServer {
      * @param billboardList A list of billboards
      * @throws IOException
      */
-    public static void getBillboardInfo(ObjectOutputStream oos, ObjectInputStream ois, BillboardList billboardList)throws Exception{
+    private static void getBillboardInfo(ObjectOutputStream oos, ObjectInputStream ois, BillboardList billboardList)throws Exception{
         //Read Parameters sent by client
         String billboardName = ois.readObject().toString();
         //Output results to the client
         oos.writeObject(billboardList.GetBillboardInfo(billboardName));
 
         Billboard BillboardInfo = billboardList.GetBillboardInfo(billboardName);
-        System.out.println("billboard infos: "+ billboardList.GetBillboardInfo(billboardName));
-        System.out.println("billboard name: "+BillboardInfo.BillboardName);
-        System.out.println("billboard creator: "+BillboardInfo.BillboardCreator);
-        System.out.println("billboard xml: "+BillboardInfo.XMLFile);
+
+        //Print billboard variables received from client
+        System.out.println("Sent to client:\n");
+        System.out.println("billboard name: "+BillboardInfo.BillboardName + "\n");
+        System.out.println("billboard creator: "+BillboardInfo.BillboardCreator + "\n");
+        System.out.println("billboard xml: "+BillboardInfo.XMLFile + "\n");
     }
 
     /**
@@ -322,18 +319,16 @@ public class BillboardServer {
      * @param billboardList
      * @throws IOException
      */
-    public static void createEditBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList) throws Exception {
+    private static void createEditBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList) throws Exception {
         //Read parameters sent by the client
         String billboardName = ois.readObject().toString();
         String billboardCreator = ois.readObject().toString();
         String xmlFile = ois.readObject().toString();
 
-        //For testing purposes
-        //print bb list
-        System.out.println("billboard list: "+ billboardList);
-        //print what was received from client
-        System.out.println("billboard name: "+ billboardName + "\n" +
-                "creator: "+billboardCreator+"\n"+
+        //Print billboard variables received from client
+        System.out.println("Received from client:\n");
+        System.out.println("billboard name : "+ billboardName + "\n" +
+                "billboard creator: "+billboardCreator+"\n"+
                 "xml file: "+xmlFile+"\n");
 
         //Clear the db with the billboard information
@@ -353,10 +348,12 @@ public class BillboardServer {
      * @param billboardList the list of billboards
      * @throws IOException
      */
-    public static void deleteBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList) throws Exception {
+    private static void deleteBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList) throws Exception {
         //Read the parameters given by the client
         String billboardName = ois.readObject().toString();
-        //Display the name of the billboard for ease of testing
+
+        //Print name of billboard being deleted
+        System.out.println("Received from client:\n");
         System.out.println("billboard name: "+ billboardName);
 
         //Clear the db with the billboard information
@@ -376,10 +373,16 @@ public class BillboardServer {
      * @param billboardSchedule schedule being sent to Client
      * @throws IOException
      */
-    public static void viewSchedule(ObjectOutputStream oos, ScheduleMultiMap billboardSchedule) throws IOException {
+    private static void viewSchedule(ObjectOutputStream oos, ScheduleMultiMap billboardSchedule) throws IOException {
         MultiMap<String, ScheduleInfo> schedule = billboardSchedule.viewSchedule();
+
         //send schedule to client
         oos.writeObject(schedule);
+
+        //print schedule that was sent to client
+        System.out.println("Sent to client:\n");
+        System.out.println("Schedule: "+schedule+"\n");
+
     }
 
    /**
@@ -392,13 +395,20 @@ public class BillboardServer {
      * Exception - billboard does not exist, viewing does not exist
      */
 
-    public static void scheduleBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList
+   private static void scheduleBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList
             , ScheduleMultiMap billboardSchedule) throws Exception {
         //read parameters sent by client
         String billboardName = ois.readObject().toString();
         String startTime = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrenceDelay = ois.readObject().toString();
+
+        //print schedule variables received from client
+        System.out.println("Received to client:\n");
+        System.out.println("Billboard Name: "+billboardName+"\n");
+        System.out.println("Start Time: "+startTime+"\n");
+        System.out.println("Duration (mins): "+duration+"\n");
+        System.out.println("Recurrence delay (mins): "+recurrenceDelay+"\n");
 
         Billboard billboard = billboardList.GetBillboardInfo(billboardName);
         String billboardCreator = billboard.BillboardCreator;
@@ -427,13 +437,20 @@ public class BillboardServer {
      * @throws Exception IOException, ClassNotFoundException, SQLException,
      * Exception - billboard does not exist, viewing does not exist, invalid duration, invalid recurrence delay
      */
-    public static void removeSchedule (ObjectInputStream ois, Connection connection,
+    private static void removeSchedule (ObjectInputStream ois, Connection connection,
                                        ScheduleMultiMap billboardSchedule, BillboardList billboardList) throws Exception {
         //read parameters sent by client
         String billboardName = ois.readObject().toString();
         String startTime = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrenceDelay = ois.readObject().toString();
+
+        //print schedule variables received from client
+        System.out.println("Received to client:\n");
+        System.out.println("Billboard Name: "+billboardName+"\n");
+        System.out.println("Start Time: "+startTime+"\n");
+        System.out.println("Duration (mins): "+duration+"\n");
+        System.out.println("Recurrence delay (mins): "+recurrenceDelay+"\n");
 
         //retrieve billboard object
         Billboard billboard = billboardList.GetBillboardInfo(billboardName);
@@ -455,12 +472,42 @@ public class BillboardServer {
         billboardSchedule.writeToDBschedule(connection);
     }
 
+
+    private static void billboardScheduleCheck(ObjectInputStream ois, ObjectOutputStream oos, ScheduleMultiMap billboardSchedule) throws IOException, ClassNotFoundException {
+        //read billboard name sent by client
+        String billboardName = ois.readObject().toString();
+
+        //print schedule variables received from client
+        System.out.println("Received to client:\n");
+        System.out.println("Billboard Name: "+billboardName+"\n");
+
+        //check if billboard exists in schedule
+        //try retrieve billboard's scheduling information
+        try {
+            billboardSchedule.getSchedule(billboardName);
+            //if viewings for billboard exist
+            //write true to DB
+            oos.writeObject("true");
+            System.out.println("true");
+            //flush output stream
+            oos.flush();
+        }
+        //if viewings for billboard do NOT exist
+        catch (Exception e) {
+            //write false to DB
+            oos.writeObject("false");
+            System.out.println("false");
+            //flush output stream
+            oos.flush();
+        }
+    }
+
     /**
      * populates queue with schedule from database
      * @param connection database connection
      * @throws SQLException invalid SQL query
      */
-    public static void populateQueue (Connection connection) throws SQLException {
+    private static void populateQueue (Connection connection) throws SQLException {
 
         //Read data from DB - sort rows in ascending order by start time of viewing
         final String SELECT = "SELECT * FROM schedule ORDER BY startTimeScheduled ASC;";
@@ -528,7 +575,7 @@ public class BillboardServer {
      * @throws Exception IOException, SQLException,
      * Exception - billboard does not exist, viewing does not exist, invalid duration, invalid recurrence delay
      **/
-    public static void runViewer(ObjectOutputStream oos, BillboardList billboardList, ScheduleMultiMap billboardSchedule, Connection connection) throws Exception {
+    private static void runViewer(ObjectOutputStream oos, BillboardList billboardList, ScheduleMultiMap billboardSchedule, Connection connection) throws Exception {
         //if billboards have been scheduled
         if(queue.length > 0)
         {   //store current time and time of next viewing in local variables
@@ -559,18 +606,37 @@ public class BillboardServer {
                 //Write schedule changes to DB
                 billboardSchedule.writeToDBschedule(connection);
 
+                //repopulate queue
+                populateQueue(connection);
+
+                //if there are remaining viewings
+                if(queue.length > 0){
+                    //update schedule info for next viewing
+                    billboardName = queue[0][0];
+                    nextViewingTime = LocalDateTime.parse(queue[0][1]);
+                    duration = Duration.parse(queue[0][2]);
+                    recurrenceDelay = Integer.parseInt(queue[0][3]);
+                    billboardCreator = queue[0][4];
+                }
             }
 
             //Check if the next viewing in the queue is before or equal to current time
-            else if(nextViewingTime.isBefore(currentTime) || nextViewingTime.isEqual(currentTime))
+            if((nextViewingTime.isBefore(currentTime) || nextViewingTime.isEqual(currentTime)) && queue.length > 0)
             {
                 System.out.println("\n"+LocalDateTime.now());
 
-                //Send billboard name to client
-                oos.writeObject(billboardName);
+                //retrieve information of currently displayed billboard
+                Billboard billboard = billboardList.GetBillboardInfo(billboardName);
+
+                //retrieve xml from billboard
+                String xmlFile = billboard.XMLFile;
+
+                //Send billboard xml to client
+                oos.writeObject(xmlFile);
                 oos.flush();;
 
-                System.out.println(billboardName+" is being displayed");
+                //print currently displaying billboard
+                System.out.println("Currently displayed billboard: "+billboardName);
 
 
                 //clear DB
@@ -608,7 +674,7 @@ public class BillboardServer {
                     //if billboard has not been rescheduled
                     if (rescheduled == false)
                     {
-                        //Reschedule start time of viewing for +1 day
+                        //Reschedule start time of viewing for next recurring
                         billboardSchedule.scheduleBillboard(billboardName,newStartTime,duration,recurrenceDelay,
                                 billboardList.billboardHashMap, billboardCreator);
                     }
@@ -625,15 +691,10 @@ public class BillboardServer {
                 System.out.println("There are no billboards scheduled for this time");
 
                 //send details of "no billboard to display" xml
-                oos.writeObject("no viewing");
+                oos.writeObject(noViewingXML);
                 oos.flush();;
             }
 
-            //update viewer queue
-            populateQueue(connection);
-            //send details of "no billboard to display" xml
-            oos.writeObject("no viewing");
-            oos.flush();;
         }
 
         else
@@ -644,14 +705,14 @@ public class BillboardServer {
             System.out.println("queue is empty");
 
             //send details of "no billboard to display" xml
-            oos.writeObject("no viewing");
+            oos.writeObject(noViewingXML);
             oos.flush();;
 
         }
     }
 
     //Static int for counting which session has expired.
-    public static int i = 0;
+    private static int i = 0;
     //Inner class called when a timer expires.
     class RemoveFromList extends TimerTask{
         public void run(){
@@ -734,7 +795,7 @@ public class BillboardServer {
         }
     }
 
-    public static void updateUsers(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
+    private static void updateUsers(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
         //Clear the db with the user information
         //userList.clearUsersFromDB(connection);
 
@@ -742,7 +803,7 @@ public class BillboardServer {
         //userList.sendUsersToDB(connection);
     }
 
-    public static void deleteUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
+    private static void deleteUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
         //Read the parameters given by the client
         String username = ois.readObject().toString();
         User user = UserList.getUserInformation(userList.listUsers(), username);
@@ -760,7 +821,7 @@ public class BillboardServer {
         UserList.sendUsersToDB(userList.listUsers(), connection);
     }
 
-    public static void listUsers(ObjectOutputStream oos, UserList userList) throws Exception {
+    private static void listUsers(ObjectOutputStream oos, UserList userList) throws Exception {
         oos.writeObject(userList.listUsers());
     }
 

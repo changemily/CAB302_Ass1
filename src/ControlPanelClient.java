@@ -1,10 +1,4 @@
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
-
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -22,12 +16,6 @@ import java.util.Properties;
  * @version - under development
  */
 public class ControlPanelClient {
-    public static final String xmlFile = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
-            "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download'/><information>Billboard with " +
-            "picture (with URL attribute) and information text only. The picture is now centred within the top" +
-            " 2/3 of the image and the information text is centred in the remaining space below the image." +
-            "</information></billboard>";
-
     /**
      * Sends requests to Server
      */
@@ -97,7 +85,7 @@ public class ControlPanelClient {
                     break;
 
                 case "List users":
-                    listUsers(oos, ois, user_inputs);
+                    listUsersScreen(oos, ois, user_inputs);
                     break;
                 case "Delete User":
                     deleteUser(oos, request, user_inputs);
@@ -144,7 +132,7 @@ public class ControlPanelClient {
      * @param password password in the form of array of bytes
      * @return return hashed password
      */
-    public static String hash(byte[] password)
+    private static String hash(byte[] password)
     {
         StringBuffer sb = new StringBuffer();
         //for each byte of the password
@@ -162,7 +150,7 @@ public class ControlPanelClient {
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
-    public static void loginRequest(ObjectOutputStream oos, String buttonClicked) throws NoSuchAlgorithmException, IOException {
+    private static void loginRequest(ObjectOutputStream oos, String buttonClicked) throws NoSuchAlgorithmException, IOException {
         oos.writeObject(buttonClicked);
         //retrieve username and password
         String username ="user";
@@ -187,7 +175,7 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by the control panel GUI
      * @throws IOException
      */
-    public static void listBillboards(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws IOException, ClassNotFoundException {
+    private static void listBillboards(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws IOException, ClassNotFoundException {
         //Output clients request to the server
         oos.writeObject(buttonClicked);
 
@@ -202,7 +190,7 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by Contol Panel GUI
      * @throws IOException
      */
-    public static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
+    private static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
 
         String  billboardName = user_inputs[1];
         String billboardCreator = user_inputs[2];
@@ -224,7 +212,7 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by Contol Panel GUI
      * @throws IOException
      */
-    public static void getBillboardInfo(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
+    private static void getBillboardInfo(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
         String billboardName = user_inputs[1];
         //Write the request to the server
         oos.writeObject(buttonClicked);
@@ -238,7 +226,7 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by control panel GUI
      * @throws IOException
      */
-    public static void deleteBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
+    private static void deleteBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
         String billboardName = user_inputs[1];
         //Write the request to the server
         //Write the request to the server
@@ -253,7 +241,7 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by Contol Panel GUI
      * @throws IOException
      */
-    public static void viewScheduleWrite(ObjectOutputStream oos, String buttonClicked) throws IOException {
+    private static void viewScheduleWrite(ObjectOutputStream oos, String buttonClicked) throws IOException {
         //Write the Client's request to the server
         oos.writeObject(buttonClicked);
     }
@@ -264,7 +252,7 @@ public class ControlPanelClient {
      * @throws IOException
      */
 
-    public static void viewScheduleRead(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+    private static void viewScheduleRead(ObjectInputStream ois) throws IOException, ClassNotFoundException {
         //read schedule sent by server
         MultiMap schedule = (MultiMap) ois.readObject();
 
@@ -277,13 +265,12 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by Control Panel GUI
      * @throws IOException
      */
-    public static void scheduleBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+    private static void scheduleBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
 
         String  billboardName= user_inputs[1];
         String startTime = user_inputs[2];
         String duration = user_inputs[3];
         String recurrence = user_inputs[4];
-
 
         //Write the Client's request to the server
         oos.writeObject(buttonClicked);
@@ -301,8 +288,8 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by Control Panel GUI
      * @throws IOException
      */
-    public static void removeSchedule(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
-        String  billboardName= user_inputs[1];
+    private static void removeSchedule(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+        String billboardName= user_inputs[1];
         String startTime = user_inputs[2];
         String duration = user_inputs[3];
         String recurrence = user_inputs[4];
@@ -318,7 +305,35 @@ public class ControlPanelClient {
         oos.writeObject(recurrence);
     }
 
-    public static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws Exception {
+    /**
+     * checks if billboard exists in schedule
+     * @param billboardName Name of billboard being checked
+     * @param oos Object output stream of client
+     * @return boolean value - true if billboard exists in schedule, false if not
+     * @throws IOException
+     */
+    private static boolean billboardScheduleCheck (String billboardName, ObjectOutputStream oos, ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        //send server request
+        oos.writeObject("Billboard Schedule Check");
+        oos.writeObject(billboardName);
+
+        //read server's response
+        String billboardExists = ois.readObject().toString();
+
+        //if billboard exists in schedule
+        if(billboardExists == "true")
+        {
+            return true;
+        }
+
+        //if billboard does not exist in schedule
+        else
+        {
+            return false;
+        }
+    }
+
+    private static void listUsersScreen(ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws Exception {
         //Output clients request to the server
         oos.writeObject(user_inputs[0]);
         HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
@@ -337,7 +352,7 @@ public class ControlPanelClient {
         }
     }
 
-    public static void deleteUser(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException{
+    private static void deleteUser(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException{
         String deletedUsername = user_inputs[1];
         oos.writeObject(buttonClicked);
         oos.writeObject(deletedUsername);
@@ -348,23 +363,5 @@ public class ControlPanelClient {
      */
     public static void main(String args[]) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IOException, IllegalAccessException {
         SwingUtilities.invokeLater(new ControlPanelGUI("user", "1234"));
-
-        String time = LocalDateTime.now().plus(Duration.ofMinutes(1)).toString();
-
-        String [] user_inputs1 = {"Schedule Billboard","3","2021-05-10T10:00:00.00", "10", "60"};
-        String [] user_inputs2 = {"Schedule Billboard","2","2021-05-10T10:10:00.00", "10", "10"};
-        String [] user_inputs3 = {"Schedule Billboard","1","2021-05-10T10:05:00.00", "10", "0"};
-
-        String [] user_inputs4 = {"Schedule Billboard","2","2021-05-10T10:10:00.00", "5", "0"};
-        String [] user_inputs5 = {"Schedule Billboard","1","2021-05-10T10:00:00.00", "20", "0"};
-        String[] user_inputs6 = {"Create edit billboard", "Billboard1",  "Jarod", xmlFile};
-        String[] user_inputs7 = {"List billboards"};
-
-        //Run_Client(user_inputs1);
-        //Run_Client(user_inputs6);
-        //Run_Client(user_inputs3);
-        //Run_Client(user_inputs4);
-        //Run_Client(user_inputs5);
-        Run_Client(user_inputs6);
     }
 }
