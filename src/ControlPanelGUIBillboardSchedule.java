@@ -17,8 +17,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * NOTES: Current version is a basic design; some functionality still needs to be added; further refinement required
  */
 public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, WindowListener {
-    private MultiMap billboard_schedule;
-    private final int days_in_week = 7;
+    private MultiMap billboardSchedule;
+    private final int DAYS_IN_WEEK = 7;
     String username;
     String sessionToken;
     /**
@@ -28,7 +28,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         // Set window title
         super("Billboard Schedule");
 
-        billboard_schedule = schedule;
+        billboardSchedule = schedule;
         this.username = username;
         this.sessionToken = sessionToken;
     }
@@ -139,68 +139,68 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         String[][] data = new String[24][8];
 
         //for each billboard in billboard_schedule
-        for (Object billboard_name : billboard_schedule.keySet() ) {
+        for (Object billboardName : billboardSchedule.keySet() ) {
 
             //create array list to store viewings of billboard
-            ArrayList<ScheduleInfo> viewings = billboard_schedule.get(billboard_name);
+            ArrayList<ScheduleInfo> viewings = billboardSchedule.get(billboardName);
 
             //for every viewing of billboard
             for ( ScheduleInfo viewing : viewings ) {
 
                 //store scheduled date time of billboard in local var
-                LocalDateTime scheduled_date_time = viewing.startTimeScheduled;
+                LocalDateTime scheduledDateTime = viewing.startTimeScheduled;
 
                 //store current date time in local var
-                LocalDateTime current_date_time = LocalDateTime.now();
+                LocalDateTime currentDateTime = LocalDateTime.now();
 
                 //round scheduled date time up in days
-                LocalDateTime ceiling_scheduled_date_time = viewing.startTimeScheduled.truncatedTo(DAYS).plusDays(1);
+                LocalDateTime ceilingScheduledDateTime = viewing.startTimeScheduled.truncatedTo(DAYS).plusDays(1);
 
                 //round current date time up in days
-                LocalDateTime ceiling_current_date_time = LocalDateTime.now().truncatedTo(DAYS).plusDays(1);
+                LocalDateTime ceilingCurrentDateTime = LocalDateTime.now().truncatedTo(DAYS).plusDays(1);
 
                 //calculate days in between current time and scheduled viewing
-                long time_diff = DAYS.between(ceiling_current_date_time, ceiling_scheduled_date_time);
+                long timeDiff = DAYS.between(ceilingCurrentDateTime, ceilingScheduledDateTime);
 
-                System.out.println("time diff of "+ billboard_name +"= "+time_diff);
+                System.out.println("time diff of "+ billboardName + "= " + timeDiff);
 
                 //get current day of the week
-                DayOfWeek current_day = current_date_time.getDayOfWeek();
+                DayOfWeek currentDay = currentDateTime.getDayOfWeek();
 
-                System.out.println("scheduled day" + scheduled_date_time.getDayOfWeek());
-                System.out.println("scheduled day int: " + scheduled_date_time.getDayOfWeek().getValue());
-                System.out.println("current day: "+current_day);
+                System.out.println("scheduled day" + scheduledDateTime.getDayOfWeek());
+                System.out.println("scheduled day int: " + scheduledDateTime.getDayOfWeek().getValue());
+                System.out.println("current day: "+ currentDay);
 
                 //convert day to int value
-                int int_current_day = current_day.getValue();
+                int intCurrentDay = currentDay.getValue();
 
                 //calculate time till end of the week (Sunday)
-                int time_end_wk = days_in_week - int_current_day;
+                int timeEndWk = DAYS_IN_WEEK - intCurrentDay;
 
-                System.out.println("end of week: "+time_end_wk);
+                System.out.println("end of week: "+timeEndWk);
                 //if viewing is in the current week
-                if (time_diff <= time_end_wk)
+                if (timeDiff <= timeEndWk)
                 {
                     //get day of the week from LocalDateTime
-                    DayOfWeek billboard_day = scheduled_date_time.getDayOfWeek();
+                    DayOfWeek billboardDay = scheduledDateTime.getDayOfWeek();
 
                     //get int value of day
-                    int day_int = billboard_day.getValue();
+                    int dayInt = billboardDay.getValue();
 
                     //get hour displayed from LocalDateTime
-                    int billboard_hour = scheduled_date_time.getHour();
+                    int billboardHour = scheduledDateTime.getHour();
 
                     //retrieve string from cell
-                    String temp_cell_string = data[billboard_hour][day_int];
+                    String tempCellString = data[billboardHour][dayInt];
 
                     //add billboard name and creator to string in cell
-                    temp_cell_string += billboard_name + " by " + viewing.billboardCreator + "\n";
+                    tempCellString += billboardName + " by " + viewing.billboardCreator + "\n";
 
                     //replace all instances of null with empty string
-                    String cell_string = temp_cell_string.replaceAll("null", "");
+                    String cellString = tempCellString.replaceAll("null", "");
 
                     //populate cell with new string
-                    data[billboard_hour][day_int] = cell_string; // Change this line to "BillboardName by User"
+                    data[billboardHour][dayInt] = cellString; // Change this line to "BillboardName by User"
                 }
             }
 
