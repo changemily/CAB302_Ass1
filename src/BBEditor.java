@@ -35,6 +35,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private String sessionToken;
     private BillboardViewer bb = null;
 
+    BillboardList billboardList = new BillboardList();
+
     public BBEditor(String username, String sessionToken, String billboardName, String XMLString)
     {
         // Set window title
@@ -179,38 +181,103 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         ImageBrowseBttn.setForeground(Color.black);
 
         // Create SaveBttn
-        JButton SaveBttn = new JButton( new AbstractAction("Exit")
+        JButton SaveBttn = new JButton( new AbstractAction("Save")
         {
             @Override
             public void actionPerformed( ActionEvent e ) {
-                if(bb.getMessageExists())
+//                System.out.println("Save button is working");
+//
+//                //When save is pressed the user ended details will be used to create a new billboard
+//                //String to hold build the xml file with.
+//                String newXmlFile = tempXMLString;
+//
+//                //Get all the relevant details and store them in string variables.
+//                Color bgColour = bb.getBillboardColour();
+//                String textColour = String.valueOf(bb.getMessageColour());
+//                String extraInfoColour = String.valueOf(bb.getInformationColour());
+                String billboardName = bb.getName();
+//                String imageUrl = bb.getPictureURL();
+                String usernameOfCreator = username;
+//                String extraText = bb.getInformationText();
+//
+//                //Build the xml using the variables
+//                newXmlFile = "<?xml version='1.0' encoding='UTF-8'?><billboard background='"+bgColour+"'>" +
+//                        "<message colour='"+textColour+"'></message><picture url=" + "'"+imageUrl+"'/>" +
+//                        "<information colour='"+extraInfoColour+"'>"+extraText+"</information></billboard>";
+//                System.out.println(newXmlFile);
+
+
+                if(!MessageField.getText().equals(""))
                 {
                     bb.setMessageText(MessageField.getText());
+                    bb.setMessageExists(true);
+                }
+                else{
+                    bb.setMessageExists(false);
                 }
 
-                if(bb.getInformationExists())
+                if(!ExtraInfoText.getText().equals(""))
                 {
                     bb.setInformationText(ExtraInfoText.getText());
+                    bb.setInformationExists(true);
+                }
+                else{
+                    bb.setInformationExists(false);
                 }
 
-                if(bb.getPictureExists())
+                if(!ImageURL.getText().equals(""))
                 {
-                    bb.setPictureURL(ImageURL.getText());
+                    bb.setPictureExists(true);
+                    try{
+                        URL urlString = new URL(ImageURL.getText());
+                        bb.setUrlExists(true);
+                        bb.setDataExists(false);
+                        bb.setPictureURL(ImageURL.getText());
+                    } catch(MalformedURLException m){
+                        bb.setDataExists(true);
+                        bb.setUrlExists(false);
+                        File f = new File(ImageURL.getText());
+                        try {
+                            FileInputStream imageFile = new FileInputStream(f);
+                            byte[] imageData = imageFile.readAllBytes();
+                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                        } catch (IOException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                            JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                                    "ERROR", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+                else{
+                    bb.setPictureExists(false);
+                }
+
+                try {
+                    tempXMLString = bb.updateXMLString();
+                } catch (ParserConfigurationException | TransformerException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), ex,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+
+                //Test if it worked
+                System.out.println(tempXMLString);
+
+                final String xmlFile = tempXMLString;
+
+                //Store the information for the billboard
+                try {
+                    billboardList.createEditBillboard(billboardName, usernameOfCreator, tempXMLString);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
 
                 PreviewPanel.removeAll();
-                PreviewPanel.revalidate();
-                PreviewPanel.repaint();
-                try {
-                    bb = new BillboardViewer(tempXMLString, d);
-                } catch (ParserConfigurationException | IOException | SAXException ex1) {
-                    ex1.printStackTrace();
-                }
-                assert bb != null;
-                JPanel billboardPreview = bb.getSizedBillboard();
-                PreviewPanel.add(billboardPreview);
-                PreviewPanel.revalidate();
-                PreviewPanel.repaint();
+
+                //Reload the main page with the new list of billboards
+                SwingUtilities.invokeLater(new ControlPanelGUI("user", "1234"));
+                //Close after saving so they know it has been done
+                dispose();
             }
         });
         SaveBttn.setText("Save");
@@ -492,7 +559,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
                 try {
                     tempXMLString = bb.updateXMLString();
-                    String a = "b";
                 } catch (ParserConfigurationException | TransformerException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(getContentPane(), ex,
