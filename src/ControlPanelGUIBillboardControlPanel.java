@@ -229,7 +229,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         if (buttonClicked==editBillboardButton || buttonClicked == createBillboardButton) {
             //Retrieve the xml file associated with the name
             try {
-                xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
+                //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
+                xmlFile = billboardListH.get(billboardXML).XMLFile;
+
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(getContentPane(), e,
