@@ -185,28 +185,11 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         {
             @Override
             public void actionPerformed( ActionEvent e ) {
-//                System.out.println("Save button is working");
-//
-//                //When save is pressed the user ended details will be used to create a new billboard
-//                //String to hold build the xml file with.
-//                String newXmlFile = tempXMLString;
-//
-//                //Get all the relevant details and store them in string variables.
-//                Color bgColour = bb.getBillboardColour();
-//                String textColour = String.valueOf(bb.getMessageColour());
-//                String extraInfoColour = String.valueOf(bb.getInformationColour());
+                //Variables to store for the billboard later
                 String billboardName = bb.getName();
-//                String imageUrl = bb.getPictureURL();
                 String usernameOfCreator = username;
-//                String extraText = bb.getInformationText();
-//
-//                //Build the xml using the variables
-//                newXmlFile = "<?xml version='1.0' encoding='UTF-8'?><billboard background='"+bgColour+"'>" +
-//                        "<message colour='"+textColour+"'></message><picture url=" + "'"+imageUrl+"'/>" +
-//                        "<information colour='"+extraInfoColour+"'>"+extraText+"</information></billboard>";
-//                System.out.println(newXmlFile);
 
-
+                //Get what the user has inputted and put it into the file.
                 if(!MessageField.getText().equals(""))
                 {
                     bb.setMessageText(MessageField.getText());
@@ -262,8 +245,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
                 //Test if it worked
                 System.out.println(tempXMLString);
-
-                final String xmlFile = tempXMLString;
 
                 //Store the information for the billboard
                 try {
