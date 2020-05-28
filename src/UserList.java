@@ -111,7 +111,7 @@ public class UserList extends HashMap implements java.io.Serializable {
         st.close();
     }
 
-    public void addUserToList(HashMap<String, User> userHashMap,User newUser) throws Exception {
+    public static void addUserToList(HashMap<String, User> userHashMap,User newUser) throws Exception {
         for(String username : userHashMap.keySet()){
             if(username.equals(newUser.Username)) {
                 throw new Exception("Username already exists, pick a new one.");
@@ -120,7 +120,7 @@ public class UserList extends HashMap implements java.io.Serializable {
         userHashMap.put(newUser.Username, newUser);
     }
 
-    public void deleteUser(HashMap<String, User> userHashMap,User oldUser) throws Exception {
+    public static void deleteUser(HashMap<String, User> userHashMap,User oldUser) throws Exception {
         boolean userFound = false;
         for(String username : userHashMap.keySet()){
             if(username.equals(oldUser.Username)) {
@@ -139,7 +139,7 @@ public class UserList extends HashMap implements java.io.Serializable {
     }
 
 
-    public User getUserInformation(HashMap<String, User> userHashMap,String userName) throws Exception {
+    public static User getUserInformation(HashMap<String, User> userHashMap, String userName) throws Exception {
         for(String username : userHashMap.keySet()){
             if(username.equals(userName)) {
                 return userHashMap.get(userName);
@@ -148,7 +148,7 @@ public class UserList extends HashMap implements java.io.Serializable {
         throw new Exception("User with this username doesn't exist");
     }
 
-    public void modifyUser(HashMap<String, User> userHashMap, User oldUser, User newUser) throws Exception {
+    public static void modifyUser(HashMap<String, User> userHashMap, User oldUser, User newUser) throws Exception {
         boolean userFound = false;
         for(String username : userHashMap.keySet()){
             if(username.equals(oldUser.Username)){

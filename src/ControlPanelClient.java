@@ -133,6 +133,8 @@ public class ControlPanelClient {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -315,13 +317,18 @@ public class ControlPanelClient {
         oos.writeObject(recurrence);
     }
 
-    public static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws IOException, ClassNotFoundException {
+    public static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws Exception {
         //Output clients request to the server
         oos.writeObject(buttonClicked);
         HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
-        String username = "AdminUser";
-
-        SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, "1234", userList));
+        String username = "otheruser";
+        User userDetails = UserList.getUserInformation(userList, username);
+        if(userDetails.Permissions.contains("Edit Users")) {
+            SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, "1234", userList));
+        }
+        else{
+            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", false));
+        }
     }
 
     /**

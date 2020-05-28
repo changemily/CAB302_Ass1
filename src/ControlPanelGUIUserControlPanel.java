@@ -373,7 +373,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             }
 
             else {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken));
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true));
             }
         }
 
@@ -392,7 +392,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             }
 
             else {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken));
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true));
             }
         }
 
@@ -402,7 +402,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             //run user (to check if admin), then if admin open Create/Edit User GUI
 
             if (userType.equals("admin")) {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken));
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true));
             }
 
             else {
