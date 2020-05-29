@@ -313,6 +313,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
             else{
                 //Schedule billboard with viewing details given by user
                 ControlPanelClient.Run_Client(user_inputs);
+                showMessageDialog(null, "Billboard Successfully Scheduled");
 
                 //FOR TESTING
                 System.out.println("request: "+user_inputs[0]);

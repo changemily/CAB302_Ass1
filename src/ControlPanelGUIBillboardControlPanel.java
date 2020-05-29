@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static javax.swing.JOptionPane.YES_OPTION;
-import static javax.swing.JOptionPane.showConfirmDialog;
+import static javax.swing.JOptionPane.*;
 
 /**
  * Billboard Control Panel class for Control Panel GUI
@@ -313,6 +312,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                         ControlPanelClient.Run_Client(user_inputs);
                         //Close after saving so they know it has been done
                         dispose();
+                        showMessageDialog(null, "Billboard Successfully Deleted");
                     }
 
                 } catch (Exception e) {
