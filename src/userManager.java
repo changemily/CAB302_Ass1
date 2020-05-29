@@ -1,4 +1,7 @@
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
+import java.util.Random;
 
 /**
  * User Manager class
@@ -129,4 +132,64 @@ public class userManager
             return false;
         }
     }
+
+    /**
+     * Hashes byte array of password into hexadecimal code
+     * @param password password in the form of array of bytes
+     * @return return hashed password
+     */
+    private static String hash(byte[] password)
+    {
+        StringBuffer sb = new StringBuffer();
+        //for each byte of the password
+        for (byte b : password)
+        {
+            sb.append(String.format("%02x",b &0xFF));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Method for hashing passwords
+     * @param password The password entered by the user
+     * @return An array containing the hash product of the hashed password and salt, and he salt itself
+     */
+    public String[] hashPassword(String password) throws NoSuchAlgorithmException {
+        //turn password into bytes
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        byte[] passwordBytes = messageDigest.digest(password.getBytes());
+
+        //hash password
+        String hashedPassword = hash(passwordBytes);
+
+        System.out.println("Hashed and salted password : " + hashedPassword);
+
+
+        String[] user = {String.valueOf(hashPasswordAndSalt(hashedPassword))};
+        return user;
+    }
+
+
+    /**
+     * Method for hashing a salt and a password
+     * @param hashedPassword The password the user enter after being hashed by hashPassword
+     * @return
+     */
+    public String[] hashPasswordAndSalt(String hashedPassword) throws NoSuchAlgorithmException {
+        //Setup ready for hashing
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+
+        //Create a salt
+        Random rnd = new Random();
+        byte[] saltBytes = new byte[32];
+        rnd.nextBytes(saltBytes);
+        String saltString = saltBytes.toString();
+
+        //Add a salt to the user inputted hashed password
+        String inputtedPasswordSalted = (messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
+        String[] user = {inputtedPasswordSalted, saltString};
+        return user;
+    }
+
+
 }
