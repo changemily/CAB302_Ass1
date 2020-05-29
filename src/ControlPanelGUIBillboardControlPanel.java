@@ -54,7 +54,10 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     private JPanel createBillboardPanel;
     private final Dimension dimension = new Dimension(400,200);
     private BillboardViewer Billboard;
-    private final String tempXMLString = "<billboard></billboard>";
+    private final String noSelectionXMLString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <message>Select a billboard to preview</message>\n" +
+            "</billboard>";
     private final String emptyListXMLString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
             "    <message>No billboards stored in the database</message>\n" +
@@ -100,7 +103,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         else
         {
             //create new billboard preview with empty xml
-            Billboard = new BillboardViewer(tempXMLString, dimension);
+            Billboard = new BillboardViewer(noSelectionXMLString, dimension);
         }
 
         billboardPreview = Billboard.getSizedBillboard();
@@ -247,6 +250,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
 
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.add(Box.createVerticalStrut(50));
+
         billboardPreview = Billboard.getSizedBillboard();
         //add control panel components back to panel
         mainPanel.add(billboardPreview);
@@ -256,6 +262,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         mainPanel.revalidate();
         mainPanel.repaint();
         pack();
+
 
         System.out.println("bb xml: "+billboardXML);
         System.out.println("bb name: "+billboardName);
