@@ -361,8 +361,27 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent actionEvent) {
+        // Get button that has been clicked - event source
+        Object buttonClicked = actionEvent.getSource();
 
+        // Checks if the back button has been clicked
+        if (buttonClicked == backButton) {
+            // Closes current GUI screen
+            dispose();
+
+            // Open new Control Panel GUI screen
+            //SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }
+
+        // Checks if the logout button has been clicked
+        else if (buttonClicked == logoutButton) {
+            // Closes current GUI screen
+            dispose();
+
+            // Open new Login screen
+            //SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        }
     }
 
     @Override
