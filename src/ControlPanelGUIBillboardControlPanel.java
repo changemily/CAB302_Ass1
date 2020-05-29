@@ -252,16 +252,12 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.add(Box.createVerticalStrut(50));
-
         billboardPreview = Billboard.getSizedBillboard();
+
         //add control panel components back to panel
         mainPanel.add(billboardPreview);
         mainPanel.add(buttonPanel);
         mainPanel.add(createBillboardPanel);
-
-        mainPanel.revalidate();
-        mainPanel.repaint();
-        pack();
 
 
         System.out.println("bb xml: "+billboardXML);
