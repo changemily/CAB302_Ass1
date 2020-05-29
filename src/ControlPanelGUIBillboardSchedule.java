@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.time.DayOfWeek;
@@ -14,13 +16,17 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * @author - Nickhil Nischal
  * @version - under development
  *
- * NOTES: Current version is a basic design; some functionality still needs to be added; further refinement required
+ * NOTES: Some button functionality still needs to be added; further refinement required
  */
-public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, WindowListener {
+public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, ActionListener, WindowListener {
     private MultiMap billboardSchedule;
     private final int DAYS_IN_WEEK = 7;
     String username;
     String sessionToken;
+
+    private JButton backButton;
+    private JButton logoutButton;
+
     /**
      * Method used to create a GUI window for the Billboard Schedule Screen
      */
@@ -48,6 +54,25 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        // Create main content JPanel, with Y axis Box Layout
+        JPanel buttonPanel = newPanel('X');
+
+        // Add strut for formatting
+        buttonPanel.add(Box.createHorizontalStrut(20));
+
+        // Create back JButton
+        backButton = newButton("Back", buttonPanel);
+
+        // Add horizontal glue in between buttons for spacing
+        buttonPanel.add(Box.createHorizontalGlue());
+
+        // Create logout JButton
+        logoutButton = newButton("Logout", buttonPanel);
+
+        // Add strut for formatting
+        buttonPanel.add(Box.createHorizontalStrut(20));
+
+
         // Create and add the Billboards this Week label, inside of a JPanel
         JPanel title = addLabel();
 
@@ -56,7 +81,9 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
 
         // Window formatting
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-        getContentPane().add(Box.createVerticalStrut(50)); // boundary
+        getContentPane().add(Box.createVerticalStrut(20)); // boundary
+        getContentPane().add(buttonPanel);
+        getContentPane().add(Box.createVerticalStrut(50));
         getContentPane().add(title);
         getContentPane().add(Box.createVerticalStrut(40));
         getContentPane().add(table);
@@ -71,16 +98,50 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         setVisible(true);
     }
 
+    private JPanel newPanel(char axis) {
+        // Create new JPanel
+        JPanel panel = new JPanel();
+
+        // Check if 'X' axis has been requested
+        if (axis == 'X') {
+            // Create X_AXIS BoxLayout
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        }
+
+        // Check if 'Y' axis has been requested
+        else if (axis == 'Y') {
+            // Create Y_AXIS BoxLayout
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        }
+
+        // Returns a JPanel
+        return panel;
+    }
+
+    private JButton newButton(String buttonName, JPanel panel) {
+        //Create JButton
+        JButton button = new JButton(buttonName);
+
+        // Centre the JButton
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        //Add the frame as an actionListener
+        button.addActionListener(this);
+
+        // Add JButton to specified JPanel
+        panel.add(button);
+
+        // Returns a JButton
+        return button;
+    }
+
     /**
      * This method creates the Billboards this Week label, inside of a JPanel
      * @return Returns a JPanel
      */
     private JPanel addLabel() {
         // Create JPanel
-        JPanel title = new JPanel();
-
-        // Set layout of JPanel
-        title.setLayout(new BoxLayout(title, BoxLayout.Y_AXIS));
+        JPanel title = newPanel('Y');
 
         // Create JLabel
         JLabel billboardsThisWeekLabel = new JLabel("Billboards this Week");
@@ -216,8 +277,9 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
      */
     private JPanel addTable() {
         // Create Billboards Table view, inside of a JPanel
-        JPanel table = new JPanel();
-        table.setLayout(new BoxLayout(table, BoxLayout.X_AXIS));
+        JPanel table = newPanel('X');
+
+        // Add horizontal strut for formatting
         table.add(Box.createHorizontalStrut(100));
 
         // Create string array for days of the week, used in table column headers
@@ -294,6 +356,30 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
 
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        // Get button that has been clicked - event source
+        Object buttonClicked = actionEvent.getSource();
+
+        // Checks if the back button has been clicked
+        if (buttonClicked == backButton) {
+            // Closes current GUI screen
+            dispose();
+
+            // Open new Control Panel GUI screen
+            //SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }
+
+        // Checks if the logout button has been clicked
+        else if (buttonClicked == logoutButton) {
+            // Closes current GUI screen
+            dispose();
+
+            // Open new Login screen
+            //SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        }
     }
 
     @Override
