@@ -98,6 +98,8 @@ public class ControlPanelClient {
                 case "Create User":
                     createUser(oos, request, user_inputs);
                     break;
+                case "Edit User":
+                    editUser(oos, request, user_inputs);
             }
 
             //flush output stream
@@ -386,6 +388,24 @@ public class ControlPanelClient {
         String editUsers = user_inputs[6];
 
         oos.writeObject(buttonClicked);
+        oos.writeObject(username);
+        oos.writeObject(password);
+        oos.writeObject(createBillboard);
+        oos.writeObject(scheduleBillboard);
+        oos.writeObject(editBillboard);
+        oos.writeObject(editUsers);
+    }
+
+    private static void editUser(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+        String username = user_inputs[1];
+        String password = user_inputs[2];
+        String createBillboard = user_inputs[3];
+        String scheduleBillboard = user_inputs[4];
+        String editBillboard = user_inputs[5];
+        String editUsers = user_inputs[6];
+
+        oos.writeObject("Modify User");
+        oos.writeObject(username);
         oos.writeObject(username);
         oos.writeObject(password);
         oos.writeObject(createBillboard);
