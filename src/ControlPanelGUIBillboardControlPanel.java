@@ -28,8 +28,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     String username;
     String sessionToken;
     boolean closeable = true;
+
+
     /**
      * Method used to create a GUI window for the Billboard Control Panel Screen
+     * @param username Used for setting the username
+     * @param sessionToken The sessionToken associated with the user
+     * @param BillboardList A list of billboards passed in
      */
     public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList) {
         // Set window title
@@ -54,15 +59,16 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     private JPanel createBillboardPanel;
     private final Dimension DIMENSION = new Dimension(400,200);
     private BillboardViewer Billboard;
+    // Xml string used when there was no selection made
     private final String NO_SELECTION_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
             "    <message>Select a billboard to preview</message>\n" +
             "</billboard>";
+    // Xml string used when the list of billboards in empty
     private final String EMPTY_LIST_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
             "    <message>No billboards stored in the database</message>\n" +
             "</billboard>";
-
     // Default xml file to be used for creating a new xml file.
     public static final String XML_TEMPLATE = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
             "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download'/><information>Default text, delete or change." +
@@ -167,11 +173,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
 
-    private static final String XML_FILES = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
-            "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download%27/%3E<information>Billboard" +
-            " with picture (with URL attribute) and information text only. The picture is now centred within" +
-            " the top 2/3 of the image and the information text is centred in the remaining space below the" +
-            " image.</information></billboard>";
     /**
      * This method creates a JList, returns a JList
      * @return Returns JList
@@ -185,8 +186,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Get the Creator of each billboard in the billboard list
         for(Map.Entry<String, Billboard> billboardEntry : billboardListH.entrySet()){
-            //Initialize array with the new size and repopulate it
-            //billboardListWithCreator = new String[counter];
             //Assign creator name to position one in the 2D array
             billboardListWithCreator[counter] = billboardEntry.getValue().BillboardCreator;
             //Assign billboard name to the second position in the 2D array
@@ -222,6 +221,11 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         return list;
     }
 
+
+    /**
+     * This method creates a is used to evaluate which billboards is being clicked on in the list
+     * @return Returns JList
+     */
     // Changes billboard XML when a user selects a billboard from the list
     private void valueChanged(ListSelectionEvent event){
         //get string stored in current cell of list
@@ -264,6 +268,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         System.out.println("bb name: "+billboardName);
     }
 
+
     /**
      * This method creates a JButton, when given a display name for the button, returns a JButton
      * @param buttonName Name of button (which is displayed in GUI)
@@ -280,6 +285,11 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         return button;
     }
 
+
+    /**
+     * This method listens for an action to be performed
+     * @return Returns JList
+     */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         //Get button that has been clicked - event source
