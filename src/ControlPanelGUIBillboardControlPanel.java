@@ -20,16 +20,19 @@ import static javax.swing.JOptionPane.*;
  * @author - Nickhil Nischal
  * @version - under development
  *
- * NOTES: Current version is a basic design; button functionality still needs to be added; further refinement required;
- *        contains some code used during testing which will be removed
+ * NOTES: Minor button functionality still needs to be added; further refinement required
  */
 public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener {
     HashMap<String, Billboard> billboardListH;
     String username;
     String sessionToken;
     boolean closeable = true;
+
     /**
      * Method used to create a GUI window for the Billboard Control Panel Screen
+     * @param username The current user's username
+     * @param sessionToken The current user's session token
+     * @param BillboardList The billboard list hashmap
      */
     public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList) {
         // Set window title
@@ -40,6 +43,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
     // Clickable buttons and list
+    private JButton backButton;
+    private JButton logoutButton;
     private JList billboardList;
     private JButton editBillboardButton;
     private JButton deleteBillboardButton;
@@ -96,7 +101,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // If billboard list is empty
         if(billboardListH.size() == 0)
         {
-            //create new billboard preview with empty billboard list message
+            // Create new billboard preview with empty billboard list message
             Billboard = new BillboardViewer(EMPTY_LIST_XML_STRING, DIMENSION);
         }
 
@@ -148,13 +153,51 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // Add create billboard JPanel to preview panel JPanel
         mainPanel.add(createBillboardPanel);
 
+        // Create bottom JPanel
+        JPanel bottomPanel = new JPanel();
+        // Set layout for bottom JPanel
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
+        // Add Strut to bottom panel for formatting
+        bottomPanel.add(Box.createHorizontalStrut(100));
+        // Add billboard JPanel to bottom JPanel
+        bottomPanel.add(billboardPanel);
+        // Add Strut to bottom panel for formatting
+        bottomPanel.add(Box.createHorizontalStrut(40));
+        // Add main JPanel to bottom JPanel
+        bottomPanel.add(mainPanel);
+        // Add Strut to bottom panel for formatting
+        bottomPanel.add(Box.createHorizontalStrut(100));
+
+
+        // Create top JPanel
+        JPanel topPanel = new JPanel();
+        // Set layout for bottom JPanel
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        // Add strut for formatting
+        topPanel.add(Box.createHorizontalStrut(20));
+        // Create back JButton
+        backButton = createButton("Back");
+        // Add back button to top JPanel
+        topPanel.add(backButton);
+        // Add horizontal glue in between buttons for spacing
+        topPanel.add(Box.createHorizontalGlue());
+        // Create logout JButton
+        logoutButton = createButton("Logout");
+        // Add logout button to top JPanel
+        topPanel.add(logoutButton);
+        // Add strut for formatting
+        topPanel.add(Box.createHorizontalStrut(20));
+
+
         // Window formatting
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
-        getContentPane().add(Box.createHorizontalStrut(100));
-        getContentPane().add(billboardPanel);
-        getContentPane().add(Box.createHorizontalStrut(40));
-        getContentPane().add(mainPanel);
-        getContentPane().add(Box.createHorizontalStrut(100));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().add(Box.createVerticalStrut(20)); // formatting
+        getContentPane().add(topPanel);
+        //getContentPane().add(Box.createHorizontalStrut(100));
+        getContentPane().add(bottomPanel);
+        //getContentPane().add(Box.createHorizontalStrut(40));
+        //getContentPane().add(mainPanel);
+        //getContentPane().add(Box.createHorizontalStrut(100));
 
         // Add Window Listener, used for when window is closed
         addWindowListener(this);
