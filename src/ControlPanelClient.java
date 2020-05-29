@@ -277,7 +277,6 @@ public class ControlPanelClient {
      * @param ois Object input stream of client
      * @throws IOException
      */
-
     private static void viewScheduleRead(ObjectInputStream ois) throws IOException, ClassNotFoundException {
         //read schedule sent by server
         MultiMap schedule = (MultiMap) ois.readObject();
