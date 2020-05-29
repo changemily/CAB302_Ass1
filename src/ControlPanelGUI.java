@@ -188,9 +188,9 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         // If edit billboard JButton is clicked
         else if (buttonClicked == editBillboardButton) {
-            //run Billboard Control Panel GUI
+            // Run Billboard Control Panel GUI
             String [] user_input = {"List billboards"};
-            //request schedule and run calendar GUI
+            // Request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
 
             // Close the GUI screen
@@ -198,8 +198,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         }
 
         // If view billboard schedule JButton is clicked
-        else if (buttonClicked == viewBillboardScheduleButton)
-        {
+        else if (buttonClicked == viewBillboardScheduleButton) {
             String [] user_input = {"View schedule"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
@@ -208,9 +207,8 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             dispose();
         }
 
-        // If logout JButton is clicked
-        else if (buttonClicked == passwordChangeButton)
-        {
+        // If password change JButton is clicked
+        else if (buttonClicked == passwordChangeButton) {
             String [] user_input = {"List users", "Password"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
