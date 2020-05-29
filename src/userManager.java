@@ -198,7 +198,7 @@ public class userManager
         String userPass = inputtedPasswordSalted;
 
         //Store the user information in the database(username, hasedsaltedpassword, salt)
-        final String SELECT = "INSERT INTO users(username, password, salt) VALUES ("+username+","+userPass+","+saltString+");";
+        final String SELECT = "INSERT INTO users(username, password, salt) VALUES (\""+username+"\",\""+userPass+"\",\""+saltString+"\");";
 
         //create statement
         Statement st = connection.createStatement();
