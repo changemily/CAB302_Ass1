@@ -837,13 +837,15 @@ public class BillboardServer {
 
 
     private static void createUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
+        String[] userSet = userManager.hashPasswordAndSalt(ois.readObject().toString());
         String username = ois.readObject().toString();
-        String password = ois.readObject().toString();
+        String password = userSet[0];
+        String salt = userSet[1];
         String createBillboard = ois.readObject().toString();
         String scheduleBillboard = ois.readObject().toString();
         String editBillboard = ois.readObject().toString();
         String editUsers = ois.readObject().toString();
-        User newUser = new User(username, password);
+        User newUser = new User(username, password, salt);
         if(createBillboard.equals("1")) {
             newUser.Permissions.add("Create Billboards");
         }

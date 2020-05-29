@@ -22,10 +22,11 @@ public class UserList extends HashMap implements java.io.Serializable {
         {
             String username = rs.getString(1);
             String password = rs.getString(2);
-            int createBillboard = Integer.parseInt(rs.getString(3));
-            int editBillboards = Integer.parseInt(rs.getString(4));
-            int scheduleBillboards = Integer.parseInt(rs.getString(5));
-            int editUsers = Integer.parseInt(rs.getString(6));
+            String salt = rs.getString(3);
+            int createBillboard = Integer.parseInt(rs.getString(4));
+            int editBillboards = Integer.parseInt(rs.getString(5));
+            int scheduleBillboards = Integer.parseInt(rs.getString(6));
+            int editUsers = Integer.parseInt(rs.getString(7));
             HashSet<String> permissions = new HashSet<>();
 
             if(createBillboard == 1){
@@ -40,7 +41,7 @@ public class UserList extends HashMap implements java.io.Serializable {
             if(editUsers == 1){
                 permissions.add("Edit Users");
             }
-            User newUser = new User(username, password);
+            User newUser = new User(username, password, salt);
             newUser.Permissions = permissions;
             userHashMap.put(username, newUser);
         }
@@ -74,6 +75,7 @@ public class UserList extends HashMap implements java.io.Serializable {
             //Pass the values of each billboard to the SQL statement.
             String username = user.Username;
             String password = user.Password;
+            String salt = user.Salt;
             int createBillboard;
             int editBillboards;
             int scheduleBillboards;
@@ -104,8 +106,8 @@ public class UserList extends HashMap implements java.io.Serializable {
                 editUsers = 0;
             }
 
-            st.executeQuery("INSERT INTO Users (username, password, createBillboard, editBillboards, scheduleBillboards, editUsers) " +
-                    "VALUES(\""+username+"\",\""+password+"\",\""+createBillboard+"\",\""+editBillboards+"\",\""+scheduleBillboards+"\",\""+editUsers+"\");");
+            st.executeQuery("INSERT INTO Users (username, password, salt, createBillboard, editBillboards, scheduleBillboards, editUsers) " +
+                    "VALUES(\""+username+"\",\""+password+"\", \""+salt+"\", \""+createBillboard+"\",\""+editBillboards+"\",\""+scheduleBillboards+"\",\""+editUsers+"\");");
         }
         //close statement
         st.close();
