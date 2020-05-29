@@ -333,7 +333,25 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         //Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
 
-        if (buttonClicked==editBillboardButton) {
+        // Checks if the back button has been clicked
+        if (buttonClicked == backButton) {
+            // Closes current GUI screen
+            dispose();
+
+            // Open new Control Panel GUI screen
+            //SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }
+
+        // Checks if the logout button has been clicked
+        else if (buttonClicked == logoutButton) {
+            // Closes current GUI screen
+            dispose();
+
+            // Open new Login screen
+            //SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        }
+
+        else if (buttonClicked==editBillboardButton) {
             //if billboard has not been selected in list
             if(billboardName == null)
             {
