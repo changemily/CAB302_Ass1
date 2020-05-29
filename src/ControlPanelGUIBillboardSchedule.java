@@ -98,6 +98,11 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         setVisible(true);
     }
 
+    /**
+     * This method creates a new JPanel, on specified X_AXIS layout or Y_AXIS layout
+     * @param axis The specified layout axis as a char (X or Y)
+     * @return Returns a JPanel
+     */
     private JPanel newPanel(char axis) {
         // Create new JPanel
         JPanel panel = new JPanel();
@@ -118,8 +123,14 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         return panel;
     }
 
+    /**
+     * This method creates a JButton, and adds it to a specified JPanel
+     * @param buttonName The text that will be displayed inside the button
+     * @param panel The JPanel that the created JButton is to be added to
+     * @return Returns a JButton
+     */
     private JButton newButton(String buttonName, JPanel panel) {
-        //Create JButton
+        // Create JButton
         JButton button = new JButton(buttonName);
 
         // Centre the JButton
@@ -152,7 +163,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         // Centre JLabel
         billboardsThisWeekLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        //Add JLabel to JPanel
+        // Add JLabel to JPanel
         title.add(billboardsThisWeekLabel);
 
         // Return JPanel
@@ -199,72 +210,71 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         // Create string array for each cell in table
         String[][] data = new String[24][8];
 
-        //for each billboard in billboard_schedule
+        // For each billboard in billboard_schedule
         for (Object billboardName : billboardSchedule.keySet() ) {
 
-            //create array list to store viewings of billboard
+            // Create array list to store viewings of billboard
             ArrayList<ScheduleInfo> viewings = billboardSchedule.get(billboardName);
 
-            //for every viewing of billboard
+            // For every viewing of billboard
             for ( ScheduleInfo viewing : viewings ) {
 
-                //store scheduled date time of billboard in local var
+                // Store scheduled date time of billboard in local var
                 LocalDateTime scheduledDateTime = viewing.startTimeScheduled;
 
-                //store current date time in local var
+                // Store current date time in local var
                 LocalDateTime currentDateTime = LocalDateTime.now();
 
-                //round scheduled date time up in days
+                // Round scheduled date time up in days
                 LocalDateTime ceilingScheduledDateTime = viewing.startTimeScheduled.truncatedTo(DAYS).plusDays(1);
 
-                //round current date time up in days
+                // Round current date time up in days
                 LocalDateTime ceilingCurrentDateTime = LocalDateTime.now().truncatedTo(DAYS).plusDays(1);
 
-                //calculate days in between current time and scheduled viewing
+                // Calculate days in between current time and scheduled viewing
                 long timeDiff = DAYS.between(ceilingCurrentDateTime, ceilingScheduledDateTime);
 
                 System.out.println("time diff of "+ billboardName + "= " + timeDiff);
 
-                //get current day of the week
+                // Get current day of the week
                 DayOfWeek currentDay = currentDateTime.getDayOfWeek();
 
                 System.out.println("scheduled day" + scheduledDateTime.getDayOfWeek());
                 System.out.println("scheduled day int: " + scheduledDateTime.getDayOfWeek().getValue());
                 System.out.println("current day: "+ currentDay);
 
-                //convert day to int value
+                // Convert day to int value
                 int intCurrentDay = currentDay.getValue();
 
-                //calculate time till end of the week (Sunday)
+                // Calculate time till end of the week (Sunday)
                 int timeEndWk = DAYS_IN_WEEK - intCurrentDay;
 
                 System.out.println("end of week: "+timeEndWk);
-                //if viewing is in the current week
+                // If viewing is in the current week
                 if (timeDiff <= timeEndWk)
                 {
-                    //get day of the week from LocalDateTime
+                    // Get day of the week from LocalDateTime
                     DayOfWeek billboardDay = scheduledDateTime.getDayOfWeek();
 
-                    //get int value of day
+                    // Get int value of day
                     int dayInt = billboardDay.getValue();
 
-                    //get hour displayed from LocalDateTime
+                    // Get hour displayed from LocalDateTime
                     int billboardHour = scheduledDateTime.getHour();
 
-                    //retrieve string from cell
+                    // Retrieve string from cell
                     String tempCellString = data[billboardHour][dayInt];
 
-                    //add billboard name and creator to string in cell
+                    // Add billboard name and creator to string in cell
                     tempCellString += billboardName + " by " + viewing.billboardCreator + "\n";
 
-                    //replace all instances of null with empty string
+                    // Replace all instances of null with empty string
                     String cellString = tempCellString.replaceAll("null", "");
 
-                    //populate cell with new string
+                    // Populate cell with new string
                     data[billboardHour][dayInt] = cellString; // Change this line to "BillboardName by User"
                 }
             }
-
         }
 
         // Returns a two-dimensional array for use in the JTable
