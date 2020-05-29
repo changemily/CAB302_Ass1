@@ -294,6 +294,12 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         else if (buttonClicked == deleteBillboardButton) {
             //Open the editor with a new file
+            if(billboardName == null)
+            {
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "You must select a billboard in the list to schedule");
+            } else
             try {
                 //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
                 int a = showConfirmDialog(null, "Are you sure you want to delete this billboard?");
