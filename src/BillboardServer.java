@@ -44,7 +44,7 @@ public class BillboardServer {
     //Setup another hashmap to store an id and hasmap of the token and its timer
     private HashMap<Integer, Timer> SessionCombinedHashmap;
     //Setup a hashmap to store each hasmap with a timer
-    private HashMap<Integer, String> SessionTokenListHashmap;
+    private static HashMap<Integer, String> SessionTokenListHashmap;
 
     /**
      * Starts up Billboard server for connection to client
@@ -124,6 +124,12 @@ public class BillboardServer {
                         //check if hashed pwd match
                         //if match return session token
                         //else returns error to client
+                        break;
+                    case "Logout request":
+                        //retrieve sessionToken
+                        //String sessionToken = ois.readObject().toString();
+                        //System.out.println("Username: " +sessionToken);
+                        logoutRequest(oos, ois);
                         break;
                     case "List billboards":
                         //write billboard list to client
@@ -273,6 +279,39 @@ public class BillboardServer {
         }else{
             oos.writeObject("In-valid");
         }
+    }
+
+    /**
+     * Uses the users session token to remove session token in the event the user logs out
+     * @param oos Object Output stream of Server
+     * @param ois ObjectInputStream
+     * @throws IOException
+     */
+    private static void logoutRequest(ObjectOutputStream oos, ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        //Get the users token
+        //String userToken = (String) ois.readObject();
+        String userToken = "reee";
+        System.out.println(userToken);
+
+//        //Boolean for checking existance of session token
+//        Boolean tokenExists = false;
+//        //Check the user inputted token
+//        for(Map.Entry<Integer, String> entry : SessionTokenListHashmap.entrySet()){
+//            //If the user token exists in the hashmap then return a true value.
+//            if(entry.getValue() == userToken) {
+//                tokenExists = true;
+//                SessionTokenListHashmap.remove(userToken);
+//                oos.writeChars("Removed");
+//            }else{
+//                //Token doesn't exist in the hashmap
+//                tokenExists = false;
+//            }
+//        }
+//        //If the token wasn't found in the hashmap then it has expired
+//        if(tokenExists == false){
+//            oos.writeChars("Token has already expired.");
+//            System.out.println("No session token existed, completed properly.");
+//        }
     }
 
     /**
@@ -794,6 +833,7 @@ public class BillboardServer {
             oos.writeChars("Token has expired.");
         }
     }
+
 
     private static void updateUsers(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
         //Clear the db with the user information
