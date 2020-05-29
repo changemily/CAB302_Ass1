@@ -98,6 +98,8 @@ public class ControlPanelClient {
                 case "Create User":
                     createUser(oos, request, user_inputs);
                     break;
+                case "Edit User":
+                    editUser(oos, request, user_inputs);
             }
 
             //flush output stream
@@ -172,8 +174,9 @@ public class ControlPanelClient {
     }
 
     /**
-     * Sends logiut request, session token if the user to server
+     * Sends logout request, session token if the user to server
      * @param oos Object output stream of client
+     * @param ois Object Input Stream
      * @param buttonClicked Request given by Contol Panel GUI
      * @throws NoSuchAlgorithmException
      * @throws IOException
@@ -193,15 +196,16 @@ public class ControlPanelClient {
     /**
      * Sends List billboards request to the server
      * @param oos Object output stream
+     * @param ois Object Input Stream
      * @param buttonClicked Request given by the control panel GUI
      * @throws IOException
      */
     private static void listBillboards(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws IOException, ClassNotFoundException {
         //Output clients request to the server
         oos.writeObject(buttonClicked);
-
-        //read billboard list from server
+        //Read billboard list from server
         HashMap<String, Billboard> BillboardList = (HashMap) ois.readObject();
+        //Open the billboard control panel using username, session token and the billboard list
         SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel("user", "1234", BillboardList));
     }
 
@@ -209,14 +213,16 @@ public class ControlPanelClient {
      * Sends a get info request to the server
      * @param oos Object output stream of client
      * @param buttonClicked Request given by Contol Panel GUI
+     * @param userInputs String array used for recieving information
      * @throws IOException
      */
-    private static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
-
-        String  billboardName = user_inputs[1];
-        String billboardCreator = user_inputs[2];
-        String xmlFile = user_inputs[3];
-
+    private static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String[] userInputs)throws IOException{
+        //Store the billboard name in a String
+        String  billboardName = userInputs[1];
+        //Store the billboard creator name in a String
+        String billboardCreator = userInputs[2];
+        //Store the billboards xml in a String
+        String xmlFile = userInputs[3];
         //Write the request to the server
         oos.writeObject(buttonClicked);
         //Write the details to the server
@@ -228,10 +234,11 @@ public class ControlPanelClient {
     /**
      * Sends a get info request to the server
      * @param oos Object output stream of client
-     * @param buttonClicked Request given by Contol Panel GUI
+     * @param buttonClicked Request given by Control Panel GUI
      * @throws IOException
      */
     private static void getBillboardInfo(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
+        //Store the billboard name in a String
         String billboardName = user_inputs[1];
         //Write the request to the server
         oos.writeObject(buttonClicked);
@@ -246,8 +253,8 @@ public class ControlPanelClient {
      * @throws IOException
      */
     private static void deleteBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
+        //Store the billboard name in a String
         String billboardName = user_inputs[1];
-        //Write the request to the server
         //Write the request to the server
         oos.writeObject(buttonClicked);
         //Write the billboardName to the server
@@ -386,6 +393,24 @@ public class ControlPanelClient {
         String editUsers = user_inputs[6];
 
         oos.writeObject(buttonClicked);
+        oos.writeObject(username);
+        oos.writeObject(password);
+        oos.writeObject(createBillboard);
+        oos.writeObject(scheduleBillboard);
+        oos.writeObject(editBillboard);
+        oos.writeObject(editUsers);
+    }
+
+    private static void editUser(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+        String username = user_inputs[1];
+        String password = user_inputs[2];
+        String createBillboard = user_inputs[3];
+        String scheduleBillboard = user_inputs[4];
+        String editBillboard = user_inputs[5];
+        String editUsers = user_inputs[6];
+
+        oos.writeObject("Modify User");
+        oos.writeObject(username);
         oos.writeObject(username);
         oos.writeObject(password);
         oos.writeObject(createBillboard);
