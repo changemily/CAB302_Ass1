@@ -293,28 +293,35 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         }
 
         else if (buttonClicked == deleteBillboardButton) {
-            //Open the editor with a new file
-            try {
-                //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
-                int a = showConfirmDialog(null, "Are you sure you want to delete this billboard?");
-                if(a == YES_OPTION)
-                {
-                    xmlFile = xmlTemplate;
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(getContentPane(), e,
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            if(billboardName == null)
+            {
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "You must select a billboard in the list to delete");
             }
-            System.out.println("xmlFile: "+xmlFile);
 
-            //run Billboard editor/and assign the current users username to be the creator
-            String [] user_inputs = {"Delete billboard", billboardName};
-            //Schedule billboard with viewing details given by user
-            ControlPanelClient.Run_Client(user_inputs);
-            //Close after saving so they know it has been done
-            dispose();
+            else{
+                //Open the editor with a new file
+                try {
+                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
+                    int a = showConfirmDialog(null, "Are you sure you want to delete this billboard?");
+                    if(a == YES_OPTION)
+                    {
+                        //adjust user inputs to delete given billboard
+                        String [] user_inputs = {"Delete billboard", billboardName};
+                        //Delete billboard with viewing details given by user
+                        ControlPanelClient.Run_Client(user_inputs);
+                        //Close after saving so they know it has been done
+                        dispose();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), e,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+                System.out.println("xmlFile: "+xmlFile);
+            }
         }
 
         else if (buttonClicked==scheduleBillboardButton) {
