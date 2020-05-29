@@ -141,10 +141,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
      */
     private JPanel addLabel() {
         // Create JPanel
-        JPanel title = new JPanel();
-
-        // Set layout of JPanel
-        title.setLayout(new BoxLayout(title, BoxLayout.Y_AXIS));
+        JPanel title = newPanel('Y');
 
         // Create JLabel
         JLabel billboardsThisWeekLabel = new JLabel("Billboards this Week");
@@ -280,8 +277,9 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
      */
     private JPanel addTable() {
         // Create Billboards Table view, inside of a JPanel
-        JPanel table = new JPanel();
-        table.setLayout(new BoxLayout(table, BoxLayout.X_AXIS));
+        JPanel table = newPanel('X');
+
+        // Add horizontal strut for formatting
         table.add(Box.createHorizontalStrut(100));
 
         // Create string array for days of the week, used in table column headers
