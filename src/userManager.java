@@ -1,5 +1,9 @@
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -11,12 +15,12 @@ import java.util.Random;
  * notes - Current some of the methods are built around a HashSet User array however, once the database is implemented
  * they should be fixed to suit the database
  */
-
 public class userManager
 {
     // Main User Variables
     public User current;
     public User target;
+
 
     /**
      * Constructor used to create a userManager relation. When attempted to use UserManager methods that don't require it
@@ -152,9 +156,9 @@ public class userManager
     /**
      * Method for hashing passwords
      * @param password The password entered by the user
-     * @return An array containing the hash product of the hashed password and salt, and he salt itself
+     * @return A string containing the hash product of the hashed password and salt
      */
-    public String[] hashPassword(String password) throws NoSuchAlgorithmException {
+    public String hashPassword(String username, String password) throws NoSuchAlgorithmException, SQLException {
         //turn password into bytes
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         byte[] passwordBytes = messageDigest.digest(password.getBytes());
@@ -164,8 +168,11 @@ public class userManager
 
         System.out.println("Hashed and salted password : " + hashedPassword);
 
+        //create DB connection
+        Connection connection = null;
+        connection = DBconnection.getInstance();
 
-        String[] user = {String.valueOf(hashPasswordAndSalt(hashedPassword))};
+        String user = hashPasswordAndSalt(username, hashedPassword, connection);
         return user;
     }
 
@@ -173,9 +180,10 @@ public class userManager
     /**
      * Method for hashing a salt and a password
      * @param hashedPassword The password the user enter after being hashed by hashPassword
+     * @param connection Uses a connection to store the relevant information
      * @return
      */
-    public String[] hashPasswordAndSalt(String hashedPassword) throws NoSuchAlgorithmException {
+    public String hashPasswordAndSalt(String username, String hashedPassword, Connection connection) throws NoSuchAlgorithmException, SQLException {
         //Setup ready for hashing
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
@@ -187,8 +195,21 @@ public class userManager
 
         //Add a salt to the user inputted hashed password
         String inputtedPasswordSalted = (messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
-        String[] user = {inputtedPasswordSalted, saltString};
-        return user;
+        String userPass = inputtedPasswordSalted;
+
+        //Store the user information in the database(username, hasedsaltedpassword, salt)
+        final String SELECT = "INSERT INTO users(username, password, salt) VALUES ("+username+","+userPass+","+saltString+");";
+
+        //create statement
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(SELECT);
+
+        //close ResultSet
+        rs.close();
+        //close statement
+        st.close();
+
+        return userPass;
     }
 
 
