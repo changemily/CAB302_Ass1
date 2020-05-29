@@ -224,7 +224,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         previewBttn = createButton("Preview");
 
         // Create backBttn
-        backBttn = createButton("Preview");
+        backBttn = createButton("Back");
 
         // Set Layout for EVERYTHING
         mainPanelLayout = new GroupLayout(mainPanel);
