@@ -47,6 +47,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
     String username;
     String sessionToken;
     HashMap<String, User> userList;
+    boolean closeable = true;
 
 
     /**
@@ -107,6 +108,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Create user selection JLabel, inside of right JPanel
         userSelectionLabel = newLargeTitle("", rightPanel);
+        userSelectionLabel.setText("No User Selected");
 
         // Create buttons JPanel, with X axis Box Layout
         JPanel buttonsPanel = newPanel('X');
@@ -378,7 +380,8 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                 try {
                     User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
                     System.out.println("edit user: "+ usernameSelected);
-                    SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true));
+                    SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true, userList));
+                    closeable =  false;
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this,
                             "You must select a user in the list to edit");
@@ -403,7 +406,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                         ControlPanelClient.Run_Client(user_inputs);
                         user_inputs = new String[]{"List users", "Admin"};
                         ControlPanelClient.Run_Client(user_inputs);
-                        getContentPane().setVisible(false);
+                        closeable = false;
                         dispose();
                     }
                     else{
@@ -414,8 +417,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                //ControlPanelClient.Run_Client();
             }
         }
 
@@ -423,7 +424,8 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         else if (buttonClicked == createUserButton) {
             System.out.println("create user button clicked");
             try {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true));
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true, userList));
+                closeable = false;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -494,7 +496,9 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
     @Override
     public void windowClosed(WindowEvent e) {
         // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
-        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        if(closeable) {
+            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }
     }
 
     @Override

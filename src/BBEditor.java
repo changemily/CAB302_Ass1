@@ -553,9 +553,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             {
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel") || (fr.getClass().getName().equals("ControlPanelGUI")))){
+                    if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
                         fr.dispose();
-                        if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel") || (fr.getClass().getName().equals("ControlPanelGUI")))){
+                        if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
                             fr.dispose();
                         }
                     }
