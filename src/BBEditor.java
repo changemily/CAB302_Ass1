@@ -66,8 +66,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private StreamResult o;
     private Dimension d;
 
-    BillboardList billboardList = new BillboardList();
-
     public BBEditor(String username, String sessionToken, String billboardName, String XMLString)
     {
         // Set window title
@@ -465,9 +463,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 imageURL.setText(selectedFile.getAbsolutePath());
             }
         } else if(buttonClicked == saveBttn){
-
             //Variables to store for the billboard later
-            if(createdBillboard) {
+            boolean Break = false;
+            if(createdBillboard && !Break) {
                 billboardName = nameField.getText();
                 System.out.println("billboardNameInput: "+billboardName);
                 //if name has NOT been inputted in text field
@@ -475,6 +473,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     //display error pop up
                     JOptionPane.showMessageDialog(this,
                             "You must select a name for the billboard");
+                    Break = true;
                 }
             }
             else {
@@ -512,13 +511,15 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     bb.setUrlExists(false);
                     File f = new File(imageURL.getText());
                     try {
-                        FileInputStream imageFile = new FileInputStream(f);
-                        byte[] imageData = imageFile.readAllBytes();
-                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                        if(!imageURL.getText().equals("Encoded Image")) {
+                            FileInputStream imageFile = new FileInputStream(f);
+                            byte[] imageData = imageFile.readAllBytes();
+                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                        }
                     } catch (IOException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
                         JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
+                        Break = true;
                     }
                 }
             }
@@ -526,37 +527,26 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 bb.setPictureExists(false);
             }
 
-            try {
-                tempXMLString = bb.updateXMLString();
-                JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Saved to Database");
-            } catch (ParserConfigurationException | TransformerException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(getContentPane(), ex,
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            if(!Break) {
+                try {
+                    tempXMLString = bb.updateXMLString();
+                    JOptionPane.showMessageDialog(getContentPane(), "Billboard Successfully Saved to Database");
+                } catch (ParserConfigurationException | TransformerException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), ex,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
             }
 
             //Test if it worked
-            System.out.println(tempXMLString);
+            if(!Break) {
+                System.out.println(tempXMLString);
 
-            String [] user_inputs = {"Create edit billboard",billboardName,username, tempXMLString};
+                String[] user_inputs = {"Create edit billboard", billboardName, username, tempXMLString};
 
-            //Schedule billboard with viewing details given by user
-            ControlPanelClient.Run_Client(user_inputs);
-
-//            // all frames to a array
-//            Frame[] allFrames = Frame.getFrames();
-//            for(Frame fr : allFrames){
-//                if(fr.getClass().getName() == "ControlPanelGUIBillboardControlPanel"){
-//                    fr.dispose();
-//                }
-//            }
-//            //run Billboard Control Panel GUI
-//            String [] user_input = {"List billboards"};
-//            //request schedule and run calendar GUI
-//            ControlPanelClient.Run_Client(user_input);
-
-            //Close after saving so they know it has been done
-//            dispose();
+                //Schedule billboard with viewing details given by user
+                ControlPanelClient.Run_Client(user_inputs);
+            }
         } else if (buttonClicked == exitBttn)
         {
             int a = showConfirmDialog(null, "Have you saved any changes?");
@@ -764,7 +754,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                         byte[] imageData = imageFile.readAllBytes();
                         bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
                     } catch (IOException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
                         JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
