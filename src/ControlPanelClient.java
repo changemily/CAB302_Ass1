@@ -51,6 +51,11 @@ public class ControlPanelClient {
                     loginRequest(oos,request);
                     break;
 
+                case "Logout request":
+                    //send sessionToken to the server
+                    logoutRequest(oos, ois, request);
+                    break;
+
                 case "List billboards":
                     listBillboards(oos, ois, request);
                     break;
@@ -170,6 +175,25 @@ public class ControlPanelClient {
     }
 
     /**
+     * Sends logiut request, session token if the user to server
+     * @param oos Object output stream of client
+     * @param buttonClicked Request given by Contol Panel GUI
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     */
+    private static void logoutRequest( ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
+        oos.writeObject(buttonClicked);
+        //retrieve session token
+        //String sessionToken = (String) ois.readObject();
+        String sessionToken = "reee";
+        System.out.println(sessionToken);
+        //send username and hashed password to server
+        oos.writeObject(sessionToken);
+        //open login screen
+        SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+    }
+
+    /**
      * Sends List billboards request to the server
      * @param oos Object output stream
      * @param buttonClicked Request given by the control panel GUI
@@ -179,8 +203,8 @@ public class ControlPanelClient {
         //Output clients request to the server
         oos.writeObject(buttonClicked);
 
+        //read billboard list from server
         HashMap<String, Billboard> BillboardList = (HashMap) ois.readObject();
-
         SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel("user", "1234", BillboardList));
     }
 
@@ -202,8 +226,6 @@ public class ControlPanelClient {
         oos.writeObject(billboardName);
         oos.writeObject(billboardCreator);
         oos.writeObject(xmlFile);
-
-        //SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser());
     }
 
     /**
@@ -339,7 +361,7 @@ public class ControlPanelClient {
         HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
         String username = "AdminUser";
         User userDetails = UserList.getUserInformation(userList, username);
-        if(user_inputs[1] != "Password") {
+        if(!user_inputs[1].equals("Password")) {
             if (userDetails.Permissions.contains("Edit Users")) {
                 SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, "1234", userList));
             } else {
@@ -348,7 +370,7 @@ public class ControlPanelClient {
             }
         }
         else{
-            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", false));
+            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", userDetails, false));
         }
     }
 

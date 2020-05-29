@@ -401,20 +401,24 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Checks if the login button has been clicked
         if (buttonClicked == editUserButton) {
-            System.out.println("edit user button clicked with " + userSelectionLabel.getText() + " selected");
-            //run user (to check if admin), then if admin open Create/Edit User GUI
 
-            if (!userType.equals("admin")) {
+            String usernameSelected  = userSelectionLabel.getText();
+            if(usernameSelected == null)
+            {
+                //display error pop up\
                 JOptionPane.showMessageDialog(this,
-                        "You do not have Admin permissions to edit a user.");
+                        "You must select a user in the list to edit");
             }
-
-            else if (userSelectionLabel.getText().equals("") || userSelectionLabel.getText() == null) {
-                // Add message dialog, a user has not been selected from the list
-            }
-
-            else {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true));
+            else{
+                //Retrieve the user associated with the name
+                try {
+                    User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
+                    System.out.println("edit user: "+ usernameSelected);
+                    SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true));
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this,
+                            "You must select a user in the list to edit");
+                }
             }
         }
 
@@ -454,20 +458,12 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         // Checks if the create user button has been clicked
         else if (buttonClicked == createUserButton) {
             System.out.println("create user button clicked");
-            //run user (to check if admin), then if admin open Create/Edit User GUI
-
-            if (userType.equals("admin")) {
+            try {
                 SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true));
-                //dispose();
-            }
-
-            else {
-                // Display an Error Message Dialog, alerting the user that the entered credentials are incorrect
-                JOptionPane.showMessageDialog(this,
-                        "You do not have Admin permissions to create a new user.");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-
     }
 
     @Override

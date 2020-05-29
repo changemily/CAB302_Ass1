@@ -25,19 +25,32 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
     private JCheckBox editUsersBox;
     String username;
     String sessionToken;
-    HashMap<String, User> userList;
     boolean adminUser;
+    boolean newUser;
+    User targetUser;
 
     /**
      * Method used to create a GUI window for the Create/Edit User Screen
      */
-    public ControlPanelGUICreateEditUser(String username, String sessionToken, boolean adminUser) {
+    public ControlPanelGUICreateEditUser(String username, String sessionToken, boolean newUser) throws Exception {
         // Set window title
         super("Create/Edit User");
         this.username = username;
         this.sessionToken = sessionToken;
-        this.adminUser = adminUser;
+        this.adminUser = true;
+        this.newUser = newUser;
+        this.targetUser = new User("", "");
     }
+
+    public ControlPanelGUICreateEditUser(String username, String sessionToken, User targetUser, boolean adminUser){
+        super("Create/Edit User");
+        this.username = username;
+        this.sessionToken = sessionToken;
+        this.adminUser = adminUser;
+        this.targetUser = targetUser;
+        this.newUser = false;
+    }
+
 
     /**
      * Method used to create a GUI window for the Create/Edit User screen
@@ -62,13 +75,20 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Create username JTextField, add to left JPanel
         usernameField = newTextField(leftPanel);
-        usernameField.setEditable(false);
+        if(newUser) {
+            usernameField.setEditable(true);
+        }
+        else{
+            usernameField.setEditable(false);
+            usernameField.setText(targetUser.Username);
+        }
 
         // Create password JLabel, add to left JPanel
         newLabel("Password", leftPanel);
 
         // Create password JTextField, add to left JPanel
         password = newTextField(leftPanel);
+        password.setText(targetUser.Password);
         leftPanel.add(Box.createVerticalStrut(20)); // Formatting
 
         // Create Save and Exit JButton, add to left JPanel
@@ -92,15 +112,27 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Create Create Billboards JCheckBox, add to permissions JPanel
         createBillboardsBox = newCheckBox("Create Billboards", permissionsPanel);
+        if(targetUser.Permissions.contains("Create Billboards")){
+            createBillboardsBox.setSelected(true);
+        }
 
         // Create Schedule Billboards JCheckBox, add to permissions JPanel
         scheduleBillboardsBox = newCheckBox("Schedule Billboards", permissionsPanel);
+        if(targetUser.Permissions.contains("Schedule Billboards")){
+            scheduleBillboardsBox.setSelected(true);
+        }
 
         // Create Edit All Billboards JCheckBox, add to permissions JPanel
         editAllBillboardsBox = newCheckBox("Edit All Billboards", permissionsPanel);
+        if(targetUser.Permissions.contains("Edit All Billboards")){
+            editAllBillboardsBox.setSelected(true);
+        }
 
         // Create Edit Users (Admin) JCheckBox, add to permissions JPanel
         editUsersBox = newCheckBox("Edit Users (Admin)", permissionsPanel);
+        if(targetUser.Permissions.contains("Edit Users")){
+            editUsersBox.setSelected(true);
+        }
 
         // Add permissions JPanel to spacer JPanel, with Structs for spacing
         spacer.add(permissionsPanel);
