@@ -179,8 +179,8 @@ public class ControlPanelClient {
         //Output clients request to the server
         oos.writeObject(buttonClicked);
 
+        //read billboard list from server
         HashMap<String, Billboard> BillboardList = (HashMap) ois.readObject();
-
         SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel("user", "1234", BillboardList));
     }
 
