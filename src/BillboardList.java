@@ -44,11 +44,9 @@ public class BillboardList implements java.io.Serializable {
 
     /**
      * Method to create and edit billboards
-     * Parameters -
-     *
      * @param billboardName  Billboards name
      * @param  billboardCreator The billboard creators name
-     * @param xmlFile
+     * @param xmlFile String xml file
      */
     public void createEditBillboard(String billboardName, String billboardCreator, String xmlFile) throws Exception {
             //Create a new billboard object
@@ -63,18 +61,16 @@ public class BillboardList implements java.io.Serializable {
      * Method for listing current billboards
      * Return type void
      */
-
     public HashMap<String, Billboard> listBillboards() {
         return billboardHashMap;
     }
 
+
     /**
      * Method for retrieving billboard information from database
-     *
      * @param billboardName Return type Billboard
      * @return returns HashMap of billboard names and objects
      */
-
     public Billboard GetBillboardInfo(String billboardName) throws Exception {
         //boolean variable to track whether billboard exists in schedule
         boolean billboardExists = false;
@@ -103,10 +99,11 @@ public class BillboardList implements java.io.Serializable {
         return billboardInfo;
     }
 
+
     /**
+     * Method for deleting billboards
      * @param billboardName Name of billboard being deleted
      */
-
     public void DeleteBillboard(String billboardName) throws Exception {
 
         //The code for deleting the billboard info from the schedule.
@@ -138,10 +135,14 @@ public class BillboardList implements java.io.Serializable {
         }
     }
 
+
+    /**
+     * Method for retrieving a list of billboards from the database
+     * @param connection A connection for accessing the database
+     */
     public void RetrieveDBbillboardList(Connection connection) throws Exception {
 
         final String SELECT = "SELECT * FROM Billboards ORDER BY billboardName desc";
-
 
         //create statement
         Statement st = connection.createStatement();
@@ -166,13 +167,17 @@ public class BillboardList implements java.io.Serializable {
             //store billboard name with corresponding billboard
             billboardHashMap.put(billboardName, billboard);
         }
-
         //close ResultSet
         rs.close();
         //close statement
         st.close();
     }
 
+
+    /**
+     * Method for clearing a list of billboards in the database
+     * @param connection A connection for accessing the database
+     */
     public void ClearDBbillboardList(Connection connection) throws SQLException {
         //create statement to connect to db
         Statement st = connection.createStatement();
@@ -185,6 +190,11 @@ public class BillboardList implements java.io.Serializable {
         }
     }
 
+
+    /**
+     * Method for writing an updated list of billboards from the database
+     * @param connection A connection for accessing the database
+     */
     //A method for writing the billboardList to the database
     public void WriteToDBbillboard(Connection connection) throws SQLException {
         //create statement
@@ -206,6 +216,15 @@ public class BillboardList implements java.io.Serializable {
         st.close();
     }
 
+
+    /**
+     * Method for editing an xml file that is passed to it
+     * @param xmlFile A string xml file
+     * @param billboardName The name of the billboard
+     * @param billboardText The text of the billboard
+     * @param backgroundColour The background colour of the billboard
+     * @param billboardImage The image url in the from of a string
+     */
     //A method that edits a users XML file
     public void editXMLFile(String xmlFile, String billboardName, String billboardText,
                             String backgroundColour, String billboardImage) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException, TransformerException {
@@ -231,6 +250,11 @@ public class BillboardList implements java.io.Serializable {
     }
 
 
+
+    /**
+     * Method for importing an xml file that is passed to it
+     * @param xmlFile A string xml file
+     */
     //A method that accepts an xml file and creates a billboard using it
     public void importXML(String xmlFile) throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -272,6 +296,11 @@ public class BillboardList implements java.io.Serializable {
     }
 
 
+
+    /**
+     * Method for exporting an xml file that is passed to it
+     * @param billboardName The name of the billboard
+     */
     //A method that accepts an xml file and creates a billboard using it
     public Document exportXML(String billboardName) throws Exception {
         //Use the billboard name provided to find the correct info
