@@ -29,7 +29,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     String sessionToken;
     boolean closeable = true;
     /**
-     * Method used to create a GUI window for the Billboard edit Screen
+     * Method used to create a GUI window for the Billboard Control Panel Screen
      */
     public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList) {
         // Set window title
@@ -52,19 +52,19 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     private JPanel billboardPreview;
     private JPanel buttonPanel;
     private JPanel createBillboardPanel;
-    private final Dimension dimension = new Dimension(400,200);
+    private final Dimension DIMENSION = new Dimension(400,200);
     private BillboardViewer Billboard;
-    private final String noSelectionXMLString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+    private final String NO_SELECTION_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
             "    <message>Select a billboard to preview</message>\n" +
             "</billboard>";
-    private final String emptyListXMLString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+    private final String EMPTY_LIST_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
             "    <message>No billboards stored in the database</message>\n" +
             "</billboard>";
 
-    //Default xml file to be used for ceating a new xml file.
-    public static final String xmlTemplate = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
+    // Default xml file to be used for creating a new xml file.
+    public static final String XML_TEMPLATE = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
             "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download'/><information>Default text, delete or change." +
             "To use an image link it in the URL section."+
             "</information></billboard>";
@@ -93,23 +93,23 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.add(Box.createVerticalStrut(50));
 
-        //if billboard list is empty
+        // If billboard list is empty
         if(billboardListH.size() == 0)
         {
             //create new billboard preview with empty billboard list message
-            Billboard = new BillboardViewer(emptyListXMLString, dimension);
+            Billboard = new BillboardViewer(EMPTY_LIST_XML_STRING, DIMENSION);
         }
 
         else
         {
-            //create new billboard preview with empty xml
-            Billboard = new BillboardViewer(noSelectionXMLString, dimension);
+            // Create new billboard preview with empty xml
+            Billboard = new BillboardViewer(NO_SELECTION_XML_STRING, DIMENSION);
         }
 
         billboardPreview = Billboard.getSizedBillboard();
         mainPanel.add(billboardPreview);
 
-        //if billboard list is NOT empty
+        // If billboard list is NOT empty
         if(billboardListH.size() >0)
         {
             //Create billboard JList, and add it to billboard JPanel
@@ -167,7 +167,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
 
-    private static final String xmlFiles = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
+    private static final String XML_FILES = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
             "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download%27/%3E<information>Billboard" +
             " with picture (with URL attribute) and information text only. The picture is now centred within" +
             " the top 2/3 of the image and the information text is centred in the remaining space below the" +
@@ -177,13 +177,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * @return Returns JList
      */
     private JList createJList(JPanel panel) {
-        //Int counter for assigning values in the array
+        // Int counter for assigning values in the array
         int counter = 1;
 
-        //Setup an array to return creator and billboard
+        // Setup an array to return creator and billboard
         String[] billboardListWithCreator = new String[billboardListH.size()+1];
 
-        //Get the Creator of each billboard in the billboard list
+        // Get the Creator of each billboard in the billboard list
         for(Map.Entry<String, Billboard> billboardEntry : billboardListH.entrySet()){
             //Initialize array with the new size and repopulate it
             //billboardListWithCreator = new String[counter];
@@ -243,7 +243,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         mainPanel.repaint();
 
         try {
-            Billboard = new BillboardViewer(billboardXML, dimension);
+            Billboard = new BillboardViewer(billboardXML, DIMENSION);
         } catch (ParserConfigurationException | IOException | SAXException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(getContentPane(), ex,
@@ -317,7 +317,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //Open the editor with a new file
             try {
                 //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
-                xmlFile = xmlTemplate;
+                xmlFile = XML_TEMPLATE;
                 closeable = false;
             } catch (Exception e) {
                 e.printStackTrace();
