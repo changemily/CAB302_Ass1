@@ -15,6 +15,7 @@ import static javax.swing.JOptionPane.showConfirmDialog;
  * NOTES: Some button functionality still needs to be added
  */
 public class ControlPanelGUI extends JFrame implements Runnable, ActionListener {
+    private JButton logoutButton;
     private JButton editUsersButton;
     private JButton editBillboardButton;
     private JButton viewBillboardScheduleButton;
@@ -43,32 +44,39 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         // Default close operation, so window does not continue running after it is closed
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // create label
+        // Create logout JButton
+        logoutButton = createButton("Logout");
+        // Create JPanel that holds logout JButton
+        JPanel logoutPanel = createButtonJPanel(logoutButton,0,20, true);
+
+        // Create JLabel
         JPanel label = createLabel("Control Panel Menu");
 
-        // create edit users button
+        // Create edit users JButton
         editUsersButton = createButton("Edit Users");
         //create JPanel that holds button
-        JPanel editUsersPanel = createButtonJPanel(editUsersButton);
+        JPanel editUsersPanel = createButtonJPanel(editUsersButton,150,150,false);
 
         // create edit billboard button
         editBillboardButton = createButton("Edit Billboards");
         //create JPanel that holds button
-        JPanel editBillboardPanel = createButtonJPanel(editBillboardButton);
+        JPanel editBillboardPanel = createButtonJPanel(editBillboardButton,150,150,false);
 
         // create edit billboard schedule button
         viewBillboardScheduleButton = createButton("View Billboard Schedule");
         //create JPanel that holds button
-        JPanel editBillboardSchedulePanel = createButtonJPanel(viewBillboardScheduleButton);
+        JPanel editBillboardSchedulePanel = createButtonJPanel(viewBillboardScheduleButton,150,150,false);
 
         // create edit password button
         passwordChangeButton = createButton("Edit Password");
         // create JPanel that holds button
-        JPanel editPasswordChangePanel = createButtonJPanel(passwordChangeButton);
+        JPanel editPasswordChangePanel = createButtonJPanel(passwordChangeButton,150,150,false);
 
 
         //Add label and buttons to content pane
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().add(Box.createVerticalStrut(20));
+        getContentPane().add(logoutPanel);
         getContentPane().add(Box.createVerticalStrut(50));
         getContentPane().add(label);
         getContentPane().add(Box.createVerticalStrut(50));
@@ -97,6 +105,9 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         // Create new JLabel
         JLabel label = new JLabel(labelText);
 
+        // Change text size of JLabel
+        label.setFont(new Font(null, Font.BOLD, 15));
+
         // Center align label
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -107,7 +118,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         return labelPanel;
     }
 
-    private JPanel createButtonJPanel(JButton button) {
+    private JPanel createButtonJPanel(JButton button, int strut1, int strut2, boolean horizontalGlue) {
         // Create new JPanel to hold button
         JPanel buttonPanel = new JPanel();
 
@@ -115,13 +126,22 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 
         // Add horizontal strut for formatting
-        buttonPanel.add(Box.createHorizontalStrut(150));
+        buttonPanel.add(Box.createHorizontalStrut(strut1));
+
+        // If horizontal glue has been requested, add horizontal glue
+        if (horizontalGlue) {
+            // Add horizontal glue for right alignment of JPanel
+            buttonPanel.add(Box.createHorizontalGlue());
+        }
 
         // Add new button to button JPanel
         buttonPanel.add(button);
 
         // Add horizontal strut for formatting
-        buttonPanel.add(Box.createHorizontalStrut(150));
+        buttonPanel.add(Box.createHorizontalStrut(strut2));
+
+        // Centre align the JPanel
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Returns a JPanel
         return buttonPanel;
@@ -147,34 +167,54 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         // Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
 
-        if (buttonClicked==editUsersButton) {
-            // Open User Control Panel GUI
-            String[] user_input = {"List users", "Admin"};
-            ControlPanelClient.Run_Client(user_input);
+        // If logout JButton is clicked
+        if (buttonClicked == logoutButton) {
+            // RUN LOGOUT CODE
+
+            // Close the GUI screen
             dispose();
         }
 
-        else if (buttonClicked==editBillboardButton) {
+        // If edit users JButton is clicked
+        else if (buttonClicked == editUsersButton) {
+            // Open User Control Panel GUI
+            String[] user_input = {"List users", "Admin"};
+            ControlPanelClient.Run_Client(user_input);
+
+            // Close the GUI screen
+            dispose();
+        }
+
+        // If edit billboard JButton is clicked
+        else if (buttonClicked == editBillboardButton) {
             //run Billboard Control Panel GUI
             String [] user_input = {"List billboards"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
+
+            // Close the GUI screen
             dispose();
         }
 
+        // If view billboard schedule JButton is clicked
         else if (buttonClicked == viewBillboardScheduleButton)
         {
             String [] user_input = {"View schedule"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
+
+            // Close the GUI screen
             dispose();
         }
 
+        // If logout JButton is clicked
         else if (buttonClicked == passwordChangeButton)
         {
             String [] user_input = {"List users", "Password"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
+
+            // Close the GUI screen
             dispose();
         }
 
@@ -202,5 +242,4 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 }
