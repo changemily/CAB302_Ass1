@@ -507,19 +507,20 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     bb.setDataExists(false);
                     bb.setPictureURL(imageURL.getText());
                 } catch(MalformedURLException m){
-                    bb.setDataExists(true);
-                    bb.setUrlExists(false);
-                    File f = new File(imageURL.getText());
                     try {
                         if(!imageURL.getText().equals("Encoded Image")) {
+                            File f = new File(imageURL.getText());
                             FileInputStream imageFile = new FileInputStream(f);
                             byte[] imageData = imageFile.readAllBytes();
                             bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                            bb.setDataExists(true);
+                            bb.setUrlExists(false);
                         }
                     } catch (IOException fileNotFoundException) {
                         JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                         Break = true;
+                        bb.setPictureExists(false);
                     }
                 }
             }
@@ -540,8 +541,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
             //Test if it worked
             if(!Break) {
-                System.out.println(tempXMLString);
-
                 String[] user_inputs = {"Create edit billboard", billboardName, username, tempXMLString};
 
                 //Schedule billboard with viewing details given by user
@@ -644,7 +643,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     if(bb.getPictureURL() != null){
                         imageURL.setText(bb.getPictureURL());
                     }
-                    else{
+                    else if(bb.getPictureDataString() != null){
                         imageURL.setText("Encoded Image");
                     }
                     backgroundColourDisplay.setBackground(bb.getBillboardColour());
@@ -688,21 +687,20 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     bb.setDataExists(false);
                     bb.setPictureURL(imageURL.getText());
                 } catch(MalformedURLException m){
-                    bb.setDataExists(true);
-                    bb.setUrlExists(false);
-                    File f = new File(imageURL.getText());
-                    JOptionPane.showMessageDialog(getContentPane(), m,
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
                     try {
-                        FileInputStream imageFile = new FileInputStream(f);
-                        byte[] imageData = imageFile.readAllBytes();
-                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                        if(!imageURL.getText().equals("Encoded Image")) {
+                            File f = new File(imageURL.getText());
+                            FileInputStream imageFile = new FileInputStream(f);
+                            byte[] imageData = imageFile.readAllBytes();
+                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                            bb.setDataExists(true);
+                            bb.setUrlExists(false);
+                        }
                     } catch (IOException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
                         JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
+                        bb.setPictureExists(false);
                     }
-
                 }
             }
             else{
@@ -737,25 +735,27 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 bb.setInformationExists(false);
             }
 
-            if(!imageURL.getText().equals(""))
-            {
-                bb.setPictureExists(true);
-                try{
-                    URL urlString = new URL(imageURL.getText());
-                    bb.setUrlExists(true);
-                    bb.setDataExists(false);
-                    bb.setPictureURL(imageURL.getText());
-                } catch(MalformedURLException m){
-                    bb.setDataExists(true);
-                    bb.setUrlExists(false);
-                    File f = new File(imageURL.getText());
+            if(!imageURL.getText().equals("")) {
+                if (!imageURL.getText().equals("Encoded Image")) {
+                    bb.setPictureExists(true);
                     try {
-                        FileInputStream imageFile = new FileInputStream(f);
-                        byte[] imageData = imageFile.readAllBytes();
-                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
-                    } catch (IOException fileNotFoundException) {
-                        JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        URL urlString = new URL(imageURL.getText());
+                        bb.setUrlExists(true);
+                        bb.setDataExists(false);
+                        bb.setPictureURL(imageURL.getText());
+                    } catch (MalformedURLException m) {
+                        try {
+                            File f = new File(imageURL.getText());
+                            FileInputStream imageFile = new FileInputStream(f);
+                            byte[] imageData = imageFile.readAllBytes();
+                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                            bb.setDataExists(true);
+                            bb.setUrlExists(false);
+                        } catch (IOException fileNotFoundException) {
+                            JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                                    "ERROR", JOptionPane.ERROR_MESSAGE);
+                            bb.setPictureExists(false);
+                        }
                     }
                 }
             }

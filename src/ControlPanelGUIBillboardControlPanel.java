@@ -296,8 +296,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             {
                 //Retrieve the xml file associated with the name
                 try {
-                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
-                    xmlFile = billboardListH.get(billboardXML).XMLFile;
+                    xmlFile = billboardXML;
                     closeable = false;
 
                 } catch (Exception e) {
