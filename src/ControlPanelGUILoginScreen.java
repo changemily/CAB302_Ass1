@@ -40,21 +40,21 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // Create title label, inside of a JPanel
-        JPanel titlePanel = newLabel("Welcome to the Billboard Control Panel");
+        JPanel titlePanel = newLabel("Welcome to the Billboard Control Panel",true,true);
         titlePanel.add(Box.createHorizontalStrut(100));
 
         // Create subtitle label, inside of a JPanel
-        JPanel subtitlePanel = newLabel("Please enter login details to begin");
+        JPanel subtitlePanel = newLabel("Please enter login details to begin",true,false);
         subtitlePanel.add(Box.createHorizontalStrut(100));
 
         // Create username label, inside of a JPanel
-        JPanel usernamePanel = newLabel("Username     ");
+        JPanel usernamePanel = newLabel("Username     ",false,false);
 
         // Create username text field, and add to the username JPanel
         username = newTextField(usernamePanel);
 
         // Create password label, inside of a JPanel
-        JPanel passwordPanel = newLabel("Password      ");
+        JPanel passwordPanel = newLabel("Password      ",false,false);
 
         // Create password text field, and add to the password JPanel
         password = newTextField(passwordPanel);
@@ -88,10 +88,12 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
 
     /**
      * This method creates a JLabel, inside of a JPanel
-     * @param label The text of the JLabel
+     * @param labelText The text of the JLabel
+     * @param large Boolean for large text
+     * @param largeAndBold Boolean for large and bold text
      * @return Returns a JPanel
      */
-    private JPanel newLabel(String label) {
+    private JPanel newLabel(String labelText, boolean large, boolean largeAndBold) {
         // Create JPanel
         JPanel labelPanel = new JPanel();
 
@@ -99,8 +101,24 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
         labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
         labelPanel.add(Box.createHorizontalStrut(100));
 
+        // Create new JLabel
+        JLabel label = new JLabel(labelText);
+
+        // If large text size has been requested
+        if (large) {
+            // Change text size of JLabel
+            label.setFont(new Font(null, Font.PLAIN, 12));
+        }
+
+        // If large text size and bold has been requested
+        if (largeAndBold) {
+            // Change text size of JLabel, and make it bold
+            label.setFont(new Font(null, Font.BOLD, 14));
+        }
+
         // Add the JLabel to the created JPanel
-        labelPanel.add(new JLabel(label));
+        labelPanel.add(label);
+
 
         // Returns a JPanel with a JLabel inside
         return labelPanel;
