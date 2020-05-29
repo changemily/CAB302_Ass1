@@ -41,7 +41,8 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         this.sessionToken = sessionToken;
         this.adminUser = true;
         this.newUser = newUser;
-        this.targetUser = new User("", "");
+        //Creates user, usernmae and hashed(hashed + salted password)
+        this.targetUser = new User(username, userManager.hashPassword(username, password.getText()));
         this.userList = userList;
     }
 

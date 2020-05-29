@@ -158,7 +158,7 @@ public class userManager
      * @param password The password entered by the user
      * @return A string containing the hash product of the hashed password and salt
      */
-    public String hashPassword(String username, String password) throws NoSuchAlgorithmException, SQLException {
+    public static String hashPassword(String username, String password) throws NoSuchAlgorithmException, SQLException {
         //turn password into bytes
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         byte[] passwordBytes = messageDigest.digest(password.getBytes());
@@ -183,7 +183,7 @@ public class userManager
      * @param connection Uses a connection to store the relevant information
      * @return
      */
-    public String hashPasswordAndSalt(String username, String hashedPassword, Connection connection) throws NoSuchAlgorithmException, SQLException {
+    public static String hashPasswordAndSalt(String username, String hashedPassword, Connection connection) throws NoSuchAlgorithmException, SQLException {
         //Setup ready for hashing
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
