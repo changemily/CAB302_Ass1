@@ -22,10 +22,11 @@ public class UserList extends HashMap implements java.io.Serializable {
         {
             String username = rs.getString(1);
             String password = rs.getString(2);
-            int createBillboard = Integer.parseInt(rs.getString(3));
-            int editBillboards = Integer.parseInt(rs.getString(4));
-            int scheduleBillboards = Integer.parseInt(rs.getString(5));
-            int editUsers = Integer.parseInt(rs.getString(6));
+            String salt = rs.getString(3);
+            int createBillboard = Integer.parseInt(rs.getString(4));
+            int editBillboards = Integer.parseInt(rs.getString(5));
+            int scheduleBillboards = Integer.parseInt(rs.getString(6));
+            int editUsers = Integer.parseInt(rs.getString(7));
             HashSet<String> permissions = new HashSet<>();
 
             if(createBillboard == 1){
