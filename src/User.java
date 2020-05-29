@@ -14,6 +14,7 @@ public class User implements java.io.Serializable {
     // Variables used for each User
     String Username;
     String Password;
+    String Salt;
     HashSet<String> Permissions = new HashSet<>();
 
     // Creates an array with valid User Permissions
@@ -42,7 +43,7 @@ public class User implements java.io.Serializable {
      * @param Permissions The User's assigned permission/s
      * @throws Exception Throws exception when an invalid permission type is entered
      */
-    User(String Username, String Password, String ... Permissions) throws Exception {
+    User(String Username, String Password, String Salt, String ... Permissions) throws Exception {
         // For loop that iterates over each permission that is entered, to check if each permission is valid
         for (String Permission: Permissions) {
             // Checks if the entered permission is a valid permission, else user is not created
@@ -54,6 +55,7 @@ public class User implements java.io.Serializable {
         // Assigns the inputted Username, Password, and Permission/s to the user
         this.Username = Username;
         this.Password = Password;
+        this.Salt = Salt;
         for (String Permission2: Permissions) {
             this.Permissions.add(Permission2);
         }
@@ -67,6 +69,7 @@ public class User implements java.io.Serializable {
         // Sets specified user's Username, Password, and Permissions to null
         this.Username = null;
         this.Password = null;
+        this.Salt = null;
         this.Permissions = null;
         System.out.println("The user " + UsernameTemp + " has been successfully deleted.");
     }

@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -41,8 +43,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         this.sessionToken = sessionToken;
         this.adminUser = true;
         this.newUser = newUser;
-        //Creates user, usernmae and hashed(hashed + salted password)
-        this.targetUser = new User(username, userManager.hashPassword(username, password.getText()));
+        this.targetUser = new User("", "", "");
         this.userList = userList;
     }
 
@@ -321,7 +322,14 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
             if (newUser) {
                 String newUsername = usernameField.getText();
-                String newPassword = password.getText();
+                String newPassword = null;
+                try {
+                    newPassword = userManager.hashPassword(password.getText());
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 String createBillboard;
                 String scheduleBillboard;
                 String editBillboard;

@@ -158,7 +158,7 @@ public class userManager
      * @param password The password entered by the user
      * @return A string containing the hash product of the hashed password and salt
      */
-    public static String hashPassword(String username, String password) throws NoSuchAlgorithmException, SQLException {
+    public static String hashPassword(String password) throws NoSuchAlgorithmException, SQLException {
         //turn password into bytes
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         byte[] passwordBytes = messageDigest.digest(password.getBytes());
@@ -172,18 +172,16 @@ public class userManager
         Connection connection = null;
         connection = DBconnection.getInstance();
 
-        String user = hashPasswordAndSalt(username, hashedPassword, connection);
-        return user;
+        return hashedPassword;
     }
 
 
     /**
      * Method for hashing a salt and a password
      * @param hashedPassword The password the user enter after being hashed by hashPassword
-     * @param connection Uses a connection to store the relevant information
      * @return
      */
-    public static String hashPasswordAndSalt(String username, String hashedPassword, Connection connection) throws NoSuchAlgorithmException, SQLException {
+    public static String[] hashPasswordAndSalt(String hashedPassword) throws NoSuchAlgorithmException, SQLException {
         //Setup ready for hashing
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
@@ -198,18 +196,18 @@ public class userManager
         String userPass = inputtedPasswordSalted;
 
         //Store the user information in the database(username, hasedsaltedpassword, salt)
-        final String SELECT = "INSERT INTO users(username, password, salt) VALUES (\""+username+"\",\""+userPass+"\",\""+saltString+"\");";
+        //final String SELECT = "INSERT INTO users(username, password, salt) VALUES (\""+username+"\",\""+userPass+"\",\""+saltString+"\");";
 
         //create statement
-        Statement st = connection.createStatement();
-        ResultSet rs = st.executeQuery(SELECT);
+        //Statement st = connection.createStatement();
+        //ResultSet rs = st.executeQuery(SELECT);
 
         //close ResultSet
-        rs.close();
+        //rs.close();
         //close statement
-        st.close();
-
-        return userPass;
+        //st.close();
+        String[] userSet = {userPass, saltString};
+        return userSet;
     }
 
 

@@ -41,7 +41,7 @@ public class UserList extends HashMap implements java.io.Serializable {
             if(editUsers == 1){
                 permissions.add("Edit Users");
             }
-            User newUser = new User(username, password);
+            User newUser = new User(username, password, salt);
             newUser.Permissions = permissions;
             userHashMap.put(username, newUser);
         }
@@ -75,6 +75,7 @@ public class UserList extends HashMap implements java.io.Serializable {
             //Pass the values of each billboard to the SQL statement.
             String username = user.Username;
             String password = user.Password;
+            String salt = user.Salt;
             int createBillboard;
             int editBillboards;
             int scheduleBillboards;
@@ -105,8 +106,8 @@ public class UserList extends HashMap implements java.io.Serializable {
                 editUsers = 0;
             }
 
-            st.executeQuery("INSERT INTO Users (username, password, createBillboard, editBillboards, scheduleBillboards, editUsers) " +
-                    "VALUES(\""+username+"\",\""+password+"\",\""+createBillboard+"\",\""+editBillboards+"\",\""+scheduleBillboards+"\",\""+editUsers+"\");");
+            st.executeQuery("INSERT INTO Users (username, password, salt, createBillboard, editBillboards, scheduleBillboards, editUsers) " +
+                    "VALUES(\""+username+"\",\""+password+"\", \""+salt+"\", \""+createBillboard+"\",\""+editBillboards+"\",\""+scheduleBillboards+"\",\""+editUsers+"\");");
         }
         //close statement
         st.close();
