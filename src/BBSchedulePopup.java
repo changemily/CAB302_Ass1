@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.*;
@@ -20,6 +21,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 {
     private JButton removeBttn;
     private JButton scheduleBttn;
+    private JButton backBttn;
     private JSpinner durationSpinner;
     private JSpinner dateTimePicker;
     private JComboBox recurrencePicker;
@@ -84,61 +86,63 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 
         // Create Remove Button
         removeBttn = createButton("Remove From Schedule");
+        removeBttn.setMargin(new Insets(0, 0, 0, 0));
 
-        // Create Save Button
+        // Create Schedule Button
         scheduleBttn = createButton("Schedule Billboard");
+
+        // Create Back Button
+        backBttn = createButton("Back");
 
         // Set Group Layout
         GroupLayout contentPaneLayout = new GroupLayout(getContentPane());
         getContentPane().setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
                 contentPaneLayout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(removeBttn, GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(scheduleBttn, GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                                .addContainerGap())
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addGap(50, 50, 50)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addComponent(recurrenceMins, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
-                                                .addContainerGap(200, Short.MAX_VALUE))
+                                                .addComponent(durationSpinner, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(durationLabel))
                                         .addGroup(contentPaneLayout.createSequentialGroup()
                                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
                                                         .addComponent(dateTimePicker, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
-                                                        .addComponent(recurrencePicker, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
-                                                        .addComponent(durationSpinner, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                                                        .addComponent(recurrencePicker, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addGroup(contentPaneLayout.createParallelGroup()
-                                                        .addComponent(durationLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(datePickerLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(recurrenceOptionLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addGap(18, 18, 18))))
+                                                        .addComponent(recurrenceOptionLabel)
+                                                        .addComponent(datePickerLabel)))
+                                        .addComponent(backBttn, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(removeBttn, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(scheduleBttn, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(recurrenceMins, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
                 contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addGap(16, 16, 16)
+                                .addContainerGap()
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(durationLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                                        .addComponent(durationSpinner, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-                                .addGap(18, 18, 18)
+                                        .addComponent(durationSpinner, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                                        .addComponent(durationLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(dateTimePicker, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(datePickerLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGap(18, 18, 18)
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(recurrenceOptionLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                                        .addComponent(recurrencePicker, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(recurrenceMins, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(removeBttn, GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                                        .addComponent(scheduleBttn, GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
+                                        .addComponent(recurrencePicker, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(recurrenceOptionLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(recurrenceMins, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(scheduleBttn, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(removeBttn, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(backBttn, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
 
@@ -157,7 +161,6 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         JSpinner jspinner = new JSpinner(spinnerModel);
 
         //set font and size of JSpinner
-        jspinner.setFont(jspinner.getFont().deriveFont(jspinner.getFont().getSize() + 7f));
         return jspinner;
     }
 
@@ -171,7 +174,6 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         JSpinner jspinner = new JSpinner(spinnerModel);
 
         //set font and size of JSpinner
-        jspinner.setFont(durationSpinner.getFont().deriveFont(durationSpinner.getFont().getSize() + 7f));
         return jspinner;
     }
 
@@ -184,7 +186,6 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         label.setText(labelText);
 
         //format label's font, size and alignment
-        label.setFont(label.getFont().deriveFont(label.getFont().getSize() + 5f));
         label.setAlignmentX(0.5F);
         return label;
     }
@@ -198,7 +199,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         //set text of button
         button.setText(buttonLabel);
         //set alignment of button
-        button.setAlignmentX(0.5F);
+        button.setAlignmentX(CENTER_ALIGNMENT);
         return button;
     }
     /**
@@ -387,7 +388,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 
     public static void main(String[] args)
     {
-        //SwingUtilities.invokeLater(new BBSchedulePopup(BillboardName));
+        SwingUtilities.invokeLater(new BBSchedulePopup("admin","1234","name"));
     }
 
 }

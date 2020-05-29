@@ -224,7 +224,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         previewBttn = createButton("Preview");
 
         // Create backBttn
-        backBttn = createButton("Preview");
+        backBttn = createButton("Back");
 
         // Set Layout for EVERYTHING
         mainPanelLayout = new GroupLayout(mainPanel);
@@ -238,7 +238,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addGap(19, 19, 19)
                                                 .addGroup(mainPanelLayout.createParallelGroup()
                                                         .addGroup(mainPanelLayout.createSequentialGroup()
-                                                                .addComponent(saveBttn, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(previewBttn, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(exitBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -246,7 +246,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(exportBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(previewBttn)
+                                                                .addComponent(saveBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
                                                                 .addComponent(backBttn))
                                                         .addGroup(mainPanelLayout.createSequentialGroup()
@@ -350,10 +350,10 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                         .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                                                 .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(exitBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(saveBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(previewBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(importBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(exportBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(previewBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(saveBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(backBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(20, 20, 20))))
         );
