@@ -19,6 +19,12 @@ import java.util.HashMap;
  * NOTES: Some button functionality still needs to be added
  */
 public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener, WindowListener {
+    // Back JButton
+    private JButton backButton;
+
+    // Logout JButton
+    private JButton logoutButton;
+
     // Search JTextField
     private JTextField search;
 
@@ -75,9 +81,33 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        // Create main content JPanel, with Y axis Box Layout
+        JPanel topButtonPanel = newPanel('X');
+
+        // Add strut for formatting
+        topButtonPanel.add(Box.createHorizontalStrut(20));
+
+
+        // Create back JButton
+        backButton = newButton("Back", topButtonPanel);
+
+        // Add horizontal glue in between buttons for spacing
+        topButtonPanel.add(Box.createHorizontalGlue());
+
+
+        // Create logout JButton
+        logoutButton = newButton("Logout", topButtonPanel);
+
+        // Add strut for formatting
+        topButtonPanel.add(Box.createHorizontalStrut(20));
+
+        // Create main content JPanel, with Y axis Box Layout
+        JPanel mainPanel = newPanel('X');
+
         // Create left JPanel, with Y axis Box Layout
         JPanel leftPanel = newPanel('Y');
-        // Formatting
+
+        // Add strut for formatting
         leftPanel.add(Box.createVerticalStrut(50));
 
         // Create search JPanel, with X axis Box Layout
@@ -91,7 +121,8 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Create search JPanel, inside of left JPanel
         leftPanel.add(searchPanel);
-        // Formatting
+
+        // Add strut for formatting
         leftPanel.add(Box.createVerticalStrut(20));
 
         // Populate the master array of users, with user information
@@ -102,7 +133,8 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Create right JPanel, with Y axis Box Layout
         JPanel rightPanel = newPanel('Y');
-        // Formatting
+
+        // Add strut for formatting
         rightPanel.add(Box.createVerticalStrut(50));
 
         // Create user selection JLabel, inside of right JPanel
@@ -119,19 +151,26 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Add buttons JPanel to right JPanel
         rightPanel.add(buttonsPanel);
-        // Formatting
+
+        // Add strut for formatting
         rightPanel.add(Box.createVerticalStrut(40));
 
         // Create Create User button, inside of right JPanel
         createUserButton = newButton("Create User", rightPanel);
 
+        // Main JPanel window formatting
+        mainPanel.add(Box.createHorizontalStrut(100));
+        mainPanel.add(leftPanel);
+        mainPanel.add(Box.createHorizontalStrut(50));
+        mainPanel.add(rightPanel);
+        mainPanel.add(Box.createHorizontalStrut(100));
+
         // Window formatting
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
-        getContentPane().add(Box.createHorizontalStrut(100)); // boundary
-        getContentPane().add(leftPanel);
-        getContentPane().add(Box.createHorizontalStrut(50));
-        getContentPane().add(rightPanel);
-        getContentPane().add(Box.createHorizontalStrut(100)); // boundary
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().add(Box.createVerticalStrut(20)); // boundary
+        getContentPane().add(topButtonPanel);
+        getContentPane().add(mainPanel);
+        getContentPane().add(Box.createVerticalStrut(50)); // boundary
 
         // Add Window Listener, used for when window is closed
         addWindowListener(this);
@@ -207,6 +246,8 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                 }
             }
         }
+
+        // Returns a String array of users
         return users;
     }
 
@@ -234,9 +275,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Add JScrollPane to the specified JPanel
         panel.add(scroll);
-
-        // Formatting
-        panel.add(Box.createVerticalStrut(50));
 
         // Listener for user selection
         // When a user is clicked from the user list, the selection is displayed above the Edit User and Delete User buttons
@@ -281,6 +319,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         // Create new JTextField
         JTextField textField = new JTextField(10);
 
+        // Add document listener for text field search
         textField.getDocument().addDocumentListener(this);
 
         // Add the JTextField to the specified JPanel
@@ -308,9 +347,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Add JButton to specified JPanel
         panel.add(button);
-
-        // Formatting
-        panel.add(Box.createVerticalStrut(50));
 
         // Returns a JButton
         return button;
