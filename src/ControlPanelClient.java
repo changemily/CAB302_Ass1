@@ -95,11 +95,8 @@ public class ControlPanelClient {
                 case "Delete User":
                     deleteUser(oos, request, user_inputs);
                     break;
-                case "Get user permissions":
-                    break;
-                case "Set user permissions":
-                    break;
-                case "Set user password":
+                case "Create User":
+                    createUser(oos, request, user_inputs);
                     break;
             }
 
@@ -370,7 +367,7 @@ public class ControlPanelClient {
             }
         }
         else{
-            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", userDetails, false));
+            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", userDetails, false, userList));
         }
     }
 
@@ -378,6 +375,23 @@ public class ControlPanelClient {
         String deletedUsername = user_inputs[1];
         oos.writeObject(buttonClicked);
         oos.writeObject(deletedUsername);
+    }
+
+    private static void createUser(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+        String username = user_inputs[1];
+        String password = user_inputs[2];
+        String createBillboard = user_inputs[3];
+        String scheduleBillboard = user_inputs[4];
+        String editBillboard = user_inputs[5];
+        String editUsers = user_inputs[6];
+
+        oos.writeObject(buttonClicked);
+        oos.writeObject(username);
+        oos.writeObject(password);
+        oos.writeObject(createBillboard);
+        oos.writeObject(scheduleBillboard);
+        oos.writeObject(editBillboard);
+        oos.writeObject(editUsers);
     }
     /**
      * Runs client
