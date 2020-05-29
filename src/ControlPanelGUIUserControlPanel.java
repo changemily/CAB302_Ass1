@@ -402,18 +402,37 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
     public void actionPerformed(ActionEvent actionEvent) {
         //Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
+
+        // Checks if the back button has been clicked
+        if (buttonClicked == backButton) {
+            // Closes current GUI screen
+            dispose();
+
+            // Open new Control Panel GUI screen
+            //SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }
+
+        // Checks if the logout button has been clicked
+        else if (buttonClicked == logoutButton) {
+            // Closes current GUI screen
+            dispose();
+
+            // Open new Login screen
+            //SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        }
+
         // Checks if the login button has been clicked
-        if (buttonClicked == editUserButton) {
+        else if (buttonClicked == editUserButton) {
 
             String usernameSelected  = userSelectionLabel.getText();
             if(usernameSelected == null)
             {
-                //display error pop up\
+                // Display error pop up
                 JOptionPane.showMessageDialog(this,
                         "You must select a user in the list to edit");
             }
             else{
-                //Retrieve the user associated with the name
+                // Retrieve the user associated with the name
                 try {
                     User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
                     System.out.println("edit user: "+ usernameSelected);
