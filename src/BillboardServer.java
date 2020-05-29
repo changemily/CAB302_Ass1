@@ -19,7 +19,7 @@ import java.util.*;
 public class BillboardServer {
 
     private static final String CREATE_USER_TABLE =
-            "CREATE TABLE IF NOT EXISTS Users (username varchar(255) PRIMARY KEY,password varchar(255), createBillboard INT, editBillboards INT, scheduleBillboards INT, editUsers INT)";
+            "CREATE TABLE IF NOT EXISTS Users (username varchar(255) PRIMARY KEY,password varchar(255), salt varchar(50), createBillboard INT, editBillboards INT, scheduleBillboards INT, editUsers INT)";
 
     private static final String CREATE_BILLBOARD_TABLE =
             "CREATE TABLE IF NOT EXISTS Billboards (billboardName varchar(255), billboardCreator varchar (255), xmlFile text);";
@@ -29,8 +29,8 @@ public class BillboardServer {
                     "Duration varchar (255), recurrenceDelay varchar (50), billboardCreator varchar (255));";
 
     private static final String ADD_DEFAULT_USER =
-            "INSERT INTO Users (username, password, createBillboard, editBillboards, scheduleBillboards, editUsers)"  +
-            "VALUES(\""+"AdminUser"+"\",\""+"Password1"+"\",\""+1+"\",\""+1+"\",\""+1+"\",\""+1+"\")" +
+            "INSERT INTO Users (username, password, salt, createBillboard, editBillboards, scheduleBillboards, editUsers)"  +
+            "VALUES(\""+"AdminUser"+"\",\""+"Password1"+"\",\""+"Salt"+"\",\""+1+"\",\""+1+"\",\""+1+"\",\""+1+"\")" +
                     "ON DUPLICATE KEY UPDATE username = \""+"AdminUser"+"\";";
 
     //queue of billboard viewings - 2D array
