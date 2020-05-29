@@ -351,7 +351,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
         }
 
-        else if (buttonClicked==editBillboardButton) {
+        // Checks if the edit billboard button has been clicked
+        else if (buttonClicked == editBillboardButton) {
             //if billboard has not been selected in list
             if(billboardName == null)
             {
@@ -379,6 +380,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             }
         }
 
+        // Checks if the create billboard button has been clicked
         else if (buttonClicked == createBillboardButton) {
             //Open the editor with a new file
             try {
@@ -395,6 +397,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             SwingUtilities.invokeLater(new BBEditor("admin", "1234"));
         }
 
+        // Checks if the delete billboard button has been clicked
         else if (buttonClicked == deleteBillboardButton) {
             if(billboardName == null)
             {
@@ -428,7 +431,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             }
         }
 
-        else if (buttonClicked==scheduleBillboardButton) {
+        // Checks if the schedule billboard button has been clicked
+        else if (buttonClicked == scheduleBillboardButton) {
             //if schedule pop up is not already open
 
 
