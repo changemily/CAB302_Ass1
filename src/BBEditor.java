@@ -464,134 +464,118 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 File selectedFile = FileChooser.getSelectedFile();
                 imageURL.setText(selectedFile.getAbsolutePath());
             }
-        } else if(buttonClicked == saveBttn)
-        {
-            //Variables to store for the billboard later
-            if(createdBillboard){
-                String billboardNameInput = nameField.getText();
+        } else if(buttonClicked == saveBttn){
 
-                System.out.println("billboardNameInput: "+billboardNameInput);
+            //Variables to store for the billboard later
+            if(createdBillboard) {
+                billboardName = nameField.getText();
+                System.out.println("billboardNameInput: "+billboardName);
                 //if name has NOT been inputted in text field
-                if (billboardNameInput.equals("")||billboardNameInput.equals(" ")) {
+                if (billboardName.equals("")||billboardName.equals(" ")) {
                     //display error pop up
                     JOptionPane.showMessageDialog(this,
                             "You must select a name for the billboard");
                 }
-
-                //if name has been inputted in text field
-                else{
-                    //NEEDS TO BE IMPLEMENTED
-                    //if name exists in billboard list
-                    //{
-                    //display error pop up
-                    // JOptionPane.showMessageDialog(this,
-                    // name + " already exists, please choose another name");
-                    // }
-
-                    //else{
-                        //set billboard name to user input
-                        billboardName = billboardNameInput;
-                        System.out.println(nameField.getText());
-                        String usernameOfCreator = username;
-
-                        //Get what the user has inputted and put it into the file.
-                        if(!messageField.getText().equals(""))
-                        {
-                            bb.setMessageText(messageField.getText());
-                            bb.setMessageExists(true);
-                        }
-                        else{
-                            bb.setMessageExists(false);
-                        }
-
-                        if(!extraInfoText.getText().equals(""))
-                        {
-                            bb.setInformationText(extraInfoText.getText());
-                            bb.setInformationExists(true);
-                        }
-                        else{
-                            bb.setInformationExists(false);
-                        }
-
-                        if(!imageURL.getText().equals(""))
-                        {
-                            bb.setPictureExists(true);
-                            try{
-                                URL urlString = new URL(imageURL.getText());
-                                bb.setUrlExists(true);
-                                bb.setDataExists(false);
-                                bb.setPictureURL(imageURL.getText());
-                            } catch(MalformedURLException m){
-                                bb.setDataExists(true);
-                                bb.setUrlExists(false);
-                                File f = new File(imageURL.getText());
-                                try {
-                                    FileInputStream imageFile = new FileInputStream(f);
-                                    byte[] imageData = imageFile.readAllBytes();
-                                    bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
-                                } catch (IOException fileNotFoundException) {
-                                    fileNotFoundException.printStackTrace();
-                                    JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                                            "ERROR", JOptionPane.ERROR_MESSAGE);
-                                }
-                            }
-                        }
-                        else{
-                            bb.setPictureExists(false);
-                        }
-
-                        try {
-                            tempXMLString = bb.updateXMLString();
-                            JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Saved to Database");
-                        } catch (ParserConfigurationException | TransformerException ex) {
-                            ex.printStackTrace();
-                            JOptionPane.showMessageDialog(getContentPane(), ex,
-                                    "ERROR", JOptionPane.ERROR_MESSAGE);
-                        }
-
-                        //Test if it worked
-                        System.out.println(tempXMLString);
-
-                        //Store the information for the billboard
-                        try {
-                            //billboardList.createEditBillboard(billboardName, usernameOfCreator, tempXMLString);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-
-                        String [] user_inputs = {"Create edit billboard",billboardName,usernameOfCreator, tempXMLString};
-
-                        //Schedule billboard with viewing details given by user
-                        ControlPanelClient.Run_Client(user_inputs);
-
-                        // all frames to a array
-                        Frame[] allFrames = Frame.getFrames();
-                        for(Frame fr : allFrames){
-                            if(fr.getClass().getName() == "ControlPanelGUIBillboardControlPanel"){
-                                fr.dispose();
-                            }
-                        }
-                        //run Billboard Control Panel GUI
-                        String [] user_input = {"List billboards"};
-                        //request schedule and run calendar GUI
-                        ControlPanelClient.Run_Client(user_input);
-
-
-                        //Close after saving so they know it has been done
-                        dispose();
-                    //}
-                }
+            }
+            else {
+                System.out.println(billboardName);
             }
 
+            if(!messageField.getText().equals(""))
+            {
+                bb.setMessageText(messageField.getText());
+                bb.setMessageExists(true);
+            }
+            else{
+                bb.setMessageExists(false);
+            }
 
+            if(!extraInfoText.getText().equals(""))
+            {
+                bb.setInformationText(extraInfoText.getText());
+                bb.setInformationExists(true);
+            }
+            else{
+                bb.setInformationExists(false);
+            }
 
+            if(!imageURL.getText().equals(""))
+            {
+                bb.setPictureExists(true);
+                try{
+                    URL urlString = new URL(imageURL.getText());
+                    bb.setUrlExists(true);
+                    bb.setDataExists(false);
+                    bb.setPictureURL(imageURL.getText());
+                } catch(MalformedURLException m){
+                    bb.setDataExists(true);
+                    bb.setUrlExists(false);
+                    File f = new File(imageURL.getText());
+                    try {
+                        FileInputStream imageFile = new FileInputStream(f);
+                        byte[] imageData = imageFile.readAllBytes();
+                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                    } catch (IOException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                        JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+            else{
+                bb.setPictureExists(false);
+            }
 
+            try {
+                tempXMLString = bb.updateXMLString();
+                JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Saved to Database");
+            } catch (ParserConfigurationException | TransformerException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), ex,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+
+            //Test if it worked
+            System.out.println(tempXMLString);
+
+            String [] user_inputs = {"Create edit billboard",billboardName,username, tempXMLString};
+
+            //Schedule billboard with viewing details given by user
+            ControlPanelClient.Run_Client(user_inputs);
+
+//            // all frames to a array
+//            Frame[] allFrames = Frame.getFrames();
+//            for(Frame fr : allFrames){
+//                if(fr.getClass().getName() == "ControlPanelGUIBillboardControlPanel"){
+//                    fr.dispose();
+//                }
+//            }
+//            //run Billboard Control Panel GUI
+//            String [] user_input = {"List billboards"};
+//            //request schedule and run calendar GUI
+//            ControlPanelClient.Run_Client(user_input);
+
+            //Close after saving so they know it has been done
+//            dispose();
         } else if (buttonClicked == exitBttn)
         {
             int a = showConfirmDialog(null, "Have you saved any changes?");
             if(a == YES_OPTION)
             {
+                Frame[] allFrames = Frame.getFrames();
+                for(Frame fr : allFrames){
+                    if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel") || (fr.getClass().getName().equals("ControlPanelGUI")))){
+                        fr.dispose();
+                        if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel") || (fr.getClass().getName().equals("ControlPanelGUI")))){
+                            fr.dispose();
+                        }
+                    }
+                }
                 dispose();
+                //run Billboard Control Panel GUI
+                String [] user_input = {"List billboards"};
+                //request schedule and run calendar GUI
+                ControlPanelClient.Run_Client(user_input);
             }
         } else if(buttonClicked == backgroundColourBttn)
         {

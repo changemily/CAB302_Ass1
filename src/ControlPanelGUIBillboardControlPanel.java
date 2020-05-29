@@ -28,13 +28,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     HashMap<String, Billboard> billboardListH;
     String username;
     String sessionToken;
+    boolean closeable = true;
     /**
      * Method used to create a GUI window for the Billboard edit Screen
      */
     public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList) {
         // Set window title
         super("Billboard Control Panel");
-
         this.username = username;
         this.sessionToken = sessionToken;
         billboardListH = BillboardList;
@@ -250,7 +250,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //if billboard has not been selected in list
             if(billboardName == null)
             {
-                //display error pop up
+                //display error pop up\
                 JOptionPane.showMessageDialog(this,
                         "You must select a billboard in the list to edit");
             }
@@ -263,6 +263,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 try {
                     //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
                     xmlFile = billboardListH.get(billboardXML).XMLFile;
+                    closeable = false;
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -280,7 +281,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             try {
                 //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
                 xmlFile = xmlTemplate;
-
+                closeable = false;
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(getContentPane(), e,
@@ -382,7 +383,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     @Override
     public void windowClosed(WindowEvent e) {
         // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
-        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        if(closeable) {
+            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }
     }
 
     @Override
