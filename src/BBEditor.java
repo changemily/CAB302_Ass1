@@ -78,11 +78,11 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         this.sessionToken = sessionToken;
     }
 
-    public BBEditor(String username, String sessionToken, boolean createdBillboard){
+    public BBEditor(String username, String sessionToken){
         super("Billboard Editor");
         this.billboardName = null;
         tempXMLString = "<billboard></billboard>";
-        this.createdBillboard = createdBillboard;
+        createdBillboard = true;
         this.username = username;
         this.sessionToken = sessionToken;
     }
@@ -805,6 +805,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
     public static void main(String[] args)
     {
-        SwingUtilities.invokeLater(new BBEditor("admin", "124", true));
+        SwingUtilities.invokeLater(new BBEditor("admin", "1234"));
     }
 }
