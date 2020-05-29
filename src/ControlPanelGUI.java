@@ -53,12 +53,12 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         JPanel label = createLabel("Control Panel Menu");
 
         // Create edit users JButton
-        editUsersButton = createButton("Edit Users");
+        editUsersButton = createButton("Manage Users");
         //create JPanel that holds button
         JPanel editUsersPanel = createButtonJPanel(editUsersButton,150,150,false);
 
         // create edit billboard button
-        editBillboardButton = createButton("Edit Billboards");
+        editBillboardButton = createButton("Manage Billboards");
         //create JPanel that holds button
         JPanel editBillboardPanel = createButtonJPanel(editBillboardButton,150,150,false);
 

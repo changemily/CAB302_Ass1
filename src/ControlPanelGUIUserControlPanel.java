@@ -10,6 +10,9 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.HashMap;
 
+import static javax.swing.JOptionPane.YES_OPTION;
+import static javax.swing.JOptionPane.showConfirmDialog;
+
 /**
  * User Control Panel class for Control Panel GUI
  * This class contains a method that creates a GUI window for the User Control Panel
@@ -19,6 +22,12 @@ import java.util.HashMap;
  * NOTES: Some button functionality still needs to be added
  */
 public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener, WindowListener {
+    // Back JButton
+    private JButton backButton;
+
+    // Logout JButton
+    private JButton logoutButton;
+
     // Search JTextField
     private JTextField search;
 
@@ -47,6 +56,8 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
     String username;
     String sessionToken;
     HashMap<String, User> userList;
+    boolean closeable = true;
+    String openedUser;
 
 
     /**
@@ -75,9 +86,33 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        // Create main content JPanel, with Y axis Box Layout
+        JPanel topButtonPanel = newPanel('X');
+
+        // Add strut for formatting
+        topButtonPanel.add(Box.createHorizontalStrut(20));
+
+
+        // Create back JButton
+        backButton = newButton("Back", topButtonPanel);
+
+        // Add horizontal glue in between buttons for spacing
+        topButtonPanel.add(Box.createHorizontalGlue());
+
+
+        // Create logout JButton
+        logoutButton = newButton("Logout", topButtonPanel);
+
+        // Add strut for formatting
+        topButtonPanel.add(Box.createHorizontalStrut(20));
+
+        // Create main content JPanel, with Y axis Box Layout
+        JPanel mainPanel = newPanel('X');
+
         // Create left JPanel, with Y axis Box Layout
         JPanel leftPanel = newPanel('Y');
-        // Formatting
+
+        // Add strut for formatting
         leftPanel.add(Box.createVerticalStrut(50));
 
         // Create search JPanel, with X axis Box Layout
@@ -91,7 +126,8 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Create search JPanel, inside of left JPanel
         leftPanel.add(searchPanel);
-        // Formatting
+
+        // Add strut for formatting
         leftPanel.add(Box.createVerticalStrut(20));
 
         // Populate the master array of users, with user information
@@ -102,11 +138,13 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Create right JPanel, with Y axis Box Layout
         JPanel rightPanel = newPanel('Y');
-        // Formatting
+
+        // Add strut for formatting
         rightPanel.add(Box.createVerticalStrut(50));
 
         // Create user selection JLabel, inside of right JPanel
         userSelectionLabel = newLargeTitle("", rightPanel);
+        userSelectionLabel.setText("No User Selected");
 
         // Create buttons JPanel, with X axis Box Layout
         JPanel buttonsPanel = newPanel('X');
@@ -119,19 +157,26 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Add buttons JPanel to right JPanel
         rightPanel.add(buttonsPanel);
-        // Formatting
+
+        // Add strut for formatting
         rightPanel.add(Box.createVerticalStrut(40));
 
         // Create Create User button, inside of right JPanel
         createUserButton = newButton("Create User", rightPanel);
 
+        // Main JPanel window formatting
+        mainPanel.add(Box.createHorizontalStrut(100));
+        mainPanel.add(leftPanel);
+        mainPanel.add(Box.createHorizontalStrut(50));
+        mainPanel.add(rightPanel);
+        mainPanel.add(Box.createHorizontalStrut(100));
+
         // Window formatting
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
-        getContentPane().add(Box.createHorizontalStrut(100)); // boundary
-        getContentPane().add(leftPanel);
-        getContentPane().add(Box.createHorizontalStrut(50));
-        getContentPane().add(rightPanel);
-        getContentPane().add(Box.createHorizontalStrut(100)); // boundary
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().add(Box.createVerticalStrut(20)); // boundary
+        getContentPane().add(topButtonPanel);
+        getContentPane().add(mainPanel);
+        getContentPane().add(Box.createVerticalStrut(50)); // boundary
 
         // Add Window Listener, used for when window is closed
         addWindowListener(this);
@@ -207,6 +252,8 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                 }
             }
         }
+
+        // Returns a String array of users
         return users;
     }
 
@@ -234,9 +281,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Add JScrollPane to the specified JPanel
         panel.add(scroll);
-
-        // Formatting
-        panel.add(Box.createVerticalStrut(50));
 
         // Listener for user selection
         // When a user is clicked from the user list, the selection is displayed above the Edit User and Delete User buttons
@@ -281,6 +325,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         // Create new JTextField
         JTextField textField = new JTextField(10);
 
+        // Add document listener for text field search
         textField.getDocument().addDocumentListener(this);
 
         // Add the JTextField to the specified JPanel
@@ -308,9 +353,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Add JButton to specified JPanel
         panel.add(button);
-
-        // Formatting
-        panel.add(Box.createVerticalStrut(50));
 
         // Returns a JButton
         return button;
@@ -360,9 +402,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
     public void actionPerformed(ActionEvent actionEvent) {
         //Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
-
-        String userType = "admin"; // USED FOR TESTING
-
         // Checks if the login button has been clicked
         if (buttonClicked == editUserButton) {
 
@@ -378,7 +417,26 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                 try {
                     User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
                     System.out.println("edit user: "+ usernameSelected);
-                    SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true));
+                    if(!closeable) {
+                        int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
+                        if(a == YES_OPTION) {
+                            Frame[] allFrames = Frame.getFrames();
+                            for(Frame fr : allFrames){
+                                if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                                    fr.dispose();
+                                    if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                                        fr.dispose();
+                                    }
+                                }
+                            }
+                            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true, userList));
+                        }
+                    }
+                    else{
+                        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true, userList));
+                    }
+                    openedUser = usernameSelected;
+                    closeable =  false;
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this,
                             "You must select a user in the list to edit");
@@ -393,6 +451,10 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                 JOptionPane.showMessageDialog(this,
                         "You have not selected a user");
             }
+            else if(userSelectionLabel.getText().equals(openedUser)){
+                JOptionPane.showMessageDialog(this,
+                        "You can't delete a user that you are currently editing");
+            }
             else {
                 try {
                     User baseUser = UserList.getUserInformation(userList, "AdminUser");
@@ -403,7 +465,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                         ControlPanelClient.Run_Client(user_inputs);
                         user_inputs = new String[]{"List users", "Admin"};
                         ControlPanelClient.Run_Client(user_inputs);
-                        getContentPane().setVisible(false);
+                        closeable = false;
                         dispose();
                     }
                     else{
@@ -414,8 +476,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                //ControlPanelClient.Run_Client();
             }
         }
 
@@ -423,7 +483,25 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         else if (buttonClicked == createUserButton) {
             System.out.println("create user button clicked");
             try {
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, true));
+                if(!closeable) {
+                    int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
+                    if(a == YES_OPTION) {
+                        Frame[] allFrames = Frame.getFrames();
+                        for(Frame fr : allFrames){
+                            if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                                fr.dispose();
+                                if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                                    fr.dispose();
+                                }
+                            }
+                        }
+                        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", true, userList));
+                    }
+                }
+                else{
+                    SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", true, userList));
+                }
+                closeable = false;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -494,7 +572,9 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
     @Override
     public void windowClosed(WindowEvent e) {
         // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
-        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        if(closeable) {
+            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }
     }
 
     @Override

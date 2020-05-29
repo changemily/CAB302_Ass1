@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     String sessionToken;
     boolean closeable = true;
     /**
-     * Method used to create a GUI window for the Billboard edit Screen
+     * Method used to create a GUI window for the Billboard Control Panel Screen
      */
     public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList) {
         // Set window title
@@ -49,16 +48,23 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     private String billboardXML = null;
     private String billboardName;
     private String xmlFile;
-    private JPanel previewPanel;
+    private JPanel mainPanel;
     private JPanel billboardPreview;
     private JPanel buttonPanel;
     private JPanel createBillboardPanel;
-    private final Dimension dimension = new Dimension(400,200);
+    private final Dimension DIMENSION = new Dimension(400,200);
     private BillboardViewer Billboard;
-    private String tempXMLString = "<billboard></billboard>";
+    private final String NO_SELECTION_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <message>Select a billboard to preview</message>\n" +
+            "</billboard>";
+    private final String EMPTY_LIST_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<billboard>\n" +
+            "    <message>No billboards stored in the database</message>\n" +
+            "</billboard>";
 
-    //Default xml file to be used for ceating a new xml file.
-    public static final String xmlTemplate = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
+    // Default xml file to be used for creating a new xml file.
+    public static final String XML_TEMPLATE = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
             "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download'/><information>Default text, delete or change." +
             "To use an image link it in the URL section."+
             "</information></billboard>";
@@ -82,31 +88,46 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         JPanel billboardPanel = new JPanel();
         billboardPanel.setLayout(new BoxLayout(billboardPanel, BoxLayout.X_AXIS));
 
-        //Create billboard JList, and add it to billboard JPanel
-        billboardList = createJList(billboardPanel);
-
         // Add billboard preview image, inside of a JPanel
-        previewPanel = new JPanel();
-        previewPanel.setLayout(new BoxLayout(previewPanel, BoxLayout.Y_AXIS));
-        previewPanel.add(Box.createVerticalStrut(50));
-        //JLabel billboardList = new JLabel("ADD BILLBOARD PREVIEW HERE");
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.add(Box.createVerticalStrut(50));
 
-        Billboard = new BillboardViewer(tempXMLString, dimension);
+        // If billboard list is empty
+        if(billboardListH.size() == 0)
+        {
+            //create new billboard preview with empty billboard list message
+            Billboard = new BillboardViewer(EMPTY_LIST_XML_STRING, DIMENSION);
+        }
+
+        else
+        {
+            // Create new billboard preview with empty xml
+            Billboard = new BillboardViewer(NO_SELECTION_XML_STRING, DIMENSION);
+        }
+
         billboardPreview = Billboard.getSizedBillboard();
-        previewPanel.add(billboardPreview);
+        mainPanel.add(billboardPreview);
+
+        // If billboard list is NOT empty
+        if(billboardListH.size() >0)
+        {
+            //Create billboard JList, and add it to billboard JPanel
+            billboardList = createJList(billboardPanel);
+        }
 
         // Create button JPanel
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1,2));
 
         // Create and add Edit Billboard button, inside button JPanel
-        editBillboardButton = createButton("Edit");
+        editBillboardButton = createButton("Edit Billboard");
         buttonPanel.add(editBillboardButton);
 
         // Create and add Schedule Billboard button, inside button JPanel
-        scheduleBillboardButton = createButton("Schedule");
+        scheduleBillboardButton = createButton("Schedule Billboard");
         buttonPanel.add(scheduleBillboardButton);
-        previewPanel.add(buttonPanel); // Add button JPanel to billboard preview JPanel
+        mainPanel.add(buttonPanel); // Add button JPanel to billboard preview JPanel
 
         // Create create billboard JPanel
         createBillboardPanel = new JPanel();
@@ -125,14 +146,14 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         createBillboardPanel.add(Box.createVerticalStrut(100));
 
         // Add create billboard JPanel to preview panel JPanel
-        previewPanel.add(createBillboardPanel);
+        mainPanel.add(createBillboardPanel);
 
         // Window formatting
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
         getContentPane().add(Box.createHorizontalStrut(100));
         getContentPane().add(billboardPanel);
         getContentPane().add(Box.createHorizontalStrut(40));
-        getContentPane().add(previewPanel);
+        getContentPane().add(mainPanel);
         getContentPane().add(Box.createHorizontalStrut(100));
 
         // Add Window Listener, used for when window is closed
@@ -146,7 +167,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
 
-    private static final String xmlFiles = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
+    private static final String XML_FILES = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
             "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download%27/%3E<information>Billboard" +
             " with picture (with URL attribute) and information text only. The picture is now centred within" +
             " the top 2/3 of the image and the information text is centred in the remaining space below the" +
@@ -156,13 +177,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * @return Returns JList
      */
     private JList createJList(JPanel panel) {
-        //Int counter for assigning values in the array
+        // Int counter for assigning values in the array
         int counter = 1;
 
-        //Setup an array to return creator and billboard
+        // Setup an array to return creator and billboard
         String[] billboardListWithCreator = new String[billboardListH.size()+1];
 
-        //Get the Creator of each billboard in the billboard list
+        // Get the Creator of each billboard in the billboard list
         for(Map.Entry<String, Billboard> billboardEntry : billboardListH.entrySet()){
             //Initialize array with the new size and repopulate it
             //billboardListWithCreator = new String[counter];
@@ -216,25 +237,28 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         //get billboard xml file name
         billboardXML = billboardObjectSelected.XMLFile;
 
-        previewPanel.removeAll();
-        previewPanel.revalidate();
-        previewPanel.repaint();
+        //remove all elements of GUI screen
+        mainPanel.removeAll();
+        mainPanel.revalidate();
+        mainPanel.repaint();
 
         try {
-            Billboard = new BillboardViewer(billboardXML, dimension);
+            Billboard = new BillboardViewer(billboardXML, DIMENSION);
         } catch (ParserConfigurationException | IOException | SAXException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(getContentPane(), ex,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-        billboardPreview = Billboard.getSizedBillboard();
-        previewPanel.add(billboardPreview);
-        previewPanel.add(buttonPanel);
-        previewPanel.add(createBillboardPanel);
 
-        previewPanel.revalidate();
-        previewPanel.repaint();
-        pack();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.add(Box.createVerticalStrut(50));
+        billboardPreview = Billboard.getSizedBillboard();
+
+        //add control panel components back to panel
+        mainPanel.add(billboardPreview);
+        mainPanel.add(buttonPanel);
+        mainPanel.add(createBillboardPanel);
+
 
         System.out.println("bb xml: "+billboardXML);
         System.out.println("bb name: "+billboardName);
@@ -275,8 +299,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             {
                 //Retrieve the xml file associated with the name
                 try {
-                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
-                    xmlFile = billboardListH.get(billboardXML).XMLFile;
+                    xmlFile = billboardXML;
                     closeable = false;
 
                 } catch (Exception e) {
@@ -294,7 +317,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //Open the editor with a new file
             try {
                 //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
-                xmlFile = xmlTemplate;
+                xmlFile = XML_TEMPLATE;
                 closeable = false;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -340,6 +363,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         }
 
         else if (buttonClicked==scheduleBillboardButton) {
+            //if schedule pop up is not already open
+
+
             //if billboard has not been selected in list
             if(billboardName == null)
             {

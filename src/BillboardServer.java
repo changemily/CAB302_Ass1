@@ -165,21 +165,22 @@ public class BillboardServer {
                         billboardScheduleCheck(ois,oos,billboardSchedule);
                         break;
                     case "List users":
-                    case "Get user permissions":
                         userList.retrieveUsersFromDB(connection);
                         listUsers(oos, userList);
                         break;
-                    case "Update user details":
-                    case "Set user permissions":
-                    case "Set user password":
+                    case "Create User":
                         userList.retrieveUsersFromDB(connection);
-                        updateUsers(ois, connection, userList);
+                        createUser(ois, connection, userList);
                         break;
                     case "Delete User":
                         userList.retrieveUsersFromDB(connection);
                         deleteUser(ois, connection, userList);
+                        break;
+                    case "Modify User":
+                        userList.retrieveUsersFromDB(connection);
+                        deleteUser(ois, connection, userList);
+                        createUser(ois, connection, userList);
                     case "Run Billboard Viewer":
-
                         Connection finalConnection = connection;
 
                         //send details of currently displayed billboard to Viewer client
@@ -835,12 +836,38 @@ public class BillboardServer {
     }
 
 
-    private static void updateUsers(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
-        //Clear the db with the user information
-        //userList.clearUsersFromDB(connection);
+    private static void createUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
+        String username = ois.readObject().toString();
+        String password = ois.readObject().toString();
+        String createBillboard = ois.readObject().toString();
+        String scheduleBillboard = ois.readObject().toString();
+        String editBillboard = ois.readObject().toString();
+        String editUsers = ois.readObject().toString();
+        User newUser = new User(username, password);
+        if(createBillboard.equals("1")) {
+            newUser.Permissions.add("Create Billboards");
+        }
+        if(scheduleBillboard.equals("1")) {
+            newUser.Permissions.add("Schedule Billboards");
+        }
+        if(editBillboard.equals("1")) {
+            newUser.Permissions.add("Edit All Billboards");
+        }
+        if(editUsers.equals("1")) {
+            newUser.Permissions.add("Edit Users");
+        }
 
-        // Write the new users to the DB
-        //userList.sendUsersToDB(connection);
+        System.out.println("Received new user from client");
+        System.out.println("username = " + username + ", password = " + password);
+
+        //Clear the db with the user information
+        UserList.clearUsersFromDB(userList.listUsers(), connection);
+
+        //Write the new users to the list
+        UserList.addUserToList(userList.listUsers(), newUser);
+
+        //Write new user to db
+        UserList.sendUsersToDB(userList.listUsers(), connection);
     }
 
     private static void deleteUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {

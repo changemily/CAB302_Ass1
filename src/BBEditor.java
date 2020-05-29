@@ -61,12 +61,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private JButton exportBttn;
     private JButton previewBttn;
     private JButton saveBttn;
-    private JButton backBttn;
     private GroupLayout mainPanelLayout;
     private StreamResult o;
     private Dimension d;
-
-    BillboardList billboardList = new BillboardList();
 
     public BBEditor(String username, String sessionToken, String billboardName, String XMLString)
     {
@@ -223,9 +220,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         // Create previewBttn
         previewBttn = createButton("Preview");
 
-        // Create backBttn
-        backBttn = createButton("Back");
-
         // Set Layout for EVERYTHING
         mainPanelLayout = new GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -240,15 +234,13 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                         .addGroup(mainPanelLayout.createSequentialGroup()
                                                                 .addComponent(previewBttn, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(exitBttn)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(importBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(exportBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(saveBttn)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
-                                                                .addComponent(backBttn))
+                                                                .addComponent(exitBttn))
                                                         .addGroup(mainPanelLayout.createSequentialGroup()
                                                                 .addGroup(mainPanelLayout.createParallelGroup()
                                                                         .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
@@ -353,8 +345,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                         .addComponent(previewBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(importBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(exportBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(saveBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(backBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(saveBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(20, 20, 20))))
         );
 
@@ -464,120 +455,27 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 File selectedFile = FileChooser.getSelectedFile();
                 imageURL.setText(selectedFile.getAbsolutePath());
             }
-        } else if(buttonClicked == saveBttn){
 
-            //Variables to store for the billboard later
-            if(createdBillboard) {
-                billboardName = nameField.getText();
-                System.out.println("billboardNameInput: "+billboardName);
-                //if name has NOT been inputted in text field
-                if (billboardName.equals("")||billboardName.equals(" ")) {
-                    //display error pop up
-                    JOptionPane.showMessageDialog(this,
-                            "You must select a name for the billboard");
-                }
-            }
-            else {
-                System.out.println(billboardName);
-            }
+        }
 
-            if(!messageField.getText().equals(""))
-            {
-                bb.setMessageText(messageField.getText());
-                bb.setMessageExists(true);
-            }
-            else{
-                bb.setMessageExists(false);
-            }
-
-            if(!extraInfoText.getText().equals(""))
-            {
-                bb.setInformationText(extraInfoText.getText());
-                bb.setInformationExists(true);
-            }
-            else{
-                bb.setInformationExists(false);
-            }
-
-            if(!imageURL.getText().equals(""))
-            {
-                bb.setPictureExists(true);
-                try{
-                    URL urlString = new URL(imageURL.getText());
-                    bb.setUrlExists(true);
-                    bb.setDataExists(false);
-                    bb.setPictureURL(imageURL.getText());
-                } catch(MalformedURLException m){
-                    bb.setDataExists(true);
-                    bb.setUrlExists(false);
-                    File f = new File(imageURL.getText());
-                    try {
-                        FileInputStream imageFile = new FileInputStream(f);
-                        byte[] imageData = imageFile.readAllBytes();
-                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
-                    } catch (IOException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
-                        JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                                "ERROR", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-            else{
-                bb.setPictureExists(false);
-            }
-
-            try {
-                tempXMLString = bb.updateXMLString();
-                JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Saved to Database");
-            } catch (ParserConfigurationException | TransformerException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(getContentPane(), ex,
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
-            }
-
-            //Test if it worked
-            System.out.println(tempXMLString);
-
-            String [] user_inputs = {"Create edit billboard",billboardName,username, tempXMLString};
-
-            //Schedule billboard with viewing details given by user
-            ControlPanelClient.Run_Client(user_inputs);
-
-//            // all frames to a array
-//            Frame[] allFrames = Frame.getFrames();
-//            for(Frame fr : allFrames){
-//                if(fr.getClass().getName() == "ControlPanelGUIBillboardControlPanel"){
-//                    fr.dispose();
-//                }
-//            }
-//            //run Billboard Control Panel GUI
-//            String [] user_input = {"List billboards"};
-//            //request schedule and run calendar GUI
-//            ControlPanelClient.Run_Client(user_input);
-
-            //Close after saving so they know it has been done
-//            dispose();
-        } else if (buttonClicked == exitBttn)
+        else if (buttonClicked == exitBttn)
         {
-            int a = showConfirmDialog(null, "Have you saved any changes?");
+            int a = showConfirmDialog(null, "Would you like to save your billboard to the database?");
             if(a == YES_OPTION)
             {
-                Frame[] allFrames = Frame.getFrames();
-                for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel") || (fr.getClass().getName().equals("ControlPanelGUI")))){
-                        fr.dispose();
-                        if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel") || (fr.getClass().getName().equals("ControlPanelGUI")))){
-                            fr.dispose();
-                        }
-                    }
-                }
-                dispose();
-                //run Billboard Control Panel GUI
-                String [] user_input = {"List billboards"};
-                //request schedule and run calendar GUI
-                ControlPanelClient.Run_Client(user_input);
+                //save billboard to database
+                saveBillboardToDB();
+                //closes editor and reloads billboard control panel
+                refreshFrames();
             }
-        } else if(buttonClicked == backgroundColourBttn)
+        }
+
+        else if(buttonClicked == saveBttn){
+            //save billboard to database
+            saveBillboardToDB();
+            //closes editor and reloads billboard control panel
+            refreshFrames();
+        }  else if(buttonClicked == backgroundColourBttn)
         {
             Color originalColour = bb.getBillboardColour();
             Color colour = JColorChooser.showDialog(null,
@@ -654,7 +552,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     if(bb.getPictureURL() != null){
                         imageURL.setText(bb.getPictureURL());
                     }
-                    else{
+                    else if(bb.getPictureDataString() != null){
                         imageURL.setText("Encoded Image");
                     }
                     backgroundColourDisplay.setBackground(bb.getBillboardColour());
@@ -698,21 +596,20 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     bb.setDataExists(false);
                     bb.setPictureURL(imageURL.getText());
                 } catch(MalformedURLException m){
-                    bb.setDataExists(true);
-                    bb.setUrlExists(false);
-                    File f = new File(imageURL.getText());
-                    JOptionPane.showMessageDialog(getContentPane(), m,
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
                     try {
-                        FileInputStream imageFile = new FileInputStream(f);
-                        byte[] imageData = imageFile.readAllBytes();
-                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                        if(!imageURL.getText().equals("Encoded Image")) {
+                            File f = new File(imageURL.getText());
+                            FileInputStream imageFile = new FileInputStream(f);
+                            byte[] imageData = imageFile.readAllBytes();
+                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                            bb.setDataExists(true);
+                            bb.setUrlExists(false);
+                        }
                     } catch (IOException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
                         JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
+                        bb.setPictureExists(false);
                     }
-
                 }
             }
             else{
@@ -747,26 +644,27 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 bb.setInformationExists(false);
             }
 
-            if(!imageURL.getText().equals(""))
-            {
-                bb.setPictureExists(true);
-                try{
-                    URL urlString = new URL(imageURL.getText());
-                    bb.setUrlExists(true);
-                    bb.setDataExists(false);
-                    bb.setPictureURL(imageURL.getText());
-                } catch(MalformedURLException m){
-                    bb.setDataExists(true);
-                    bb.setUrlExists(false);
-                    File f = new File(imageURL.getText());
+            if(!imageURL.getText().equals("")) {
+                if (!imageURL.getText().equals("Encoded Image")) {
+                    bb.setPictureExists(true);
                     try {
-                        FileInputStream imageFile = new FileInputStream(f);
-                        byte[] imageData = imageFile.readAllBytes();
-                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
-                    } catch (IOException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
-                        JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        URL urlString = new URL(imageURL.getText());
+                        bb.setUrlExists(true);
+                        bb.setDataExists(false);
+                        bb.setPictureURL(imageURL.getText());
+                    } catch (MalformedURLException m) {
+                        try {
+                            File f = new File(imageURL.getText());
+                            FileInputStream imageFile = new FileInputStream(f);
+                            byte[] imageData = imageFile.readAllBytes();
+                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                            bb.setDataExists(true);
+                            bb.setUrlExists(false);
+                        } catch (IOException fileNotFoundException) {
+                            JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                                    "ERROR", JOptionPane.ERROR_MESSAGE);
+                            bb.setPictureExists(false);
+                        }
                     }
                 }
             }
@@ -801,6 +699,108 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         }
 
 
+    }
+
+    private void refreshFrames() {
+        Frame[] allFrames = Frame.getFrames();
+        for(Frame fr : allFrames){
+            if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
+                fr.dispose();
+                if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
+                    fr.dispose();
+                }
+            }
+        }
+        dispose();
+        //run Billboard Control Panel GUI
+        String [] user_input = {"List billboards"};
+        //request billboard list and run calendar GUI
+        ControlPanelClient.Run_Client(user_input);
+    }
+
+    private void saveBillboardToDB() {
+        boolean Break = false;
+        if(createdBillboard && !Break) {
+            billboardName = nameField.getText();
+            System.out.println("billboardNameInput: "+billboardName);
+            //if name has NOT been inputted in text field
+            if (billboardName.equals("")||billboardName.equals(" ")) {
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "You must select a name for the billboard");
+                Break = true;
+            }
+        }
+        else {
+            System.out.println(billboardName);
+        }
+
+        if(!messageField.getText().equals(""))
+        {
+            bb.setMessageText(messageField.getText());
+            bb.setMessageExists(true);
+        }
+        else{
+            bb.setMessageExists(false);
+        }
+
+        if(!extraInfoText.getText().equals(""))
+        {
+            bb.setInformationText(extraInfoText.getText());
+            bb.setInformationExists(true);
+        }
+        else{
+            bb.setInformationExists(false);
+        }
+
+        if(!imageURL.getText().equals(""))
+        {
+            bb.setPictureExists(true);
+            try{
+                URL urlString = new URL(imageURL.getText());
+                bb.setUrlExists(true);
+                bb.setDataExists(false);
+                bb.setPictureURL(imageURL.getText());
+            } catch(MalformedURLException m){
+                try {
+                    if(!imageURL.getText().equals("Encoded Image")) {
+                        File f = new File(imageURL.getText());
+                        FileInputStream imageFile = new FileInputStream(f);
+                        byte[] imageData = imageFile.readAllBytes();
+                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
+                        bb.setDataExists(true);
+                        bb.setUrlExists(false);
+                    }
+                } catch (IOException fileNotFoundException) {
+                    JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    Break = true;
+                    bb.setPictureExists(false);
+                }
+            }
+        }
+        else{
+            bb.setPictureExists(false);
+        }
+
+        if(!Break) {
+            try {
+                tempXMLString = bb.updateXMLString();
+                JOptionPane.showMessageDialog(getContentPane(), "Billboard Successfully Saved to Database");
+            } catch (ParserConfigurationException | TransformerException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), ex,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        //Test if it worked
+        if(!Break) {
+            String[] user_inputs = {"Create edit billboard", billboardName, username, tempXMLString};
+
+            //Schedule billboard with viewing details given by user
+            ControlPanelClient.Run_Client(user_inputs);
+        }
     }
 
     public static void main(String[] args)
