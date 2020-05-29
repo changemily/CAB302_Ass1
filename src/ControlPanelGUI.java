@@ -169,8 +169,9 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         // If logout JButton is clicked
         if (buttonClicked == logoutButton) {
-            // RUN LOGOUT CODE
-
+            // Remove users session token and proceed to the login screen
+            String[] user_input = {"Logout request", "1234"};
+            ControlPanelClient.Run_Client(user_input);
             // Close the GUI screen
             dispose();
         }

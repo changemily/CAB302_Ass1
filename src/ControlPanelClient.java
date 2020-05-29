@@ -51,6 +51,11 @@ public class ControlPanelClient {
                     loginRequest(oos,request);
                     break;
 
+                case "Logout request":
+                    //send sessionToken to the server
+                    logoutRequest(oos, ois, request);
+                    break;
+
                 case "List billboards":
                     listBillboards(oos, ois, request);
                     break;
@@ -167,6 +172,25 @@ public class ControlPanelClient {
         //send username and hashed password to server
         oos.writeObject(username);
         oos.writeObject(hashedPassword);
+    }
+
+    /**
+     * Sends logiut request, session token if the user to server
+     * @param oos Object output stream of client
+     * @param buttonClicked Request given by Contol Panel GUI
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     */
+    private static void logoutRequest( ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
+        oos.writeObject(buttonClicked);
+        //retrieve session token
+        //String sessionToken = (String) ois.readObject();
+        String sessionToken = "reee";
+        System.out.println(sessionToken);
+        //send username and hashed password to server
+        oos.writeObject(sessionToken);
+        //open login screen
+        SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
     }
 
     /**
