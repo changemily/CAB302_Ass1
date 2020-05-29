@@ -289,7 +289,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             }
             System.out.println("xmlFile: "+xmlFile);
             //run Billboard editor/and assign the current users username to be the creator
-            SwingUtilities.invokeLater(new BBEditor("admin", "1234", true));
+            SwingUtilities.invokeLater(new BBEditor("admin", "1234"));
         }
 
         else if (buttonClicked == deleteBillboardButton) {
