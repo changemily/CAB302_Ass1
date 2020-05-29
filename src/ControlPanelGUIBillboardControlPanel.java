@@ -121,11 +121,11 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         buttonPanel.setLayout(new GridLayout(1,2));
 
         // Create and add Edit Billboard button, inside button JPanel
-        editBillboardButton = createButton("Edit");
+        editBillboardButton = createButton("Edit Billboard");
         buttonPanel.add(editBillboardButton);
 
         // Create and add Schedule Billboard button, inside button JPanel
-        scheduleBillboardButton = createButton("Schedule");
+        scheduleBillboardButton = createButton("Schedule Billboard");
         buttonPanel.add(scheduleBillboardButton);
         mainPanel.add(buttonPanel); // Add button JPanel to billboard preview JPanel
 
@@ -367,6 +367,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         }
 
         else if (buttonClicked==scheduleBillboardButton) {
+            //if schedule pop up is not already open
+
+
             //if billboard has not been selected in list
             if(billboardName == null)
             {
