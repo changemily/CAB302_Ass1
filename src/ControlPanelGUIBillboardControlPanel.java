@@ -1,6 +1,8 @@
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
@@ -22,7 +24,7 @@ import static javax.swing.JOptionPane.*;
  *
  * NOTES: Minor button functionality still needs to be added; further refinement required
  */
-public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener {
+public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, DocumentListener {
     HashMap<String, Billboard> billboardListH;
     String username;
     String sessionToken;
@@ -45,6 +47,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     // Clickable buttons and list
     private JButton backButton;
     private JButton logoutButton;
+    private JTextField search;
     private JList billboardList;
     private JButton editBillboardButton;
     private JButton deleteBillboardButton;
@@ -92,7 +95,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Create billboards JPanel
         JPanel billboardPanel = new JPanel();
-        billboardPanel.setLayout(new BoxLayout(billboardPanel, BoxLayout.X_AXIS));
+        billboardPanel.setLayout(new BoxLayout(billboardPanel, BoxLayout.Y_AXIS));
 
         // Add billboard preview image, inside of a JPanel
         mainPanel = new JPanel();
@@ -118,6 +121,28 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // If billboard list is NOT empty
         if(billboardListH.size() >0)
         {
+            billboardPanel.add(Box.createVerticalStrut(50));
+
+            // Create search JPanel, with X axis Box Layout
+            JPanel searchPanel = new JPanel();
+
+            //searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
+
+            JLabel label = new JLabel("Search Billboard");
+
+            // Add JLabel to specified JPanel
+            searchPanel.add(label);
+
+            // Formatting
+            searchPanel.add(Box.createHorizontalStrut(10));
+
+            // Create search JTextField, inside search JPanel
+            search = newTextField(searchPanel);
+
+            billboardPanel.add(searchPanel);
+
+            billboardPanel.add(Box.createVerticalStrut(20));
+
             //Create billboard JList, and add it to billboard JPanel
             billboardList = createJList(billboardPanel);
         }
@@ -210,6 +235,19 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         setVisible(true);
     }
 
+    private JTextField newTextField(JPanel panel) {
+        // Create new JTextField
+        JTextField textField = new JTextField(10);
+
+        // Add document listener for text field search
+        textField.getDocument().addDocumentListener(this);
+
+        // Add the JTextField to the specified JPanel
+        panel.add(textField);
+
+        // Returns a JTextField
+        return textField;
+    }
 
     /**
      * This method creates a JList, returns a JList
@@ -235,7 +273,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // Create new JPanel for spacing and formatting
         JPanel panel2 = new JPanel();
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
-        panel2.add(Box.createVerticalStrut(50));
 
         // Create new JList
         JList list = new JList(billboardListWithCreator);
@@ -518,4 +555,18 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
     }
 
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+
+    }
 }
