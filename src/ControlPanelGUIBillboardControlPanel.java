@@ -28,13 +28,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     HashMap<String, Billboard> billboardListH;
     String username;
     String sessionToken;
+    boolean closeable = true;
     /**
      * Method used to create a GUI window for the Billboard edit Screen
      */
     public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList) {
         // Set window title
         super("Billboard Control Panel");
-
         this.username = username;
         this.sessionToken = sessionToken;
         billboardListH = BillboardList;
@@ -46,11 +46,16 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     private JButton deleteBillboardButton;
     private JButton scheduleBillboardButton;
     private JButton createBillboardButton;
-    private String billboardXML="./5.xml"; //CHANGE TO DEFAULT NOTHING TO DISPLAY XML
-    private BillboardList billboard_list = new BillboardList();
+    private String billboardXML = null;
     private String billboardName;
     private String xmlFile;
-    private Billboard tempBillboard;
+    private JPanel previewPanel;
+    private JPanel billboardPreview;
+    private JPanel buttonPanel;
+    private JPanel createBillboardPanel;
+    private final Dimension dimension = new Dimension(400,200);
+    private BillboardViewer Billboard;
+    private String tempXMLString = "<billboard></billboard>";
 
     //Default xml file to be used for ceating a new xml file.
     public static final String xmlTemplate = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
@@ -81,26 +86,17 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         billboardList = createJList(billboardPanel);
 
         // Add billboard preview image, inside of a JPanel
-        JPanel previewPanel = new JPanel();
+        previewPanel = new JPanel();
         previewPanel.setLayout(new BoxLayout(previewPanel, BoxLayout.Y_AXIS));
         previewPanel.add(Box.createVerticalStrut(50));
         //JLabel billboardList = new JLabel("ADD BILLBOARD PREVIEW HERE");
 
-       /* String imagePath = "C:\\Users\\Nickhil N.NPN-ASUS\\OneDrive\\Documents\\Nickhil's Documents\\QUT\\3rd Year 2020\\Semester 1\\CAB302 - Software Development\\Major Project\\qutLogo.jpg";
-        BufferedImage image = ImageIO.read(new File(imagePath));
-        Image image2 = image.getScaledInstance(-1,300, Image.SCALE_DEFAULT);
-        JLabel billboardPreview = new JLabel(new ImageIcon(image2));
-        */
-
-        //create new viewer to display xml
-        File file = new File(billboardXML);
-        //BillboardViewer Billboard = new BillboardViewer(file, new Dimension(400,200));
-        //JPanel billboardPreview = Billboard.getSizedBillboard();
-        //previewPanel.add(billboardPreview);
-
+        Billboard = new BillboardViewer(tempXMLString, dimension);
+        billboardPreview = Billboard.getSizedBillboard();
+        previewPanel.add(billboardPreview);
 
         // Create button JPanel
-        JPanel buttonPanel = new JPanel();
+        buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1,2));
 
         // Create and add Edit Billboard button, inside button JPanel
@@ -113,7 +109,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         previewPanel.add(buttonPanel); // Add button JPanel to billboard preview JPanel
 
         // Create create billboard JPanel
-        JPanel createBillboardPanel = new JPanel();
+        createBillboardPanel = new JPanel();
         createBillboardPanel.setLayout(new BoxLayout(createBillboardPanel, BoxLayout.X_AXIS));
 
         // Create and add Create Billboard button, inside billboard create billboard JPanel; and add formatting
@@ -206,20 +202,39 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
     // Changes billboard XML when a user selects a billboard from the list
-    private void valueChanged(ListSelectionEvent event) {
+    private void valueChanged(ListSelectionEvent event){
         //get string stored in current cell of list
         String cellSelected = billboardList.getSelectedValue().toString();
 
         //remove creator from list
         String billboardSelected = cellSelected.replaceAll(",.*", "");
 
-        //get billboard xml file name
-        billboardXML = billboardSelected;
-
-
-
-        //store billboard name of selected cell
         billboardName = billboardSelected;
+
+        Billboard billboardObjectSelected = billboardListH.get(billboardSelected);
+
+        //get billboard xml file name
+        billboardXML = billboardObjectSelected.XMLFile;
+
+        previewPanel.removeAll();
+        previewPanel.revalidate();
+        previewPanel.repaint();
+
+        try {
+            Billboard = new BillboardViewer(billboardXML, dimension);
+        } catch (ParserConfigurationException | IOException | SAXException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(getContentPane(), ex,
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        billboardPreview = Billboard.getSizedBillboard();
+        previewPanel.add(billboardPreview);
+        previewPanel.add(buttonPanel);
+        previewPanel.add(createBillboardPanel);
+
+        previewPanel.revalidate();
+        previewPanel.repaint();
+        pack();
 
         System.out.println("bb xml: "+billboardXML);
         System.out.println("bb name: "+billboardName);
@@ -250,19 +265,19 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //if billboard has not been selected in list
             if(billboardName == null)
             {
-                //display error pop up
+                //display error pop up\
                 JOptionPane.showMessageDialog(this,
                         "You must select a billboard in the list to edit");
             }
 
             //if billboard has been selected
-
             else
             {
                 //Retrieve the xml file associated with the name
                 try {
                     //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
                     xmlFile = billboardListH.get(billboardXML).XMLFile;
+                    closeable = false;
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -280,7 +295,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             try {
                 //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
                 xmlFile = xmlTemplate;
-
+                closeable = false;
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(getContentPane(), e,
@@ -288,7 +303,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             }
             System.out.println("xmlFile: "+xmlFile);
             //run Billboard editor/and assign the current users username to be the creator
-            SwingUtilities.invokeLater(new BBEditor("admin", "1234", true));
+            SwingUtilities.invokeLater(new BBEditor("admin", "1234"));
         }
 
         else if (buttonClicked == deleteBillboardButton) {
@@ -382,7 +397,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     @Override
     public void windowClosed(WindowEvent e) {
         // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
-        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        if(closeable) {
+            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }
     }
 
     @Override

@@ -847,16 +847,16 @@ public class BillboardServer {
         //Read the parameters given by the client
         String username = ois.readObject().toString();
         User user = UserList.getUserInformation(userList.listUsers(), username);
-        //Display the name of the billboard for ease of testing
-        System.out.println("username: "+ username);
+        //Display the name of the user for ease of testing
+        System.out.println("delete user: "+ username);
 
-        //Clear the db with the billboard information
+        //Clear the db with the user information
         UserList.clearUsersFromDB(userList.listUsers(), connection);
 
-        //Now that the db is empty remove the billboard from the billboard list
+        //Now that the db is empty remove the user from the user list
         UserList.deleteUser(userList.listUsers(), user);
 
-        //Now that the billboard has been removed from the list of billboards
+        //Now that the user has been removed from the list of user
         //Write the updated list to the db
         UserList.sendUsersToDB(userList.listUsers(), connection);
     }
