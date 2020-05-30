@@ -123,7 +123,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             // Create new billboard preview with empty billboard list message
             Billboard = new BillboardViewer(EMPTY_LIST_XML_STRING, DIMENSION);
         }
-
+        // Else: billboard list is not empty
         else
         {
             // Create new billboard preview with empty xml
@@ -136,6 +136,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // If billboard list is NOT empty
         if(billboardListH.size() >0)
         {
+            // Add strut for formatting
             billboardPanel.add(Box.createVerticalStrut(50));
 
             // Create search JPanel, with X axis Box Layout
@@ -143,6 +144,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
             //searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
 
+            // Create Search Billboard JLabel
             JLabel label = new JLabel("Search Billboard");
 
             // Add JLabel to specified JPanel
@@ -154,8 +156,10 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             // Create search JTextField, inside search JPanel
             search = newTextField(searchPanel);
 
+            // Add search JPanel to billboard JPanel
             billboardPanel.add(searchPanel);
 
+            // Add strut for formatting
             billboardPanel.add(Box.createVerticalStrut(20));
 
             // Populate the master array of billboardsWithCreator, with information
@@ -167,20 +171,20 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Create button JPanel
         buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1,2));
+        buttonPanel.setLayout(new GridLayout(1,2)); // Set layout of JPanel
 
         // Create and add Edit Billboard button, inside button JPanel
         editBillboardButton = createButton("Edit Billboard");
-        buttonPanel.add(editBillboardButton);
+        buttonPanel.add(editBillboardButton); // Add JButton to button JPanel
 
         // Create and add Schedule Billboard button, inside button JPanel
         scheduleBillboardButton = createButton("Manage Schedule");
-        buttonPanel.add(scheduleBillboardButton);
+        buttonPanel.add(scheduleBillboardButton); // Add JButton to button JPanel
         mainPanel.add(buttonPanel); // Add button JPanel to billboard preview JPanel
 
         // Create create billboard JPanel
         createBillboardPanel = new JPanel();
-        createBillboardPanel.setLayout(new BoxLayout(createBillboardPanel, BoxLayout.X_AXIS));
+        createBillboardPanel.setLayout(new BoxLayout(createBillboardPanel, BoxLayout.X_AXIS)); // Set box layout
 
         // Create and add Create Billboard button, inside billboard create billboard JPanel; and add formatting
         createBillboardButton = createButton("Create Billboard");
@@ -237,11 +241,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().add(Box.createVerticalStrut(20)); // formatting
         getContentPane().add(topPanel);
-        //getContentPane().add(Box.createHorizontalStrut(100));
         getContentPane().add(bottomPanel);
-        //getContentPane().add(Box.createHorizontalStrut(40));
-        //getContentPane().add(mainPanel);
-        //getContentPane().add(Box.createHorizontalStrut(100));
 
         // Add Window Listener, used for when window is closed
         addWindowListener(this);
@@ -253,6 +253,11 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         setVisible(true);
     }
 
+    /**
+     * This method creates a new JTextField, and adds it to a specified JPanel
+     * @param panel  The JPanel that the created JTextField is to be added to
+     * @return Returns a JTextField
+     */
     private JTextField newTextField(JPanel panel) {
         // Create new JTextField
         JTextField textField = new JTextField(10);
@@ -267,6 +272,10 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         return textField;
     }
 
+    /**
+     * This method populates an array with real billboard and creator information
+     * @return  Returns a String array
+     */
     private String[] populateBillboardsArray() {
         // Int counter for assigning values in the array
         int counter = 0;
@@ -284,18 +293,23 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             counter++;
         }
 
+        // Returns a String array of billboards and their creator
         return billboardListWithCreator;
     }
 
     /**
-     * This method creates a JList, returns a JList
+     * This method creates a JList from a specified list model, then populates the list model from a populated String array,
+     *  then the JList is added to a specified JPanel
+     * @param listModel The list model to be written to
+     * @param array The array to fetch information from
+     * @param panel The JPanel that the created JList is to be added to
      * @return Returns JList
      */
     private JList createJList(DefaultListModel listModel, String[] array, JPanel panel) {
 
         // Create new JPanel for spacing and formatting
         JPanel panel2 = new JPanel();
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
+        panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS)); // Add box layout
 
         // Create new JList
         JList list = new JList(billboardWithCreatorListModel);
@@ -325,11 +339,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         return list;
     }
 
-
     /**
      * This method creates a is used to evaluate which billboards is being clicked on in the list
+     *
+     * Changes billboard XML when a user selects a billboard from the list
+     *
+     * @param event
      */
-    // Changes billboard XML when a user selects a billboard from the list
     public void valueChanged(ListSelectionEvent event) {
         //get string stored in current cell of list
         try {
@@ -396,11 +412,10 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
     /**
      * This method listens for an action to be performed
-     * @return Returns JList
      */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        //Get button that has been clicked - event source
+        // Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
 
         // Checks if the back button has been clicked
@@ -502,7 +517,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Checks if the create billboard button has been clicked
         else if (buttonClicked == createBillboardButton) {
-            //Open the editor with a new file
+            // Open the editor with a new file
             if (currentUser.Permissions.contains("Create Billboards")) {
                 try {
                     xmlFile = XML_TEMPLATE;
@@ -664,6 +679,12 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         }
     }
 
+    /**
+     * This method checks the user's search within a given array, and updates the search results accordingly in the JList live
+     * Used for the Document Listener (insertUpdate, removeUpdate, and changedUpdate)
+     * @param model The model list to be changed, translates to the JList
+     * @param array The master array to be checked against
+     */
     private void listSearch(DefaultListModel model, String[] array) {
         // Try executing the search
         try {
@@ -693,6 +714,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Ignore any exception thrown
         catch (Exception ignored) {
+            // Do nothing
         }
     }
 
