@@ -4,8 +4,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -21,7 +23,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 {
     private JButton removeBttn;
     private JButton scheduleBttn;
-    private JButton backBttn;
+    private JButton closeBttn;
     private JSpinner durationSpinner;
     private JSpinner dateTimePicker;
     private JComboBox recurrencePicker;
@@ -92,7 +94,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         scheduleBttn = createButton("Schedule Billboard");
 
         // Create Back Button
-        backBttn = createButton("Back");
+        closeBttn = createButton("Close");
 
         // Set Group Layout
         GroupLayout contentPaneLayout = new GroupLayout(getContentPane());
@@ -114,7 +116,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                                                 .addGroup(contentPaneLayout.createParallelGroup()
                                                         .addComponent(recurrenceOptionLabel)
                                                         .addComponent(datePickerLabel)))
-                                        .addComponent(backBttn, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(closeBttn, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(removeBttn, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(scheduleBttn, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(recurrenceMins, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE))
@@ -142,7 +144,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(removeBttn, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(backBttn, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(closeBttn, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
 
@@ -165,15 +167,17 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     }
 
     private JSpinner createDateJSpinner() {
-        SpinnerModel spinnerModel;
+        //get current time in calendar format
+        Calendar cal = Calendar.getInstance();
+        //add 1 minute to current time as you cannot schedule in the past
+        cal.add(Calendar.MINUTE, 1);
 
-        //set spinner model to dayTime
-        spinnerModel = new SpinnerDateModel();
+        //create date spinner model with adjusted time and time adjustable up to minutes
+        SpinnerModel spinnerModel = new SpinnerDateModel(cal.getTime(), null, null, Calendar.MINUTE);
 
         //create new JSpinner
         JSpinner jspinner = new JSpinner(spinnerModel);
 
-        //set font and size of JSpinner
         return jspinner;
     }
 
@@ -351,6 +355,9 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 
                     //remove viewing from schedule with viewing details given by user
                     ControlPanelClient.Run_Client(user_inputs);
+                    //dispose check pop up
+                    dispose();
+                    //dispose schedule billboard pop up
                     dispose();
                 }
             }
