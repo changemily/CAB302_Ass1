@@ -374,18 +374,18 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         if (buttonClicked == backButton) {
             // Closes current GUI screen
             dispose();
-
+            closeable = false;
             // Open new Control Panel GUI screen
-            //SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
         }
 
         // Checks if the logout button has been clicked
         else if (buttonClicked == logoutButton) {
             // Closes current GUI screen
             dispose();
-
+            closeable = false;
             // Open new Login screen
-            //SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
         }
 
         // Checks if the edit billboard button has been clicked
@@ -442,7 +442,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 JOptionPane.showMessageDialog(this,
                         "You must select a billboard in the list to delete");
             }
-
             else{
                 //Open the editor with a new file
                 try {
@@ -454,9 +453,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                         String [] user_inputs = {"Delete billboard", billboardName};
                         //Delete billboard with viewing details given by user
                         ControlPanelClient.Run_Client(user_inputs);
-                        //Close after saving so they know it has been done
+                        //Refresh control panel
+                        user_inputs = new String[]{"List billboards"};
+                        ControlPanelClient.Run_Client(user_inputs);
+                        closeable = false;
                         dispose();
-                        showMessageDialog(null, "Billboard Successfully Deleted");
+                        //JOptionPane.showMessageDialog(this,
+                        //        "Billboard Successfully Deleted");
                     }
 
                 } catch (Exception e) {

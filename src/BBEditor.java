@@ -472,9 +472,11 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
         else if(buttonClicked == saveBttn){
             //save billboard to database
-            saveBillboardToDB();
+            boolean Break = saveBillboardToDB();
             //closes editor and reloads billboard control panel
-            refreshFrames();
+            if(!Break) {
+                refreshFrames();
+            }
         }  else if(buttonClicked == backgroundColourBttn)
         {
             Color originalColour = bb.getBillboardColour();
@@ -718,9 +720,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         ControlPanelClient.Run_Client(user_input);
     }
 
-    private void saveBillboardToDB() {
+    private boolean saveBillboardToDB() {
         boolean Break = false;
-        if(createdBillboard && !Break) {
+        if(createdBillboard) {
             billboardName = nameField.getText();
             System.out.println("billboardNameInput: "+billboardName);
             //if name has NOT been inputted in text field
@@ -801,6 +803,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             //Schedule billboard with viewing details given by user
             ControlPanelClient.Run_Client(user_inputs);
         }
+        return Break;
     }
 
     public static void main(String[] args)

@@ -407,18 +407,20 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         if (buttonClicked == backButton) {
             // Closes current GUI screen
             dispose();
+            closeable = false;
 
             // Open new Control Panel GUI screen
-            //SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
         }
 
         // Checks if the logout button has been clicked
         else if (buttonClicked == logoutButton) {
             // Closes current GUI screen
             dispose();
+            closeable = false;
 
             // Open new Login screen
-            //SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
         }
 
         // Checks if the login button has been clicked
