@@ -480,6 +480,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //Open the editor with a new file
             if (currentUser.Permissions.contains("Create Billboards")) {
                 try {
+                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
                     xmlFile = XML_TEMPLATE;
                     closeable = false;
                 } catch (Exception e) {
@@ -627,6 +628,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                         SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName));
                     }
 
+                    SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName, schedule));
                 }
                 else{
                     //display error pop up
