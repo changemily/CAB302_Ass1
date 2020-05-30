@@ -469,9 +469,11 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             if(a == YES_OPTION)
             {
                 //save billboard to database
-                saveBillboardToDB();
+                boolean Break = saveBillboardToDB();
                 //closes editor and reloads billboard control panel
-                refreshFrames();
+                if(!Break) {
+                    refreshFrames();
+                }
             }
             else if(a == NO_OPTION)
             {
