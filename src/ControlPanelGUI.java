@@ -199,9 +199,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             String [] user_input = {"View schedule"};
             //request schedule and run calendar GUI
             ControlPanelClient.Run_Client(user_input);
-
-            // Close the GUI screen
-            dispose();
         }
 
         // If password change JButton is clicked

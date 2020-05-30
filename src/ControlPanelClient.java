@@ -282,11 +282,28 @@ public class ControlPanelClient {
      * @param ois Object input stream of client
      * @throws IOException
      */
-    private static void viewScheduleRead(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+    private static void viewScheduleRead(ObjectInputStream ois) throws Exception {
         //read schedule sent by server
         MultiMap schedule = (MultiMap) ois.readObject();
+        HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
+        User userDetails = UserList.getUserInformation(userList, username);
 
-        SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(username, "1234",schedule));
+        if(userDetails.Permissions.contains("Schedule Billboards")) {
+            Frame[] allFrames = Frame.getFrames();
+            for(Frame fr : allFrames){
+                if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                    fr.dispose();
+                    if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                        fr.dispose();
+                    }
+                }
+            }
+            SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(username, "1234", schedule));
+        }
+        else{
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "User doesn't have Schedule Billboards permission");
+        }
     }
 
     /**

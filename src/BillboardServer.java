@@ -151,7 +151,9 @@ public class BillboardServer {
                         deleteBillboard(ois, connection, billboardList);
                         break;
                     case "View schedule":
-                        viewSchedule(oos,billboardSchedule);
+                        billboardList.RetrieveDBbillboardList(connection);
+                        userList.retrieveUsersFromDB(connection);
+                        viewSchedule(oos,billboardSchedule, userList);
                         break;
 
                     case "Schedule Billboard":
@@ -414,11 +416,12 @@ public class BillboardServer {
      * @param billboardSchedule schedule being sent to Client
      * @throws IOException
      */
-    private static void viewSchedule(ObjectOutputStream oos, ScheduleMultiMap billboardSchedule) throws IOException {
+    private static void viewSchedule(ObjectOutputStream oos, ScheduleMultiMap billboardSchedule, UserList userList) throws IOException {
         MultiMap<String, ScheduleInfo> schedule = billboardSchedule.viewSchedule();
 
         //send schedule to client
         oos.writeObject(schedule);
+        oos.writeObject(userList.listUsers());
 
         //print schedule that was sent to client
         System.out.println("Sent to client:\n");

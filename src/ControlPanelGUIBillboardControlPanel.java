@@ -441,15 +441,10 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                     //run Billboard editor/creator GUI
                     SwingUtilities.invokeLater(new BBEditor(username, "1234", billboardName, xmlFile));
                 }
-                else if(!((!creatorCheck) && currentUser.Permissions.contains("Edit All Billboards"))) {
-                    //display error pop up\
-                    JOptionPane.showMessageDialog(this,
-                            "You must have 'Edit All Billboards' to edit someone else's billboard");
-                }
                 else{
                     //display error pop up\
                     JOptionPane.showMessageDialog(this,
-                            "You must have 'Create Billboards' to edit scheduled billboards");
+                            "You do not have permission to edit this billboards");
                 }
             }
         }
@@ -474,7 +469,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             else{
                 //display error pop up
                 JOptionPane.showMessageDialog(this,
-                        "You do not have permission to create a billboard");
+                        "You do not permission to create a billboard");
             }
         }
 
@@ -487,7 +482,26 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                         "You must select a billboard in the list to delete");
             }
             else{
-                if(currentUser.Permissions.contains("Edit All Billboards")) {
+                //get string stored in current cell of list
+                String cellSelected = billboardList.getSelectedValue().toString();
+
+                //remove creator from list
+                String billboardSelected = cellSelected.replaceAll(",.*", "");
+                billboardName = billboardSelected;
+                Billboard billboardObjectSelected = billboardListH.get(billboardSelected);
+                //get billboard creator, and current username
+                String billboardCreator = billboardObjectSelected.BillboardCreator;
+                String currentUsername = currentUser.Username;
+                boolean creatorCheck = billboardCreator.equals(currentUsername);
+                boolean scheduleCheck;
+                try {
+                    schedule.getSchedule(billboardName);
+                    scheduleCheck = true;
+                }
+                catch (Exception e) {
+                    scheduleCheck = false;
+                }
+                if(((!creatorCheck) && currentUser.Permissions.contains("Edit All Billboards")) || (creatorCheck && (currentUser.Permissions.contains("Create Billboards") && !scheduleCheck))) {
                     //Open the editor with a new file
                     try {
                         //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
@@ -516,7 +530,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 else{
                     //display error pop up
                     JOptionPane.showMessageDialog(this,
-                            "You must have 'Edit All Billboards' to delete a billboard");
+                            "You do not have permission to delete this billboards");
                 }
             }
         }
@@ -533,12 +547,17 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 JOptionPane.showMessageDialog(this,
                         "You must select a billboard in the list to schedule");
             }
-
             //if billboard has been selected
             else
             {
-                //run schedule billboard GUI pop up
-                SwingUtilities.invokeLater(new BBSchedulePopup(username, "1234",billboardName));
+                if (currentUser.Permissions.contains("Schedule Billboards")) {
+                    SwingUtilities.invokeLater(new BBSchedulePopup(username, "1234",billboardName));
+                }
+                else{
+                    //display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "You do not have permission to schedule billboards");
+                }
             }
         }
     }
