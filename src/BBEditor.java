@@ -17,8 +17,7 @@ import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 
-import static javax.swing.JOptionPane.YES_OPTION;
-import static javax.swing.JOptionPane.showConfirmDialog;
+import static javax.swing.JOptionPane.*;
 
 /**
  * @author Liam
@@ -88,7 +87,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, SAXException, ParserConfigurationException {
         // Set default look and feel & window properties
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // Create mainPanel
         mainPanel = new JPanel();
@@ -468,6 +467,10 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 saveBillboardToDB();
                 //closes editor and reloads billboard control panel
                 refreshFrames();
+            }
+            else if(a == NO_OPTION)
+            {
+                dispose();
             }
         }
 
