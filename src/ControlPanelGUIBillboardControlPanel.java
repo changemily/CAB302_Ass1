@@ -468,6 +468,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                     }
                     else{
                         SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardName, xmlFile));
+                        closeable = false;
                     }
                 }
                 else{
