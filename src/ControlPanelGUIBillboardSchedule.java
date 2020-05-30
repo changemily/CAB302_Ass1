@@ -54,6 +54,9 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        //make window non resizable
+        setResizable(false);
+
         // Create main content JPanel, with Y axis Box Layout
         JPanel buttonPanel = newPanel('X');
 

@@ -78,7 +78,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     }
 
     public BBEditor(String username, String sessionToken, HashMap<String, Billboard> billboardList){
-        super("Billboard Editor");
+        super("Billboard Creator");
         this.billboardName = null;
         tempXMLString = "<billboard></billboard>";
         createdBillboard = true;
@@ -91,6 +91,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         // Set default look and feel & window properties
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        //make window non resizable
+        setResizable(false);
 
         // Create mainPanel
         mainPanel = new JPanel();

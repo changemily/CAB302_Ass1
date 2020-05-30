@@ -44,6 +44,9 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         // Default close operation, so window does not continue running after it is closed
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        //make window non resizable
+        setResizable(false);
+
         // Create logout JButton
         logoutButton = createButton("Logout");
         // Create JPanel that holds logout JButton

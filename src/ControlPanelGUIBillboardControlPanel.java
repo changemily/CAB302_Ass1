@@ -97,6 +97,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        //make window non resizable
+        setResizable(false);
+
         // Create billboards JPanel
         JPanel billboardPanel = new JPanel();
         billboardPanel.setLayout(new BoxLayout(billboardPanel, BoxLayout.Y_AXIS));
@@ -160,7 +163,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         buttonPanel.add(editBillboardButton);
 
         // Create and add Schedule Billboard button, inside button JPanel
-        scheduleBillboardButton = createButton("Schedule Billboard");
+        scheduleBillboardButton = createButton("Manage Schedule");
         buttonPanel.add(scheduleBillboardButton);
         mainPanel.add(buttonPanel); // Add button JPanel to billboard preview JPanel
 
