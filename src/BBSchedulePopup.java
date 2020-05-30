@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -173,6 +174,8 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     private JSpinner createDateJSpinner() {
         //get current time in calendar format
         Calendar cal = Calendar.getInstance();
+        //round seconds down
+        cal.set(Calendar.SECOND, 0);
         //add 1 minute to current time as you cannot schedule in the past
         cal.add(Calendar.MINUTE, 1);
 
@@ -288,8 +291,8 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         //format to LocalDateTime as string
         String startTimeString = calendarToLocalDateTime(dateTime);
 
-        //convert to type LocalDateTime
-        LocalDateTime startTime = LocalDateTime.parse(startTimeString);
+        //convert to type LocalDateTime and round down in minutes
+        LocalDateTime startTime = LocalDateTime.parse(startTimeString).truncatedTo(ChronoUnit.MINUTES);
 
         //get duration from spinner
         String duration = durationSpinner.getValue().toString();
@@ -320,16 +323,10 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 
             //if start time is valid
             else{
-                //Schedule billboard with viewing details given by user
+                //display confirmation message
                 ControlPanelClient.Run_Client(user_inputs);
+                //add viewing to local map of schedule
                 showMessageDialog(null, "Billboard Successfully Scheduled");
-
-                //FOR TESTING
-                System.out.println("request: "+user_inputs[0]);
-                System.out.println("bb name: "+user_inputs[1]);
-                System.out.println("Start time: "+user_inputs[2]);
-                System.out.println("Duration: "+user_inputs[3]);
-                System.out.println("recurrence: "+user_inputs[4]);
             }
 
         }
@@ -354,23 +351,19 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                 //if yes is selected in check window
                 if(a == YES_OPTION)
                 {
-                    //boolean to check if billboard exists in schedule
-                    boolean billboardExists = false;
-
                     //boolean to check if viewing exists in schedule
                     boolean validSchedule = false;
                     //try retrieving schedule info of billboard
                     try {
                         ArrayList<ScheduleInfo> viewings = billboardSchedule.getSchedule(billboardName);
-                        billboardExists = true;
                         //for all viewings of the billboard
                         for(ScheduleInfo viewing : viewings)
                         {
-                            //get start time of viewing
-                            LocalDateTime viewingStartTime = viewing.startTimeScheduled;
+                            //get start time of viewing and round down in minutes
+                            LocalDateTime viewingStartTime = viewing.startTimeScheduled.truncatedTo(ChronoUnit.MINUTES);
 
                             System.out.println("startTime: " + startTime);
-                            System.out.println("viewingStartTime: " + viewingStartTime);
+                            System.out.println("viewingStartTime: " + viewingStartTime +"\n");
 
                             //if user selected start time is equal to start time of viewing stored
                             if(startTime.equals(viewingStartTime))
@@ -381,11 +374,24 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 
                                 //remove viewing from schedule with viewing details given by user
                                 ControlPanelClient.Run_Client(user_inputs);
+
+                                //display confirmation message
+                                ControlPanelClient.Run_Client(user_inputs);
+                                showMessageDialog(null, "Billboard Successfully Removed From Schedule");
+
                                 //dispose check pop up
                                 dispose();
                                 //dispose schedule billboard pop up
                                 dispose();
                                 break;
+                            }
+
+                            //if user selected start time is equal to start time of viewing stored
+                            if (!validSchedule)
+                            {
+                                //display error pop up
+                                JOptionPane.showMessageDialog(this,
+                                        "The viewing of " +billboardName+" for "+ startTime+" does not exist in the schedule");
                             }
                         }
                     }
@@ -396,26 +402,22 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
 
-                    //if user selected start time is equal to start time of viewing stored
-                    if (!validSchedule)
-                    {
-                        //display error pop up
-                        JOptionPane.showMessageDialog(this,
-                                "The viewing of " +billboardName+" for "+ startTime+" does not exist in the schedule");
-                    }
-
-                    if (billboardExists)
+                    /*if (billboardExists)
                     {
                         //change user inputs to GUI inputs
                         String [] user_inputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
-
                         //remove viewing from schedule with viewing details given by user
                         ControlPanelClient.Run_Client(user_inputs);
+
+                        //display confirmation message
+                        ControlPanelClient.Run_Client(user_inputs);
+                        showMessageDialog(null, "Billboard Successfully Removed From Schedule");
+
                         //dispose check pop up
                         dispose();
                         //dispose schedule billboard pop up
                         dispose();
-                    }
+                    }*/
 
                 }
             }
