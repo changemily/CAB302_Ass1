@@ -162,7 +162,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         JLabel billboardsThisWeekLabel = new JLabel("Billboards this Week");
 
         // Change text size of JLabel
-        billboardsThisWeekLabel.setFont(new Font(null, Font.PLAIN, 15));
+        billboardsThisWeekLabel.setFont(new Font(null, Font.BOLD, 15));
 
         // Centre JLabel
         billboardsThisWeekLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
