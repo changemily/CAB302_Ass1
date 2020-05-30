@@ -335,16 +335,8 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                 System.out.println("Duration: "+user_inputs[3]);
                 System.out.println("recurrence: "+user_inputs[4]);
 
-                Frame[] allFrames = Frame.getFrames();
-                for (Frame fr : allFrames) {
-                    if ((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))) {
-                        fr.dispose();
-                    }
-                }
-                dispose();
-
-                String[] user_input = {"List billboards"};
-                ControlPanelClient.Run_Client(user_input);
+                //dispose pop up and reopen billboard control panel
+                frameRefresh();
             }
 
         }
@@ -387,20 +379,19 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                             if(startTime.equals(viewingStartTime))
                             {
                                 validSchedule = true;
+
+                                //display confirmation message
+                                showMessageDialog(null, "Billboard Successfully Removed From Schedule");
+
                                 //change user inputs to GUI inputs
                                 String [] user_inputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
 
                                 //remove viewing from schedule with viewing details given by user
                                 ControlPanelClient.Run_Client(user_inputs);
 
-                                //display confirmation message
-                                ControlPanelClient.Run_Client(user_inputs);
-                                showMessageDialog(null, "Billboard Successfully Removed From Schedule");
+                                //dispose pop up and reopen billboard control panel
+                                frameRefresh();
 
-                                //dispose check pop up
-                                dispose();
-                                //dispose schedule billboard pop up
-                                dispose();
                                 break;
                             }
 
@@ -416,43 +407,31 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                     //if billboard does not exist in schedule
                     catch (Exception e) {
                         //display error pop up
-                        JOptionPane.showMessageDialog(this, e,
-                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "The billboard does not exist in the schedule");
                     }
-
-                    /*if (billboardExists)
-                    {
-                        //change user inputs to GUI inputs
-                        String [] user_inputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
-                        //remove viewing from schedule with viewing details given by user
-                        ControlPanelClient.Run_Client(user_inputs);
-
-                        //display confirmation message
-                        ControlPanelClient.Run_Client(user_inputs);
-                        showMessageDialog(null, "Billboard Successfully Removed From Schedule");
-
-                        //dispose check pop up
-                        dispose();
-                        //dispose schedule billboard pop up
-                        dispose();
-                    }*/
 
                 }
             }
         }
         else if(buttonClicked == closeBttn){
-            Frame[] allFrames = Frame.getFrames();
-            for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
-                    fr.dispose();
-                }
-            }
-            dispose();
-            //run Billboard Control Panel GUI
-            String [] user_input = {"List billboards"};
-            //request billboard list and run calendar GUI
-            ControlPanelClient.Run_Client(user_input);
+            //dispose pop up and reopen billboard control panel
+            frameRefresh();
+
         }
+    }
+
+    private void frameRefresh() {
+        Frame[] allFrames = Frame.getFrames();
+        for (Frame fr : allFrames) {
+            if ((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))) {
+                fr.dispose();
+            }
+        }
+        dispose();
+        //run Billboard Control Panel GUI
+        String [] user_input = {"List billboards"};
+        //request billboard list and run calendar GUI
+        ControlPanelClient.Run_Client(user_input);
     }
 
     @Override

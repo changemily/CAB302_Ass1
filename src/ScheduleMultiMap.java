@@ -32,7 +32,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
     public void retrieveDBschedule(Connection connection) throws Exception {
         //clear multimap
         //for every billboard name in Billboard_schedule
-        for (String billboardName : scheduleMultiMap.keySet() ) {
+        for (String billboardName : new ArrayList<>(scheduleMultiMap.keySet())) {
             scheduleMultiMap.remove(billboardName);
         }
 
