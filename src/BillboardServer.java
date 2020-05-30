@@ -176,7 +176,7 @@ public class BillboardServer {
                         userList.retrieveUsersFromDB(connection);
                         deleteUser(ois, connection, userList);
                         break;
-                    case "Modify User":
+                    case "Edit User":
                         userList.retrieveUsersFromDB(connection);
                         deleteUser(ois, connection, userList);
                         createUser(ois, connection, userList);

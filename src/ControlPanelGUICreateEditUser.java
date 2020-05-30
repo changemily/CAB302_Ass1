@@ -405,22 +405,29 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 String[] user_inputs = {"Edit User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
                 ControlPanelClient.Run_Client(user_inputs);
                 Frame[] allFrames = Frame.getFrames();
-                for (Frame fr : allFrames) {
-                    if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
-                        fr.dispose();
+                if(adminUser) {
+                    for (Frame fr : allFrames) {
                         if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
                             fr.dispose();
+                            if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                                fr.dispose();
+                            }
+                            dispose();
                         }
-                        dispose();
                     }
-                }
-                forcedExit = false;
-                dispose();
+                    dispose();
 
-                //run Billboard Control Panel GUI
-                String[] user_input = {"List users", "Admin"};
-                //request schedule and run calendar GUI
-                ControlPanelClient.Run_Client(user_input);
+                    //run Billboard Control Panel GUI
+                    String[] user_input = {"List users", "Admin"};
+                    //request schedule and run calendar GUI
+                    ControlPanelClient.Run_Client(user_input);
+                    forcedExit = false;
+                }
+                else{
+                    dispose();
+                    SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                }
+
             }
         }
         // Checks if the Exit Without Saving button has been clicked
@@ -430,6 +437,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
             }
             else{
                 dispose();
+                SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
             }
             System.out.println("exit without saving clicked");
             //run close window

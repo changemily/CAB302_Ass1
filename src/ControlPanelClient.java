@@ -392,8 +392,8 @@ public class ControlPanelClient {
         String editUsers = user_inputs[6];
 
         oos.writeObject(buttonClicked);
-        oos.writeObject(username);
         oos.writeObject(password);
+        oos.writeObject(username);
         oos.writeObject(createBillboard);
         oos.writeObject(scheduleBillboard);
         oos.writeObject(editBillboard);
@@ -408,10 +408,10 @@ public class ControlPanelClient {
         String editBillboard = user_inputs[5];
         String editUsers = user_inputs[6];
 
-        oos.writeObject("Modify User");
-        oos.writeObject(username);
+        oos.writeObject(buttonClicked);
         oos.writeObject(username);
         oos.writeObject(password);
+        oos.writeObject(username);
         oos.writeObject(createBillboard);
         oos.writeObject(scheduleBillboard);
         oos.writeObject(editBillboard);
@@ -421,7 +421,7 @@ public class ControlPanelClient {
      * Runs client
      * @param args
      */
-    public static void main(String args[]) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IOException, IllegalAccessException {
-        SwingUtilities.invokeLater(new ControlPanelGUI("user", "1234"));
+    public static void main(String args[]){
+        SwingUtilities.invokeLater(new ControlPanelGUI("AdminUser", "1234"));
     }
 }

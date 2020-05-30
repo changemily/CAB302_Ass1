@@ -434,20 +434,35 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             else{
                 // Retrieve the user associated with the name
                 try {
+                    int frameCount = 0;
+                    Frame[] allFrames = Frame.getFrames();
+                    for(Frame fr : allFrames){
+                        if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                            if(fr.isVisible()){
+                                frameCount += 1;
+                            }
+                        }
+                    }
+
                     User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
                     System.out.println("edit user: "+ usernameSelected);
                     if(!closeable) {
-                        int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
-                        if(a == YES_OPTION) {
-                            Frame[] allFrames = Frame.getFrames();
-                            for(Frame fr : allFrames){
-                                if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
-                                    fr.dispose();
-                                    if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                        if(frameCount > 0) {
+                            int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
+                            if (a == YES_OPTION) {
+                                allFrames = Frame.getFrames();
+                                for (Frame fr : allFrames) {
+                                    if ((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))) {
                                         fr.dispose();
+                                        if ((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))) {
+                                            fr.dispose();
+                                        }
                                     }
                                 }
+                                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true, userList));
                             }
+                        }
+                        else{
                             SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true, userList));
                         }
                     }
@@ -502,18 +517,32 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         else if (buttonClicked == createUserButton) {
             System.out.println("create user button clicked");
             try {
+                int frameCount = 0;
+                Frame[] allFrames = Frame.getFrames();
+                for(Frame fr : allFrames){
+                    if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                        if(fr.isVisible()){
+                            frameCount += 1;
+                        }
+                    }
+                }
                 if(!closeable) {
-                    int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
-                    if(a == YES_OPTION) {
-                        Frame[] allFrames = Frame.getFrames();
-                        for(Frame fr : allFrames){
-                            if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
-                                fr.dispose();
+                    if(frameCount > 0){
+                        int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
+                        if(a == YES_OPTION) {
+                            allFrames = Frame.getFrames();
+                            for(Frame fr : allFrames){
                                 if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
                                     fr.dispose();
+                                    if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                                        fr.dispose();
+                                    }
                                 }
                             }
+                            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", true, userList));
                         }
+                    }
+                    else{
                         SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", true, userList));
                     }
                 }
