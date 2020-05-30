@@ -44,9 +44,15 @@ public class BillboardServer {
             "</billboard>";
 
     //Setup another hashmap to store an id and hasmap of the token and its timer
-    private static HashMap<Integer, Timer> SessionCombinedHashmap;
+    public static HashMap<Integer, Timer> SessionCombinedHashmap;
+    static{
+        SessionCombinedHashmap = new HashMap<>();
+    }
     //Setup a hashmap to store each hasmap with a timer
-    private static HashMap<Integer, String> SessionTokenListHashmap;
+    public static HashMap<Integer, String> SessionTokenListHashmap;
+    static{
+        SessionTokenListHashmap = new HashMap<>();
+    }
 
     /**
      * Starts up Billboard server for connection to client
@@ -313,6 +319,7 @@ public class BillboardServer {
             //If the user is valid set them as the default user in the control panel
             ControlPanelClient.username = userName;
             ControlPanelClient.sessionToken = SessionToken;
+            System.out.println("The session token is: "+ SessionToken);
             //Create and return the user a valid session token
             SwingUtilities.invokeLater(new ControlPanelGUI(userName, SessionToken));
         }else{
@@ -840,9 +847,14 @@ public class BillboardServer {
             timer.schedule(taskA, (long) 8.64e+7);
 
             //Store counter ID and session token
-            //SessionCombinedHashmap.put(counter, timer);
-            //Then store the hasmpa of counter and token with a timer
-            //SessionTokenListHashmap.put(counter, thisSessionToken);
+            try{
+                SessionCombinedHashmap.put(counter, timer);
+                //Then store the hasmpa of counter and token with a timer
+                SessionTokenListHashmap.put(counter, thisSessionToken);
+                System.out.println("The session token is: "+SessionTokenListHashmap.get(1));
+            }catch(Exception e){
+
+            }
 
             //Pass back the valid user session token
             return thisSessionToken;
