@@ -4,8 +4,6 @@ import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -78,8 +76,7 @@ public class ControlPanelClient {
                     break;
 
                 case "View schedule":
-                    viewScheduleWrite(oos,request);
-                    viewScheduleRead(ois);
+                    viewSchedule(oos,request,ois);
                     break;
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
@@ -267,24 +264,16 @@ public class ControlPanelClient {
     }
 
     /**
-     * Sends view schedule request to Server
-     * @param oos Object output stream of client
-     * @param buttonClicked Request given by Contol Panel GUI
-     * @throws IOException
-     */
-    private static void viewScheduleWrite(ObjectOutputStream oos, String buttonClicked) throws IOException {
-        //Write the Client's request to the server
-        oos.writeObject(buttonClicked);
-    }
-
-    /**
-     * Sends view schedule request to Server
+     * Sends view schedule request to Server and reads response
      * @param ois Object input stream of client
      * @throws IOException
      */
-    private static void viewScheduleRead(ObjectInputStream ois) throws Exception {
+    private static void viewSchedule(ObjectOutputStream oos, String buttonClicked, ObjectInputStream ois) throws Exception {
+        //Write the Client's request to the server
+        oos.writeObject(buttonClicked);
         //read schedule sent by server
         MultiMap schedule = (MultiMap) ois.readObject();
+
         HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
         User userDetails = UserList.getUserInformation(userList, username);
 

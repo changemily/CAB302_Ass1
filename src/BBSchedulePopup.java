@@ -4,10 +4,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -21,6 +20,7 @@ import static javax.swing.JOptionPane.*;
 
 public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 {
+    private ScheduleMultiMap billboardSchedule;
     private JButton removeBttn;
     private JButton scheduleBttn;
     private JButton closeBttn;
@@ -34,7 +34,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     private String username;
     private String sessionToken;
 
-    public BBSchedulePopup(String username, String sessionToken, String billboardName)
+    public BBSchedulePopup(String username, String sessionToken, String billboardName, ScheduleMultiMap schedule)
     {
         // Set window title
         super("Schedule Billboard");
@@ -42,6 +42,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         this.billboardName = billboardName;
         this.username = username;
         this.sessionToken = sessionToken;
+        this.billboardSchedule = schedule;
     }
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException
     {
@@ -278,7 +279,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         //Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
 
-        //get date time string
+        //get date time string from user input
         String dateTime = dateTimePicker.getValue().toString();
 
         //format to LocalDateTime as string
@@ -350,15 +351,69 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                 //if yes is selected in check window
                 if(a == YES_OPTION)
                 {
-                    //change user inputs to GUI inputs
-                    String [] user_inputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
+                    //boolean to check if billboard exists in schedule
+                    boolean billboardExists = false;
 
-                    //remove viewing from schedule with viewing details given by user
-                    ControlPanelClient.Run_Client(user_inputs);
-                    //dispose check pop up
-                    dispose();
-                    //dispose schedule billboard pop up
-                    dispose();
+                    //boolean to check if viewing exists in schedule
+                    boolean validSchedule = false;
+                    //try retrieving schedule info of billboard
+                    try {
+                        ArrayList<ScheduleInfo> viewings = billboardSchedule.getSchedule(billboardName);
+                        billboardExists = true;
+                        //for all viewings of the billboard
+                        for(ScheduleInfo viewing : viewings)
+                        {
+                            //get start time of viewing
+                            LocalDateTime viewingStartTime = viewing.startTimeScheduled;
+
+                            System.out.println("startTime: " + startTime);
+                            System.out.println("viewingStartTime: " + viewingStartTime);
+
+                            //if user selected start time is equal to start time of viewing stored
+                            if(startTime.equals(viewingStartTime))
+                            {
+                                validSchedule = true;
+                                //change user inputs to GUI inputs
+                                String [] user_inputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
+
+                                //remove viewing from schedule with viewing details given by user
+                                ControlPanelClient.Run_Client(user_inputs);
+                                //dispose check pop up
+                                dispose();
+                                //dispose schedule billboard pop up
+                                dispose();
+                                break;
+                            }
+                        }
+                    }
+                    //if billboard does not exist in schedule
+                    catch (Exception e) {
+                        //display error pop up
+                        JOptionPane.showMessageDialog(this, e,
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    //if user selected start time is equal to start time of viewing stored
+                    if (validSchedule == false)
+                    {
+                        //display error pop up
+                        JOptionPane.showMessageDialog(this,
+                                "The viewing of " +billboardName+" for "+ startTime+" does not exist in the schedule");
+                    }
+
+                    if (billboardExists == true)
+                    {
+                        //change user inputs to GUI inputs
+                        String [] user_inputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
+
+                        //remove viewing from schedule with viewing details given by user
+                        ControlPanelClient.Run_Client(user_inputs);
+                        //dispose check pop up
+                        dispose();
+                        //dispose schedule billboard pop up
+                        dispose();
+                    }
+
                 }
             }
         }
@@ -391,11 +446,6 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    public static void main(String[] args)
-    {
-        SwingUtilities.invokeLater(new BBSchedulePopup("admin","1234","name"));
     }
 
 }
