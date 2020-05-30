@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.HashMap;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle;
@@ -31,7 +32,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private String username;
     private String sessionToken;
     private BillboardViewer bb = null;
+    private HashMap<String, Billboard> billboardList;
     private boolean createdBillboard = false;
+    private boolean savedBillboard = false;
     private JPanel mainPanel;
     private JPanel previewPanel;
     private JPanel billboardPreview;
@@ -75,13 +78,14 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         this.sessionToken = sessionToken;
     }
 
-    public BBEditor(String username, String sessionToken){
+    public BBEditor(String username, String sessionToken, HashMap<String, Billboard> billboardList){
         super("Billboard Editor");
         this.billboardName = null;
         tempXMLString = "<billboard></billboard>";
         createdBillboard = true;
         this.username = username;
         this.sessionToken = sessionToken;
+        this.billboardList = billboardList;
     }
 
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, SAXException, ParserConfigurationException {
@@ -736,6 +740,11 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                         "You must select a name for the billboard");
                 Break = true;
             }
+            if(billboardList.containsKey(billboardName)){
+                JOptionPane.showMessageDialog(this,
+                        "This billboard name is already in use");
+                Break = true;
+            }
         }
         else {
             System.out.println(billboardName);
@@ -843,10 +852,5 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     @Override
     public void windowDeactivated(WindowEvent e) {
 
-    }
-
-    public static void main(String[] args)
-    {
-        SwingUtilities.invokeLater(new BBEditor("admin", "1234"));
     }
 }
