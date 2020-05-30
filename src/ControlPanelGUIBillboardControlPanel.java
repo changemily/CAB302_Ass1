@@ -439,7 +439,33 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                     }
                     System.out.println("xmlFile: " + xmlFile);
                     //run Billboard editor/creator GUI
-                    SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardName, xmlFile));
+
+                    // check that editor isn't already open
+                    int frameCount = 0;
+                    Frame[] allFrames = Frame.getFrames();
+                    for(Frame fr : allFrames){
+                        if((fr.getClass().getName().equals("BBEditor"))){
+                            if(fr.isVisible()){
+                                frameCount += 1;
+                            }
+                        }
+                    }
+
+                    if(frameCount > 0) {
+                        int a = showConfirmDialog(null, "This will close your current billboard editor screen and you will lose any changes");
+                        if (a == YES_OPTION) {
+                            allFrames = Frame.getFrames();
+                            for (Frame fr : allFrames) {
+                                if ((fr.getClass().getName().equals("BBEditor"))) {
+                                    fr.dispose();
+                                }
+                            }
+                            SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardName, xmlFile));
+                        }
+                    }
+                    else{
+                        SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardName, xmlFile));
+                    }
                 }
                 else{
                     //display error pop up\
@@ -454,7 +480,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //Open the editor with a new file
             if (currentUser.Permissions.contains("Create Billboards")) {
                 try {
-                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
                     xmlFile = XML_TEMPLATE;
                     closeable = false;
                 } catch (Exception e) {
@@ -463,8 +488,33 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                             "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
                 System.out.println("xmlFile: " + xmlFile);
-                //run Billboard editor/and assign the current users username to be the creator
-                SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardListH));
+
+                // check that editor isn't already open
+                int frameCount = 0;
+                Frame[] allFrames = Frame.getFrames();
+                for(Frame fr : allFrames){
+                    if((fr.getClass().getName().equals("BBEditor"))){
+                        if(fr.isVisible()){
+                            frameCount += 1;
+                        }
+                    }
+                }
+
+                if(frameCount > 0) {
+                    int a = showConfirmDialog(null, "This will close your current billboard editor screen and you will lose any changes");
+                    if (a == YES_OPTION) {
+                        allFrames = Frame.getFrames();
+                        for (Frame fr : allFrames) {
+                            if ((fr.getClass().getName().equals("BBEditor"))) {
+                                fr.dispose();
+                            }
+                        }
+                        SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardListH));
+                    }
+                }
+                else{
+                    SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardListH));
+                }
             }
             else{
                 //display error pop up
@@ -551,7 +601,32 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             else
             {
                 if (currentUser.Permissions.contains("Schedule Billboards")) {
-                    SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName));
+                    int frameCount = 0;
+                    Frame[] allFrames = Frame.getFrames();
+                    for(Frame fr : allFrames){
+                        if((fr.getClass().getName().equals("BBSchedulePopup"))){
+                            if(fr.isVisible()){
+                                frameCount += 1;
+                            }
+                        }
+                    }
+
+                    if(frameCount > 0) {
+                        int a = showConfirmDialog(null, "This will close your current scheduling screen and you will lose any changes");
+                        if (a == YES_OPTION) {
+                            allFrames = Frame.getFrames();
+                            for (Frame fr : allFrames) {
+                                if ((fr.getClass().getName().equals("BBSchedulePopup"))) {
+                                    fr.dispose();
+                                }
+                            }
+                            SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName));
+                        }
+                    }
+                    else{
+                        SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName));
+                    }
+
                 }
                 else{
                     //display error pop up

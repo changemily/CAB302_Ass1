@@ -459,9 +459,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                                 for (Frame fr : allFrames) {
                                     if ((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))) {
                                         fr.dispose();
-                                        if ((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))) {
-                                            fr.dispose();
-                                        }
                                     }
                                 }
                                 SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
@@ -539,9 +536,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                             for(Frame fr : allFrames){
                                 if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
                                     fr.dispose();
-                                    if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
-                                        fr.dispose();
-                                    }
                                 }
                             }
                             SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", true, userList));
