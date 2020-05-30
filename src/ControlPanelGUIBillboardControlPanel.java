@@ -430,7 +430,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                     //Retrieve the xml file associated with the name
                     try {
                         xmlFile = billboardXML;
-                        closeable = false;
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -461,6 +460,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                                 }
                             }
                             SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardName, xmlFile));
+                            closeable = false;
                         }
                     }
                     else{
@@ -480,9 +480,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //Open the editor with a new file
             if (currentUser.Permissions.contains("Create Billboards")) {
                 try {
-                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
                     xmlFile = XML_TEMPLATE;
-                    closeable = false;
                 } catch (Exception e) {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(getContentPane(), e,
@@ -511,6 +509,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                             }
                         }
                         SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardListH));
+                        closeable = false;
                     }
                 }
                 else{
@@ -622,10 +621,12 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                                 }
                             }
                             SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName, schedule));
+                            closeable = false;
                         }
                     }
                     else{
                         SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName, schedule));
+                        closeable = false;
                     }
                 }
                 else{

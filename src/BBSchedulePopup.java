@@ -417,6 +417,19 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                 }
             }
         }
+        else if(buttonClicked == closeBttn){
+            Frame[] allFrames = Frame.getFrames();
+            for(Frame fr : allFrames){
+                if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
+                    fr.dispose();
+                }
+            }
+            dispose();
+            //run Billboard Control Panel GUI
+            String [] user_input = {"List billboards"};
+            //request billboard list and run calendar GUI
+            ControlPanelClient.Run_Client(user_input);
+        }
     }
 
     @Override
