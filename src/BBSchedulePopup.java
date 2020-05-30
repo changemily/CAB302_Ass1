@@ -50,6 +50,9 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        //make window non resizable
+        setResizable(false);
+
         // Create DurationSpinner
         durationSpinner = createNumberJSpinner(1, 1, 1440);
 

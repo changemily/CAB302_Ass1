@@ -92,6 +92,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         // Set default look and feel & window properties
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
+        //make window non resizable
+        setResizable(false);
+
         // Create mainPanel
         mainPanel = new JPanel();
 
