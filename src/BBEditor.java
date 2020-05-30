@@ -34,7 +34,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private BillboardViewer bb = null;
     private HashMap<String, Billboard> billboardList;
     private boolean createdBillboard = false;
-    private boolean savedBillboard = false;
     private JPanel mainPanel;
     private JPanel previewPanel;
     private JPanel billboardPreview;
@@ -91,6 +90,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, SAXException, ParserConfigurationException {
         // Set default look and feel & window properties
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         // Create mainPanel
         mainPanel = new JPanel();
@@ -835,6 +835,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         else if(a == NO_OPTION)
         {
             dispose();
+        }
+        else if(a == CANCEL_OPTION){
+            // do nothing
         }
     }
 
