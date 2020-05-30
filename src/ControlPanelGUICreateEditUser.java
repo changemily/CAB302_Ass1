@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -87,19 +84,41 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Create username JTextField, add to left JPanel
         usernameField = newTextField(leftPanel);
-        if(newUser) {
-            usernameField.setEditable(true);
-        }
-        else{
-            usernameField.setEditable(false);
-            usernameField.setText(targetUser.Username);
-        }
+
 
         // Create password JLabel, add to left JPanel
         newLabel("Password", leftPanel);
 
         // Create password JTextField, add to left JPanel
         password = newTextField(leftPanel);
+        password.setEditable(false);
+
+        if(newUser) {
+            usernameField.setEditable(true);
+            password.setText("");
+        }
+        else{
+            usernameField.setEditable(false);
+            usernameField.setText(targetUser.Username);
+            password.setText("Click to Change");
+        }
+        password.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if(password.getText().equals("Click to Change") && !newUser){
+                    password.setText("");
+                    password.setEditable(true);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if(password.getText().equals("") && !newUser){
+                    password.setText("Click to Change");
+                    password.setEditable(false);
+                }
+            }
+        });
         leftPanel.add(Box.createVerticalStrut(20)); // Formatting
 
         // Create Save and Exit JButton, add to left JPanel
@@ -324,111 +343,166 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
             System.out.println(editAllBillboardsBox.isSelected());
             System.out.println(editUsersBox.isSelected());
             //run save info, and close window
-            if(!usernameField.getText().equals("") && !password.getText().equals("")) {
+            if(!usernameField.getText().equals("")) {
                 if (newUser) {
-                    String newUsername = usernameField.getText();
-                    String newPassword = null;
-                    try {
-                        newPassword = userManager.hashPassword(password.getText());
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    String createBillboard;
-                    String scheduleBillboard;
-                    String editBillboard;
-                    String editUsers;
-                    if (createBillboardsBox.isSelected()) {
-                        createBillboard = "1";
-                    } else {
-                        createBillboard = "0";
-                    }
-                    if (scheduleBillboardsBox.isSelected()) {
-                        scheduleBillboard = "1";
-                    } else {
-                        scheduleBillboard = "0";
-                    }
-                    if (editAllBillboardsBox.isSelected()) {
-                        editBillboard = "1";
-                    } else {
-                        editBillboard = "0";
-                    }
-                    if (editUsersBox.isSelected()) {
-                        editUsers = "1";
-                    } else {
-                        editUsers = "0";
-                    }
-
-                    String[] user_inputs = {"Create User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
-                    ControlPanelClient.Run_Client(user_inputs);
-                    Frame[] allFrames = Frame.getFrames();
-                    for (Frame fr : allFrames) {
-                        if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
-                            fr.dispose();
+                    if(password.getText().equals("")) {
+                        String newUsername = usernameField.getText();
+                        String newPassword = null;
+                        try {
+                            newPassword = userManager.hashPassword(password.getText());
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
                         }
-                    }
-                    forcedExit = false;
-                    dispose();
+                        String createBillboard;
+                        String scheduleBillboard;
+                        String editBillboard;
+                        String editUsers;
+                        if (createBillboardsBox.isSelected()) {
+                            createBillboard = "1";
+                        } else {
+                            createBillboard = "0";
+                        }
+                        if (scheduleBillboardsBox.isSelected()) {
+                            scheduleBillboard = "1";
+                        } else {
+                            scheduleBillboard = "0";
+                        }
+                        if (editAllBillboardsBox.isSelected()) {
+                            editBillboard = "1";
+                        } else {
+                            editBillboard = "0";
+                        }
+                        if (editUsersBox.isSelected()) {
+                            editUsers = "1";
+                        } else {
+                            editUsers = "0";
+                        }
 
-                    //run Billboard Control Panel GUI
-                    String[] user_input = {"List users", "Admin"};
-                    //request schedule and run calendar GUI
-                    ControlPanelClient.Run_Client(user_input);
-                } else {
-                    String newUsername = usernameField.getText();
-                    String newPassword = password.getText();
-                    String createBillboard;
-                    String scheduleBillboard;
-                    String editBillboard;
-                    String editUsers;
-                    if (createBillboardsBox.isSelected()) {
-                        createBillboard = "1";
-                    } else {
-                        createBillboard = "0";
-                    }
-                    if (scheduleBillboardsBox.isSelected()) {
-                        scheduleBillboard = "1";
-                    } else {
-                        scheduleBillboard = "0";
-                    }
-                    if (editAllBillboardsBox.isSelected()) {
-                        editBillboard = "1";
-                    } else {
-                        editBillboard = "0";
-                    }
-                    if (editUsersBox.isSelected()) {
-                        editUsers = "1";
-                    } else {
-                        editUsers = "0";
-                    }
-
-                    String[] user_inputs = {"Edit User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
-                    ControlPanelClient.Run_Client(user_inputs);
-                    Frame[] allFrames = Frame.getFrames();
-                    if (adminUser) {
+                        String[] user_inputs = {"Create User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
+                        ControlPanelClient.Run_Client(user_inputs);
+                        Frame[] allFrames = Frame.getFrames();
                         for (Frame fr : allFrames) {
                             if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
+                        forcedExit = false;
                         dispose();
 
                         //run Billboard Control Panel GUI
                         String[] user_input = {"List users", "Admin"};
                         //request schedule and run calendar GUI
                         ControlPanelClient.Run_Client(user_input);
-                        forcedExit = false;
-                    } else {
-                        dispose();
-                        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
                     }
+                    else{
+                        JOptionPane.showMessageDialog(this,
+                                "Missing password");
+                    }
+                } else {
+                    if(!password.getText().equals("Click to Change")) {
+                        String newUsername = usernameField.getText();
+                        String newPassword = password.getText();
+                        String createBillboard;
+                        String scheduleBillboard;
+                        String editBillboard;
+                        String editUsers;
+                        if (createBillboardsBox.isSelected()) {
+                            createBillboard = "1";
+                        } else {
+                            createBillboard = "0";
+                        }
+                        if (scheduleBillboardsBox.isSelected()) {
+                            scheduleBillboard = "1";
+                        } else {
+                            scheduleBillboard = "0";
+                        }
+                        if (editAllBillboardsBox.isSelected()) {
+                            editBillboard = "1";
+                        } else {
+                            editBillboard = "0";
+                        }
+                        if (editUsersBox.isSelected()) {
+                            editUsers = "1";
+                        } else {
+                            editUsers = "0";
+                        }
 
+                        String[] user_inputs = {"Edit User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
+                        ControlPanelClient.Run_Client(user_inputs);
+                        Frame[] allFrames = Frame.getFrames();
+                        if (adminUser) {
+                            for (Frame fr : allFrames) {
+                                if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                                    fr.dispose();
+                                }
+                            }
+                            dispose();
+
+                            //run Billboard Control Panel GUI
+                            String[] user_input = {"List users", "Admin"};
+                            //request schedule and run calendar GUI
+                            ControlPanelClient.Run_Client(user_input);
+                            forcedExit = false;
+                        } else {
+                            dispose();
+                            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                        }
+                    }
+                    else{
+                        String newUsername = usernameField.getText();
+                        String createBillboard;
+                        String scheduleBillboard;
+                        String editBillboard;
+                        String editUsers;
+                        if (createBillboardsBox.isSelected()) {
+                            createBillboard = "1";
+                        } else {
+                            createBillboard = "0";
+                        }
+                        if (scheduleBillboardsBox.isSelected()) {
+                            scheduleBillboard = "1";
+                        } else {
+                            scheduleBillboard = "0";
+                        }
+                        if (editAllBillboardsBox.isSelected()) {
+                            editBillboard = "1";
+                        } else {
+                            editBillboard = "0";
+                        }
+                        if (editUsersBox.isSelected()) {
+                            editUsers = "1";
+                        } else {
+                            editUsers = "0";
+                        }
+
+                        String[] user_inputs = {"Edit User Keep Password", newUsername, createBillboard, scheduleBillboard, editBillboard, editUsers};
+                        ControlPanelClient.Run_Client(user_inputs);
+                        Frame[] allFrames = Frame.getFrames();
+                        if (adminUser) {
+                            for (Frame fr : allFrames) {
+                                if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                                    fr.dispose();
+                                }
+                            }
+                            dispose();
+
+                            //run Billboard Control Panel GUI
+                            String[] user_input = {"List users", "Admin"};
+                            //request schedule and run calendar GUI
+                            ControlPanelClient.Run_Client(user_input);
+                            forcedExit = false;
+                        } else {
+                            dispose();
+                            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                        }
+                    }
                 }
             }
             else{
                 JOptionPane.showMessageDialog(this,
-                        "Missing username or password");
+                        "Missing username");
             }
         }
         // Checks if the Exit Without Saving button has been clicked
