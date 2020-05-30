@@ -15,7 +15,7 @@ import java.util.Properties;
  * @version - under development
  */
 public class ControlPanelClient {
-    public static String username = "editUser";
+    public static String username = "AdminUser";
     public static String sessionToken = "1234";
 
     /**

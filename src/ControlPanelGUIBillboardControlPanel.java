@@ -621,14 +621,12 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                                     fr.dispose();
                                 }
                             }
-                            SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName));
+                            SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName, schedule));
                         }
                     }
                     else{
-                        SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName));
+                        SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName, schedule));
                     }
-
-                    SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName, schedule));
                 }
                 else{
                     //display error pop up

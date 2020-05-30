@@ -394,14 +394,14 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                     }
 
                     //if user selected start time is equal to start time of viewing stored
-                    if (validSchedule == false)
+                    if (!validSchedule)
                     {
                         //display error pop up
                         JOptionPane.showMessageDialog(this,
                                 "The viewing of " +billboardName+" for "+ startTime+" does not exist in the schedule");
                     }
 
-                    if (billboardExists == true)
+                    if (billboardExists)
                     {
                         //change user inputs to GUI inputs
                         String [] user_inputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
