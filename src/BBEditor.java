@@ -79,7 +79,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     }
 
     public BBEditor(String username, String sessionToken, HashMap<String, Billboard> billboardList){
-        super("Billboard Editor");
+        super("Billboard Creator");
         this.billboardName = null;
         tempXMLString = "<billboard></billboard>";
         createdBillboard = true;

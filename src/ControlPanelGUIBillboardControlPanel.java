@@ -160,7 +160,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         buttonPanel.add(editBillboardButton);
 
         // Create and add Schedule Billboard button, inside button JPanel
-        scheduleBillboardButton = createButton("Schedule Billboard");
+        scheduleBillboardButton = createButton("Manage Schedule");
         buttonPanel.add(scheduleBillboardButton);
         mainPanel.add(buttonPanel); // Add button JPanel to billboard preview JPanel
 
