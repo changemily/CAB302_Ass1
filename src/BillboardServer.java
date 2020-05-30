@@ -160,6 +160,7 @@ public class BillboardServer {
                     case "Schedule Billboard":
                         //schedule billboard
                         scheduleBillboard(ois, connection, billboardList, billboardSchedule);
+                        billboardSchedule.retrieveDBschedule(connection);
                         break;
 
                     case "Remove Schedule":

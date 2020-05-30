@@ -30,6 +30,11 @@ public class ScheduleMultiMap implements java.io.Serializable  {
      * schedule information does not exist
      */
     public void retrieveDBschedule(Connection connection) throws Exception {
+        //clear multimap
+        //for every billboard name in Billboard_schedule
+        for (String billboardName : new ArrayList<>(scheduleMultiMap.keySet())) {
+            scheduleMultiMap.remove(billboardName);
+        }
 
         //SQL query that selects all viewings in schedule and orders them by start time descending
         final String SELECT = "SELECT * FROM schedule ORDER BY startTimeScheduled desc";

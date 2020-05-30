@@ -34,7 +34,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private BillboardViewer bb = null;
     private HashMap<String, Billboard> billboardList;
     private boolean createdBillboard = false;
-    private boolean savedBillboard = false;
     private JPanel mainPanel;
     private JPanel previewPanel;
     private JPanel billboardPreview;
@@ -79,7 +78,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     }
 
     public BBEditor(String username, String sessionToken, HashMap<String, Billboard> billboardList){
-        super("Billboard Editor");
+        super("Billboard Creator");
         this.billboardName = null;
         tempXMLString = "<billboard></billboard>";
         createdBillboard = true;
@@ -91,7 +90,10 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, SAXException, ParserConfigurationException {
         // Set default look and feel & window properties
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        //make window non resizable
+        setResizable(false);
 
         // Create mainPanel
         mainPanel = new JPanel();
@@ -307,9 +309,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(extraInfoScrollPanel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
                                         .addGroup(mainPanelLayout.createSequentialGroup()
-                                                .addComponent(messageLabel)
+                                                .addComponent(nameLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(messageField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(imageLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -331,9 +333,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED))
                                         .addGroup(mainPanelLayout.createSequentialGroup()
                                                 .addGap(12, 12, 12)
-                                                .addComponent(nameLabel)
+                                                .addComponent(messageLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(messageField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)))
                                 .addGroup(mainPanelLayout.createParallelGroup()
                                         .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
@@ -354,6 +356,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         );
 
         getContentPane().add(mainPanel);
+
+        addWindowListener(this);
 
         pack();
         setLocationRelativeTo(null);
@@ -468,9 +472,11 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             if(a == YES_OPTION)
             {
                 //save billboard to database
-                saveBillboardToDB();
+                boolean Break = saveBillboardToDB();
                 //closes editor and reloads billboard control panel
-                refreshFrames();
+                if(!Break) {
+                    refreshFrames();
+                }
             }
             else if(a == NO_OPTION)
             {
@@ -716,9 +722,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         for(Frame fr : allFrames){
             if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
                 fr.dispose();
-                if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
-                    fr.dispose();
-                }
             }
         }
         dispose();
@@ -826,12 +829,27 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
     @Override
     public void windowClosing(WindowEvent e) {
-
+        int a = showConfirmDialog(null, "Would you like to save changes to the database?");
+        if(a == YES_OPTION)
+        {
+            //save billboard to database
+            boolean Break = saveBillboardToDB();
+            //closes editor and reloads billboard control panel
+            if(!Break) {
+                refreshFrames();
+            }
+        }
+        else if(a == NO_OPTION)
+        {
+            dispose();
+        }
+        else if(a == CANCEL_OPTION){
+            // do nothing
+        }
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-
     }
 
     @Override

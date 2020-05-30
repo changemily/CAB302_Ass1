@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,7 @@ import static javax.swing.JOptionPane.*;
  *
  * NOTES: Minor button functionality still needs to be added; further refinement required
  */
-public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, DocumentListener {
+public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, ListSelectionListener, DocumentListener {
     HashMap<String, Billboard> billboardListH;
     User currentUser;
     ScheduleMultiMap schedule;
@@ -66,6 +67,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     private JPanel createBillboardPanel;
     private final Dimension DIMENSION = new Dimension(400,200);
     private BillboardViewer Billboard;
+
+    // Master Array of billboards (and creators), used in billboard search checking
+    String[] billboardListWithCreatorArray;
+
+    // Variable list used to populate JList when user is searching
+    DefaultListModel billboardWithCreatorListModel = new DefaultListModel();
+
     // Xml string used when there was no selection made
     private final String NO_SELECTION_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
@@ -96,6 +104,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        //make window non resizable
+        setResizable(false);
 
         // Create billboards JPanel
         JPanel billboardPanel = new JPanel();
@@ -147,8 +158,11 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
             billboardPanel.add(Box.createVerticalStrut(20));
 
+            // Populate the master array of billboardsWithCreator, with information
+            billboardListWithCreatorArray = populateBillboardsArray();
+
             //Create billboard JList, and add it to billboard JPanel
-            billboardList = createJList(billboardPanel);
+            billboardList = createJList(billboardWithCreatorListModel, billboardListWithCreatorArray, billboardPanel);
         }
 
         // Create button JPanel
@@ -160,7 +174,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         buttonPanel.add(editBillboardButton);
 
         // Create and add Schedule Billboard button, inside button JPanel
-        scheduleBillboardButton = createButton("Schedule Billboard");
+        scheduleBillboardButton = createButton("Manage Schedule");
         buttonPanel.add(scheduleBillboardButton);
         mainPanel.add(buttonPanel); // Add button JPanel to billboard preview JPanel
 
@@ -253,11 +267,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         return textField;
     }
 
-    /**
-     * This method creates a JList, returns a JList
-     * @return Returns JList
-     */
-    private JList createJList(JPanel panel) {
+    private String[] populateBillboardsArray() {
         // Int counter for assigning values in the array
         int counter = 0;
 
@@ -274,12 +284,27 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             counter++;
         }
 
+        return billboardListWithCreator;
+    }
+
+    /**
+     * This method creates a JList, returns a JList
+     * @return Returns JList
+     */
+    private JList createJList(DefaultListModel listModel, String[] array, JPanel panel) {
+
         // Create new JPanel for spacing and formatting
         JPanel panel2 = new JPanel();
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
 
         // Create new JList
-        JList list = new JList(billboardListWithCreator);
+        JList list = new JList(billboardWithCreatorListModel);
+
+        // For each element in the provided array, add the element to the list model
+        for (String a : array) {
+            // Add element a to the list model
+            listModel.addElement(a);
+        }
 
         // Create JScrollPane
         JScrollPane scroll = new JScrollPane(list);
@@ -303,10 +328,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
     /**
      * This method creates a is used to evaluate which billboards is being clicked on in the list
-     * @return Returns JList
      */
     // Changes billboard XML when a user selects a billboard from the list
-    private void valueChanged(ListSelectionEvent event){
+    public void valueChanged(ListSelectionEvent event){
         //get string stored in current cell of list
         try {
             String cellSelected = billboardList.getSelectedValue().toString();
@@ -426,11 +450,10 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 catch (Exception e) {
                     scheduleCheck = false;
                 }
-                if(((!creatorCheck) && currentUser.Permissions.contains("Edit All Billboards")) || (creatorCheck && (currentUser.Permissions.contains("Create Billboards") && !scheduleCheck))){
+                if((currentUser.Permissions.contains("Edit All Billboards")) || (creatorCheck && !scheduleCheck && currentUser.Permissions.contains("Create Billboards"))){
                     //Retrieve the xml file associated with the name
                     try {
                         xmlFile = billboardXML;
-                        closeable = false;
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -439,7 +462,35 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                     }
                     System.out.println("xmlFile: " + xmlFile);
                     //run Billboard editor/creator GUI
-                    SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardName, xmlFile));
+
+                    // check that editor isn't already open
+                    int frameCount = 0;
+                    Frame[] allFrames = Frame.getFrames();
+                    for(Frame fr : allFrames){
+                        if((fr.getClass().getName().equals("BBEditor"))){
+                            if(fr.isVisible()){
+                                frameCount += 1;
+                            }
+                        }
+                    }
+
+                    if(frameCount > 0) {
+                        int a = showConfirmDialog(null, "This will close your current billboard editor screen and you will lose any changes");
+                        if (a == YES_OPTION) {
+                            allFrames = Frame.getFrames();
+                            for (Frame fr : allFrames) {
+                                if ((fr.getClass().getName().equals("BBEditor"))) {
+                                    fr.dispose();
+                                }
+                            }
+                            SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardName, xmlFile));
+                            closeable = false;
+                        }
+                    }
+                    else{
+                        SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardName, xmlFile));
+                        closeable = false;
+                    }
                 }
                 else{
                     //display error pop up\
@@ -454,17 +505,42 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //Open the editor with a new file
             if (currentUser.Permissions.contains("Create Billboards")) {
                 try {
-                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
                     xmlFile = XML_TEMPLATE;
-                    closeable = false;
                 } catch (Exception e) {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(getContentPane(), e,
                             "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
                 System.out.println("xmlFile: " + xmlFile);
-                //run Billboard editor/and assign the current users username to be the creator
-                SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardListH));
+
+                // check that editor isn't already open
+                int frameCount = 0;
+                Frame[] allFrames = Frame.getFrames();
+                for(Frame fr : allFrames){
+                    if((fr.getClass().getName().equals("BBEditor"))){
+                        if(fr.isVisible()){
+                            frameCount += 1;
+                        }
+                    }
+                }
+
+                if(frameCount > 0) {
+                    int a = showConfirmDialog(null, "This will close your current billboard editor screen and you will lose any changes");
+                    if (a == YES_OPTION) {
+                        allFrames = Frame.getFrames();
+                        for (Frame fr : allFrames) {
+                            if ((fr.getClass().getName().equals("BBEditor"))) {
+                                fr.dispose();
+                            }
+                        }
+                        SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardListH));
+                        closeable = false;
+                    }
+                }
+                else{
+                    SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardListH));
+                    closeable = false;
+                }
             }
             else{
                 //display error pop up
@@ -501,7 +577,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 catch (Exception e) {
                     scheduleCheck = false;
                 }
-                if(((!creatorCheck) && currentUser.Permissions.contains("Edit All Billboards")) || (creatorCheck && (currentUser.Permissions.contains("Create Billboards") && !scheduleCheck))) {
+                if((currentUser.Permissions.contains("Edit All Billboards")) || (creatorCheck && !scheduleCheck && currentUser.Permissions.contains("Create Billboards"))){
                     //Open the editor with a new file
                     try {
                         //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
@@ -551,7 +627,33 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             else
             {
                 if (currentUser.Permissions.contains("Schedule Billboards")) {
-                    SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName));
+                    int frameCount = 0;
+                    Frame[] allFrames = Frame.getFrames();
+                    for(Frame fr : allFrames){
+                        if((fr.getClass().getName().equals("BBSchedulePopup"))){
+                            if(fr.isVisible()){
+                                frameCount += 1;
+                            }
+                        }
+                    }
+
+                    if(frameCount > 0) {
+                        int a = showConfirmDialog(null, "This will close your current scheduling screen and you will lose any changes");
+                        if (a == YES_OPTION) {
+                            allFrames = Frame.getFrames();
+                            for (Frame fr : allFrames) {
+                                if ((fr.getClass().getName().equals("BBSchedulePopup"))) {
+                                    fr.dispose();
+                                }
+                            }
+                            SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName, schedule));
+                            closeable = false;
+                        }
+                    }
+                    else{
+                        SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName, schedule));
+                        closeable = false;
+                    }
                 }
                 else{
                     //display error pop up

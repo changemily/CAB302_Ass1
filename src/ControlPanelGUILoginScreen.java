@@ -40,6 +40,9 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
         // Default close operation, so window does not continue running after it is closed
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        // Make window non resizable
+        setResizable(false);
+
         // Create title label, inside of a JPanel
         JPanel titlePanel = newLabel("Welcome to the Billboard Control Panel", true, true);
         titlePanel.add(Box.createHorizontalStrut(100));

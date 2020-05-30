@@ -21,6 +21,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, ActionListener, WindowListener {
     private MultiMap billboardSchedule;
     private final int DAYS_IN_WEEK = 7;
+    private boolean forcedClose = false;
     String username;
     String sessionToken;
 
@@ -53,6 +54,9 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
 
         // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        //make window non resizable
+        setResizable(false);
 
         // Create main content JPanel, with Y axis Box Layout
         JPanel buttonPanel = newPanel('X');
@@ -158,7 +162,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         JLabel billboardsThisWeekLabel = new JLabel("Billboards this Week");
 
         // Change text size of JLabel
-        billboardsThisWeekLabel.setFont(new Font(null, Font.PLAIN, 15));
+        billboardsThisWeekLabel.setFont(new Font(null, Font.BOLD, 15));
 
         // Centre JLabel
         billboardsThisWeekLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -377,18 +381,20 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         if (buttonClicked == backButton) {
             // Closes current GUI screen
             dispose();
+            forcedClose = true;
 
             // Open new Control Panel GUI screen
-            //SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
         }
 
         // Checks if the logout button has been clicked
         else if (buttonClicked == logoutButton) {
             // Closes current GUI screen
             dispose();
+            forcedClose = true;
 
             // Open new Login screen
-            //SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
         }
     }
 
@@ -405,7 +411,9 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
     @Override
     public void windowClosed(WindowEvent e) {
         // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
-        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        if(!forcedClose) {
+            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }
     }
 
     @Override

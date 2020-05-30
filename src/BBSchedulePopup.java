@@ -4,10 +4,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -21,6 +21,7 @@ import static javax.swing.JOptionPane.*;
 
 public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 {
+    private ScheduleMultiMap billboardSchedule;
     private JButton removeBttn;
     private JButton scheduleBttn;
     private JButton closeBttn;
@@ -34,7 +35,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     private String username;
     private String sessionToken;
 
-    public BBSchedulePopup(String username, String sessionToken, String billboardName)
+    public BBSchedulePopup(String username, String sessionToken, String billboardName, ScheduleMultiMap schedule)
     {
         // Set window title
         super("Schedule Billboard");
@@ -42,12 +43,16 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         this.billboardName = billboardName;
         this.username = username;
         this.sessionToken = sessionToken;
+        this.billboardSchedule = schedule;
     }
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException
     {
         // Set default look and feel & window properties
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        //make window non resizable
+        setResizable(false);
 
         // Create DurationSpinner
         durationSpinner = createNumberJSpinner(1, 1, 1440);
@@ -169,6 +174,8 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
     private JSpinner createDateJSpinner() {
         //get current time in calendar format
         Calendar cal = Calendar.getInstance();
+        //round seconds down
+        cal.set(Calendar.SECOND, 0);
         //add 1 minute to current time as you cannot schedule in the past
         cal.add(Calendar.MINUTE, 1);
 
@@ -278,14 +285,14 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         //Get button that has been clicked - event source
         Object buttonClicked = actionEvent.getSource();
 
-        //get date time string
+        //get date time string from user input
         String dateTime = dateTimePicker.getValue().toString();
 
         //format to LocalDateTime as string
         String startTimeString = calendarToLocalDateTime(dateTime);
 
-        //convert to type LocalDateTime
-        LocalDateTime startTime = LocalDateTime.parse(startTimeString);
+        //convert to type LocalDateTime and round down in minutes
+        LocalDateTime startTime = LocalDateTime.parse(startTimeString).truncatedTo(ChronoUnit.MINUTES);
 
         //get duration from spinner
         String duration = durationSpinner.getValue().toString();
@@ -316,8 +323,9 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
 
             //if start time is valid
             else{
-                //Schedule billboard with viewing details given by user
+                //display confirmation message
                 ControlPanelClient.Run_Client(user_inputs);
+                //add viewing to local map of schedule
                 showMessageDialog(null, "Billboard Successfully Scheduled");
 
                 //FOR TESTING
@@ -326,6 +334,9 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                 System.out.println("Start time: "+user_inputs[2]);
                 System.out.println("Duration: "+user_inputs[3]);
                 System.out.println("recurrence: "+user_inputs[4]);
+
+                //dispose pop up and reopen billboard control panel
+                frameRefresh();
             }
 
         }
@@ -350,18 +361,77 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                 //if yes is selected in check window
                 if(a == YES_OPTION)
                 {
-                    //change user inputs to GUI inputs
-                    String [] user_inputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
+                    //boolean to check if viewing exists in schedule
+                    boolean validSchedule = false;
+                    //try retrieving schedule info of billboard
+                    try {
+                        ArrayList<ScheduleInfo> viewings = billboardSchedule.getSchedule(billboardName);
+                        //for all viewings of the billboard
+                        for(ScheduleInfo viewing : viewings)
+                        {
+                            //get start time of viewing and round down in minutes
+                            LocalDateTime viewingStartTime = viewing.startTimeScheduled.truncatedTo(ChronoUnit.MINUTES);
 
-                    //remove viewing from schedule with viewing details given by user
-                    ControlPanelClient.Run_Client(user_inputs);
-                    //dispose check pop up
-                    dispose();
-                    //dispose schedule billboard pop up
-                    dispose();
+                            System.out.println("startTime: " + startTime);
+                            System.out.println("viewingStartTime: " + viewingStartTime +"\n");
+
+                            //if user selected start time is equal to start time of viewing stored
+                            if(startTime.equals(viewingStartTime))
+                            {
+                                validSchedule = true;
+
+                                //display confirmation message
+                                showMessageDialog(null, "Billboard Successfully Removed From Schedule");
+
+                                //change user inputs to GUI inputs
+                                String [] user_inputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
+
+                                //remove viewing from schedule with viewing details given by user
+                                ControlPanelClient.Run_Client(user_inputs);
+
+                                //dispose pop up and reopen billboard control panel
+                                frameRefresh();
+
+                                break;
+                            }
+
+                            //if user selected start time is equal to start time of viewing stored
+                            if (!validSchedule)
+                            {
+                                //display error pop up
+                                JOptionPane.showMessageDialog(this,
+                                        "The viewing of " +billboardName+" for "+ startTime+" does not exist in the schedule");
+                            }
+                        }
+                    }
+                    //if billboard does not exist in schedule
+                    catch (Exception e) {
+                        //display error pop up
+                        JOptionPane.showMessageDialog(null, "The billboard does not exist in the schedule");
+                    }
+
                 }
             }
         }
+        else if(buttonClicked == closeBttn){
+            //dispose pop up and reopen billboard control panel
+            frameRefresh();
+
+        }
+    }
+
+    private void frameRefresh() {
+        Frame[] allFrames = Frame.getFrames();
+        for (Frame fr : allFrames) {
+            if ((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))) {
+                fr.dispose();
+            }
+        }
+        dispose();
+        //run Billboard Control Panel GUI
+        String [] user_input = {"List billboards"};
+        //request billboard list and run calendar GUI
+        ControlPanelClient.Run_Client(user_input);
     }
 
     @Override
@@ -391,11 +461,6 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    public static void main(String[] args)
-    {
-        SwingUtilities.invokeLater(new BBSchedulePopup("admin","1234","name"));
     }
 
 }
