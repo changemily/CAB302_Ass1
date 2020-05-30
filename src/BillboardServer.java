@@ -133,8 +133,10 @@ public class BillboardServer {
                         break;
                     case "List billboards":
                         //write billboard list to client
+                        billboardSchedule.retrieveDBschedule(connection);
                         billboardList.RetrieveDBbillboardList(connection);
-                        listBillboards(oos, billboardList);
+                        userList.retrieveUsersFromDB(connection);
+                        listBillboards(oos, billboardList, userList, billboardSchedule);
                         break;
                     case "Get Billboard info":
                         //write billboard info to client
@@ -160,9 +162,6 @@ public class BillboardServer {
                     case "Remove Schedule":
                         //remove viewing from schedule
                         removeSchedule(ois,connection,billboardSchedule, billboardList);
-                        break;
-                    case "Billboard Schedule Check":
-                        billboardScheduleCheck(ois,oos,billboardSchedule);
                         break;
                     case "List users":
                         userList.retrieveUsersFromDB(connection);
@@ -321,9 +320,11 @@ public class BillboardServer {
      * @param billboardList the list being sent to the client
      * @throws Exception
      */
-    private static void listBillboards(ObjectOutputStream oos, BillboardList billboardList) throws Exception{
+    private static void listBillboards(ObjectOutputStream oos, BillboardList billboardList, UserList userList, ScheduleMultiMap billboardSchedule) throws Exception{
         //Output to client
         oos.writeObject(billboardList.listBillboards());
+        oos.writeObject(userList.listUsers());
+        oos.writeObject(billboardSchedule);
 
         //Print billboard list sent to client
         System.out.println("Sent to client:\n");
@@ -511,36 +512,36 @@ public class BillboardServer {
         //write schedule to DB
         billboardSchedule.writeToDBschedule(connection);
     }
-
-
-    private static void billboardScheduleCheck(ObjectInputStream ois, ObjectOutputStream oos, ScheduleMultiMap billboardSchedule) throws IOException, ClassNotFoundException {
-        //read billboard name sent by client
-        String billboardName = ois.readObject().toString();
-
-        //print schedule variables received from client
-        System.out.println("Received to client:\n");
-        System.out.println("Billboard Name: "+billboardName+"\n");
-
-        //check if billboard exists in schedule
-        //try retrieve billboard's scheduling information
-        try {
-            billboardSchedule.getSchedule(billboardName);
-            //if viewings for billboard exist
-            //write true to DB
-            oos.writeObject("true");
-            System.out.println("true");
-            //flush output stream
-            oos.flush();
-        }
-        //if viewings for billboard do NOT exist
-        catch (Exception e) {
-            //write false to DB
-            oos.writeObject("false");
-            System.out.println("false");
-            //flush output stream
-            oos.flush();
-        }
-    }
+//
+//
+//    private static void billboardScheduleCheck(ObjectInputStream ois, ObjectOutputStream oos, ScheduleMultiMap billboardSchedule) throws IOException, ClassNotFoundException {
+//        //read billboard name sent by client
+//        String billboardName = ois.readObject().toString();
+//
+//        //print schedule variables received from client
+//        System.out.println("Received to client:\n");
+//        System.out.println("Billboard Name: "+billboardName+"\n");
+//
+//        //check if billboard exists in schedule
+//        //try retrieve billboard's scheduling information
+//        try {
+//            billboardSchedule.getSchedule(billboardName);
+//            //if viewings for billboard exist
+//            //write true to DB
+//            oos.writeObject("true");
+//            System.out.println("true");
+//            //flush output stream
+//            oos.flush();
+//        }
+//        //if viewings for billboard do NOT exist
+//        catch (Exception e) {
+//            //write false to DB
+//            oos.writeObject("false");
+//            System.out.println("false");
+//            //flush output stream
+//            oos.flush();
+//        }
+//    }
 
     /**
      * populates queue with schedule from database

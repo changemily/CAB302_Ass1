@@ -181,9 +181,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             // Open User Control Panel GUI
             String[] user_input = {"List users", "Admin"};
             ControlPanelClient.Run_Client(user_input);
-
-            // Close the GUI screen
-            dispose();
         }
 
         // If edit billboard JButton is clicked

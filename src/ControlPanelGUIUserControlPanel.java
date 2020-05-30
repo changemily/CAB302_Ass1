@@ -425,9 +425,12 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Checks if the login button has been clicked
         else if (buttonClicked == editUserButton) {
-
+            boolean selfEdit = false;
             String usernameSelected  = userSelectionLabel.getText();
-            if(usernameSelected == null)
+            if(usernameSelected.equals(username)){
+                selfEdit = true;
+            }
+            if(usernameSelected.equals("No User Selected"))
             {
                 // Display error pop up
                 JOptionPane.showMessageDialog(this,
@@ -461,15 +464,15 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                                         }
                                     }
                                 }
-                                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true, userList));
+                                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                             }
                         }
                         else{
-                            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true, userList));
+                            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                         }
                     }
                     else{
-                        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", intendedUser, true, userList));
+                        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                     }
                     openedUser = usernameSelected;
                     closeable =  false;
@@ -483,7 +486,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         // Checks if the delete user button has been clicked
         else if (buttonClicked == deleteUserButton) {
             System.out.println("delete user button clicked with " + userSelectionLabel.getText() + " selected");
-            if (userSelectionLabel.getText().equals("") || userSelectionLabel.getText() == null) {
+            if (userSelectionLabel.getText().equals("No User Selected")) {
                 JOptionPane.showMessageDialog(this,
                         "You have not selected a user");
             }

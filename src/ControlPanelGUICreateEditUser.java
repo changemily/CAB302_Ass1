@@ -29,6 +29,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
     String sessionToken;
     boolean adminUser;
     boolean newUser;
+    boolean selfUser;
     User targetUser;
     HashMap<String, User> userList;
     boolean forcedExit = true;
@@ -47,13 +48,14 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         this.userList = userList;
     }
 
-    public ControlPanelGUICreateEditUser(String username, String sessionToken, User targetUser, boolean adminUser, HashMap<String, User> userList){
+    public ControlPanelGUICreateEditUser(String username, String sessionToken, User targetUser, boolean adminUser, boolean selfUser, HashMap<String, User> userList){
         super("Create/Edit User");
         this.username = username;
         this.sessionToken = sessionToken;
         this.adminUser = adminUser;
         this.targetUser = targetUser;
         this.newUser = false;
+        this.selfUser = selfUser;
         this.userList = userList;
     }
 
@@ -94,7 +96,6 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Create password JTextField, add to left JPanel
         password = newTextField(leftPanel);
-        password.setText(targetUser.Password);
         leftPanel.add(Box.createVerticalStrut(20)); // Formatting
 
         // Create Save and Exit JButton, add to left JPanel
@@ -442,6 +443,14 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
             System.out.println("exit without saving clicked");
             //run close window
 
+        }
+        else if (buttonClicked == editUsersBox){
+            if(targetUser.Permissions.contains("Edit Users") && selfUser){
+                editUsersBox.setSelected(true);
+                // Display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "User can't remove 'Edit Users' from themselves");
+            }
         }
     }
 

@@ -12,7 +12,7 @@ import java.util.Map;
  * @author — Emily Chang
  * @version - complete
  */
-public class ScheduleMultiMap {
+public class ScheduleMultiMap implements java.io.Serializable  {
 
     MultiMap<String, ScheduleInfo> scheduleMultiMap;
 

@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -16,6 +17,9 @@ import java.util.Properties;
  * @version - under development
  */
 public class ControlPanelClient {
+    public static String username = "createBillboards";
+    public static String sessionToken = "1234";
+
     /**
      * Sends requests to Server
      */
@@ -57,7 +61,7 @@ public class ControlPanelClient {
                     break;
 
                 case "List billboards":
-                    listBillboards(oos, ois, request);
+                    listBillboardDetails(oos, ois, request);
                     break;
 
                 case "Get Billboard info":
@@ -77,13 +81,10 @@ public class ControlPanelClient {
                     viewScheduleWrite(oos,request);
                     viewScheduleRead(ois);
                     break;
-
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
                     scheduleBillboard(oos, request, user_inputs);
-
                     break;
-
                 case "Remove Schedule":
                     //Send details of billboard wanting to be scheduled to server
                     removeSchedule(oos, request, user_inputs);
@@ -200,13 +201,17 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by the control panel GUI
      * @throws IOException
      */
-    private static void listBillboards(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws IOException, ClassNotFoundException {
+    private static void listBillboardDetails(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws Exception {
         //Output clients request to the server
         oos.writeObject(buttonClicked);
         //Read billboard list from server
         HashMap<String, Billboard> BillboardList = (HashMap) ois.readObject();
+        // Listing billboards also requires a current user details
+        HashMap<String, User> userList = (HashMap) ois.readObject();
+        ScheduleMultiMap schedule = (ScheduleMultiMap) ois.readObject();
+        User currentUser = UserList.getUserInformation(userList, username);
         //Open the billboard control panel using username, session token and the billboard list
-        SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel("user", "1234", BillboardList));
+        SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel(username, sessionToken, BillboardList, currentUser, schedule));
     }
 
     /**
@@ -242,7 +247,7 @@ public class ControlPanelClient {
         String billboardName = user_inputs[1];
         //Write the request to the server
         oos.writeObject(buttonClicked);
-        //Write the billboardname to the server
+        //Write the billboardName to the server
         oos.writeObject(billboardName);
     }
 
@@ -281,7 +286,7 @@ public class ControlPanelClient {
         //read schedule sent by server
         MultiMap schedule = (MultiMap) ois.readObject();
 
-        SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule("user", "1234",schedule));
+        SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(username, "1234",schedule));
     }
 
     /**
@@ -330,50 +335,56 @@ public class ControlPanelClient {
         oos.writeObject(recurrence);
     }
 
-    /**
-     * checks if billboard exists in schedule
-     * @param billboardName Name of billboard being checked
-     * @param oos Object output stream of client
-     * @return boolean value - true if billboard exists in schedule, false if not
-     * @throws IOException
-     */
-    private static boolean billboardScheduleCheck (String billboardName, ObjectOutputStream oos, ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        //send server request
-        oos.writeObject("Billboard Schedule Check");
-        oos.writeObject(billboardName);
-
-        //read server's response
-        String billboardExists = ois.readObject().toString();
-
-        //if billboard exists in schedule
-        if(billboardExists == "true")
-        {
-            return true;
-        }
-
-        //if billboard does not exist in schedule
-        else
-        {
-            return false;
-        }
-    }
+//    /**
+//     * checks if billboard exists in schedule
+//     * @param oos Object output stream of client
+//     * @return boolean value - true if billboard exists in schedule, false if not
+//     * @throws IOException
+//     */
+//    private static boolean billboardScheduleCheck (ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws IOException, ClassNotFoundException {
+//        //send server request
+//        oos.writeObject(user_inputs[0]);
+//        oos.writeObject(user_inputs[1]);
+//
+//        //read server's response
+//        String billboardExists = ois.readObject().toString();
+//
+//        //if billboard exists in schedule
+//        if(billboardExists.equals("true"))
+//        {
+//            return true;
+//        }
+//
+//        //if billboard does not exist in schedule
+//        else
+//        {
+//            return false;
+//        }
+//    }
 
     private static void listUsersScreen(ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws Exception {
-        //Output clients request to the server
         oos.writeObject(user_inputs[0]);
         HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
-        String username = "AdminUser";
         User userDetails = UserList.getUserInformation(userList, username);
         if(!user_inputs[1].equals("Password")) {
             if (userDetails.Permissions.contains("Edit Users")) {
-                SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, "1234", userList));
+                Frame[] allFrames = Frame.getFrames();
+                for(Frame fr : allFrames){
+                    if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                        fr.dispose();
+                        if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                            fr.dispose();
+                        }
+                    }
+                }
+                SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken, userList));
             } else {
                 JOptionPane.showMessageDialog(new JFrame(),
-                        "User doesn't have Edit Users permission");
+                        "User doesn't have Edit Users permission");                
             }
         }
         else{
-            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", userDetails, false, userList));
+            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, userDetails, false, true, userList));
         }
     }
 
@@ -422,6 +433,6 @@ public class ControlPanelClient {
      * @param args
      */
     public static void main(String args[]){
-        SwingUtilities.invokeLater(new ControlPanelGUI("AdminUser", "1234"));
+        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
     }
 }

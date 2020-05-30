@@ -11,6 +11,7 @@ import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
 import javax.swing.filechooser.FileSystemView;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -24,7 +25,7 @@ import static javax.swing.JOptionPane.showConfirmDialog;
  *
  */
 
-public class BBEditor extends JFrame implements Runnable, ActionListener, ChangeListener
+public class BBEditor extends JFrame implements Runnable, ActionListener, ChangeListener, WindowListener
 {
     private String billboardName;
     private String tempXMLString;
@@ -804,6 +805,41 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             ControlPanelClient.Run_Client(user_inputs);
         }
         return Break;
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
     }
 
     public static void main(String[] args)

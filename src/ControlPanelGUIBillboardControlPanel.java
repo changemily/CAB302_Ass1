@@ -26,6 +26,8 @@ import static javax.swing.JOptionPane.*;
  */
 public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, DocumentListener {
     HashMap<String, Billboard> billboardListH;
+    User currentUser;
+    ScheduleMultiMap schedule;
     String username;
     String sessionToken;
     boolean closeable = true;
@@ -36,12 +38,14 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * @param sessionToken The sessionToken associated with the user
      * @param BillboardList A list of billboards passed in
      */
-    public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList) {
+    public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList, User currentUser, ScheduleMultiMap schedule) {
         // Set window title
         super("Billboard Control Panel");
         this.username = username;
         this.sessionToken = sessionToken;
+        this.currentUser = currentUser;
         billboardListH = BillboardList;
+        this.schedule = schedule;
     }
 
     // Clickable buttons and list
@@ -255,7 +259,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      */
     private JList createJList(JPanel panel) {
         // Int counter for assigning values in the array
-        int counter = 1;
+        int counter = 0;
 
         // Setup an array to return creator and billboard
         String[] billboardListWithCreator = new String[billboardListH.size()+1];
@@ -304,43 +308,48 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     // Changes billboard XML when a user selects a billboard from the list
     private void valueChanged(ListSelectionEvent event){
         //get string stored in current cell of list
-        String cellSelected = billboardList.getSelectedValue().toString();
-
-        //remove creator from list
-        String billboardSelected = cellSelected.replaceAll(",.*", "");
-
-        billboardName = billboardSelected;
-
-        Billboard billboardObjectSelected = billboardListH.get(billboardSelected);
-
-        //get billboard xml file name
-        billboardXML = billboardObjectSelected.XMLFile;
-
-        //remove all elements of GUI screen
-        mainPanel.removeAll();
-        mainPanel.revalidate();
-        mainPanel.repaint();
-
         try {
-            Billboard = new BillboardViewer(billboardXML, DIMENSION);
-        } catch (ParserConfigurationException | IOException | SAXException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(getContentPane(), ex,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            String cellSelected = billboardList.getSelectedValue().toString();
+
+            //remove creator from list
+            String billboardSelected = cellSelected.replaceAll(",.*", "");
+
+            billboardName = billboardSelected;
+
+            Billboard billboardObjectSelected = billboardListH.get(billboardSelected);
+
+            //get billboard xml file name
+            billboardXML = billboardObjectSelected.XMLFile;
+
+            //remove all elements of GUI screen
+            mainPanel.removeAll();
+            mainPanel.revalidate();
+            mainPanel.repaint();
+
+            try {
+                Billboard = new BillboardViewer(billboardXML, DIMENSION);
+            } catch (ParserConfigurationException | IOException | SAXException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(getContentPane(), ex,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+
+            mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+            mainPanel.add(Box.createVerticalStrut(50));
+            billboardPreview = Billboard.getSizedBillboard();
+
+            //add control panel components back to panel
+            mainPanel.add(billboardPreview);
+            mainPanel.add(buttonPanel);
+            mainPanel.add(createBillboardPanel);
+
+
+            System.out.println("bb xml: " + billboardXML);
+            System.out.println("bb name: " + billboardName);
         }
-
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.add(Box.createVerticalStrut(50));
-        billboardPreview = Billboard.getSizedBillboard();
-
-        //add control panel components back to panel
-        mainPanel.add(billboardPreview);
-        mainPanel.add(buttonPanel);
-        mainPanel.add(createBillboardPanel);
-
-
-        System.out.println("bb xml: "+billboardXML);
-        System.out.println("bb name: "+billboardName);
+        catch (Exception e){
+            // don't do anything
+        }
     }
 
 
@@ -391,47 +400,82 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // Checks if the edit billboard button has been clicked
         else if (buttonClicked == editBillboardButton) {
             //if billboard has not been selected in list
-            if(billboardName == null)
-            {
+            if (billboardName == null) {
                 //display error pop up\
                 JOptionPane.showMessageDialog(this,
                         "You must select a billboard in the list to edit");
             }
-
             //if billboard has been selected
-            else
-            {
-                //Retrieve the xml file associated with the name
-                try {
-                    xmlFile = billboardXML;
-                    closeable = false;
+            else {
+                //get string stored in current cell of list
+                String cellSelected = billboardList.getSelectedValue().toString();
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(getContentPane(), e,
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                //remove creator from list
+                String billboardSelected = cellSelected.replaceAll(",.*", "");
+                billboardName = billboardSelected;
+                Billboard billboardObjectSelected = billboardListH.get(billboardSelected);
+                //get billboard creator, and current username
+                String billboardCreator = billboardObjectSelected.BillboardCreator;
+                String currentUsername = currentUser.Username;
+                boolean creatorCheck = billboardCreator.equals(currentUsername);
+                boolean scheduleCheck;
+                try {
+                    schedule.getSchedule(billboardName);
+                    scheduleCheck = true;
                 }
-                System.out.println("xmlFile: "+xmlFile);
-                //run Billboard editor/creator GUI
-                SwingUtilities.invokeLater(new BBEditor("admin", "1234",billboardName, xmlFile));
+                catch (Exception e) {
+                    scheduleCheck = false;
+                }
+                if(((!creatorCheck) && currentUser.Permissions.contains("Edit All Billboards")) || (creatorCheck && (currentUser.Permissions.contains("Create Billboards") && !scheduleCheck))){
+                    //Retrieve the xml file associated with the name
+                    try {
+                        xmlFile = billboardXML;
+                        closeable = false;
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(getContentPane(), e,
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                    System.out.println("xmlFile: " + xmlFile);
+                    //run Billboard editor/creator GUI
+                    SwingUtilities.invokeLater(new BBEditor(username, "1234", billboardName, xmlFile));
+                }
+                else if(!((!creatorCheck) && currentUser.Permissions.contains("Edit All Billboards"))) {
+                    //display error pop up\
+                    JOptionPane.showMessageDialog(this,
+                            "You must have 'Edit All Billboards' to edit someone else's billboard");
+                }
+                else{
+                    //display error pop up\
+                    JOptionPane.showMessageDialog(this,
+                            "You must have 'Create Billboards' to edit scheduled billboards");
+                }
             }
         }
 
         // Checks if the create billboard button has been clicked
         else if (buttonClicked == createBillboardButton) {
             //Open the editor with a new file
-            try {
-                //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
-                xmlFile = XML_TEMPLATE;
-                closeable = false;
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(getContentPane(), e,
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
+            if (currentUser.Permissions.contains("Create Billboards")) {
+                try {
+                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
+                    xmlFile = XML_TEMPLATE;
+                    closeable = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), e,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+                System.out.println("xmlFile: " + xmlFile);
+                //run Billboard editor/and assign the current users username to be the creator
+                SwingUtilities.invokeLater(new BBEditor(username, "1234"));
             }
-            System.out.println("xmlFile: "+xmlFile);
-            //run Billboard editor/and assign the current users username to be the creator
-            SwingUtilities.invokeLater(new BBEditor("admin", "1234"));
+            else{
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "You do not have permission to create a billboard");
+            }
         }
 
         // Checks if the delete billboard button has been clicked
@@ -443,31 +487,37 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                         "You must select a billboard in the list to delete");
             }
             else{
-                //Open the editor with a new file
-                try {
-                    //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
-                    int a = showConfirmDialog(null, "Are you sure you want to delete this billboard?");
-                    if(a == YES_OPTION)
-                    {
-                        //adjust user inputs to delete given billboard
-                        String [] user_inputs = {"Delete billboard", billboardName};
-                        //Delete billboard with viewing details given by user
-                        ControlPanelClient.Run_Client(user_inputs);
-                        //Refresh control panel
-                        user_inputs = new String[]{"List billboards"};
-                        ControlPanelClient.Run_Client(user_inputs);
-                        closeable = false;
-                        dispose();
-                        //JOptionPane.showMessageDialog(this,
-                        //        "Billboard Successfully Deleted");
-                    }
+                if(currentUser.Permissions.contains("Edit All Billboards")) {
+                    //Open the editor with a new file
+                    try {
+                        //xmlFile = billboard_list.GetBillboardInfo(billboardXML).XMLFile;
+                        int a = showConfirmDialog(null, "Are you sure you want to delete this billboard?");
+                        if (a == YES_OPTION) {
+                            //adjust user inputs to delete given billboard
+                            String[] user_inputs = {"Delete billboard", billboardName};
+                            //Delete billboard with viewing details given by user
+                            ControlPanelClient.Run_Client(user_inputs);
+                            //Refresh control panel
+                            user_inputs = new String[]{"List billboards"};
+                            ControlPanelClient.Run_Client(user_inputs);
+                            closeable = false;
+                            dispose();
+                            //JOptionPane.showMessageDialog(this,
+                            //        "Billboard Successfully Deleted");
+                        }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(getContentPane(), e,
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(getContentPane(), e,
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                    System.out.println("xmlFile: " + xmlFile);
                 }
-                System.out.println("xmlFile: "+xmlFile);
+                else{
+                    //display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "You must have 'Edit All Billboards' to delete a billboard");
+                }
             }
         }
 
@@ -488,7 +538,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             else
             {
                 //run schedule billboard GUI pop up
-                SwingUtilities.invokeLater(new BBSchedulePopup("admin", "1234",billboardName));
+                SwingUtilities.invokeLater(new BBSchedulePopup(username, "1234",billboardName));
             }
         }
     }
