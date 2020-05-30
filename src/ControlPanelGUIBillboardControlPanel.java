@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,7 @@ import static javax.swing.JOptionPane.*;
  *
  * NOTES: Minor button functionality still needs to be added; further refinement required
  */
-public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, DocumentListener {
+public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, ListSelectionListener, DocumentListener {
     HashMap<String, Billboard> billboardListH;
     User currentUser;
     ScheduleMultiMap schedule;
@@ -66,6 +67,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     private JPanel createBillboardPanel;
     private final Dimension DIMENSION = new Dimension(400,200);
     private BillboardViewer Billboard;
+
+    // Master Array of billboards (and creators), used in billboard search checking
+    String[] billboardListWithCreatorArray;
+
+    // Variable list used to populate JList when user is searching
+    DefaultListModel billboardWithCreatorListModel = new DefaultListModel();
+
     // Xml string used when there was no selection made
     private final String NO_SELECTION_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
@@ -150,8 +158,11 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
             billboardPanel.add(Box.createVerticalStrut(20));
 
+            // Populate the master array of billboardsWithCreator, with information
+            billboardListWithCreatorArray = populateBillboardsArray();
+
             //Create billboard JList, and add it to billboard JPanel
-            billboardList = createJList(billboardPanel);
+            billboardList = createJList(billboardWithCreatorListModel, billboardListWithCreatorArray, billboardPanel);
         }
 
         // Create button JPanel
@@ -256,11 +267,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         return textField;
     }
 
-    /**
-     * This method creates a JList, returns a JList
-     * @return Returns JList
-     */
-    private JList createJList(JPanel panel) {
+    private String[] populateBillboardsArray() {
         // Int counter for assigning values in the array
         int counter = 0;
 
@@ -277,12 +284,27 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             counter++;
         }
 
+        return billboardListWithCreator;
+    }
+
+    /**
+     * This method creates a JList, returns a JList
+     * @return Returns JList
+     */
+    private JList createJList(DefaultListModel listModel, String[] array, JPanel panel) {
+
         // Create new JPanel for spacing and formatting
         JPanel panel2 = new JPanel();
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
 
         // Create new JList
-        JList list = new JList(billboardListWithCreator);
+        JList list = new JList(billboardWithCreatorListModel);
+
+        // For each element in the provided array, add the element to the list model
+        for (String a : array) {
+            // Add element a to the list model
+            listModel.addElement(a);
+        }
 
         // Create JScrollPane
         JScrollPane scroll = new JScrollPane(list);
@@ -306,10 +328,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
     /**
      * This method creates a is used to evaluate which billboards is being clicked on in the list
-     * @return Returns JList
      */
     // Changes billboard XML when a user selects a billboard from the list
-    private void valueChanged(ListSelectionEvent event){
+    public void valueChanged(ListSelectionEvent event){
         //get string stored in current cell of list
         try {
             String cellSelected = billboardList.getSelectedValue().toString();
