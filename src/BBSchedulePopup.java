@@ -330,6 +330,17 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                 System.out.println("Start time: "+user_inputs[2]);
                 System.out.println("Duration: "+user_inputs[3]);
                 System.out.println("recurrence: "+user_inputs[4]);
+
+                Frame[] allFrames = Frame.getFrames();
+                for (Frame fr : allFrames) {
+                    if ((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))) {
+                        fr.dispose();
+                    }
+                }
+                dispose();
+
+                String[] user_input = {"List billboards"};
+                ControlPanelClient.Run_Client(user_input);
             }
 
         }
