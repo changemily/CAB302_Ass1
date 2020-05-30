@@ -318,7 +318,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         if (buttonClicked == saveExitButton) {
             System.out.println("save and exit clicked");
             System.out.println(usernameField.getText());
-            System.out.println(password.getText());
+
             System.out.println(createBillboardsBox.isSelected());
             System.out.println(scheduleBillboardsBox.isSelected());
             System.out.println(editAllBillboardsBox.isSelected());

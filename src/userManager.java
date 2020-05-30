@@ -166,6 +166,7 @@ public class userManager
         //hash password
         String hashedPassword = hash(passwordBytes);
 
+
         System.out.println("Hashed and salted password : " + hashedPassword);
 
         //create DB connection
@@ -175,24 +176,32 @@ public class userManager
         return hashedPassword;
     }
 
+    /**
+     * Method for hashing a salt and a password
+     * @return
+     */
+    public static String createASalt() throws NoSuchAlgorithmException, SQLException {
+        //Create a salt
+        Random rnd = new Random();
+        byte[] saltBytes = new byte[32];
+        rnd.nextBytes(saltBytes);
+        String saltString = hash(saltBytes);
+
+        //Return the salt
+        String userSalt = saltString;
+        //System.out.println("Salt String from the method:"+userSalt);
+        return userSalt;
+    }
+
 
     /**
      * Method for hashing a salt and a password
      * @param hashedPassword The password the user enter after being hashed by hashPassword
      * @return
      */
-    public static String[] hashPasswordAndSalt(String hashedPassword) throws NoSuchAlgorithmException, SQLException {
-        //Setup ready for hashing
-        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-
-        //Create a salt
-        Random rnd = new Random();
-        byte[] saltBytes = new byte[32];
-        rnd.nextBytes(saltBytes);
-        String saltString = saltBytes.toString();
-
+    public static String[] hashPasswordAndSalt(String hashedPassword, String saltString, MessageDigest messageDigest) throws NoSuchAlgorithmException, SQLException {
         //Add a salt to the user inputted hashed password
-        String inputtedPasswordSalted = (messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
+        String inputtedPasswordSalted = hash(messageDigest.digest((hashedPassword + saltString).getBytes()));
         String userPass = inputtedPasswordSalted;
 
         //Store the user information in the database(username, hasedsaltedpassword, salt)
@@ -209,6 +218,8 @@ public class userManager
         String[] userSet = {userPass, saltString};
         return userSet;
     }
+
+
 
 
 }

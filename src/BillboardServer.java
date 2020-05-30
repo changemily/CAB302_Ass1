@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,6 +9,7 @@ import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.Timer;
 
 /**
  * Billboard server class
@@ -19,7 +21,7 @@ import java.util.*;
 public class BillboardServer {
 
     private static final String CREATE_USER_TABLE =
-            "CREATE TABLE IF NOT EXISTS Users (username varchar(255) PRIMARY KEY,password varchar(255), salt varchar(50), createBillboard INT, editBillboards INT, scheduleBillboards INT, editUsers INT)";
+            "CREATE TABLE IF NOT EXISTS Users (username varchar(255) PRIMARY KEY,password varchar(255), salt varchar(225), createBillboard INT, editBillboards INT, scheduleBillboards INT, editUsers INT)";
 
     private static final String CREATE_BILLBOARD_TABLE =
             "CREATE TABLE IF NOT EXISTS Billboards (billboardName varchar(255), billboardCreator varchar (255), xmlFile text);";
@@ -30,7 +32,7 @@ public class BillboardServer {
 
     private static final String ADD_DEFAULT_USER =
             "INSERT INTO Users (username, password, salt, createBillboard, editBillboards, scheduleBillboards, editUsers)"  +
-            "VALUES(\""+"AdminUser"+"\",\""+"Password1"+"\",\""+"Salt"+"\",\""+1+"\",\""+1+"\",\""+1+"\",\""+1+"\")" +
+            "VALUES(\""+"AdminUser"+"\",\""+"19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd"+"\",\""+"Salt"+"\",\""+1+"\",\""+1+"\",\""+1+"\",\""+1+"\")" +
                     "ON DUPLICATE KEY UPDATE username = \""+"AdminUser"+"\";";
 
     //queue of billboard viewings - 2D array
@@ -42,7 +44,7 @@ public class BillboardServer {
             "</billboard>";
 
     //Setup another hashmap to store an id and hasmap of the token and its timer
-    private HashMap<Integer, Timer> SessionCombinedHashmap;
+    private static HashMap<Integer, Timer> SessionCombinedHashmap;
     //Setup a hashmap to store each hasmap with a timer
     private static HashMap<Integer, String> SessionTokenListHashmap;
 
@@ -51,7 +53,6 @@ public class BillboardServer {
      * Sends and Receives information from client
      */
     private static void runServer() throws Exception {
-
         //create empty schedule, billboard list and user list
         ScheduleMultiMap billboardSchedule = new ScheduleMultiMap();
         BillboardList billboardList = new BillboardList();
@@ -110,14 +111,14 @@ public class BillboardServer {
                 {
                     case "Login request":
                         //retrieve username
-                        String username = ois.readObject().toString();
+                        //String username = ois.readObject().toString();
                         //retrieve hashed pwd from client
-                        String password = ois.readObject().toString();
+                        //String password = ois.readObject().toString();
 
-                        System.out.println("Username: " +username);
-                        System.out.println("Password: " +password);
+                        //System.out.println("Username: " +username);
+                        //System.out.println("Password: " +password);
 
-                        saltAndCheckUserCredentials(oos, ois, connection);
+                        saltAndCheckUserCredentials(ois, connection);
 
                         //retrieve salted pwd from DB
                         //unsalt pwd
@@ -207,6 +208,14 @@ public class BillboardServer {
         connection.close();
     }
 
+    public static MessageDigest messageDigester() throws NoSuchAlgorithmException {
+        //Message digest for the password salting
+        //Setup ready for hashing
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        return messageDigest;
+    }
+
+
     /**
      * Creates tables if they do not exist in DB
      * @param connection Database connection
@@ -249,38 +258,71 @@ public class BillboardServer {
 
     /**
      * Receives a users hashed password, salts it and then check it against the database to decide if the user is
-     * authenticated or not.
-     * @param oos Object output stream of the server
+     * authenticated or not. If valid assigns the user as the current user and opens control panel, if not returns an error message.
      * @param ois Object Input stream
      * @param connection connection to the db
      * @throws Exception
      */
-    private static void saltAndCheckUserCredentials(ObjectOutputStream oos, ObjectInputStream ois, Connection connection) throws SQLException, IOException, ClassNotFoundException, NoSuchAlgorithmException {
+    private static void saltAndCheckUserCredentials(ObjectInputStream ois, Connection connection) throws SQLException, IOException, ClassNotFoundException, NoSuchAlgorithmException {
         //Setup ready for hashing
-        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        //MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
         //Get the inputted username hashed password
         String userName = ois.readObject().toString();
         String hashedPassword = ois.readObject().toString();
 
         //SQL statement for retrieving user details
-        final String SELECT = "SELECT * FROM User WHERE username "+userName;
+        final String SELECT = "select * from users where username = "+ "'" +userName+ "'" + ";";
+
         //create statement
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(SELECT);
 
         //Retrieve the Salt and Salted Hashed Password from the database
-        String saltString = rs.getString(2);
-        String saltedPasswordDB = rs.getString(1);
+        String saltedPasswordDB = null;
+        String saltString = null;
+        if(rs.next()){
+            saltedPasswordDB = rs.getString(2);
+            saltString = rs.getString(3);
+        }
+
+        String createSalt = userManager.createASalt();
+        String[] userInfos = userManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
+        String[] userInfos2 = userManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
+
+        System.out.println("Database final product: "+saltedPasswordDB);
+        System.out.println("Inputted password hashed: "+hashedPassword);
+        System.out.println("Salt String from method: "+userInfos[1]);
+        System.out.println("Inputted Final product: "+userInfos[0]);
+        System.out.println("Salt String from method2: "+userInfos2[1]);
+        System.out.println("Inputted Final product2: "+userInfos2[0]);
+
+
 
         //Add a salt to the user inputted hashed password
-        String inputtedPasswordSalted = (messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
+        //String inputtedPasswordSalted = (messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
+        String inputtedPasswordSalted = userInfos[0];
+                //(messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
+        String userPass = inputtedPasswordSalted;
+
+
 
         //Compare the two salted and hashed passwords
-        if(inputtedPasswordSalted == saltedPasswordDB){
-            oos.writeObject("Valid");
+        if(userInfos[0].equals(saltedPasswordDB)){
+            String SessionToken = sessionToken("Valid");
+            //If the user is valid set them as the default user in the control panel
+            ControlPanelClient.username = userName;
+            ControlPanelClient.sessionToken = SessionToken;
+            //Create and return the user a valid session token
+            SwingUtilities.invokeLater(new ControlPanelGUI(userName, SessionToken));
         }else{
-            oos.writeObject("In-valid");
+            // Display an Error Message Dialog, alerting the user that the entered credentials are incorrect
+            JOptionPane optionPane = new JOptionPane("The entered username or password is incorrect," +
+                    " please try again.", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("User Error");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
+            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
         }
     }
 
@@ -759,30 +801,26 @@ public class BillboardServer {
     //Static int for counting which session has expired.
     private static int i = 0;
     //Inner class called when a timer expires.
-    class RemoveFromList extends TimerTask{
+    static class RemoveFromList extends TimerTask{
         public void run(){
             //Remove the session info from the hashmap for the session token that has expired.
             SessionTokenListHashmap.remove(i++);
         }
     }
 
-    int counter;
+    static int counter;
 
     /**
      * If the user is valid this creates a session token and sends it back to the control panel.
-     * @param ois ObjectInputStream
-     * @param oos Object Output stream of Server
-     * @param connection Database connection
      * @throws Exception
      */
-    private void sessionToken(ObjectInputStream ois, ObjectOutputStream oos,
-                                    Connection connection) throws IOException, ClassNotFoundException {
+    private static String sessionToken(String validity) throws IOException, ClassNotFoundException {
         //Setup for the random token
         final SecureRandom secRand = new SecureRandom();
         final Base64.Encoder base64En = Base64.getUrlEncoder();
 
         //Check if the user was valid
-        String Validity = ois.readObject().toString();
+        String Validity = validity;
 
         //If valid give a session token else return a message.
         if (Validity == "Valid"){
@@ -793,7 +831,7 @@ public class BillboardServer {
             String sessionToken = base64En.encodeToString(randomBytes);
             String thisSessionToken = sessionToken;
             //Send the randomised Session Token back to the control panel
-            oos.writeObject(thisSessionToken);
+            //oos.writeObject(thisSessionToken);
 
             //Create a new timer to be stored in an hashmap with the session token
             Timer timer = new Timer();
@@ -802,12 +840,14 @@ public class BillboardServer {
             timer.schedule(taskA, (long) 8.64e+7);
 
             //Store counter ID and session token
-            SessionCombinedHashmap.put(counter, timer);
+            //SessionCombinedHashmap.put(counter, timer);
             //Then store the hasmpa of counter and token with a timer
-            SessionTokenListHashmap.put(counter, thisSessionToken);
+            //SessionTokenListHashmap.put(counter, thisSessionToken);
 
+            //Pass back the valid user session token
+            return thisSessionToken;
         }else{
-            oos.writeObject("User Invalid");
+            return "User Invalid";
         }
     }
 
@@ -842,7 +882,8 @@ public class BillboardServer {
 
 
     private static void createUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
-        String[] userSet = userManager.hashPasswordAndSalt(ois.readObject().toString());
+        String createSalt = userManager.createASalt();
+        String[] userSet = userManager.hashPasswordAndSalt(ois.readObject().toString(), createSalt, messageDigester());
         String username = ois.readObject().toString();
         String password = userSet[0];
         String salt = userSet[1];

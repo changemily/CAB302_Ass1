@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -50,7 +53,7 @@ public class ControlPanelClient {
             {
                 case "Login request":
                     //send username and password to server
-                    loginRequest(oos,request);
+                    loginRequest(ois, oos, user_inputs, request);
                     break;
 
                 case "Logout request":
@@ -152,23 +155,28 @@ public class ControlPanelClient {
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
-    private static void loginRequest(ObjectOutputStream oos, String buttonClicked) throws NoSuchAlgorithmException, IOException {
+    private static void loginRequest(ObjectInputStream ois, ObjectOutputStream oos, String[] userInputs, String buttonClicked) throws NoSuchAlgorithmException, IOException, ClassNotFoundException, SQLException {
         oos.writeObject(buttonClicked);
         //retrieve username and password
-        String username ="user";
-        String pwd = "password";
+        String username = userInputs[1];
+        String pwd = userInputs[2];
+        System.out.println("pwd in user array: "+pwd);
 
-        //turn password into bytes
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] passwordBytes = md.digest(pwd.getBytes());
+//        //turn password into bytes
+//        MessageDigest md = MessageDigest.getInstance("SHA-256");
+//        byte[] passwordBytes = md.digest(pwd.getBytes());
+//
+//        //hash password
+//        String hashedPassword = hash(passwordBytes);
+//        System.out.println("Hashed pwd : " + hashedPassword);
 
-        //hash password
-        String hashedPassword = hash(passwordBytes);
-        System.out.println("Hashed pwd : " + hashedPassword);
+        String hashedPassword = userManager.hashPassword(pwd);
+        System.out.println("Hashed Password from control panel in login request: "+hashedPassword);
 
         //send username and hashed password to server
         oos.writeObject(username);
         oos.writeObject(hashedPassword);
+        oos.writeObject(userInputs);
     }
 
     /**

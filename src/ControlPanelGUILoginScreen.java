@@ -26,10 +26,11 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
 
     /**
      * Method used to create a GUI window for the Login screen
-     * @throws ClassNotFoundException Exception handling
+     *
+     * @throws ClassNotFoundException          Exception handling
      * @throws UnsupportedLookAndFeelException Exception handling
-     * @throws InstantiationException Exception handling
-     * @throws IllegalAccessException Exception handling
+     * @throws InstantiationException          Exception handling
+     * @throws IllegalAccessException          Exception handling
      */
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
 
@@ -43,21 +44,21 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
         setResizable(false);
 
         // Create title label, inside of a JPanel
-        JPanel titlePanel = newLabel("Welcome to the Billboard Control Panel",true,true);
+        JPanel titlePanel = newLabel("Welcome to the Billboard Control Panel", true, true);
         titlePanel.add(Box.createHorizontalStrut(100));
 
         // Create subtitle label, inside of a JPanel
-        JPanel subtitlePanel = newLabel("Please enter login details to begin",true,false);
+        JPanel subtitlePanel = newLabel("Please enter login details to begin", true, false);
         subtitlePanel.add(Box.createHorizontalStrut(100));
 
         // Create username label, inside of a JPanel
-        JPanel usernamePanel = newLabel("Username     ",false,false);
+        JPanel usernamePanel = newLabel("Username     ", false, false);
 
         // Create username text field, and add to the username JPanel
         username = newTextField(usernamePanel);
 
         // Create password label, inside of a JPanel
-        JPanel passwordPanel = newLabel("Password      ",false,false);
+        JPanel passwordPanel = newLabel("Password      ", false, false);
 
         // Create password text field, and add to the password JPanel
         password = newTextField(passwordPanel);
@@ -83,7 +84,7 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
         getContentPane().add(Box.createVerticalStrut(50));
 
         // Display window
-        setLocation(new Point(100,100));
+        setLocation(new Point(100, 100));
         pack();
         setLocationRelativeTo(null); // centers window
         setVisible(true);
@@ -91,8 +92,9 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
 
     /**
      * This method creates a JLabel, inside of a JPanel
-     * @param labelText The text of the JLabel
-     * @param large Boolean for large text
+     *
+     * @param labelText    The text of the JLabel
+     * @param large        Boolean for large text
      * @param largeAndBold Boolean for large and bold text
      * @return Returns a JPanel
      */
@@ -129,6 +131,7 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
 
     /**
      * This method creates a JTextField, and adds it to a specified JPanel
+     *
      * @param panel The JPanel that the created JTextField is to be added to
      * @return Returns a JTextField
      */
@@ -151,6 +154,7 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
 
     /**
      * This method creates a JPanel which can hold a button
+     *
      * @return Returns a JPanel
      */
     private JPanel newButtonPanel() {
@@ -166,8 +170,9 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
 
     /**
      * This method creates a JButton, and adds it to a specified JPanel
+     *
      * @param buttonName The text that will be displayed inside the button
-     * @param panel The JPanel that the created JButton is to be added to
+     * @param panel      The JPanel that the created JButton is to be added to
      * @return Returns a JButton
      */
     private JButton newButton(String buttonName, JPanel panel) {
@@ -192,28 +197,35 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
         String usernameText = username.getText();
         String passwordText = password.getText();
 
+        String userName = usernameText;
+        String password = passwordText;
+
         // Checks if the login button has been clicked
-        if (buttonClicked==loginButton) {
-            // Check if the provided credentials are correct, then if successful open Control Panel GUI
-            if (usernameText.equals("user") && passwordText.equals("password")) { // VALUES USED ONLY FOR TESTING
+        if (buttonClicked == loginButton) {
+            //Run control panel with the login request
+            String[] user_inputs = {"Login request", userName, password};
+            ControlPanelClient.Run_Client(user_inputs);
 
-                // Open Control Panel GUI Screen
-                String sessionToken = "123456";
-                SwingUtilities.invokeLater(new ControlPanelGUI(usernameText, sessionToken));
 
-                // Close Login Screen
-                dispose();
-            }
-
-            // Credentials are incorrect
-            else {
-                // Display an Error Message Dialog, alerting the user that the entered credentials are incorrect
-                JOptionPane.showMessageDialog(this,
-                        "The entered username or password is incorrect, please try again.",
-                        "Invalid Credentials",JOptionPane.ERROR_MESSAGE);
-            }
+//            // Check if the provided credentials are correct, then if successful open Control Panel GUI
+//            if (usernameText.equals("user") && passwordText.equals("password")) { // VALUES USED ONLY FOR TESTING
+//
+//                // Open Control Panel GUI Screen
+//                String sessionToken = "123456";
+//                SwingUtilities.invokeLater(new ControlPanelGUI(usernameText, sessionToken));
+            // Close Login Screen
+            dispose();
         }
+
+//        // Credentials are incorrect
+//        else {
+//            // Display an Error Message Dialog, alerting the user that the entered credentials are incorrect
+//            JOptionPane.showMessageDialog(this,
+//                    "The entered username or password is incorrect, please try again.",
+//                    "Invalid Credentials", JOptionPane.ERROR_MESSAGE);
+//        }
     }
+
 
     @Override
     public void run() {
