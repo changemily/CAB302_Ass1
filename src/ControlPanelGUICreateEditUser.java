@@ -314,7 +314,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         if (buttonClicked == saveExitButton) {
             System.out.println("save and exit clicked");
             System.out.println(usernameField.getText());
-            System.out.println(password.getText());
+
             System.out.println(createBillboardsBox.isSelected());
             System.out.println(scheduleBillboardsBox.isSelected());
             System.out.println(editAllBillboardsBox.isSelected());
@@ -326,6 +326,8 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 String newPassword = null;
                 try {
                     newPassword = userManager.hashPassword(password.getText());
+                    //Use for testing to see if the password is hashed
+                    System.out.println(newPassword);
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 } catch (SQLException e) {
