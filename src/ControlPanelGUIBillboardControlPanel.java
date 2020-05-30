@@ -426,7 +426,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 catch (Exception e) {
                     scheduleCheck = false;
                 }
-                if(((!creatorCheck) && currentUser.Permissions.contains("Edit All Billboards")) || (creatorCheck && (currentUser.Permissions.contains("Create Billboards") && !scheduleCheck))){
+                if((currentUser.Permissions.contains("Edit All Billboards")) || (creatorCheck && !scheduleCheck && currentUser.Permissions.contains("Create Billboards"))){
                     //Retrieve the xml file associated with the name
                     try {
                         xmlFile = billboardXML;

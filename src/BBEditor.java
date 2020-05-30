@@ -91,7 +91,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, SAXException, ParserConfigurationException {
         // Set default look and feel & window properties
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // Create mainPanel
         mainPanel = new JPanel();
@@ -354,6 +353,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         );
 
         getContentPane().add(mainPanel);
+
+        addWindowListener(this);
 
         pack();
         setLocationRelativeTo(null);
@@ -823,12 +824,22 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
     @Override
     public void windowClosing(WindowEvent e) {
-
+        int a = showConfirmDialog(null, "Would you like to save your billboard to the database?");
+        if(a == YES_OPTION)
+        {
+            //save billboard to database
+            saveBillboardToDB();
+            //closes editor and reloads billboard control panel
+            refreshFrames();
+        }
+        else if(a == NO_OPTION)
+        {
+            dispose();
+        }
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-
     }
 
     @Override
