@@ -23,7 +23,7 @@ import static javax.swing.JOptionPane.*;
  * @author - Nickhil Nischal
  * @version - under development
  *
- * NOTES: Minor button functionality still needs to be added; further refinement required
+ * NOTES: Minor functionality still needs to be added; further refinement required
  */
 public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, ListSelectionListener, DocumentListener {
     HashMap<String, Billboard> billboardListH;
@@ -330,7 +330,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * This method creates a is used to evaluate which billboards is being clicked on in the list
      */
     // Changes billboard XML when a user selects a billboard from the list
-    public void valueChanged(ListSelectionEvent event){
+    public void valueChanged(ListSelectionEvent event) {
         //get string stored in current cell of list
         try {
             String cellSelected = billboardList.getSelectedValue().toString();
@@ -664,6 +664,38 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         }
     }
 
+    private void listSearch(DefaultListModel model, String[] array) {
+        // Try executing the search
+        try {
+            // Converts any input by the user to lowercase characters (making the check case insensitive)
+            String textLower = search.getText().toLowerCase();
+
+            // Iterates through each element in the provided master array
+            for (String a : array) {
+                //  Checks if string entered in JTextField is not present in the master array (lowercase for case insensitivity)
+                if (!a.toLowerCase().contains(textLower)) {
+                    // If list model already contains the element a
+                    if (model.contains(a)) {
+                        // Remove the element a from the model
+                        model.removeElement(a);
+                    }
+                }
+                // The string entered is present in the master array
+                else {
+                    // If list model does not already contain the element a
+                    if (!model.contains(a)) {
+                        // Add the the element a to the model
+                        model.addElement(a);
+                    }
+                }
+            }
+        }
+
+        // Ignore any exception thrown
+        catch (Exception ignored) {
+        }
+    }
+
     @Override
     public void run() {
         try {
@@ -731,16 +763,19 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-
+        // Execute search
+        listSearch(billboardWithCreatorListModel, billboardListWithCreatorArray);
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-
+        // Execute search
+        listSearch(billboardWithCreatorListModel, billboardListWithCreatorArray);
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
-
+        // Execute search
+        listSearch(billboardWithCreatorListModel, billboardListWithCreatorArray);
     }
 }
