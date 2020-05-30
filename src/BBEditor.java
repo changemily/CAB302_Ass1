@@ -829,7 +829,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
     @Override
     public void windowClosing(WindowEvent e) {
-        int a = showConfirmDialog(null, "Would you like to save your billboard to the database?");
+        int a = showConfirmDialog(null, "Would you like to save changes to the database?");
         if(a == YES_OPTION)
         {
             //save billboard to database
