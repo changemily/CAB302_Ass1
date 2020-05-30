@@ -327,6 +327,24 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                 ControlPanelClient.Run_Client(user_inputs);
                 //add viewing to local map of schedule
                 showMessageDialog(null, "Billboard Successfully Scheduled");
+
+                //FOR TESTING
+                System.out.println("request: "+user_inputs[0]);
+                System.out.println("bb name: "+user_inputs[1]);
+                System.out.println("Start time: "+user_inputs[2]);
+                System.out.println("Duration: "+user_inputs[3]);
+                System.out.println("recurrence: "+user_inputs[4]);
+
+                Frame[] allFrames = Frame.getFrames();
+                for (Frame fr : allFrames) {
+                    if ((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))) {
+                        fr.dispose();
+                    }
+                }
+                dispose();
+
+                String[] user_input = {"List billboards"};
+                ControlPanelClient.Run_Client(user_input);
             }
 
         }
