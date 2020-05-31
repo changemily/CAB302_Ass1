@@ -32,7 +32,7 @@ public class BillboardServer {
 
     private static final String ADD_DEFAULT_USER =
             "INSERT INTO Users (username, password, salt, createBillboard, editBillboards, scheduleBillboards, editUsers)"  +
-            "VALUES(\""+"AdminUser"+"\",\""+"19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd"+"\",\""+"Salt"+"\",\""+1+"\",\""+1+"\",\""+1+"\",\""+1+"\")" +
+            "VALUES(\""+"AdminUser"+"\",\""+"79842e23e647ff588f4a22dae306f397d7c8472d3b55cc2a63a449ea6e56bb91"+"\",\""+"df51c3e036ed272336fdc47a21b121ec4be0884fdba475200181418c52ebd4d4"+"\",\""+1+"\",\""+1+"\",\""+1+"\",\""+1+"\")" +
                     "ON DUPLICATE KEY UPDATE username = \""+"AdminUser"+"\";";
 
     //queue of billboard viewings - 2D array
