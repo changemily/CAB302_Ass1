@@ -222,6 +222,7 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
             // Open User Control Panel GUI
             String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
             ControlPanelClient.runClient(user_input);
+            dispose();
         }
 
         // If edit billboard JButton is clicked
