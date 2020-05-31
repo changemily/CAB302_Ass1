@@ -491,7 +491,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 dispose();
                 if(frameCount == 0){
                     //run Billboard Control Panel GUI
-                    String [] user_input = {"List billboards"};
+                    String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
                     //request billboard list and run calendar GUI
                     ControlPanelClient.runClient(user_input);
                 }
@@ -740,7 +740,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         }
         dispose();
         //run Billboard Control Panel GUI
-        String [] user_input = {"List billboards"};
+        String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
         //request billboard list and run calendar GUI
         ControlPanelClient.runClient(user_input);
     }
@@ -871,7 +871,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             dispose();
             if(frameCount == 0){
                 //run Billboard Control Panel GUI
-                String [] user_input = {"List billboards"};
+                String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
                 //request billboard list and run calendar GUI
                 ControlPanelClient.runClient(user_input);
             }

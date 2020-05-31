@@ -599,12 +599,12 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                         int a = showConfirmDialog(null, "Are you sure you want to delete this billboard?");
                         if (a == YES_OPTION) {
                             //adjust user inputs to delete given billboard
-                            String[] user_inputs = {"Delete billboard", billboardName};
+                            String[] userInputs = {"Delete billboard", billboardName};
                             //Delete billboard with viewing details given by user
-                            ControlPanelClient.runClient(user_inputs);
+                            ControlPanelClient.runClient(userInputs);
                             //Refresh control panel
-                            user_inputs = new String[]{"List billboards"};
-                            ControlPanelClient.runClient(user_inputs);
+                            userInputs = new String[]{"List billboards", ControlPanelClient.sessionToken};
+                            ControlPanelClient.runClient(userInputs);
                             closeable = false;
                             dispose();
                             //JOptionPane.showMessageDialog(this,
