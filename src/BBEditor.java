@@ -660,6 +660,14 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
             // write file to current folder
             if(!Break) {
+                // create new billboard
+                try {
+                    bb = new BillboardViewer(tempXMLString, d);
+                } catch (ParserConfigurationException | IOException | SAXException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), ex,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
                 try {
                     bb.writeFile(o);
                     JOptionPane.showMessageDialog(getContentPane(), "Billboard Successfully Exported");
@@ -776,7 +784,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             String[] user_inputs = {"Create edit billboard", billboardName, username, tempXMLString};
 
             //Schedule billboard with viewing details given by user
-            ControlPanelClient.Run_Client(user_inputs);
+            ControlPanelClient.runClient(user_inputs);
         }
         return Break;
     }
