@@ -59,7 +59,7 @@ public class ControlPanelClient {
                     break;
 
                 case "List billboards":
-                    listBillboardDetails(oos, ois, request);
+                    listBillboardDetails(oos, ois, request, user_inputs);
                     break;
 
                 case "Get Billboard info":
@@ -205,9 +205,12 @@ public class ControlPanelClient {
      * @param buttonClicked Request given by the control panel GUI
      * @throws IOException
      */
-    private static void listBillboardDetails(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws Exception {
+    private static void listBillboardDetails(ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked, String[] userInputs) throws Exception {
+        //Get the users session token to send to the server
+        String sessionToken = userInputs[1];
         //Output clients request to the server
         oos.writeObject(buttonClicked);
+        oos.writeObject(sessionToken);
         //Read billboard list from server
         HashMap<String, Billboard> BillboardList = (HashMap) ois.readObject();
         // Listing billboards also requires a current user details
