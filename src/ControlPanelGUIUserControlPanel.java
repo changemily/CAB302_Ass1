@@ -16,10 +16,8 @@ import static javax.swing.JOptionPane.showConfirmDialog;
 /**
  * User Control Panel class for Control Panel GUI
  * This class contains a method that creates a GUI window for the User Control Panel
- * @author - Nickhil Nischal
- * @version - under development
- *
- * NOTES: Some button functionality still needs to be added
+ * @author - Nickhil Nischal (GUI, Buttons), Harry Estreich (Buttons, Permissions)
+ * @version - Final
  */
 public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener, WindowListener {
     // Back JButton
@@ -53,15 +51,18 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
     // Variable list used to populate JList when user is searching
     private DefaultListModel userListModel = new DefaultListModel();
 
+    // Global variables
     String username;
     String sessionToken;
     HashMap<String, User> userList;
-    boolean closeable = true;
+    boolean closeable = true; // set false is safe exit
     String openedUser;
-
 
     /**
      * Method used to create a GUI window for the User Control Panel
+     * @param username current username string
+     * @param sessionToken current session token
+     * @param userList current list of users
      */
     public ControlPanelGUIUserControlPanel(String username, String sessionToken, HashMap<String, User> userList) {
         // Set window title
@@ -71,12 +72,13 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         this.userList = userList;
     }
 
+
     /**
      * Method used to create a GUI window for the User Control Panel screen
-     * @throws ClassNotFoundException Exception handling
-     * @throws UnsupportedLookAndFeelException Exception handling
-     * @throws InstantiationException Exception handling
-     * @throws IllegalAccessException Exception handling
+     * @throws ClassNotFoundException class not found error
+     * @throws UnsupportedLookAndFeelException look and feel error
+     * @throws InstantiationException instantiation error
+     * @throws IllegalAccessException illegal access error
      */
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
 
@@ -410,7 +412,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         if (buttonClicked == backButton) {
             // Closes current GUI screen
             dispose();
-            closeable = false;
+            closeable = false; // safe exit
 
             // Open new Control Panel GUI screen
             SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
@@ -420,7 +422,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         else if (buttonClicked == logoutButton) {
             // Closes current GUI screen
             dispose();
-            closeable = false;
+            closeable = false; // safe exit
 
             // Open new Login screen
             SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
@@ -430,18 +432,19 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         else if (buttonClicked == editUserButton) {
             boolean selfEdit = false;
             String usernameSelected  = userSelectionLabel.getText();
-            if(usernameSelected.equals(username)){
+            if(usernameSelected.equals(username)){ // self edit
                 selfEdit = true;
             }
-            if(usernameSelected.equals("No User Selected"))
+            if(usernameSelected.equals("No User Selected")) // no edit, fail
             {
                 // Display error pop up
                 JOptionPane.showMessageDialog(this,
                         "You must select a user in the list to edit");
             }
-            else{
+            else{ // user picked
                 // Retrieve the user associated with the name
                 try {
+                    // check if there is any edit user guis open
                     int frameCount = 0;
                     Frame[] allFrames = Frame.getFrames();
                     for(Frame fr : allFrames){
@@ -454,29 +457,34 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
                     User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
                     System.out.println("edit user: "+ usernameSelected);
+
+                    // if safe exit
                     if(!closeable) {
-                        if(frameCount > 0) {
+                        if(frameCount > 0) { // and edit user GUI already exists
                             int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
                             if (a == YES_OPTION) {
+                                // close all createEditUser GUIs
                                 allFrames = Frame.getFrames();
                                 for (Frame fr : allFrames) {
                                     if ((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))) {
                                         fr.dispose();
                                     }
                                 }
+                                // create new one
                                 SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                             }
                         }
-                        else{
+                        else{ // no GUIs open, just open a new one
                             SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                         }
                     }
                     else{
+                        // no GUIs open, just open a new one
                         SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                     }
                     openedUser = usernameSelected;
                     closeable =  false;
-                } catch (Exception e) {
+                } catch (Exception e) { // no user selected
                     JOptionPane.showMessageDialog(this,
                             "You must select a user in the list to edit");
                 }
@@ -486,26 +494,28 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         // Checks if the delete user button has been clicked
         else if (buttonClicked == deleteUserButton) {
             System.out.println("delete user button clicked with " + userSelectionLabel.getText() + " selected");
+            // Check user selected
             if (userSelectionLabel.getText().equals("No User Selected")) {
                 JOptionPane.showMessageDialog(this,
                         "You have not selected a user");
             }
-            else if(userSelectionLabel.getText().equals(openedUser)){
+            else if(userSelectionLabel.getText().equals(openedUser)){ // check not deleting self
                 JOptionPane.showMessageDialog(this,
                         "You can't delete a user that you are currently editing");
             }
             else {
                 try {
+                    // get users
                     User baseUser = UserList.getUserInformation(userList, "AdminUser");
                     User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
-                    UserManager deleteUser = new UserManager(baseUser, intendedUser);
-                    if(deleteUser.deleteUser()){
-                        String[] user_inputs = {"Delete User", intendedUser.Username};
+                    UserManager deleteUser = new UserManager(baseUser, intendedUser); // userManager to test if valid delete
+                    if(deleteUser.deleteUser()){ // if valid
+                        String[] user_inputs = {"Delete User", intendedUser.Username}; // delete user
                         ControlPanelClient.runClient(user_inputs);
-                        user_inputs = new String[]{"List users", "Admin"};
+                        user_inputs = new String[]{"List users", "Admin"}; // refresh user control panel
                         ControlPanelClient.runClient(user_inputs);
                         closeable = false;
-                        dispose();
+                        dispose(); // close
                     }
                     else{
                         JOptionPane.showMessageDialog(this,
@@ -522,6 +532,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         else if (buttonClicked == createUserButton) {
             System.out.println("create user button clicked");
             try {
+                // check no edit user GUIs are already open
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
@@ -531,24 +542,29 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                         }
                     }
                 }
+                // if safe exit
                 if(!closeable) {
-                    if(frameCount > 0){
+                    if(frameCount > 0){ // and edit user GUIs exist
                         int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
                         if(a == YES_OPTION) {
+                            // remove all GUIs
                             allFrames = Frame.getFrames();
                             for(Frame fr : allFrames){
                                 if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
                                     fr.dispose();
                                 }
                             }
+                            // create new GUI
                             SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
                         }
                     }
                     else{
+                        // create new GUI
                         SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
                     }
                 }
                 else{
+                    // create new GUI
                     SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
                 }
                 closeable = false;
@@ -558,6 +574,10 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         }
     }
 
+    /**
+     * Update userSelected based off what value is selected on list
+     * @param selectionEvent list selection event
+     */
     @Override
     public void valueChanged(ListSelectionEvent selectionEvent) {
         // If an option is currently selected in the JList, the user selection label is changed to display the option clicked,
@@ -568,41 +588,44 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
         }
     }
 
+    /**
+     * update user list based off search
+     * @param e document event
+     */
     @Override
     public void insertUpdate(DocumentEvent e) {
         // Execute search
         listSearch(userListModel, usersMasterArray);
     }
 
+    /**
+     * update user list based off search
+     * @param e document event
+     */
     @Override
     public void removeUpdate(DocumentEvent e) {
         // Execute search
         listSearch(userListModel, usersMasterArray);
     }
 
+    /**
+     * update user list based off search
+     * @param e document event
+     */
     @Override
     public void changedUpdate(DocumentEvent e) {
         // Execute search
         listSearch(userListModel, usersMasterArray);
     }
 
+    /**
+     * Run and create GUI
+     */
     @Override
     public void run() {
         try {
             createGUI();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -619,6 +642,10 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
     }
 
+    /**
+     * closed window create new main menu
+     * @param e window event
+     */
     @Override
     public void windowClosed(WindowEvent e) {
         // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)

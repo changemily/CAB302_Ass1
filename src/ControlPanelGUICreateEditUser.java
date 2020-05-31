@@ -9,7 +9,7 @@ import static javax.swing.JOptionPane.*;
 /**
  * Create/Edit User class for Control Panel GUI
  * This class contains a Main method and method that creates a GUI window for the Create/Edit User Screen
- * @author - Nickhil Nischal (GUI), Harry Estreich (buttons & permissions)
+ * @author - Nickhil Nischal (GUI), Harry Estreich (buttons & permissions, refreshing)
  * @version - final
  */
 public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener, WindowListener {
