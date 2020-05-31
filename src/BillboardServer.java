@@ -189,6 +189,15 @@ public class BillboardServer {
                         userList.retrieveUsersFromDB(connection);
                         deleteUser(ois, connection, userList);
                         createUser(ois, connection, userList);
+                        break;
+                    case "Edit User Keep Password":
+                        userList.retrieveUsersFromDB(connection);
+                        User userInformation = UserList.getUserInformation(userList.listUsers(), ois.readObject().toString());
+                        String password = userInformation.Password;
+                        String salt = userInformation.Salt;
+                        deleteUser(ois, connection, userList);
+                        createUserWithPassword(ois, connection, userList, password, salt);
+                        break;
                     case "Run Billboard Viewer":
                         Connection finalConnection = connection;
 
@@ -292,9 +301,9 @@ public class BillboardServer {
             saltString = rs.getString(3);
         }
 
-        String createSalt = userManager.createASalt();
-        String[] userInfos = userManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
-        String[] userInfos2 = userManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
+        String createSalt = UserManager.createASalt();
+        String[] userInfos = UserManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
+        String[] userInfos2 = UserManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
 
         System.out.println("Database final product: "+saltedPasswordDB);
         System.out.println("Inputted password hashed: "+hashedPassword);
@@ -896,11 +905,44 @@ public class BillboardServer {
 
 
     private static void createUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
-        String createSalt = userManager.createASalt();
-        String[] userSet = userManager.hashPasswordAndSalt(ois.readObject().toString(), createSalt, messageDigester());
+        String createSalt = UserManager.createASalt();
+        String[] userSet = UserManager.hashPasswordAndSalt(ois.readObject().toString(), createSalt, messageDigester());
         String username = ois.readObject().toString();
         String password = userSet[0];
         String salt = userSet[1];
+        String createBillboard = ois.readObject().toString();
+        String scheduleBillboard = ois.readObject().toString();
+        String editBillboard = ois.readObject().toString();
+        String editUsers = ois.readObject().toString();
+        User newUser = new User(username, password, salt);
+        if(createBillboard.equals("1")) {
+            newUser.Permissions.add("Create Billboards");
+        }
+        if(scheduleBillboard.equals("1")) {
+            newUser.Permissions.add("Schedule Billboards");
+        }
+        if(editBillboard.equals("1")) {
+            newUser.Permissions.add("Edit All Billboards");
+        }
+        if(editUsers.equals("1")) {
+            newUser.Permissions.add("Edit Users");
+        }
+
+        System.out.println("Received new user from client");
+        System.out.println("username = " + username + ", password = " + password);
+
+        //Clear the db with the user information
+        UserList.clearUsersFromDB(userList.listUsers(), connection);
+
+        //Write the new users to the list
+        UserList.addUserToList(userList.listUsers(), newUser);
+
+        //Write new user to db
+        UserList.sendUsersToDB(userList.listUsers(), connection);
+    }
+
+    private static void createUserWithPassword(ObjectInputStream ois, Connection connection, UserList userList, String password, String salt) throws Exception {
+        String username = ois.readObject().toString();
         String createBillboard = ois.readObject().toString();
         String scheduleBillboard = ois.readObject().toString();
         String editBillboard = ois.readObject().toString();

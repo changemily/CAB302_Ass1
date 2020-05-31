@@ -2,11 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -101,6 +98,8 @@ public class ControlPanelClient {
                     break;
                 case "Edit User":
                     editUser(oos, request, user_inputs);
+                case "Edit User Keep Password":
+                    editUserKeepPassword(oos, request, user_inputs);
             }
 
             //flush output stream
@@ -170,7 +169,7 @@ public class ControlPanelClient {
 //        String hashedPassword = hash(passwordBytes);
 //        System.out.println("Hashed pwd : " + hashedPassword);
 
-        String hashedPassword = userManager.hashPassword(pwd);
+        String hashedPassword = UserManager.hashPassword(pwd);
         System.out.println("Hashed Password from control panel in login request: "+hashedPassword);
 
         //send username and hashed password to server
@@ -441,6 +440,24 @@ public class ControlPanelClient {
         oos.writeObject(scheduleBillboard);
         oos.writeObject(editBillboard);
         oos.writeObject(editUsers);
+    }
+
+    private static void editUserKeepPassword(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+        String username = user_inputs[1];
+        String createBillboard = user_inputs[2];
+        String scheduleBillboard = user_inputs[3];
+        String editBillboard = user_inputs[4];
+        String editUsers = user_inputs[5];
+
+        oos.writeObject(buttonClicked);
+        oos.writeObject(username);
+        oos.writeObject(username);
+        oos.writeObject(username);
+        oos.writeObject(createBillboard);
+        oos.writeObject(scheduleBillboard);
+        oos.writeObject(editBillboard);
+        oos.writeObject(editUsers);
+
     }
     /**
      * Runs client
