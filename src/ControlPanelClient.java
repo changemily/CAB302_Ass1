@@ -58,7 +58,7 @@ public class ControlPanelClient {
 
                 case "Logout request":
                     //send sessionToken to the server
-                    logoutRequest(oos, ois, request);
+                    logoutRequest(oos, ois, user_inputs, request);
                     break;
 
                 case "List billboards":
@@ -187,12 +187,12 @@ public class ControlPanelClient {
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
-    private static void logoutRequest( ObjectOutputStream oos, ObjectInputStream ois, String buttonClicked) throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
+    private static void logoutRequest( ObjectOutputStream oos, ObjectInputStream ois, String[] userInputs, String buttonClicked) throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
         oos.writeObject(buttonClicked);
         //retrieve session token
-        //String sessionToken = (String) ois.readObject();
-        String sessionToken = "reee";
-        System.out.println(sessionToken);
+        String sessionToken = userInputs[1];
+        //String sessionToken = "reee";
+        System.out.println("CPC session token: "+sessionToken);
         //send username and hashed password to server
         oos.writeObject(sessionToken);
         //open login screen

@@ -341,29 +341,31 @@ public class BillboardServer {
      */
     private static void logoutRequest(ObjectOutputStream oos, ObjectInputStream ois) throws IOException, ClassNotFoundException {
         //Get the users token
-        //String userToken = (String) ois.readObject();
-        String userToken = "reee";
-        System.out.println(userToken);
+        String userToken = (String) ois.readObject();
+        //String userToken = "reee";
+        System.out.println("Token passed to the server: "+userToken);
+        System.out.println("Token in token list: "+ SessionTokenListHashmap.get(1));
 
-//        //Boolean for checking existance of session token
-//        Boolean tokenExists = false;
-//        //Check the user inputted token
-//        for(Map.Entry<Integer, String> entry : SessionTokenListHashmap.entrySet()){
-//            //If the user token exists in the hashmap then return a true value.
-//            if(entry.getValue() == userToken) {
-//                tokenExists = true;
-//                SessionTokenListHashmap.remove(userToken);
-//                oos.writeChars("Removed");
-//            }else{
-//                //Token doesn't exist in the hashmap
-//                tokenExists = false;
-//            }
-//        }
-//        //If the token wasn't found in the hashmap then it has expired
-//        if(tokenExists == false){
-//            oos.writeChars("Token has already expired.");
-//            System.out.println("No session token existed, completed properly.");
-//        }
+        //Boolean for checking existance of session token
+        Boolean tokenExists = false;
+        //Check the user inputted token
+        for(Map.Entry<Integer, String> entry : SessionTokenListHashmap.entrySet()){
+            //If the user token exists in the hashmap then return a true value.
+            if(entry.getValue().equals(userToken)) {
+                tokenExists = true;
+                SessionTokenListHashmap.remove(1);
+                oos.writeChars("Removed");
+                System.out.println(SessionTokenListHashmap.get(1));
+            }else{
+                //Token doesn't exist in the hashmap
+                tokenExists = false;
+            }
+        }
+        //If the token wasn't found in the hashmap then it has expired
+        if(tokenExists == false){
+            oos.writeChars("Token has already expired.");
+            System.out.println("No session token existed, completed properly.");
+        }
     }
 
     /**
