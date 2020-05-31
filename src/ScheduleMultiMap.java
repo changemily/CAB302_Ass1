@@ -8,12 +8,13 @@ import java.util.Map;
 /**
  * scheduleMultiMap Class
  * This class contains methods that populate the billboard schedule, write the schedule to the database,
- * retrieve schedule info and manipulate the multimap that stores the billboard schedule
+ * retrieves viewings of billboards and manipulates the multimap that stores the billboard schedule
  * @author — Emily Chang
  * @version - complete
  */
 public class ScheduleMultiMap implements java.io.Serializable  {
 
+    //Multimap that stores billboard name as the key and schedule information as the values
     MultiMap<String, ScheduleInfo> scheduleMultiMap;
 
     /**
@@ -24,28 +25,29 @@ public class ScheduleMultiMap implements java.io.Serializable  {
     }
 
     /**
-     * Retrieves schedule data from database and stores it in scheduleMultiMap
+     * Retrieves schedule data from database and stores it in the MultiMap of the scheduleMultiMap object
      * @param connection Database Connection
      * @throws SQLException throws exception if SQL query is invalid, billboard does not exist or combination of billboard &
      * schedule information does not exist
      */
     public void retrieveDBschedule(Connection connection) throws Exception {
         //clear multimap
-        //for every billboard name in Billboard_schedule
+        //for every billboard in Billboard_schedule
         for (String billboardName : new ArrayList<>(scheduleMultiMap.keySet())) {
+            //remove entry
             scheduleMultiMap.remove(billboardName);
         }
 
-        //SQL query that selects all viewings in schedule and orders them by start time descending
+        //SQL query that selects all viewings in the schedule and orders them by start time descending
         final String SELECT = "SELECT * FROM schedule ORDER BY startTimeScheduled desc";
 
         //create statement
         Statement st = connection.createStatement();
 
-        //create result set that holds all viewings in schedule, ordered by start time descending
+        //create result set that holds all viewings in the schedule, ordered by start time descending
         ResultSet rs = st.executeQuery(SELECT);
 
-        //for every row in schedule table
+        //for every row in the schedule table
         while (rs.next())
         {
             //store database info in local variables
@@ -59,10 +61,9 @@ public class ScheduleMultiMap implements java.io.Serializable  {
             ScheduleInfo schedule_info = new ScheduleInfo(LocalDateTime.parse(startTimeScheduled),
                     Duration.parse(duration), Integer.parseInt(recurrence), billboardCreator);
 
-            //store billboard name with corresponding schedule information in local multimap that stores schedule
+            //store billboard name with corresponding schedule information in local multimap
             scheduleMultiMap.put(billboardName, schedule_info);
         }
-
         //close ResultSet
         rs.close();
         //close statement
@@ -146,7 +147,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
         //check if schedule information given is valid
         checkValidSchedule(newBillboardName, newBBStartTime, billboardList);
 
-        //if Billboard_schedule is empty
+        //if schedule is empty
         if(scheduleMultiMap.isEmpty())
         {
             //create schedule info for billboard
@@ -340,7 +341,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
      * @param newBillboardName name of billboard being scheduled
      * @param newBBStartTime start time (minutes) of billboard being scheduled
      * @param billboardList list that contains all billboards created
-     * @throws Exception if Billboard does not exist & if duration is out of range or the time scheduled is in the past
+     * @throws Exception if Billboard does not exist, if duration is out of range or if the start time given is in the past
      */
     private void checkValidSchedule(String newBillboardName, LocalDateTime newBBStartTime, HashMap<String, Billboard> billboardList) throws Exception {
         //CHECK FOR VALID START TIME
@@ -358,7 +359,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
         //For every billboard in billboardList
         for (Map.Entry<String, Billboard> billboardListEntry : billboardList.entrySet()){
 
-            //if billboard name of billboard being scheduled is in billboard list
+            //if billboard name of billboard being scheduled is in the billboard list
             if(billboardListEntry.getKey().equals(newBillboardName))
             {
                 //billboard exists
@@ -376,12 +377,11 @@ public class ScheduleMultiMap implements java.io.Serializable  {
     }
 
     /**
-     * Removes viewing from Billboard schedule multimap
+     * Removes viewing from schedule multimap
      * @param billboardName Name of billboard being removed from schedule
-     * @param scheduleInfo object storing info of scheduled viewing being removed
-     * @throws Exception throws exception if the billboard does not exist in the schedule & if the
+     * @param scheduleInfo schedule info of viewing being removed
+     * @throws Exception throws exception if the billboard does not exist in the schedule or if the viewing does not exist
      */
-
     public void scheduleRemoveBillboard(String billboardName, ScheduleInfo scheduleInfo) throws Exception
     {
         //boolean variable to track whether billboard is in schedule
@@ -400,7 +400,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
             //for every viewing of billboard
             for ( ScheduleInfo viewing : viewings ) {
 
-                //if billboard name is listed in schedule
+                //if billboard name is listed in the schedule
                 if(BillboardName.equals(billboardName))
                 {
                     billboardExists = true;
@@ -414,12 +414,12 @@ public class ScheduleMultiMap implements java.io.Serializable  {
                         break outerloop;
                     }
 
-                    //if combination of billboard name, and schedule info is listed in schedule
+                    //if combination of billboard name and schedule info is listed in the schedule
                     else if(viewing.startTimeScheduled.equals(scheduleInfo.startTimeScheduled))
                     {
                         viewingExists = true;
 
-                        //remove scheduled viewing from Billboard key
+                        //remove scheduled viewing value from Billboard key
                         scheduleMultiMap.remove(billboardName,viewing);
                         break outerloop;
                     }
@@ -443,27 +443,28 @@ public class ScheduleMultiMap implements java.io.Serializable  {
         }
     }
 
+
     /**
      * Returns array list of scheduled viewings for the given billboard
      * @param billboardName name of billboard, schedule information is being retrieved for
      * @return an array list of the schedule information, for each of the billboard's viewing
+     * @throws Exception throws exception if the billboard does not exist in the schedule
      */
-
     public ArrayList<ScheduleInfo> getSchedule(String billboardName) throws Exception
     {
         //array list to store scheduled times of single billboard
         ArrayList<ScheduleInfo> singleBBschedule = new ArrayList<>();
 
-        //boolean variable to track whether billboard exists in schedule
+        //boolean variable to track whether billboard exists in the schedule
         boolean billboardExists = false;
 
         //For every entry of scheduleMultiMap
         for (String BillboardName : scheduleMultiMap.keySet())
         {
-            //if given billboard name matches billboard name in schedule
+            //if given billboard name matches billboard name in the schedule
             if (BillboardName.equals(billboardName))
             {
-                //store viewings of billboard in singleBBschedule collection
+                //store viewings of billboard in singleBBschedule ArrayList
                 singleBBschedule = scheduleMultiMap.get(billboardName);
                 billboardExists = true;
                 break;
@@ -476,7 +477,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
             throw new Exception("The billboard does not exist in the schedule");
         }
 
-        //return array list of scheduled times for single billboard
+        //return array list of scheduled times for billboard
         return singleBBschedule;
     }
 }

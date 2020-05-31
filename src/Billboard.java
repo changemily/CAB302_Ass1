@@ -3,7 +3,7 @@
  * Billboard class
  * This class contains methods that construct and edit billboards
  * @author — Emily Chang
- * @version - under development
+ * @version - complete
  */
 
 public class Billboard implements java.io.Serializable{

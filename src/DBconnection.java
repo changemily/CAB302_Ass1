@@ -40,7 +40,8 @@ public class DBconnection {
             // get a connection
             instance = DriverManager.getConnection(url + "/" + schema,
                     username, password);
-        } catch (SQLException sqle) {
+        } catch (SQLException sqle) { //if connection to DB cannot be established
+            //print error message
             System.err.println("Server could not connect to Database");
             //terminate server
             System.exit(1);
