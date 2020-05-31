@@ -553,7 +553,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
                         // Refresh user control panel
                         //run Billboard Control Panel GUI
-                        String[] user_input = {"List users", "Admin"};
+                        String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
                         //request schedule and run calendar GUI
                         ControlPanelClient.Run_Client(user_input);
                     } else { // error, missing password
@@ -620,7 +620,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                         dispose();
 
                         //run Billboard Control Panel GUI to refresh
-                        String[] user_input = {"List users", "Admin"};
+                        String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
                         ControlPanelClient.Run_Client(user_input);
                         forcedExit = false; // set exit to safe
                     } else { // only password screen, go back to gui home
@@ -674,7 +674,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                         dispose();
 
                         //run Billboard Control Panel GUI
-                        String[] user_input = {"List users", "Admin"};
+                        String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
                         //request schedule and run calendar GUI
                         ControlPanelClient.Run_Client(user_input);
                         forcedExit = false; // set exit to safe

@@ -603,7 +603,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                             //Delete billboard with viewing details given by user
                             ControlPanelClient.Run_Client(user_inputs);
                             //Refresh control panel
-                            user_inputs = new String[]{"List billboards"};
+                            user_inputs = new String[]{"List billboards", ControlPanelClient.sessionToken};
                             ControlPanelClient.Run_Client(user_inputs);
                             closeable = false;
                             dispose();
