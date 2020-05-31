@@ -46,7 +46,7 @@ public class ScheduleInfo implements Serializable {
         //if valid duration
         else
         {
-            //set duration billboard is displayed for
+            //set duration the billboard is displayed for
             this.duration = durationMins;
         }
 
@@ -69,13 +69,11 @@ public class ScheduleInfo implements Serializable {
                     "every day, hour, minute or none");
         }
 
-        //if valid recurrence option
+        //if recurrence option is valid
         else
         {
             //set recurrence of billboard
             this.recurrenceDelay = recurrenceDelay;
         }
-
     }
-
 }

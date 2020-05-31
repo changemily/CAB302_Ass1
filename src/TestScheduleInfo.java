@@ -7,32 +7,22 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * This class contains methods that test the functionality of ScheduleInfo class methods
- * @author — Emily Chang
- * @version - 2
- */
 public class TestScheduleInfo {
 
     ScheduleInfo scheduleInfo;
+    //define no. minutes in a day and hour
     final int MINUTES_IN_DAY = 1440;
     final int MINUTES_IN_HOUR = 60;
 
-    /**
-     * Test 1: Constructing a Schedule info object with scheduled time
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 1: Constructing a Schedule info object
     @BeforeEach
     @Test
     public void setUpScheduleInfo() throws Exception {
         scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
-                5, "emily");
+                0, "emily");
     }
 
-    /**
-     * Test 2: construct schedule info object that recurs daily
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 2: construct a schedule info object that recurs daily
     @Test
     public void recurrenceDay() throws Exception {
         scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
@@ -41,10 +31,7 @@ public class TestScheduleInfo {
         assertEquals(MINUTES_IN_DAY, scheduleInfo.recurrenceDelay);
     }
 
-    /**
-     * Test 3: construct schedule info object that recurs hourly
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 3: construct a schedule info object that recurs hourly
     @Test
     public void recurrenceHour() throws Exception {
         scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
@@ -53,10 +40,7 @@ public class TestScheduleInfo {
         assertEquals(MINUTES_IN_HOUR, scheduleInfo.recurrenceDelay);
     }
 
-    /**
-     * Test 4: construct schedule info object that recurs every 3 mins
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 4: construct schedule info object that recurs every 3 mins
     @Test
     public void recurrenceMin() throws Exception {
         scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
@@ -65,10 +49,7 @@ public class TestScheduleInfo {
         assertEquals(3, scheduleInfo.recurrenceDelay);
     }
 
-    /**
-     * Test 5: construct schedule info object that recurs every minute
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 5: construct a schedule info object that recurs every minute
     @Test
     public void recurrenceInfinite() throws Exception {
         scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
@@ -77,10 +58,7 @@ public class TestScheduleInfo {
         assertEquals(1, scheduleInfo.recurrenceDelay);
     }
 
-    /**
-     * Test 6: construct schedule info object that recurs every 3 mins
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 6: construct a schedule info object that does not recur
     @Test
     public void recurrenceNone() throws Exception {
         scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
@@ -89,11 +67,7 @@ public class TestScheduleInfo {
         assertEquals(0, scheduleInfo.recurrenceDelay);
     }
 
-    /**
-     * Test 7: construct schedule info object with invalid recurrence delay
-     * - invalid option, larger than 60 mins and not an hr or day
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 7: construct a schedule info object with an invalid recurrence delay - invalid option, larger than 60 mins and not an hr or day
     @Test
     public void invalidRecurrence() throws Exception {
         assertThrows(Exception.class,() -> {
@@ -102,10 +76,7 @@ public class TestScheduleInfo {
         });
     }
 
-    /**
-     * Test 8: construct schedule info object with invalid recurrence delay - smaller than duration
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 8: construct a schedule info object with an invalid recurrence delay - smaller than duration
     @Test
     public void invalidRecurrence2() throws Exception {
         assertThrows(Exception.class,() -> {
@@ -114,10 +85,7 @@ public class TestScheduleInfo {
         });
     }
 
-    /**
-     * Test 9: construct schedule info object with valid duration - Negative duration
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 9: construct a schedule info object with a valid duration
     @Test
     public void validDuration() throws Exception {
         scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(5),
@@ -125,10 +93,7 @@ public class TestScheduleInfo {
         assertEquals(Duration.ofMinutes(5), scheduleInfo.duration);
     }
 
-    /**
-     * Test 10: construct schedule info object with invalid duration - Negative duration
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 10: construct schedule info object with an invalid duration - Negative duration
     @Test
     public void negDuration() throws Exception {
         assertThrows(Exception.class,() -> {
@@ -137,10 +102,7 @@ public class TestScheduleInfo {
         });
     }
 
-    /**
-     * Test 11: construct schedule info object with invalid duration - Zero duration
-     * @throws Exception invalid duration, invalid recurrence delay
-     */
+    //Test 11: construct schedule info object with an invalid duration - Zero duration
     @Test
     public void zerDuration() throws Exception {
         assertThrows(Exception.class,() -> {
