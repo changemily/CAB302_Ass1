@@ -541,15 +541,15 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                                     fr.dispose();
                                 }
                             }
-                            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", true, userList));
+                            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
                         }
                     }
                     else{
-                        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", true, userList));
+                        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
                     }
                 }
                 else{
-                    SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", true, userList));
+                    SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
                 }
                 closeable = false;
             } catch (Exception e) {

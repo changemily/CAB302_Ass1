@@ -1,84 +1,97 @@
 import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 import java.util.HashSet;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  /* This class contains methods that test the functionality of billboardManager class methods
- /*  * @author — Harry Estreich
- /*  * @version - Final
+ /*  @author — Harry Estreich
+ /*  @version - Final
   */
-
-
 public class TestUserManager {
-    // Test 1.1 Create a user manager without a target
+    /**
+     * Test 1.1 - Create a user manager without a target, check no exception thrown
+     * @throws  Exception throws exception if invalid permission
+     */
     @Test
-    public void create_user_manager() throws Exception{
+    public void createUserManager() throws Exception {
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser);
     }
 
-    // Test 1.2 Create a user manager with a target
+    /**
+     * Test 1.2 - Create a user manager with a target, check no exception thrown
+     * @throws  Exception throws exception if invalid permission
+     */
     @Test
-    public void create_user_manager_target() throws Exception{
+    public void createUserManagerTarget() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, otherUser);
     }
 
-    // Test 2.1 Create a new user with Edit Users permission
+    /**
+     * Test 2.1 - Create a new user, with Edit User permissions for current user
+     * @throws  Exception throws exception if invalid permission
+     */
     @Test
-    public void create_user_admin() throws Exception{
+    public void createUserAdmin() throws Exception{
         HashSet<User> UserList = new HashSet<>();
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser);
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
-        admin.addUser(otherUser, UserList);
-        assertTrue(UserList.contains(otherUser));
+        admin.addUser(otherUser, UserList); // add to list
+        assertTrue(UserList.contains(otherUser)); // check list contains
     }
 
-    // Test 2.1 Create a new user without Edit Users permission
+    /**
+     * Test 2.2 - Create a new user, without Edit User permission for current user
+     * @throws  Exception throws exception if invalid permission
+     */
     @Test
-    public void create_user_base() throws Exception{
+    public void createUserBase() throws Exception{
         HashSet<User> UserList = new HashSet<>();
         User adminUser = new User("Admin", "1234", "Salt",  "Edit All Billboards");
         UserManager admin = new UserManager(adminUser);
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
-        admin.addUser(otherUser, UserList);
-        assertFalse(UserList.contains(otherUser));
+        assertThrows(Exception.class, () -> admin.addUser(otherUser, UserList)); // assert that user can't add user
     }
 
-    // Test 2.1 Show a that list_user creates a list of usernames that have been added to UserList
+    /**
+     * Test 2.3 - Show tha list_usres creates a string[] of usernames after adding a user
+     * @throws  Exception throws exception if invalid permission
+     */
     @Test
-    public void list_user() throws Exception{
+    public void listUser() throws Exception{
         HashSet<User> UserList = new HashSet<>();
         User adminUser = new User("Admin", "1234", "Salt",  "Edit All Billboards", "Edit Users");
         UserManager admin = new UserManager(adminUser);
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
         admin.addUser(otherUser, UserList);
-        String[] Usernames = {"Other"};
+        String[] Usernames = {"Other"}; // expected user list
         HashSet<String> UsernameList = new HashSet<>(Arrays.asList(Usernames));
-        assertEquals(admin.listUsers(UserList), UsernameList);
+        assertEquals(admin.listUsers(UserList), UsernameList); // assert that list contains usernames
     }
 
-    // Test 2.1 Show a that list_user doesn't work without edit users
+    /**
+     * Test 2.4 Show that list_user doesn't work without Edit Users permission
+     * @throws  Exception throws exception if invalid permission
+     */
     @Test
-    public void list_user_base() throws Exception{
+    public void listUserBase() throws Exception{
         HashSet<User> UserList = new HashSet<>();
         User adminUser = new User("Admin", "1234", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser);
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
-        admin.addUser(otherUser, UserList);
-        String[] Error = {"Error"};
-        HashSet<String> UsernameList = new HashSet<>(Arrays.asList(Error));
-        assertEquals(admin.listUsers(UserList), UsernameList);
+        assertThrows(Exception.class, () -> admin.addUser(otherUser, UserList)); // assert that list user fails
     }
 
-    // Test 3.1 Remove a permission from same user
+    /**
+     * Test 3.1 - Remove a permission from the same user
+     * @throws  Exception throws an exception if invalid permission
+     */
     @Test
-    public void remove_permission() throws Exception{
+    public void removePermission() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, adminUser);
         String[] Permissions = {"Edit Users"};
@@ -88,129 +101,165 @@ public class TestUserManager {
         } catch (Exception e) {
             // null
         }
-        assertEquals(adminUser.Permissions, Permissions_List);
+        assertEquals(adminUser.Permissions, Permissions_List); // assert that new permissions are correct
     }
 
-    // Test 3.2 Remove a permission from different user
+    /**
+     * Test 3.2 - Remove a permission from different user
+     * @throws  Exception throws an exception if invalid permissions
+     */
     @Test
-    public void remove_permission_different() throws Exception{
+    public void removePermissionDifferent() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, otherUser);
         String[] Permissions = {};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
         admin.setUserPermissions(Permissions_List);
-        assertEquals(otherUser.Permissions, Permissions_List);
+        assertEquals(otherUser.Permissions, Permissions_List); // assert that new permissions are correct
     }
 
-    // Test 4.1 Add permission to own user with admin
+    /**
+     * Test 4.1 - Add a permission to own user with Edit Users
+     * @throws  Exception throws an exception if invalid permissions
+     */
     @Test
-    public void add_a_permission() throws Exception{
+    public void addAPermission() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, adminUser);
         String[] Permissions = {"Edit Users", "Edit All Billboards", "Schedule Billboards"};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
         admin.setUserPermissions(Permissions_List);
-        assertEquals(adminUser.Permissions, Permissions_List);
+        assertEquals(adminUser.Permissions, Permissions_List); // assert that new permissions are correct
     }
 
-    // Test 4.2 Add a permission to own user without admin
+    /**
+     * Test 4.2 Add a permission without to own user without Edit Users
+     * @throws  Exception throws an exception if invalid permissions, and when changing permissions without Edit Users
+     */
     @Test
-    public void add_a_permissions() throws Exception{
+    public void addAPermissions() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, adminUser);
         String[] Permissions = {"Edit Users", "Edit All Billboards", "Schedule Billboards"};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
-        assertThrows(Exception.class, () -> admin.setUserPermissions(Permissions_List));
+        assertThrows(Exception.class, () -> admin.setUserPermissions(Permissions_List)); // assert that error is thrown
     }
 
-    // Test 4.3 Add permission to another user with admin
+    /**
+     * Test 4.2 Add a permission to a different user with Edit Users
+     * @throws  Exception throws an exception if invalid permissions
+     */
     @Test
-    public void add_a_permission_different() throws Exception{
+    public void addAPermissionDifferent() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, otherUser);
         String[] Permissions = {"Edit Users", "Edit All Billboards"};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
         admin.setUserPermissions(Permissions_List);
-        assertEquals(adminUser.Permissions, Permissions_List);
+        assertEquals(adminUser.Permissions, Permissions_List); // assert that new permissions are correct
     }
 
-    // Test 5.1 Remove edit user for self user -> fails
+    /**
+     * Test 5.1 Remove edit user from self
+     * @throws  Exception throws an exception if invalid permission and when removing edit user from self
+     */
     @Test
-    public void remove_self_user() throws Exception{
+    public void removeSelfUser() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, adminUser);
         String[] Permissions = {"Edit All Billboards"};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
-        assertThrows(Exception.class, () -> admin.setUserPermissions(Permissions_List));
+        assertThrows(Exception.class, () -> admin.setUserPermissions(Permissions_List)); // assert that error is thrown
     }
 
-    // Test 6.1 Set own password, with admin, pass
+    /**
+     * Test 6.1 Set own password with Edit Users, pass
+     * @throws  Exception throws an exception if invalid permissions
+     */
     @Test
-    public void edit_own_password_admin() throws Exception{
+    public void editOwnPasswordAdmin() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, adminUser);
         String password = "4321";
         admin.setUserPassword(password);
-        assertEquals(adminUser.Password, password);
+        assertEquals(adminUser.Password, password); // assert that new password is correct
     }
 
-    // Test 6.2 Set own password, without admin, pass
+    /**
+     * Test 6.2 Set own password without Edit Users, pass
+     * @throws  Exception throws an exception if invalid permissions
+     */
     @Test
-    public void edit_own_password_without_admin() throws Exception{
+    public void editOwnPasswordWithoutAdmin() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, adminUser);
         String password = "4321";
         admin.setUserPassword(password);
-        assertEquals(adminUser.Password, password);
+        assertEquals(adminUser.Password, password); // assert that new password is correct
     }
 
-    // Test 6.3 Set other password, with admin, pass
+    /**
+     * Test 6.3 Set other user password with Edit Users, pass
+     * @throws  Exception throws an exception if invalid permissions
+     */
     @Test
-    public void edit_other_password_admin() throws Exception{
+    public void editOtherPasswordAdmin() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, otherUser);
         String password = "4321";
         admin.setUserPassword(password);
-        assertEquals(otherUser.Password, password);
+        assertEquals(otherUser.Password, password); // assert that new pass is correct
     }
 
-    // Test 6.4 Set other password, without admin, fail
+    /**
+     * Test 6.4 Set other user password without Edit Users, fail
+     * @throws  Exception throws an exception if invalid permissions and when set other use password without Edit Users
+     */
     @Test
-    public void edit_other_password_without_admin() throws Exception{
+    public void editOtherPasswordWithoutAdmin() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(otherUser, adminUser);
         String password = "4321";
-        assertThrows(Exception.class, () -> admin.setUserPassword(password));
+        assertThrows(Exception.class, () -> admin.setUserPassword(password)); // assert that error is thrown
     }
 
-    // Test 7.1 Delete own user, fail
+    /**
+     * Test 7.1 Delete own user, fail
+     * @throws  Exception throws an exception if invalid permissions
+     */
     @Test
-    public void delete_own_user() throws Exception{
+    public void deleteOwnUser() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt","Edit Users", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, adminUser);
-        assertFalse(admin.deleteUser());
+        assertFalse(admin.deleteUser()); // assert that user can't delete
     }
 
-    // Test 7.2 Delete other user, with admin, pass
+    /**
+     * Delete other user with Edit Users, pass
+     * @throws  Exception throws an exception if invalid permissions
+     */
     @Test
-    public void delete_other_user_admin() throws Exception{
+    public void deleteOtherUserAdmin() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, otherUser);
-        assertTrue(admin.deleteUser());
+        assertTrue(admin.deleteUser()); // assert that user can delete
     }
 
-    // Test 8.1 Delete other user, without admin, fail
+    /**
+     * Delete other user without Edit Users, fail
+     * @throws  Exception throws an exception if invalid permission
+     */
     @Test
-    public void delete_other_user_without_admin() throws Exception{
+    public void deleteOtherUserWithoutAdmin() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, otherUser);
-        assertFalse(admin.deleteUser());
+        assertFalse(admin.deleteUser()); // assert that user can't delete
     }
 }
 
