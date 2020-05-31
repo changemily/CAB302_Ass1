@@ -21,16 +21,25 @@ import static javax.swing.JOptionPane.*;
  * Billboard Control Panel class for Control Panel GUI
  * This class contains a Main method and method that creates a GUI window for the Billboard Control Panel
  * @author - Nickhil Nischal
- * @version - under development
- *
- * NOTES: Minor functionality still needs to be added; further refinement required
+ * @version - Complete
  */
 public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, ListSelectionListener, DocumentListener {
+    // Billboard HashMap
     HashMap<String, Billboard> billboardListH;
+
+    // Current user
     User currentUser;
+
+    // Schedule MultiMap
     ScheduleMultiMap schedule;
+
+    // User's username
     String username;
+
+    // User's sessions token
     String sessionToken;
+
+    // Boolean to specify whether closeable or not
     boolean closeable = true;
 
     /**
@@ -39,33 +48,64 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * @param sessionToken The sessionToken associated with the user
      * @param BillboardList A list of billboards passed in
      */
+
+    /**
+     * Method used to create a GUI window for the Billboard Control Panel Screen
+     * @param username Used for setting the username
+     * @param sessionToken The sessionToken associated with the user
+     * @param BillboardList A list of billboards passed in
+     * @param currentUser Current user
+     * @param schedule Schedule MultiMap
+     */
     public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList, User currentUser, ScheduleMultiMap schedule) {
         // Set window title
         super("Billboard Control Panel");
+
+        // The user's username
         this.username = username;
+
+        // The user's session token
         this.sessionToken = sessionToken;
+
+        // Current user
         this.currentUser = currentUser;
+
+        // Billboard list HashMap
         billboardListH = BillboardList;
+
+        // Schedule MultiMap
         this.schedule = schedule;
     }
 
     // Clickable buttons and list
     private JButton backButton;
     private JButton logoutButton;
-    private JTextField search;
-    private JList billboardList;
     private JButton editBillboardButton;
     private JButton deleteBillboardButton;
     private JButton scheduleBillboardButton;
     private JButton createBillboardButton;
+
+    // Interactive JTextField for search
+    private JTextField search;
+
+    // Interactive JList for displaying billboards
+    private JList billboardList;
+
+    // String elements
     private String billboardXML = null;
     private String billboardName;
     private String xmlFile;
+
+    // JPanels used throughout GUI
     private JPanel mainPanel;
     private JPanel billboardPreview;
     private JPanel buttonPanel;
     private JPanel createBillboardPanel;
+
+    // Set dimension size for billboard preview
     private final Dimension DIMENSION = new Dimension(400,200);
+
+    // Billboard viewer
     private BillboardViewer Billboard;
 
     // Master Array of billboards (and creators), used in billboard search checking
@@ -79,11 +119,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             "<billboard>\n" +
             "    <message>Select a billboard to preview</message>\n" +
             "</billboard>";
+
     // Xml string used when the list of billboards in empty
     private final String EMPTY_LIST_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
             "    <message>No billboards stored in the database</message>\n" +
             "</billboard>";
+
     // Default xml file to be used for creating a new xml file.
     public static final String XML_TEMPLATE = "<?xml version='1.0' encoding='UTF-8'?><billboard><picture url=" +
             "'https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download'/><information>Default text, delete or change." +
@@ -92,11 +134,19 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
     /**
      * Method used to create a GUI window for the Billboard Control Panel
-     * @throws ClassNotFoundException Exception handling
-     * @throws UnsupportedLookAndFeelException Exception handling
-     * @throws InstantiationException Exception handling
-     * @throws IllegalAccessException Exception handling
-     * @throws IOException Exception handling
+     * @throws ClassNotFoundException Exception thrown by setLookAndFeel: when an application tries to load in a class
+     * through its string name but no definition for the class with the specified name could be found.
+     * @throws UnsupportedLookAndFeelException Exception thrown by setLookAndFeel: an IllegalAccessException is thrown
+     * when an application tries to reflectively create an instance (other than an array), set or get a field, or invoke
+     * a method, but the currently executing method does not have access to the definition of the specified class, field,
+     * method or constructor.
+     * @throws InstantiationException Exception thrown by setLookAndFeel: an exception that indicates the requested
+     * look & feel management classes are not present on the user's system.
+     * @throws IllegalAccessException Exception thrown by setLookAndFeel: when an application tries to create an
+     * instance of a class using the newInstance method in class Class, but the specified class object cannot be instantiated
+     * @throws IOException Exception thrown: related to failed or interrupted I/O operations.
+     * @throws ParserConfigurationException Exception thrown: related to configuration error.
+     * @throws SAXException Exception thrown: related to XML.
      */
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, ParserConfigurationException, SAXException {
         // Set look and feel of GUI to resemble operating system look and feel
@@ -105,17 +155,17 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // Default close operation set to Dispose on Close, so when user closes this screen, only this screen closes (keeps Control Panel GUI running)
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        //make window non resizable
+        // Make window non resizable
         setResizable(false);
 
         // Create billboards JPanel
         JPanel billboardPanel = new JPanel();
-        billboardPanel.setLayout(new BoxLayout(billboardPanel, BoxLayout.Y_AXIS));
+        billboardPanel.setLayout(new BoxLayout(billboardPanel, BoxLayout.Y_AXIS)); // Set box layout
 
         // Add billboard preview image, inside of a JPanel
         mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.add(Box.createVerticalStrut(50));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Set box layout
+        mainPanel.add(Box.createVerticalStrut(50)); // Add vertical strut to JPanel
 
         // If billboard list is empty
         if(billboardListH.size() == 0)
@@ -123,15 +173,16 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             // Create new billboard preview with empty billboard list message
             Billboard = new BillboardViewer(EMPTY_LIST_XML_STRING, DIMENSION);
         }
-        // Else: billboard list is not empty
+        // Else billboard list is not empty
         else
         {
             // Create new billboard preview with empty xml
             Billboard = new BillboardViewer(NO_SELECTION_XML_STRING, DIMENSION);
         }
 
+        // Set billboard preview size
         billboardPreview = Billboard.getSizedBillboard();
-        mainPanel.add(billboardPreview);
+        mainPanel.add(billboardPreview); // Add billboard preview to main JPanel
 
         // If billboard list is NOT empty
         if(billboardListH.size() >0)
@@ -141,8 +192,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
             // Create search JPanel, with X axis Box Layout
             JPanel searchPanel = new JPanel();
-
-            //searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
 
             // Create Search Billboard JLabel
             JLabel label = new JLabel("Search Billboard");
@@ -165,13 +214,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             // Populate the master array of billboardsWithCreator, with information
             billboardListWithCreatorArray = populateBillboardsArray();
 
-            //Create billboard JList, and add it to billboard JPanel
+            // Create billboard JList, and add it to billboard JPanel
             billboardList = createJList(billboardWithCreatorListModel, billboardListWithCreatorArray, billboardPanel);
         }
 
         // Create button JPanel
         buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1,2)); // Set layout of JPanel
+        buttonPanel.setLayout(new GridLayout(1,2)); // Set grid layout of button JPanel
 
         // Create and add Edit Billboard button, inside button JPanel
         editBillboardButton = createButton("Edit Billboard");
@@ -188,15 +237,15 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Create and add Create Billboard button, inside billboard create billboard JPanel; and add formatting
         createBillboardButton = createButton("Create Billboard");
-        createBillboardPanel.add(Box.createVerticalStrut(30));
-        createBillboardPanel.add(createBillboardButton);
-        createBillboardPanel.add(Box.createVerticalStrut(100));
+        createBillboardPanel.add(Box.createVerticalStrut(30)); // Add vertical strut
+        createBillboardPanel.add(createBillboardButton); // Add JButton to JPanel
+        createBillboardPanel.add(Box.createVerticalStrut(100)); // Add vertical strut
 
         // Create and add Create Delete button
         deleteBillboardButton = createButton("Delete Billboard");
-        createBillboardPanel.add(Box.createVerticalStrut(30));
-        createBillboardPanel.add(deleteBillboardButton);
-        createBillboardPanel.add(Box.createVerticalStrut(100));
+        createBillboardPanel.add(Box.createVerticalStrut(30)); // Add vertical strut
+        createBillboardPanel.add(deleteBillboardButton); // Add JButton to JPanel
+        createBillboardPanel.add(Box.createVerticalStrut(100)); // Add vertical strut
 
         // Add create billboard JPanel to preview panel JPanel
         mainPanel.add(createBillboardPanel);
@@ -239,23 +288,22 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Window formatting
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-        getContentPane().add(Box.createVerticalStrut(20)); // formatting
-        getContentPane().add(topPanel);
-        getContentPane().add(bottomPanel);
+        getContentPane().add(Box.createVerticalStrut(20)); // Formatting
+        getContentPane().add(topPanel); // Add top JPanel to content pane
+        getContentPane().add(bottomPanel); // Add bottom JPanel to content pane
 
         // Add Window Listener, used for when window is closed
         addWindowListener(this);
 
         // Display window
-        setLocation(new Point(100,100));
-        pack();
+        pack(); // Pack all contents of the GUI
         setLocationRelativeTo(null); // centers window
-        setVisible(true);
+        setVisible(true); // Make GUI visible
     }
 
     /**
      * This method creates a new JTextField, and adds it to a specified JPanel
-     * @param panel  The JPanel that the created JTextField is to be added to
+     * @param panel The JPanel that the created JTextField is to be added to
      * @return Returns a JTextField
      */
     private JTextField newTextField(JPanel panel) {
@@ -274,7 +322,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
     /**
      * This method populates an array with real billboard and creator information
-     * @return  Returns a String array
+     * @return Returns a String array
      */
     private String[] populateBillboardsArray() {
         // Int counter for assigning values in the array
@@ -290,6 +338,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             //Assign billboard name to the second position in the 2D array
             billboardListWithCreator[counter] = billboardEntry.getValue().BillboardName + ", "
                     + billboardListWithCreator[counter];
+            // Increase counter
             counter++;
         }
 
@@ -298,8 +347,8 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
     }
 
     /**
-     * This method creates a JList from a specified list model, then populates the list model from a populated String array,
-     *  then the JList is added to a specified JPanel
+     * This method creates a JList from a specified list model, then populates the list model from a populated String
+     * array, then the JList is added to a specified JPanel
      * @param listModel The list model to be written to
      * @param array The array to fetch information from
      * @param panel The JPanel that the created JList is to be added to
@@ -341,57 +390,60 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
     /**
      * This method creates a is used to evaluate which billboards is being clicked on in the list
-     *
      * Changes billboard XML when a user selects a billboard from the list
-     *
-     * @param event
+     * @param event List selection event for JList
      */
     public void valueChanged(ListSelectionEvent event) {
-        //get string stored in current cell of list
+        // Get string stored in current cell of list
         try {
             String cellSelected = billboardList.getSelectedValue().toString();
 
-            //remove creator from list
+            // Remove creator from list
             String billboardSelected = cellSelected.replaceAll(",.*", "");
 
+            // Set billboard name
             billboardName = billboardSelected;
 
+            // Set what the selected billboard object
             Billboard billboardObjectSelected = billboardListH.get(billboardSelected);
 
             //get billboard xml file name
             billboardXML = billboardObjectSelected.XMLFile;
 
-            //remove all elements of GUI screen
+            // Remove all elements of GUI screen
             mainPanel.removeAll();
             mainPanel.revalidate();
             mainPanel.repaint();
 
+            // Try to set billboard
             try {
                 Billboard = new BillboardViewer(billboardXML, DIMENSION);
-            } catch (ParserConfigurationException | IOException | SAXException ex) {
+            }
+            // Catch exception
+            catch (ParserConfigurationException | IOException | SAXException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(getContentPane(), ex,
                         "ERROR", JOptionPane.ERROR_MESSAGE);
             }
 
+            // Set box layout of main JPanel
             mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-            mainPanel.add(Box.createVerticalStrut(50));
-            billboardPreview = Billboard.getSizedBillboard();
+            mainPanel.add(Box.createVerticalStrut(50)); // Add vertical strut
+            billboardPreview = Billboard.getSizedBillboard(); // Set billboard preview size
 
-            //add control panel components back to panel
+            // Add control panel components back to panel
             mainPanel.add(billboardPreview);
             mainPanel.add(buttonPanel);
             mainPanel.add(createBillboardPanel);
 
-
             System.out.println("bb xml: " + billboardXML);
             System.out.println("bb name: " + billboardName);
         }
+        // Catch exception
         catch (Exception e){
             // don't do anything
         }
     }
-
 
     /**
      * This method creates a JButton, when given a display name for the button, returns a JButton
@@ -409,9 +461,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         return button;
     }
 
-
     /**
      * This method listens for an action to be performed
+     * @param actionEvent JButton pressed
      */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
@@ -438,22 +490,22 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Checks if the edit billboard button has been clicked
         else if (buttonClicked == editBillboardButton) {
-            //if billboard has not been selected in list
+            // If billboard has not been selected in list
             if (billboardName == null) {
-                //display error pop up\
+                // Display error pop up
                 JOptionPane.showMessageDialog(this,
                         "You must select a billboard in the list to edit");
             }
-            //if billboard has been selected
+            // If billboard has been selected
             else {
-                //get string stored in current cell of list
+                // Get string stored in current cell of list
                 String cellSelected = billboardList.getSelectedValue().toString();
 
-                //remove creator from list
+                // Remove creator from list
                 String billboardSelected = cellSelected.replaceAll(",.*", "");
                 billboardName = billboardSelected;
                 Billboard billboardObjectSelected = billboardListH.get(billboardSelected);
-                //get billboard creator, and current username
+                // Get billboard creator, and current username
                 String billboardCreator = billboardObjectSelected.BillboardCreator;
                 String currentUsername = currentUser.Username;
                 boolean creatorCheck = billboardCreator.equals(currentUsername);
@@ -476,9 +528,9 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                     System.out.println("xmlFile: " + xmlFile);
-                    //run Billboard editor/creator GUI
+                    // Run Billboard editor/creator GUI
 
-                    // check that editor isn't already open
+                    // Check that editor isn't already open
                     int frameCount = 0;
                     Frame[] allFrames = Frame.getFrames();
                     for(Frame fr : allFrames){
@@ -528,7 +580,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 }
                 System.out.println("xmlFile: " + xmlFile);
 
-                // check that editor isn't already open
+                // Check that editor isn't already open
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
@@ -558,7 +610,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 }
             }
             else{
-                //display error pop up
+                // Display error pop up
                 JOptionPane.showMessageDialog(this,
                         "You do not permission to create a billboard");
             }
@@ -628,17 +680,14 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Checks if the schedule billboard button has been clicked
         else if (buttonClicked == scheduleBillboardButton) {
-            //if schedule pop up is not already open
-
-
-            //if billboard has not been selected in list
+            // If billboard has not been selected in list
             if(billboardName == null)
             {
-                //display error pop up
+                // Display error pop up
                 JOptionPane.showMessageDialog(this,
                         "You must select a billboard in the list to schedule");
             }
-            //if billboard has been selected
+            // If billboard has been selected
             else
             {
                 if (currentUser.Permissions.contains("Schedule Billboards")) {
@@ -718,83 +767,140 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         }
     }
 
+
+    /**
+     * Populates and runs the GUI
+     */
     @Override
     public void run() {
+        // Try to run the GUI
         try {
             createGUI();
-        } catch (ClassNotFoundException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (ClassNotFoundException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (UnsupportedLookAndFeelException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (InstantiationException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (InstantiationException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalAccessException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (IllegalAccessException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException | ParserConfigurationException | SAXException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+
+    /**
+     * Window opened event
+     * @param e Window event
+     */
     @Override
     public void windowOpened(WindowEvent e) {
 
     }
 
+    /**
+     * Window closing event
+     * @param e Window event
+     */
     @Override
     public void windowClosing(WindowEvent e) {
 
     }
 
+    /**
+     * Window closed event
+     * @param e Window event
+     */
     @Override
     public void windowClosed(WindowEvent e) {
         // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
         if(closeable) {
+            // Open Control Panel GUI (previous screen)
             SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
         }
     }
 
+    /**
+     * Window iconified event
+     * @param e Window event
+     */
     @Override
     public void windowIconified(WindowEvent e) {
 
     }
 
+    /**
+     * Window deinconified event
+     * @param e Window event
+     */
     @Override
     public void windowDeiconified(WindowEvent e) {
 
     }
 
+    /**
+     * Window activated event
+     * @param e Window event
+     */
     @Override
     public void windowActivated(WindowEvent e) {
 
     }
 
+    /**
+     * Window deactivated event
+     * @param e Window event
+     */
     @Override
     public void windowDeactivated(WindowEvent e) {
 
     }
 
+    /**
+     * Insert update for JTextField
+     * @param e Document event
+     */
     @Override
     public void insertUpdate(DocumentEvent e) {
         // Execute search
         listSearch(billboardWithCreatorListModel, billboardListWithCreatorArray);
     }
 
+    /**
+     * Remove update for JTextField
+     * @param e Document update
+     */
     @Override
     public void removeUpdate(DocumentEvent e) {
         // Execute search
         listSearch(billboardWithCreatorListModel, billboardListWithCreatorArray);
     }
 
+    /**
+     * Changed update for JTextField
+     * @param e Document event
+     */
     @Override
     public void changedUpdate(DocumentEvent e) {
         // Execute search
