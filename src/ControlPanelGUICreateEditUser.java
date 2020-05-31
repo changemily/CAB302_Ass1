@@ -12,9 +12,7 @@ import static javax.swing.JOptionPane.CANCEL_OPTION;
  * Create/Edit User class for Control Panel GUI
  * This class contains a Main method and method that creates a GUI window for the Create/Edit User Screen
  * @author - Nickhil Nischal (GUI), Harry Estreich (buttons & permissions)
- * @version - under development
- *
- * NOTES: Some functionality still needs to be added
+ * @version - final
  */
 public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener, WindowListener {
     // Components
@@ -567,7 +565,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 }
             } else {
                 // If editing user, check if password has changed
-                if(!password.getText().equals("Edit Password")) { // password change
+                if(!password.getText().equals("Change Password")) { // password change
                     String newUsername = usernameField.getText(); // get username
                     String newPassword = null;
                     // get password and hash
