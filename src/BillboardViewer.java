@@ -18,7 +18,7 @@ import javax.xml.transform.stream.StreamResult;
  * Billboard Viewer Gui
  * This class contains a Main method and method that creates a GUI window for the Billboard Viewer
  * @author - Harry Estreich
- * @version - under development
+ * @version - Final
  */
 
 public class BillboardViewer extends JFrame{
@@ -76,10 +76,10 @@ public class BillboardViewer extends JFrame{
         // Find screen size
         screenSize = size;
         // Parse File
-        InputStream xml_file = new ByteArrayInputStream(file.getBytes());
-        parseFile(xml_file);
+        InputStream xmlFile = new ByteArrayInputStream(file.getBytes());
+        parseFile(xmlFile);
 
-        //// Find Elements from xml_file
+        //// Find Elements from xmlFile
         findBillboardCode(parsedFile);
         // Determine billboard details
         findMessageDetails(parsedFile);

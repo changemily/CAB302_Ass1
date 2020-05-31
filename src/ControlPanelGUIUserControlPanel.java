@@ -456,7 +456,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                     }
 
                     User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
-                    System.out.println("edit user: "+ usernameSelected);
 
                     // if safe exit
                     if(!closeable) {
@@ -493,7 +492,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Checks if the delete user button has been clicked
         else if (buttonClicked == deleteUserButton) {
-            System.out.println("delete user button clicked with " + userSelectionLabel.getText() + " selected");
             // Check user selected
             if (userSelectionLabel.getText().equals("No User Selected")) {
                 JOptionPane.showMessageDialog(this,
@@ -530,7 +528,6 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Checks if the create user button has been clicked
         else if (buttonClicked == createUserButton) {
-            System.out.println("create user button clicked");
             try {
                 // check no edit user GUIs are already open
                 int frameCount = 0;

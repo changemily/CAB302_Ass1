@@ -70,8 +70,6 @@ public class User implements java.io.Serializable {
         this.password = null;
         this.salt = null;
         this.permissions = null;
-
-        System.out.println("The user " + usernameTemp + " has been successfully deleted.");
     }
 
     /**
@@ -84,8 +82,6 @@ public class User implements java.io.Serializable {
 
         // Replaces old username with newly inputted username
         this.username = newUsername;
-
-        System.out.println("Username successfully changed from " + usernameTemp + " to " + username + ".");
     }
 
     /**
@@ -98,8 +94,6 @@ public class User implements java.io.Serializable {
 
         // Replaces old password with newly inputted password
         this.password = newPassword;
-
-        System.out.println("Password successfully changed from " + passwordTemp + " to " + password + ".");
     }
 
     /**
@@ -114,8 +108,6 @@ public class User implements java.io.Serializable {
             if (this.permissions.contains(permission)) {
                 // Removes permission from permissions hashset
                 this.permissions.remove(permission);
-
-                System.out.println("Permission " + permission + " successfully removed.");
             }
         }
         // Else throw an exception
@@ -137,8 +129,6 @@ public class User implements java.io.Serializable {
             if (!this.permissions.contains(permission)) {
                 // Adds permission to permissions hashset
                 this.permissions.add(permission);
-
-                System.out.println("Permission " + permission + " successfully added.");
             }
         }
         // Else throw an exception

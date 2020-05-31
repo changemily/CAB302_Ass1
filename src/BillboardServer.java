@@ -964,8 +964,6 @@ public class BillboardServer {
         //Get the users session token to validate the action
         String sessionToken = (String) ois.readObject();
         //If session token is current
-        //String sessionToken = "(String) ois.readObject()";
-        //If session token is current
         if(checkToken(sessionToken) == true)
         {
             oos.writeBoolean(true);

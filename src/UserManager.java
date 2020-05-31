@@ -160,9 +160,6 @@ public class UserManager
         //hash password
         String hashedPassword = hash(passwordBytes);
 
-
-        System.out.println("Hashed and salted password : " + hashedPassword);
-
         //create DB connection
         Connection connection = DBconnection.getInstance();
 
@@ -178,9 +175,6 @@ public class UserManager
         Random rnd = new Random();
         byte[] saltBytes = new byte[32];
         rnd.nextBytes(saltBytes);
-
-        //Return the salt
-        //System.out.println("Salt String from the method:"+userSalt);
         return hash(saltBytes);
     }
 

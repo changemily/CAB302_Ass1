@@ -13,8 +13,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 /**
  * Billboard Schedule class for Control Panel GUI
  * This class contains a Main method and method that creates a GUI window for the Billboard Schedule Screen
- * @author - Nickhil Nischal
- * @version - under development
+ * @author - Nickhil Nischal (GUI, Buttons), Harry Estreich (Buttons, Permissions)
+ * @version - Final
  *
  * NOTES: Some button functionality still needs to be added; further refinement required
  */
@@ -254,22 +254,14 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
                 // Calculate days in between current time and scheduled viewing
                 long timeDiff = DAYS.between(ceilingCurrentDateTime, ceilingScheduledDateTime);
 
-                System.out.println("time diff of "+ billboardName + "= " + timeDiff);
-
                 // Get current day of the week
                 DayOfWeek currentDay = currentDateTime.getDayOfWeek();
-
-                System.out.println("scheduled day" + scheduledDateTime.getDayOfWeek());
-                System.out.println("scheduled day int: " + scheduledDateTime.getDayOfWeek().getValue());
-                System.out.println("current day: "+ currentDay);
 
                 // Convert day to int value
                 int intCurrentDay = currentDay.getValue();
 
                 // Calculate time till end of the week (Sunday)
                 int timeEndWk = DAYS_IN_WEEK - intCurrentDay;
-
-                System.out.println("end of week: "+timeEndWk);
                 // If viewing is in the current week
                 if (timeDiff <= timeEndWk)
                 {

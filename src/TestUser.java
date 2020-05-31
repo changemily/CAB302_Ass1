@@ -113,6 +113,7 @@ class TestUser {
     public void testAddPermissionInvalid1() throws Exception {
         assertThrows(Exception.class, () -> {
             User john16 = new User("john16", "password1", "1234","Create Billboards");
+            User john17 = new User("john16", "password1", "1234","Create Billboards");
             john16.addPermissions("Edit Any Billboards");
         });
     }
