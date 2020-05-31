@@ -5,9 +5,7 @@ import java.util.HashSet;
  * User class
  * This class contains methods that create new users and modify existing users
  * @author - Nickhil Nischal
- * @version - under development
- *
- * TO DO: 1) Database interface with the User Class
+ * @version - Complete
  */
 public class User implements java.io.Serializable {
     // Variables used for each User
@@ -19,12 +17,12 @@ public class User implements java.io.Serializable {
     // Creates an array with valid User Permissions
     final String[] PERMISSIONS_CHECK_LIST_1 = {"Create Billboards", "Edit All Billboards", "Schedule Billboards", "Edit Users"};
 
-    // Populates a HashSet with permissions from PermissionsCheckList1 array
+    // Populates a HashSet with permissions from PERMISSIONS_CHECK_LIST_1 array
     HashSet<String> permissionsCheckList2 = new HashSet<>(Arrays.asList(PERMISSIONS_CHECK_LIST_1));
 
     /**
      * Method used to check if the permission input by the user is a valid input, it is referencing the
-     *  PermissionsCheckList2 HashSet
+     * permissionsCheckList2 HashSet
      * @param inputPermission The input given by the user
      * @return Returns a boolean: true if permission is valid and exists in the PermissionsCheckList2 HashSet, and false
      *  if it is invalid and does not exist in the PermissionsCheckList2 HashSet
@@ -39,6 +37,7 @@ public class User implements java.io.Serializable {
      * (using variable arguments).
      * @param username The User's username
      * @param password The User's password
+     * @param salt The User's specific salt
      * @param permissions The User's assigned permission/s
      * @throws Exception Throws exception when an invalid permission type is entered
      */
@@ -47,6 +46,7 @@ public class User implements java.io.Serializable {
         for (String permission: permissions) {
             // Checks if the entered permission is a valid permission, else user is not created
             if (!PermissionChecker(permission)) {
+                // Throws new exception
                 throw new Exception("Invalid Permission Type, user has not been created.");
             }
         }
@@ -70,6 +70,7 @@ public class User implements java.io.Serializable {
         this.password = null;
         this.salt = null;
         this.permissions = null;
+
         System.out.println("The user " + usernameTemp + " has been successfully deleted.");
     }
 
@@ -78,9 +79,12 @@ public class User implements java.io.Serializable {
      * @param newUsername The new username which will replace the old username
      */
     public void editUsername(String newUsername) {
+        // Temporary username, stores current username
         String usernameTemp = this.username;
+
         // Replaces old username with newly inputted username
         this.username = newUsername;
+
         System.out.println("Username successfully changed from " + usernameTemp + " to " + username + ".");
     }
 
@@ -89,9 +93,12 @@ public class User implements java.io.Serializable {
      * @param newPassword The new password which will replace the old password
      */
     public void editPassword(String newPassword) {
+        // Temporary password, stores current username
         String passwordTemp = this.password;
+
         // Replaces old password with newly inputted password
         this.password = newPassword;
+
         System.out.println("Password successfully changed from " + passwordTemp + " to " + password + ".");
     }
 
@@ -105,11 +112,15 @@ public class User implements java.io.Serializable {
         if (PermissionChecker(permission)) {
             // Checks if permission exists in user's HashSet
             if (this.permissions.contains(permission)) {
+                // Removes permission from permissions hashset
                 this.permissions.remove(permission);
+
                 System.out.println("Permission " + permission + " successfully removed.");
             }
         }
+        // Else throw an exception
         else {
+            // Throws new exception
             throw new Exception("Invalid Permission Type, permission has not been removed.");
         }
     }
@@ -124,11 +135,15 @@ public class User implements java.io.Serializable {
         if (PermissionChecker(permission)) {
             // Checks if permission already exists in user's HashSet
             if (!this.permissions.contains(permission)) {
+                // Adds permission to permissions hashset
                 this.permissions.add(permission);
+
                 System.out.println("Permission " + permission + " successfully added.");
             }
         }
+        // Else throw an exception
         else {
+            // Throws new exception
             throw new Exception("Invalid Permission Type, permission has not been added.");
         }
     }
