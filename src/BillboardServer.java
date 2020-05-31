@@ -548,36 +548,6 @@ public class BillboardServer {
         //write schedule to DB
         billboardSchedule.writeToDBschedule(connection);
     }
-//
-//
-//    private static void billboardScheduleCheck(ObjectInputStream ois, ObjectOutputStream oos, ScheduleMultiMap billboardSchedule) throws IOException, ClassNotFoundException {
-//        //read billboard name sent by client
-//        String billboardName = ois.readObject().toString();
-//
-//        //print schedule variables received from client
-//        System.out.println("Received to client:\n");
-//        System.out.println("Billboard Name: "+billboardName+"\n");
-//
-//        //check if billboard exists in schedule
-//        //try retrieve billboard's scheduling information
-//        try {
-//            billboardSchedule.getSchedule(billboardName);
-//            //if viewings for billboard exist
-//            //write true to DB
-//            oos.writeObject("true");
-//            System.out.println("true");
-//            //flush output stream
-//            oos.flush();
-//        }
-//        //if viewings for billboard do NOT exist
-//        catch (Exception e) {
-//            //write false to DB
-//            oos.writeObject("false");
-//            System.out.println("false");
-//            //flush output stream
-//            oos.flush();
-//        }
-//    }
 
     /**
      * Populates queue with schedule from database
