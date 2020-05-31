@@ -110,6 +110,11 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         setVisible(true); // Make GUI visible
     }
 
+    /**
+     * This method creates a JLabel, inside of a JPanel
+     * @param labelText The text of the JLabel
+     * @return Returns a JPanel
+     */
     private JPanel createLabel(String labelText) {
         // Create new JPanel
         JPanel labelPanel = new JPanel();
@@ -133,11 +138,19 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         return labelPanel;
     }
 
+    /**
+     * Creates a JButton, inside of a JPanel
+     * @param button The text displayed o the JButton
+     * @param strut1 The horizontal strut size to add before the JPanel
+     * @param strut2 The horizontal strut size to add after the JPanel
+     * @param horizontalGlue The boolean to specify whether horizontal glue is to be added or not
+     * @return Returns a JPanel
+     */
     private JPanel createButtonJPanel(JButton button, int strut1, int strut2, boolean horizontalGlue) {
         // Create new JPanel to hold button
         JPanel buttonPanel = new JPanel();
 
-        // Set box layout
+        // Set box layout on X Axis
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 
         // Add horizontal strut for formatting
@@ -162,6 +175,11 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         return buttonPanel;
     }
 
+    /**
+     * This method creates a JButton, given text to display inside of it
+     * @param buttonLabel The text to display inside the JButton
+     * @return Returns a JButton
+     */
     private JButton createButton(String buttonLabel) {
         // Create a JButton object and store it in a local variable
         JButton button = new JButton(buttonLabel);
@@ -177,6 +195,10 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
     }
 
 
+    /**
+     * Listens to button presses and performs the appropriate action/s
+     * @param actionEvent JButton pressed
+     */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         // Get button that has been clicked - event source
@@ -225,27 +247,46 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             // Close the GUI screen
             dispose();
         }
-
     }
 
+    /**
+     * Populates and runs the GUI
+     */
     @Override
     public void run() {
+        // Try to run the GUI
         try {
             createGUI();
-        } catch (ClassNotFoundException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (ClassNotFoundException e) {
             e.printStackTrace();
+
+            // Show message dialog (popup)
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (InstantiationException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (InstantiationException e) {
             e.printStackTrace();
+
+            // Show message dialog (popup)
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalAccessException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (IllegalAccessException e) {
             e.printStackTrace();
+
+            // Show message dialog (popup)
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (UnsupportedLookAndFeelException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
+
+            // Show message dialog (popup)
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
