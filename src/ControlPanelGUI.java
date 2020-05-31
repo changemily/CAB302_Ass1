@@ -199,9 +199,9 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         // If view billboard schedule JButton is clicked
         else if (buttonClicked == viewBillboardScheduleButton) {
-            String [] user_input = {"View schedule", ControlPanelClient.sessionToken};
+            String [] userInput = {"View schedule", ControlPanelClient.sessionToken};
             //request schedule and run calendar GUI
-            ControlPanelClient.Run_Client(user_input);
+            ControlPanelClient.Run_Client(userInput);
         }
 
         // If password change JButton is clicked

@@ -21,7 +21,7 @@ public class ControlPanelClient {
     /**
      * Sends requests to Server
      */
-    public static void Run_Client(String [] user_inputs){
+    public static void Run_Client(String [] userInputs){
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
@@ -44,62 +44,62 @@ public class ControlPanelClient {
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
             //request given by button clicked on GUI screen
-            String request = user_inputs[0];
+            String request = userInputs[0];
 
             switch(request)
             {
                 case "Login request":
                     //send username and password to server
-                    loginRequest(ois, oos, user_inputs, request);
+                    loginRequest(ois, oos, userInputs, request);
                     break;
 
                 case "Logout request":
                     //send sessionToken to the server
-                    logoutRequest(oos, ois, user_inputs, request);
+                    logoutRequest(oos, ois, userInputs, request);
                     break;
 
                 case "List billboards":
-                    listBillboardDetails(oos, ois, request, user_inputs);
+                    listBillboardDetails(oos, ois, request, userInputs);
                     break;
 
                 case "Get Billboard info":
-                    getBillboardInfo(oos, request, user_inputs);
+                    getBillboardInfo(oos, request, userInputs);
                     break;
 
                 case "Create edit billboard":
                     //Send details of billboard wanting to be created to server
-                    createEditBillboard(oos, request, user_inputs);
+                    createEditBillboard(oos, request, userInputs);
                     break;
 
                 case "Delete billboard":
-                    deleteBillboard(oos, request, user_inputs);
+                    deleteBillboard(oos, request, userInputs);
                     break;
 
                 case "View schedule":
-                    viewSchedule(oos,request,ois);
+                    viewSchedule(oos,request,ois,userInputs);
                     break;
                 case "Schedule Billboard":
                     //Send details of billboard wanting to be scheduled to server
-                    scheduleBillboard(oos, request, user_inputs);
+                    scheduleBillboard(oos, request, userInputs);
                     break;
                 case "Remove Schedule":
                     //Send details of billboard wanting to be scheduled to server
-                    removeSchedule(oos, request, user_inputs);
+                    removeSchedule(oos, request, userInputs);
                     break;
 
                 case "List users":
-                    listUsersScreen(oos, ois, user_inputs);
+                    listUsersScreen(oos, ois, userInputs);
                     break;
                 case "Delete User":
-                    deleteUser(oos, request, user_inputs);
+                    deleteUser(oos, request, userInputs);
                     break;
                 case "Create User":
-                    createUser(oos, request, user_inputs);
+                    createUser(oos, request, userInputs);
                     break;
                 case "Edit User":
-                    editUser(oos, request, user_inputs);
+                    editUser(oos, request, userInputs);
                 case "Edit User Keep Password":
-                    editUserKeepPassword(oos, request, user_inputs);
+                    editUserKeepPassword(oos, request, userInputs);
             }
 
             //flush output stream
@@ -278,16 +278,36 @@ public class ControlPanelClient {
      * @param ois Object input stream of client
      * @throws IOException
      */
-    private static void viewSchedule(ObjectOutputStream oos, String buttonClicked, ObjectInputStream ois) throws Exception {
+    private static void viewSchedule(ObjectOutputStream oos, String buttonClicked,
+                                     ObjectInputStream ois, String[] userInputs) throws Exception {
+        String sessionToken = userInputs[1];
         //Write the Client's request to the server
         oos.writeObject(buttonClicked);
-        //read schedule sent by server
-        MultiMap schedule = (MultiMap) ois.readObject();
+        oos.writeObject(sessionToken);
 
-        HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
-        User userDetails = UserList.getUserInformation(userList, username);
+        if(!ois.readObject().equals("Session not valid")){
+            //read schedule sent by server
+            MultiMap schedule = (MultiMap) ois.readObject();
+            HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
+            User userDetails = UserList.getUserInformation(userList, username);
 
-        if(userDetails.Permissions.contains("Schedule Billboards")) {
+            if(userDetails.Permissions.contains("Schedule Billboards")) {
+                Frame[] allFrames = Frame.getFrames();
+                for(Frame fr : allFrames){
+                    if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                        fr.dispose();
+                        if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                            fr.dispose();
+                        }
+                    }
+                }
+                SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(username, sessionToken, schedule));
+            }
+            else{
+                JOptionPane.showMessageDialog(new JFrame(),
+                        "User doesn't have Schedule Billboards permission");
+            }
+        }else{
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
                 if((fr.getClass().getName().equals("ControlPanelGUI"))){
@@ -297,11 +317,7 @@ public class ControlPanelClient {
                     }
                 }
             }
-            SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(username, "1234", schedule));
-        }
-        else{
-            JOptionPane.showMessageDialog(new JFrame(),
-                    "User doesn't have Schedule Billboards permission");
+            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
         }
     }
 
@@ -378,11 +394,16 @@ public class ControlPanelClient {
 //        }
 //    }
 
-    private static void listUsersScreen(ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws Exception {
-        oos.writeObject(user_inputs[0]);
+    private static void listUsersScreen(ObjectOutputStream oos, ObjectInputStream ois, String[] userInputs) throws Exception {
+        oos.writeObject(userInputs[0]);
+        //Get the users session token to send to the server
+        String sessionToken = userInputs[2];
+        //Output clients request to the server
+        oos.writeObject(sessionToken);
+
         HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
         User userDetails = UserList.getUserInformation(userList, username);
-        if(!user_inputs[1].equals("Password")) {
+        if(!userInputs[1].equals("Password")) {
             if (userDetails.Permissions.contains("Edit Users")) {
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
