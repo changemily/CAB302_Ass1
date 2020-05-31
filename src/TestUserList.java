@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TestUserList {
 
     @Test
-    public void createUserList(){
+    public void createUserList() {
         UserList userList = new UserList();
     }
 
@@ -23,7 +23,7 @@ public class TestUserList {
     }
 
     @Test
-    public void addMultipleUsers() throws Exception{
+    public void addMultipleUsers() throws Exception {
         UserList userList = new UserList();
         User newUser = new User("admin", "password", "salt");
         User newUser2 = new User("admin2", "password", "salt");
@@ -34,7 +34,7 @@ public class TestUserList {
     }
 
     @Test
-    public void addUserSameName() throws Exception{
+    public void addUserSameName() throws Exception {
         UserList userList = new UserList();
         User newUser = new User("admin", "password", "salt");
         User newUser2 = new User("admin", "password", "salt");
@@ -43,7 +43,7 @@ public class TestUserList {
     }
 
     @Test
-    public void removeUser() throws Exception{
+    public void removeUser() throws Exception {
         UserList userList = new UserList();
         User newUser = new User("admin", "password", "salt");
         UserList.addUserToList(userList.listUsers(), newUser);
@@ -52,19 +52,9 @@ public class TestUserList {
     }
 
     @Test
-    public void removeUserNonExist() throws Exception{
+    public void removeUserNonExist() throws Exception {
         UserList userList = new UserList();
         User newUser = new User("admin", "password", "salt");
         assertThrows(Exception.class, () -> UserList.deleteUser(userList.listUsers(), newUser));
-    }
-
-    @Test
-    public void modifyUser() throws Exception{
-        UserList userList = new UserList();
-        User newUser = new User("admin", "password", "salt");
-        User newUser2 = new User("admin", "password1", "salt");
-        UserList.addUserToList(userList.listUsers(), newUser);
-        UserList.modifyUser(userList.listUsers(), newUser, newUser2);
-        assertEquals(UserList.getUserInformation(userList.listUsers(), "admin"), newUser2);
     }
 }
