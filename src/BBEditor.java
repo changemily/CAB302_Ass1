@@ -493,7 +493,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     //run Billboard Control Panel GUI
                     String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
                     //request billboard list and run calendar GUI
-                    ControlPanelClient.Run_Client(user_input);
+                    ControlPanelClient.runClient(user_input);
                 }
             }
         }
@@ -742,7 +742,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         //run Billboard Control Panel GUI
         String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
         //request billboard list and run calendar GUI
-        ControlPanelClient.Run_Client(user_input);
+        ControlPanelClient.runClient(user_input);
     }
 
     private boolean saveBillboardToDB() {
@@ -834,7 +834,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             String[] user_inputs = {"Create edit billboard", billboardName, username, tempXMLString};
 
             //Schedule billboard with viewing details given by user
-            ControlPanelClient.Run_Client(user_inputs);
+            ControlPanelClient.runClient(user_inputs);
         }
         return Break;
     }
@@ -873,7 +873,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 //run Billboard Control Panel GUI
                 String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
                 //request billboard list and run calendar GUI
-                ControlPanelClient.Run_Client(user_input);
+                ControlPanelClient.runClient(user_input);
             }
         }
         else if(a == CANCEL_OPTION){

@@ -21,7 +21,7 @@ public class ControlPanelClient {
     /**
      * Sends requests to Server
      */
-    public static void Run_Client(String [] userInputs){
+    public static void runClient(String [] userInputs){
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
@@ -160,7 +160,6 @@ public class ControlPanelClient {
         String username = userInputs[1];
         String pwd = userInputs[2];
         System.out.println("pwd in user array: "+pwd);
-
 //        //turn password into bytes
 //        MessageDigest md = MessageDigest.getInstance("SHA-256");
 //        byte[] passwordBytes = md.digest(pwd.getBytes());
@@ -176,6 +175,22 @@ public class ControlPanelClient {
         oos.writeObject(username);
         oos.writeObject(hashedPassword);
         oos.writeObject(userInputs);
+
+        Boolean validUser = ois.readBoolean();
+        String SessionToken = (String) ois.readObject();
+        //String sessionToken = (String) ois.readObject();
+        if(validUser == true){
+
+            //If the user is valid set them as the default user in the control panel
+            ControlPanelClient.username = username;
+            ControlPanelClient.sessionToken = SessionToken;
+            System.out.println("The session token is: "+ SessionToken);
+            //Create and return the user a valid session token
+            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+        }else{
+            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        }
+
     }
 
     /**

@@ -127,7 +127,7 @@ public class BillboardServer {
                         //System.out.println("Username: " +username);
                         //System.out.println("Password: " +password);
 
-                        saltAndCheckUserCredentials(ois, connection);
+                        saltAndCheckUserCredentials(ois, oos, connection);
 
                         //retrieve salted pwd from DB
                         //unsalt pwd
@@ -281,7 +281,7 @@ public class BillboardServer {
      * @param connection connection to the db
      * @throws Exception
      */
-    private static void saltAndCheckUserCredentials(ObjectInputStream ois, Connection connection) throws SQLException, IOException, ClassNotFoundException, NoSuchAlgorithmException {
+    private static void saltAndCheckUserCredentials(ObjectInputStream ois, ObjectOutputStream oos, Connection connection) throws SQLException, IOException, ClassNotFoundException, NoSuchAlgorithmException {
         //Setup ready for hashing
         //MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
@@ -321,17 +321,12 @@ public class BillboardServer {
                 //(messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
         String userPass = inputtedPasswordSalted;
 
-
-
         //Compare the two salted and hashed passwords
         if(userInfos[0].equals(saltedPasswordDB)){
-            String SessionToken = sessionToken("Valid");
-            //If the user is valid set them as the default user in the control panel
-            ControlPanelClient.username = userName;
-            ControlPanelClient.sessionToken = SessionToken;
-            System.out.println("The session token is: "+ SessionToken);
-            //Create and return the user a valid session token
-            SwingUtilities.invokeLater(new ControlPanelGUI(userName, SessionToken));
+            String sessionToken = BillboardServer.sessionToken("Valid");
+            oos.writeBoolean(true);
+            oos.writeObject(sessionToken);
+            //oos.writeObject(SessionToken);
         }else{
             // Display an Error Message Dialog, alerting the user that the entered credentials are incorrect
             JOptionPane optionPane = new JOptionPane("The entered username or password is incorrect," +
@@ -339,7 +334,7 @@ public class BillboardServer {
             JDialog dialog = optionPane.createDialog("User Error");
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            oos.writeBoolean(false);
         }
     }
 
@@ -588,7 +583,7 @@ public class BillboardServer {
         billboardSchedule.clearDBschedule(connection);
 
         //remove viewing from schedule
-        billboardSchedule.scheduleRemoveBillboard(billboardName,scheduleInfo);
+        billboardSchedule.removeViewing(billboardName,scheduleInfo);
 
         //write schedule to DB
         billboardSchedule.writeToDBschedule(connection);
@@ -721,7 +716,7 @@ public class BillboardServer {
                 billboardSchedule.clearDBschedule(connection);
 
                 //Remove viewing from schedule
-                billboardSchedule.scheduleRemoveBillboard(billboardName, displayedSchedule);
+                billboardSchedule.removeViewing(billboardName, displayedSchedule);
 
                 //Write schedule changes to DB
                 billboardSchedule.writeToDBschedule(connection);
@@ -766,7 +761,7 @@ public class BillboardServer {
                 if(recurrenceDelay != 0)
                 {
                     //retrieve all viewings of billboard
-                    ArrayList<ScheduleInfo> billboardViewings = billboardSchedule.getSchedule(billboardName);
+                    ArrayList<ScheduleInfo> billboardViewings = billboardSchedule.getViewings(billboardName);
 
                     //convert recurrence delay to duration
                     Duration durationRecurrenceDelay = Duration.ofMinutes(recurrenceDelay);
@@ -847,7 +842,7 @@ public class BillboardServer {
      * If the user is valid this creates a session token and sends it back to the control panel.
      * @throws Exception
      */
-    private static String sessionToken(String validity) throws IOException, ClassNotFoundException {
+    static String sessionToken(String validity) throws IOException, ClassNotFoundException {
         //Setup for the random token
         final SecureRandom secRand = new SecureRandom();
         final Base64.Encoder base64En = Base64.getUrlEncoder();
