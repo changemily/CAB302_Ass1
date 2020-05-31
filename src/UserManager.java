@@ -195,8 +195,4 @@ public class UserManager
         String userPass = hash(messageDigest.digest((hashedPassword + saltString).getBytes()));
         return new String[]{userPass, saltString};
     }
-
-
-
-
 }

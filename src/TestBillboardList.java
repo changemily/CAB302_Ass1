@@ -82,7 +82,7 @@ public class TestBillboardList<E> {
         //Create a billboard to check
         billboardList.createEditBillboard("Billboard2", "jarod", xmlFile);
         //Store billboard info sourced in a temp billboard object
-        Billboard temp_billboard = billboardList.GetBillboardInfo("Billboard2");
+        Billboard temp_billboard = billboardList.getBillboardInfo("Billboard2");
 
         //Test if retrieved Billboard variables equal the original requested_billboard info.
         //If the billboards are the same it means the correct billboard info requested is being displayed.
@@ -96,7 +96,7 @@ public class TestBillboardList<E> {
     public void no_info()
     {
         assertThrows(Exception.class, () -> {
-            billboardList.GetBillboardInfo("Billboard_1");
+            billboardList.getBillboardInfo("Billboard_1");
         });
     }
 
@@ -112,7 +112,7 @@ public class TestBillboardList<E> {
                 Duration.ofMinutes(5),0, billboardList.listBillboards(), "jarod");;
 
         //Delete Billboard1
-        billboardList.DeleteBillboard("Billboard1");
+        billboardList.deleteBillboard("Billboard1");
 
         //Check if the billboard was deleted
         assertFalse(billboardList.billboardHashMap.containsKey("Billboard1"));
@@ -124,7 +124,7 @@ public class TestBillboardList<E> {
     public void no_billboard()
     {
         assertThrows(Exception.class, () -> {
-            billboardList.DeleteBillboard("Billboard_1");
+            billboardList.deleteBillboard("Billboard_1");
         });
     }
 

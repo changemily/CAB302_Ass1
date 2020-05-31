@@ -77,7 +77,7 @@ public class BillboardServer {
 
         //populate schedule, billboard list and user list with data from database
         billboardSchedule.retrieveDBschedule(connection);
-        billboardList.RetrieveDBbillboardList(connection);
+        billboardList.retrieveDBbillboardList(connection);
         userList.retrieveUsersFromDB(connection);
 
         //populate queue with schedule
@@ -128,7 +128,7 @@ public class BillboardServer {
                     case "List billboards":
                         //write billboard list to client
                         billboardSchedule.retrieveDBschedule(connection);
-                        billboardList.RetrieveDBbillboardList(connection);
+                        billboardList.retrieveDBbillboardList(connection);
                         userList.retrieveUsersFromDB(connection);
                         listBillboards(oos, ois, billboardList, userList, billboardSchedule);
                         break;
@@ -145,7 +145,7 @@ public class BillboardServer {
                         deleteBillboard(ois, connection, billboardList);
                         break;
                     case "View schedule":
-                        billboardList.RetrieveDBbillboardList(connection);
+                        billboardList.retrieveDBbillboardList(connection);
                         userList.retrieveUsersFromDB(connection);
                         viewSchedule(oos,ois,billboardSchedule, userList);
                         break;
@@ -373,9 +373,9 @@ public class BillboardServer {
         //Read Parameters sent by client
         String billboardName = ois.readObject().toString();
         //Output results to the client
-        oos.writeObject(billboardList.GetBillboardInfo(billboardName));
+        oos.writeObject(billboardList.getBillboardInfo(billboardName));
 
-        Billboard BillboardInfo = billboardList.GetBillboardInfo(billboardName);
+        Billboard BillboardInfo = billboardList.getBillboardInfo(billboardName);
 
         //Print billboard variables received from client
         System.out.println("Sent to client:\n");
@@ -404,13 +404,13 @@ public class BillboardServer {
                 "xml file: "+xmlFile+"\n");
 
         //Clear the db with the billboard information
-        billboardList.ClearDBbillboardList(connection);
+        billboardList.clearDBbillboardList(connection);
 
         //Create the billboard
         billboardList.createEditBillboard(billboardName, billboardCreator, xmlFile);
 
         //Write the new billboard to the DB
-        billboardList.WriteToDBbillboard(connection);
+        billboardList.writeToDBbillboard(connection);
     }
 
     /**
@@ -429,14 +429,14 @@ public class BillboardServer {
         System.out.println("billboard name: "+ billboardName);
 
         //Clear the db with the billboard information
-        billboardList.ClearDBbillboardList(connection);
+        billboardList.clearDBbillboardList(connection);
 
         //Now that the db is empty remove the billboard from the billboard list
-        billboardList.DeleteBillboard(billboardName);
+        billboardList.deleteBillboard(billboardName);
 
         //Now that the billboard has been removed from the list of billboards
         //Write the updated list to the db
-        billboardList.WriteToDBbillboard(connection);
+        billboardList.writeToDBbillboard(connection);
     }
 
     /**
@@ -488,7 +488,7 @@ public class BillboardServer {
         System.out.println("Duration (mins): "+duration+"\n");
         System.out.println("Recurrence delay (mins): "+recurrenceDelay+"\n");
 
-        Billboard billboard = billboardList.GetBillboardInfo(billboardName);
+        Billboard billboard = billboardList.getBillboardInfo(billboardName);
         String billboardCreator = billboard.BillboardCreator;
 
         //Clear schedule table in DB
@@ -531,7 +531,7 @@ public class BillboardServer {
         System.out.println("Recurrence delay (mins): "+recurrenceDelay+"\n");
 
         //retrieve billboard object
-        Billboard billboard = billboardList.GetBillboardInfo(billboardName);
+        Billboard billboard = billboardList.getBillboardInfo(billboardName);
 
         //retrieve billboard creator
         String billboardCreator = billboard.BillboardCreator;
@@ -702,7 +702,7 @@ public class BillboardServer {
                 System.out.println("\n"+LocalDateTime.now());
 
                 //retrieve information of currently displayed billboard
-                Billboard billboard = billboardList.GetBillboardInfo(billboardName);
+                Billboard billboard = billboardList.getBillboardInfo(billboardName);
 
                 //retrieve xml from billboard
                 String xmlFile = billboard.XMLFile;
