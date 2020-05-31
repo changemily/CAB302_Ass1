@@ -21,8 +21,8 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
 
     /**
      * Retrieves a hashmap of users from the database and sends it to userHashMap
-     * @param connection A connection for accessing the database
-     * @throws Exception throws an SQL Exception and an exception if permissions don't exist
+     * @param   connection A connection for accessing the database
+     * @throws  Exception throws an SQL Exception and an exception if permissions don't exist
      */
     public void retrieveUsersFromDB(Connection connection) throws Exception {
         final String SELECT = "SELECT * FROM Users ORDER BY username desc";
@@ -70,15 +70,15 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
 
     /**
      * Public method for getting the userHashMap
-     * @return HashMap of users, with the usernames as key
+     * @return  HashMap of users, with the usernames as key
      */
     public HashMap<String, User> listUsers(){return userHashMap;}
 
     /**
      * Removes all users from database, used for adding and remove users
-     * @param userHashMap HashMap used to remove every user in HashMap from database
-     * @param connection A connection to the database
-     * @throws SQLException throws an SQL exception
+     * @param   userHashMap HashMap used to remove every user in HashMap from database
+     * @param   connection A connection to the database
+     * @throws  SQLException throws an SQL exception
      */
     public static void clearUsersFromDB(HashMap<String, User> userHashMap, Connection connection) throws SQLException {
         //create statement to connect to db
@@ -94,9 +94,9 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
 
     /**
      * Sends all users from the HashMap to the database, used for adding and removing users
-     * @param userHashMap HashMap used ot add every user in HashMap from database
-     * @param connection A connection to the database
-     * @throws SQLException throws an SQL exception
+     * @param   userHashMap HashMap used ot add every user in HashMap from database
+     * @param   connection A connection to the database
+     * @throws  SQLException throws an SQL exception
      */
     public static void sendUsersToDB(HashMap<String, User> userHashMap, Connection connection) throws SQLException {
         //create statement
@@ -150,9 +150,9 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
 
     /**
      * Adds a new user to the HashMap
-     * @param userHashMap HashMap of all users
-     * @param newUser User being added to HashMap
-     * @throws Exception throws an exception if user already exists
+     * @param   userHashMap HashMap of all users
+     * @param   newUser User being added to HashMap
+     * @throws  Exception throws an exception if user already exists
      */
     public static void addUserToList(HashMap<String, User> userHashMap,User newUser) throws Exception {
         // Check user doesn't exist
@@ -167,9 +167,9 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
 
     /**
      * Removes a user from the HashMap
-     * @param userHashMap HashMap of all users
-     * @param oldUser User being remove from HashMap
-     * @throws Exception throws an exception if user doesn't exist
+     * @param   userHashMap HashMap of all users
+     * @param   oldUser User being remove from HashMap
+     * @throws  Exception throws an exception if user doesn't exist
      */
     public static void deleteUser(HashMap<String, User> userHashMap,User oldUser) throws Exception {
         boolean userFound = false;
@@ -193,10 +193,10 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
 
     /**
      * Retrieves a User from the userList given a username
-     * @param userHashMap HashMap of all users
-     * @param userName Username of user being retrieved
-     * @return Full User for username given
-     * @throws Exception throws an exception if user doesn't exist
+     * @param   userHashMap HashMap of all users
+     * @param   userName Username of user being retrieved
+     * @return  Full User for username given
+     * @throws  Exception throws an exception if user doesn't exist
      */
     public static User getUserInformation(HashMap<String, User> userHashMap, String userName) throws Exception {
         // Find user
