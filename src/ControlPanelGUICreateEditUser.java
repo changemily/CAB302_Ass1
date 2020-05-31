@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
@@ -360,7 +361,18 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Checks if the Save and Exit button has been clicked
         if (buttonClicked == saveExitButton) {
-            saveAndExit(); // runs save and exit method
+            try {
+                if(BillboardServer.checkToken(sessionToken) == false){
+                    SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+                    dispose();
+                }else{
+                    saveAndExit(); // runs save and exit method
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         // Checks if the Exit Without Saving button has been clicked
         else if (buttonClicked == exitWithoutSaving) {

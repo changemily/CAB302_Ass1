@@ -888,7 +888,7 @@ public class BillboardServer {
      * Checks the Hashmap of Tokens for the users token
      * @throws IOException
      */
-    private static boolean checkToken(String userToken) throws IOException, ClassNotFoundException {
+    static boolean checkToken(String userToken) throws IOException, ClassNotFoundException {
         //Boolean for checking existance of session token
         Boolean tokenExists = false;
         //Check the user inputted token
