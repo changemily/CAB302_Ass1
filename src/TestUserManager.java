@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  /* This class contains methods that test the functionality of billboardManager class methods
- /*  * @author — Harry Estreich
- /*  * @version - Final
+ /*  @author — Harry Estreich
+ /*  @version - Final
   */
 public class TestUserManager {
     /**

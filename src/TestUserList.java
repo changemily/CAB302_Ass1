@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * This class contains tests for testing the User List class, it tests all those change the UserList[], not the database,
  * have two versions, one to change the list, one to change the database
+ * @author - Harry Estreich
+ * @version - Final
  */
 public class TestUserList {
 

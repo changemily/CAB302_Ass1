@@ -8,6 +8,8 @@ import java.util.HashSet;
 /**
  * This class contains method for return a hashmap of users with their usernames, as well as many static that ControlPanelClient
  * uses to manipulate a list of users
+ * @author - Harry Estreich
+ * @version - Final
  */
 public class UserList extends HashMap<String, User> implements java.io.Serializable {
     public static HashMap<String, User> userHashMap;
