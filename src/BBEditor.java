@@ -8,8 +8,6 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileSystemView;
@@ -18,84 +16,113 @@ import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 
 import static javax.swing.JOptionPane.*;
-
 /**
- * @author Liam
- *
+ * Create/Edit User class for Control Panel GUI
+ * This class contains a Main method and method that creates a GUI window for the Billboard Editor Screen
+ * @author - Liam Dines (GUI), Harry Estreich (buttons, preview screen methods)
+ * @version - Final
  */
 
 public class BBEditor extends JFrame implements Runnable, ActionListener, ChangeListener, WindowListener
 {
+    // Main global variables
     private String billboardName;
     private String tempXMLString;
-    private String username;
-    private String sessionToken;
-    private BillboardViewer bb = null;
+    private final String username;
+    private final String sessionToken;
     private HashMap<String, Billboard> billboardList;
-    private boolean createdBillboard = false;
-    private JPanel mainPanel;
-    private JPanel previewPanel;
-    private JPanel billboardPreview;
-    private JSeparator dividerLine;
-    private JLabel previewLabel;
-    private JLabel editLabel;
-    private JLabel messageLabel;
-    private JLabel imageLabel;
-    private JLabel backgroundColourPickerLabel;
-    private JLabel messageColourPickerLabel;
-    private JLabel extraTextColourPickerLabel;
-    private JLabel extraInfoLabel;
-    private JLabel nameLabel;
-    private JTextField imageURL;
-    private JTextField messageField;
-    private JTextField nameField;
-    private JTextArea extraInfoText;
-    private JTextArea backgroundColourDisplay;
-    private JTextArea messageTextColourDisplay;
-    private JTextArea extraTextColourDisplay;
-    private JButton imageBrowseBttn;
-    private JButton exitBttn;
-    private JButton backgroundColourBttn;
-    private JButton messageTextColourBttn;
-    private JButton extraTextColourBttn;
-    private JButton importBttn;
-    private JButton exportBttn;
-    private JButton previewBttn;
-    private JButton saveBttn;
-    private GroupLayout mainPanelLayout;
+    private final boolean createBillboard; // true if billboard is being created
     private StreamResult o;
     private Dimension d;
 
+    // Java Swing Components
+    // Billboard Viewer class
+    private BillboardViewer bb = null;
+
+    // Billboard panel
+    private JPanel previewPanel;
+
+    // Text fields
+    private JTextField imageURL;
+    private JTextField messageField;
+    private JTextField nameField;
+
+    // Text areas
+    private JTextArea informationText;
+    private JTextArea backgroundColourDisplay;
+    private JTextArea messageTextColourDisplay;
+    private JTextArea informationColourDisplay;
+
+    // Buttons
+    private JButton imageBrowseButton;
+    private JButton exitButton;
+    private JButton backgroundColourButton;
+    private JButton messageTextColourButton;
+    private JButton informationTextColourButton;
+    private JButton importButton;
+    private JButton exportButton;
+    private JButton previewButton;
+    private JButton saveButton;
+
+
+    /**
+     * Constructor for editing a billboard
+     * @param username username of creator
+     * @param sessionToken session token for user
+     * @param billboardName name of billboard edited
+     * @param XMLString billboard xml string
+     */
     public BBEditor(String username, String sessionToken, String billboardName, String XMLString)
     {
         // Set window title
         super("Billboard Editor");
+
+        // Set variables
         this.billboardName = billboardName;
         tempXMLString = XMLString;
+        createBillboard = false;
         this.username = username;
         this.sessionToken = sessionToken;
     }
 
+    /**
+     * Constructor for creating a billboard
+     * @param username username of creator
+     * @param sessionToken session token for user
+     * @param billboardList list of billboards, for checking name
+     */
     public BBEditor(String username, String sessionToken, HashMap<String, Billboard> billboardList){
         super("Billboard Creator");
+
+        // Set variables
         this.billboardName = null;
-        tempXMLString = "<billboard></billboard>";
-        createdBillboard = true;
+        tempXMLString = "<billboard></billboard>"; // empty billboard
+        createBillboard = true;
         this.username = username;
         this.sessionToken = sessionToken;
         this.billboardList = billboardList;
     }
 
+    /**
+     * Method for creating a GUI, this creates the base GUI with initial values
+     * @throws ClassNotFoundException class not found error
+     * @throws UnsupportedLookAndFeelException look and feel error
+     * @throws InstantiationException instantiation error
+     * @throws IllegalAccessException illegal access error
+     * @throws IOException io error
+     * @throws SAXException SAX error
+     * @throws ParserConfigurationException configuration error
+     */
     private void createGUI() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, SAXException, ParserConfigurationException {
         // Set default look and feel & window properties
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         //make window non resizable
         setResizable(false);
 
         // Create mainPanel
-        mainPanel = new JPanel();
+        JPanel mainPanel = new JPanel();
 
         // Create Billboard Preview Panel
         previewPanel = new JPanel();
@@ -103,49 +130,43 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         // Initialise and add Billboard to Preview Panel
         d = new Dimension(600, 350);
         bb = new BillboardViewer(tempXMLString, d);
-        billboardPreview = bb.getSizedBillboard();
+        JPanel billboardPreview = bb.getSizedBillboard();
         previewPanel.add(billboardPreview);
 
         // Create dividerLine
-        dividerLine = new JSeparator();
+        JSeparator dividerLine = new JSeparator();
 
         // Create previewLabel
-        previewLabel = createLabel("Preview");
+        JLabel previewLabel = createLabel("Preview");
         previewLabel.setHorizontalAlignment(SwingConstants.CENTER);
         previewLabel.setFont(previewLabel.getFont().deriveFont(previewLabel.getFont().getStyle() | Font.BOLD));
 
         // Create editLabel
-        editLabel = createLabel("Edit");
+        JLabel editLabel = createLabel("Edit");
         editLabel.setHorizontalAlignment(SwingConstants.CENTER);
         editLabel.setFont(editLabel.getFont().deriveFont(editLabel.getFont().getStyle() | Font.BOLD));
 
         // Create messageLabel
-        messageLabel = createLabel("Message Text");
+        JLabel messageLabel = createLabel("Message Text");
 
         // Create imageLabel
-        imageLabel = createLabel("Image File");
+        JLabel imageLabel = createLabel("Image File");
 
         // Create backgroundColourPickerLabel
-        backgroundColourPickerLabel = createLabel("Background Colour");
+        JLabel backgroundColourPickerLabel = createLabel("Background Colour");
 
         // Create messageColourPickerLabel
-        messageColourPickerLabel = createLabel("Message Text Colour");
+        JLabel messageColourPickerLabel = createLabel("Message Text Colour");
 
-        // Create extraTextColourPickerLabel
-        extraTextColourPickerLabel = createLabel("Extra Information Text Colour");
+        // Create informationColourPickerLabel
+        JLabel informationColourPickerLabel = createLabel("Information Text Colour");
 
-        //Create extraInfoLabel
-        extraInfoLabel = createLabel("Extra Information Text");
+        //Create informationLabel
+        JLabel informationLabel = createLabel("Information Text");
 
         // Create nameLabel
-        nameLabel = createLabel("Billboard Name");
-        if(!createdBillboard)
-        {
-            nameLabel.setVisible(false);
-        } else
-        {
-            nameLabel.setVisible(true);
-        }
+        JLabel nameLabel = createLabel("Billboard Name");
+        nameLabel.setVisible(createBillboard);
 
         // Create messageField
         messageField = createTextField();
@@ -156,27 +177,21 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
         // Create nameField
         nameField = createTextField();
-        if(!createdBillboard)
-        {
-            nameField.setVisible(false);
-        } else
-        {
-            nameField.setVisible(true);
-        }
+        nameField.setVisible(createBillboard);
 
-        // Create extraInfoScrollPanel and extraInfoText
-        extraInfoText = new JTextArea();
-        JScrollPane extraInfoScrollPanel;
+        // Create informationScrollPanel and informationText
+        informationText = new JTextArea();
+        JScrollPane informationScrollPanel;
         {
-            extraInfoScrollPanel = new JScrollPane();
-            extraInfoText.setBackground(Color.white);
-            extraInfoText.setForeground(Color.black);
-            extraInfoScrollPanel.setViewportView(extraInfoText);
+            informationScrollPanel = new JScrollPane();
+            informationText.setBackground(Color.white);
+            informationText.setForeground(Color.black);
+            informationScrollPanel.setViewportView(informationText);
         }
 
         // Initialise field values
         messageField.setText(bb.getMessageText());
-        extraInfoText.setText(bb.getInformationText());
+        informationText.setText(bb.getInformationText());
         if(bb.getPictureURL() != null) {
             imageURL.setText(bb.getPictureURL());
         }
@@ -185,48 +200,48 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         }
 
         // Create BackgroundColourDisplay
-        backgroundColourDisplay = createColourDiplay();
+        backgroundColourDisplay = createColourDisplay();
         backgroundColourDisplay.setBackground(bb.getBillboardColour());
 
         // Create MessageTextColourDisplay
-        messageTextColourDisplay = createColourDiplay();
+        messageTextColourDisplay = createColourDisplay();
         messageTextColourDisplay.setBackground(bb.getMessageColour());
 
-        // Create ExtraTextColourDisplay
-        extraTextColourDisplay = createColourDiplay();
-        extraTextColourDisplay.setBackground(bb.getInformationColour());
+        // Create informationTextColourDisplay
+        informationColourDisplay = createColourDisplay();
+        informationColourDisplay.setBackground(bb.getInformationColour());
 
-        // Create imageBrowseBttn
-        imageBrowseBttn = createButton("Browse");
+        // Create imageBrowseButton
+        imageBrowseButton = createButton("Browse");
 
-        // Create SaveBttn
-        saveBttn = createButton("Save");
+        // Create SaveButton
+        saveButton = createButton("Save");
 
-        // Create ExitBttn
-        exitBttn = createButton("Exit");
+        // Create ExitButton
+        exitButton = createButton("Exit");
 
-        // Create BackgroundColourBttn
-        backgroundColourBttn = createButton("Browse");
+        // Create BackgroundColourButton
+        backgroundColourButton = createButton("Browse");
 
-        //Create MessageTextColourBttn
-        messageTextColourBttn = createButton("Browse");
+        //Create MessageTextColourButton
+        messageTextColourButton = createButton("Browse");
 
-        //Create ExtraTextColourBttn
-        extraTextColourBttn = createButton("Browse");
+        //Create informationTextColourButton
+        informationTextColourButton = createButton("Browse");
 
-        // Create importBttn
-        importBttn = createButton("Import");
+        // Create importButton
+        importButton = createButton("Import");
 
-        // Create exportBttn
+        // Create exportButton
         String outPath = "./" + billboardName + ".xml";
         o = new StreamResult(outPath);
-        exportBttn = createButton("Export");
+        exportButton = createButton("Export");
 
-        // Create previewBttn
-        previewBttn = createButton("Preview");
+        // Create previewButton
+        previewButton = createButton("Preview");
 
         // Set Layout for EVERYTHING
-        mainPanelLayout = new GroupLayout(mainPanel);
+        GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
                 mainPanelLayout.createParallelGroup()
@@ -237,15 +252,15 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addGap(19, 19, 19)
                                                 .addGroup(mainPanelLayout.createParallelGroup()
                                                         .addGroup(mainPanelLayout.createSequentialGroup()
-                                                                .addComponent(previewBttn, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(previewButton, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(importBttn)
+                                                                .addComponent(importButton)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(exportBttn)
+                                                                .addComponent(exportButton)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(saveBttn)
+                                                                .addComponent(saveButton)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
-                                                                .addComponent(exitBttn))
+                                                                .addComponent(exitButton))
                                                         .addGroup(mainPanelLayout.createSequentialGroup()
                                                                 .addGroup(mainPanelLayout.createParallelGroup()
                                                                         .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
@@ -253,33 +268,33 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                                                 .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                                                                                         .addComponent(imageURL)
                                                                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                        .addComponent(imageBrowseBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
+                                                                                        .addComponent(imageBrowseButton, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
                                                                                 .addComponent(messageField, GroupLayout.PREFERRED_SIZE, 328, GroupLayout.PREFERRED_SIZE)
                                                                                 .addComponent(imageLabel))
                                                                         .addComponent(nameLabel)
                                                                         .addComponent(nameField, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE))
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                                                                 .addGroup(mainPanelLayout.createParallelGroup()
-                                                                        .addComponent(extraInfoLabel)
+                                                                        .addComponent(informationLabel)
                                                                         .addComponent(backgroundColourPickerLabel)
                                                                         .addGroup(mainPanelLayout.createSequentialGroup()
                                                                                 .addGroup(mainPanelLayout.createParallelGroup()
                                                                                         .addComponent(backgroundColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(extraTextColourDisplay, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+                                                                                        .addComponent(informationColourDisplay, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
                                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                                 .addGroup(mainPanelLayout.createParallelGroup()
                                                                                         .addGroup(mainPanelLayout.createSequentialGroup()
-                                                                                                .addComponent(backgroundColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                                                                                .addComponent(backgroundColourButton, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
                                                                                                 .addGap(18, 18, 18)
                                                                                                 .addGroup(mainPanelLayout.createParallelGroup()
                                                                                                         .addComponent(messageColourPickerLabel)
                                                                                                         .addGroup(mainPanelLayout.createSequentialGroup()
                                                                                                                 .addComponent(messageTextColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                                                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                                .addComponent(messageTextColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))))
-                                                                                        .addComponent(extraTextColourBttn, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)))
-                                                                        .addComponent(extraTextColourPickerLabel)
-                                                                        .addComponent(extraInfoScrollPanel, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE))))
+                                                                                                                .addComponent(messageTextColourButton, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))))
+                                                                                        .addComponent(informationTextColourButton, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)))
+                                                                        .addComponent(informationColourPickerLabel)
+                                                                        .addComponent(informationScrollPanel, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE))))
                                                 .addGap(23, 23, 23))
                                         .addComponent(previewPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(dividerLine)
@@ -304,9 +319,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                 .addGap(19, 19, 19)
                                 .addGroup(mainPanelLayout.createParallelGroup()
                                         .addGroup(mainPanelLayout.createSequentialGroup()
-                                                .addComponent(extraInfoLabel)
+                                                .addComponent(informationLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(extraInfoScrollPanel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(informationScrollPanel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
                                         .addGroup(mainPanelLayout.createSequentialGroup()
                                                 .addComponent(nameLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -315,7 +330,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addComponent(imageLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(imageBrowseBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(imageBrowseButton, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(imageURL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
                                 .addGroup(mainPanelLayout.createParallelGroup()
                                         .addGroup(mainPanelLayout.createSequentialGroup()
@@ -326,9 +341,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addGap(4, 4, 4)
                                                 .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(backgroundColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(backgroundColourBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(backgroundColourButton, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(messageTextColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(messageTextColourBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(messageTextColourButton, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED))
                                         .addGroup(mainPanelLayout.createSequentialGroup()
                                                 .addGap(12, 12, 12)
@@ -338,19 +353,19 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)))
                                 .addGroup(mainPanelLayout.createParallelGroup()
                                         .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                                                .addComponent(extraTextColourPickerLabel)
+                                                .addComponent(informationColourPickerLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(extraTextColourBttn, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(extraTextColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(informationTextColourButton, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(informationColourDisplay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(66, 66, 66))
                                         .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                                                 .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(exitBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(previewBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(importBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(exportBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(saveBttn, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(exitButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(previewButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(importButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(exportButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(saveButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(20, 20, 20))))
         );
 
@@ -363,6 +378,11 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         setVisible(true);
     }
 
+    /**
+     * create basic JLabel
+     * @param labelText text
+     * @return JLabel
+     */
     private JLabel createLabel(String labelText)
     {
         JLabel label = new JLabel();
@@ -373,6 +393,10 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         return label;
     }
 
+    /**
+     * create basic text field
+     * @return JTextField
+     */
     private JTextField createTextField()
     {
         JTextField text = new JTextField();
@@ -381,13 +405,22 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         return text;
     }
 
-    private JTextArea createColourDiplay()
+    /**
+     * create basic colour display
+     * @return JTextArea
+     */
+    private JTextArea createColourDisplay()
     {
         JTextArea colourDisplay = new JTextArea();
         colourDisplay.setEditable(false);
         return colourDisplay;
     }
 
+    /**
+     * create basic button
+     * @param buttonName string of button name
+     * @return JButton
+     */
     private JButton createButton(String buttonName)
     {
         JButton button = new JButton();
@@ -398,6 +431,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         return button;
     }
 
+    /**
+     * Run GUI and catch errors, none expected
+     */
     @SuppressWarnings("TryWithIdenticalCatches")
     @Override
     public void run()
@@ -449,23 +485,28 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
     }
 
+    /**
+     * Click on button
+     * @param e action event
+     */
     @Override
     public void actionPerformed(ActionEvent e)
     {
         Object buttonClicked = e.getSource();
 
-        if(buttonClicked == imageBrowseBttn)
+        // Browse for image and load into billboard
+        if(buttonClicked == imageBrowseButton)
         {
             JFileChooser FileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
             int returnValue = FileChooser.showOpenDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
+            if (returnValue == JFileChooser.APPROVE_OPTION) { // found file
                 File selectedFile = FileChooser.getSelectedFile();
-                imageURL.setText(selectedFile.getAbsolutePath());
+                imageURL.setText(selectedFile.getAbsolutePath()); // set url to file
             }
 
         }
-
-        else if (buttonClicked == exitBttn)
+        // Exit from viewer, checks if user wants to save changes
+        else if (buttonClicked == exitButton)
         {
             int a = showConfirmDialog(null, "Would you like to save your billboard to the database?");
             if(a == YES_OPTION)
@@ -479,6 +520,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             }
             else if(a == NO_OPTION)
             {
+                // Check if billboard control panels
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
@@ -489,6 +531,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     }
                 }
                 dispose();
+                // if not, add one
                 if(frameCount == 0){
                     //run Billboard Control Panel GUI
                     String [] user_input = {"List billboards"};
@@ -497,20 +540,21 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 }
             }
         }
-
-        else if(buttonClicked == saveBttn){
+        // Save button clicked, save billboard to db, and refresh control panel
+        else if(buttonClicked == saveButton){
             //save billboard to database
             boolean Break = saveBillboardToDB();
             //closes editor and reloads billboard control panel
             if(!Break) {
                 refreshFrames();
             }
-        }  else if(buttonClicked == backgroundColourBttn)
-        {
+        // Changed background colour
+        }else if(buttonClicked == backgroundColourButton){
             Color originalColour = bb.getBillboardColour();
             Color colour = JColorChooser.showDialog(null,
                     "Select a color", bb.getBillboardColour());
             backgroundColourDisplay.setBackground(colour);
+            // set billboard colour to picked colour
             try {
                 bb.setBillboardColour(colour);
                 backgroundColourDisplay.setBackground(colour);
@@ -518,11 +562,13 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 bb.setBillboardColour(originalColour);
                 backgroundColourDisplay.setBackground(originalColour);
             }
-        } else if(buttonClicked == messageTextColourBttn)
+        // Changed message colour
+        }else if(buttonClicked == messageTextColourButton)
         {
             Color originalColour = bb.getMessageColour();
             Color colour = JColorChooser.showDialog(null,
                     "Select a color", bb.getMessageColour());
+            // set message colour to picked colour
             try {
                 bb.setMessageColour(colour);
                 messageTextColourDisplay.setBackground(colour);
@@ -530,41 +576,48 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 bb.setMessageColour(originalColour);
                 messageTextColourDisplay.setBackground(originalColour);
             }
-        } else if(buttonClicked == extraTextColourBttn)
+        // Changed informationText colour
+        } else if(buttonClicked == informationTextColourButton)
         {
             Color originalColour = bb.getInformationColour();
             Color colour = JColorChooser.showDialog(null,
                     "Select a color", bb.getInformationColour());
-            extraTextColourDisplay.setBackground(colour);
+            informationColourDisplay.setBackground(colour);
+            // set information text colour
             try {
                 bb.setInformationColour(colour);
-                extraTextColourDisplay.setBackground(colour);
+                informationColourDisplay.setBackground(colour);
             }catch (Exception f){
                 bb.setInformationColour(originalColour);
-                extraTextColourDisplay.setBackground(originalColour);
+                informationColourDisplay.setBackground(originalColour);
             }
-        } else if(buttonClicked == importBttn)
+        // Import xml from file
+        } else if(buttonClicked == importButton)
         {
             JFileChooser FileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
             int returnValue = FileChooser.showOpenDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
+            if (returnValue == JFileChooser.APPROVE_OPTION) { // file found
                 File selectedFile = FileChooser.getSelectedFile();
                 File f = new File(selectedFile.getAbsolutePath());
-                Reader fileReader;
+                Reader fileReader; // read file
                 try {
                     fileReader = new FileReader(f);
                     BufferedReader bufferedReader = new BufferedReader(fileReader);
                     StringBuilder output = new StringBuilder();
                     String stringXML;
+                    // append file to one string
                     while((stringXML = bufferedReader.readLine()) != null){
                         output.append(stringXML);
                     }
+                    // read string
                     tempXMLString = output.toString();
                     bufferedReader.close();
 
+                    // remove panel
                     previewPanel.removeAll();
                     previewPanel.revalidate();
                     previewPanel.repaint();
+                    // new viewer
                     try {
                         bb = new BillboardViewer(tempXMLString, d);
                     } catch (ParserConfigurationException | IOException | SAXException ex) {
@@ -572,182 +625,111 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                         JOptionPane.showMessageDialog(getContentPane(), ex,
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
+                    // add new billboard to panel
                     JPanel billboardPreview = bb.getSizedBillboard();
                     previewPanel.add(billboardPreview);
                     previewPanel.revalidate();
                     previewPanel.repaint();
 
+                    // reset initial values for texts and colours
                     messageField.setText(bb.getMessageText());
-                    extraInfoText.setText(bb.getInformationText());
+                    informationText.setText(bb.getInformationText());
                     if(bb.getPictureURL() != null){
                         imageURL.setText(bb.getPictureURL());
                     }
-                    else if(bb.getPictureDataString() != null){
+                    else if(bb.getPictureDataString() != null){ // data string image
                         imageURL.setText("Encoded Image");
                     }
                     backgroundColourDisplay.setBackground(bb.getBillboardColour());
                     messageTextColourDisplay.setBackground(bb.getMessageColour());
-                    extraTextColourDisplay.setBackground(bb.getInformationColour());
+                    informationColourDisplay.setBackground(bb.getInformationColour());
+                    // successful import
                     JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Imported");
-
-
                 } catch (IOException fileNotFoundException) {
                     fileNotFoundException.printStackTrace();
                     JOptionPane.showMessageDialog(getContentPane(),"File could not be found, please check the filepath and try again. ", "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
             }
-        } else if(buttonClicked == exportBttn)
+        // export xml
+        } else if(buttonClicked == exportButton)
         {
-            if(!messageField.getText().equals(""))
-            {
-                bb.setMessageText(messageField.getText());
-                bb.setMessageExists(true);
-            }
-            else{
-                bb.setMessageExists(false);
-            }
+            boolean Break = updateBillboard(false);
 
-            if(!extraInfoText.getText().equals(""))
-            {
-                bb.setInformationText(extraInfoText.getText());
-                bb.setInformationExists(true);
-            }
-            else{
-                bb.setInformationExists(false);
-            }
-
-            if(!imageURL.getText().equals(""))
-            {
-                bb.setPictureExists(true);
-                try{
-                    URL urlString = new URL(imageURL.getText());
-                    bb.setUrlExists(true);
-                    bb.setDataExists(false);
-                    bb.setPictureURL(imageURL.getText());
-                } catch(MalformedURLException m){
-                    try {
-                        if(!imageURL.getText().equals("Encoded Image")) {
-                            File f = new File(imageURL.getText());
-                            FileInputStream imageFile = new FileInputStream(f);
-                            byte[] imageData = imageFile.readAllBytes();
-                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
-                            bb.setDataExists(true);
-                            bb.setUrlExists(false);
-                        }
-                    } catch (IOException fileNotFoundException) {
-                        JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                                "ERROR", JOptionPane.ERROR_MESSAGE);
-                        bb.setPictureExists(false);
-                    }
+            // write file to current folder
+            if(!Break) {
+                try {
+                    bb.writeFile(o);
+                    JOptionPane.showMessageDialog(getContentPane(), "Billboard Successfully Exported");
+                } catch (ParserConfigurationException | TransformerException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), ex,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            else{
-                bb.setPictureExists(false);
-            }
+        // preview button clicked
+        } else if(buttonClicked == previewButton) {
+            // gather new values
+            boolean Break = updateBillboard(false);
 
-            try {
-                bb.writeFile(o);
-                JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Exported");
-            } catch (ParserConfigurationException | TransformerException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(getContentPane(), ex,
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
-            }
-        } else if(buttonClicked == previewBttn)
-        {
-            if(!messageField.getText().equals(""))
-            {
-                bb.setMessageText(messageField.getText());
-                bb.setMessageExists(true);
-            }
-            else{
-                bb.setMessageExists(false);
-            }
-
-            if(!extraInfoText.getText().equals(""))
-            {
-                bb.setInformationText(extraInfoText.getText());
-                bb.setInformationExists(true);
-            }
-            else{
-                bb.setInformationExists(false);
-            }
-
-            if(!imageURL.getText().equals("")) {
-                if (!imageURL.getText().equals("Encoded Image")) {
-                    bb.setPictureExists(true);
-                    try {
-                        URL urlString = new URL(imageURL.getText());
-                        bb.setUrlExists(true);
-                        bb.setDataExists(false);
-                        bb.setPictureURL(imageURL.getText());
-                    } catch (MalformedURLException m) {
-                        try {
-                            File f = new File(imageURL.getText());
-                            FileInputStream imageFile = new FileInputStream(f);
-                            byte[] imageData = imageFile.readAllBytes();
-                            bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
-                            bb.setDataExists(true);
-                            bb.setUrlExists(false);
-                        } catch (IOException fileNotFoundException) {
-                            JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                                    "ERROR", JOptionPane.ERROR_MESSAGE);
-                            bb.setPictureExists(false);
-                        }
-                    }
+            if (!Break) {
+                // update xml string of billboard
+                try {
+                    tempXMLString = bb.updateXMLString();
+                } catch (ParserConfigurationException | TransformerException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), ex,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
-            }
-            else{
-                bb.setPictureExists(false);
-            }
 
-            try {
-                tempXMLString = bb.updateXMLString();
-            } catch (ParserConfigurationException | TransformerException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(getContentPane(), ex,
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
+                // remove panel
+                previewPanel.removeAll();
+                previewPanel.revalidate();
+                previewPanel.repaint();
+
+                // create new billboard
+                try {
+                    bb = new BillboardViewer(tempXMLString, d);
+                } catch (ParserConfigurationException | IOException | SAXException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(getContentPane(), ex,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+
+                // display new billboard
+                JPanel billboardPreview = bb.getSizedBillboard();
+                previewPanel.add(billboardPreview);
+                previewPanel.revalidate();
+                previewPanel.repaint();
             }
-
-            previewPanel.removeAll();
-            previewPanel.revalidate();
-            previewPanel.repaint();
-
-            try {
-                bb = new BillboardViewer(tempXMLString, d);
-            } catch (ParserConfigurationException | IOException | SAXException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(getContentPane(), ex,
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
-            }
-
-            JPanel billboardPreview = bb.getSizedBillboard();
-            previewPanel.add(billboardPreview);
-            previewPanel.revalidate();
-            previewPanel.repaint();
         }
-
-
     }
 
+    /**
+     * Method for closing editor and refreshing billboard control panel
+     */
     private void refreshFrames() {
+        // Close all current billboard control panels
         Frame[] allFrames = Frame.getFrames();
         for(Frame fr : allFrames){
             if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
                 fr.dispose();
             }
         }
-        dispose();
-        //run Billboard Control Panel GUI
+        dispose(); // dispose editor
+        //run Billboard Control Panel GUI, creating new GUI
         String [] user_input = {"List billboards"};
-        //request billboard list and run calendar GUI
         ControlPanelClient.Run_Client(user_input);
     }
 
+    /**
+     * Method for saving billboard to database
+     * @return boolean, true if fails
+     */
     private boolean saveBillboardToDB() {
-        boolean Break = false;
-        if (createdBillboard) {
+        boolean Break = false; // set true if fails
+        // Check for errors in naming
+        if (createBillboard) {
             billboardName = nameField.getText();
             System.out.println("billboardNameInput: " + billboardName);
             //if name has NOT been inputted in text field
@@ -757,13 +739,13 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                         "Billboard contains invalid character");
                 Break = true;
             }
-            if (billboardName.equals("") || billboardName.equals(" ")) {
+            if (billboardName.equals("") || billboardName.equals(" ")) { // no name
                 //display error pop up
                 JOptionPane.showMessageDialog(this,
                         "You must select a name for the billboard");
                 Break = true;
             }
-            if (billboardList.containsKey(billboardName)) {
+            if (billboardList.containsKey(billboardName)) { // not a new name
                 JOptionPane.showMessageDialog(this,
                         "This billboard name is already in use");
                 Break = true;
@@ -771,55 +753,13 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         } else {
             System.out.println(billboardName);
         }
-        if (!messageField.getText().equals("")) {
-            bb.setMessageText(messageField.getText());
-            bb.setMessageExists(true);
-        } else {
-            bb.setMessageExists(false);
-        }
 
-        if (!extraInfoText.getText().equals("")) {
-            bb.setInformationText(extraInfoText.getText());
-            bb.setInformationExists(true);
-        } else {
-            bb.setInformationExists(false);
-        }
+        // Update variables
+        Break = updateBillboard(Break);
 
-        if (!imageURL.getText().equals("")) {
-            bb.setPictureExists(true);
-            try {
-                URL urlString = new URL(imageURL.getText());
-                bb.setUrlExists(true);
-                bb.setDataExists(false);
-                bb.setPictureURL(imageURL.getText());
-            } catch (MalformedURLException m) {
-                try {
-                    if (!imageURL.getText().equals("Encoded Image")) {
-                        File f = new File(imageURL.getText());
-                        FileInputStream imageFile = new FileInputStream(f);
-                        byte[] imageData = imageFile.readAllBytes();
-                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData));
-                        bb.setDataExists(true);
-                        bb.setUrlExists(false);
-                    }
-                } catch (IOException fileNotFoundException) {
-                    JOptionPane.showMessageDialog(getContentPane(), fileNotFoundException,
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
-                    Break = true;
-                    bb.setPictureExists(false);
-                }
-            }
-        } else {
-            bb.setPictureExists(false);
-        }
-
-        if (!bb.getMessageExists() && !bb.getPictureExists() && !bb.getInformationExists()) {
-            JOptionPane.showMessageDialog(this,
-                    "This billboard is empty");
-            Break = true;
-        }
         if (!Break) {
             try {
+                // update xml string
                 tempXMLString = bb.updateXMLString();
                 JOptionPane.showMessageDialog(getContentPane(), "Billboard Successfully Saved to Database");
             } catch (ParserConfigurationException | TransformerException ex) {
@@ -829,7 +769,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             }
         }
 
-        //Test if it worked
+        // If not broken add billboard to database
         if (!Break) {
             String[] user_inputs = {"Create edit billboard", billboardName, username, tempXMLString};
 
@@ -839,16 +779,91 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         return Break;
     }
 
+    /**
+     * update billbaord details
+     * @param currentBreak set true if fails
+     * @return break at end of method
+     */
+    private boolean updateBillboard(boolean currentBreak){
+        boolean Break = currentBreak; // set true if fails
+        if (!messageField.getText().equals("")) {
+            // set message
+            bb.setMessageText(messageField.getText());
+            bb.setMessageExists(true);
+        } else {
+            // no message
+            bb.setMessageExists(false);
+        }
+        if (!informationText.getText().equals("")) {
+            // set information
+            bb.setInformationText(informationText.getText());
+            bb.setInformationExists(true);
+        } else {
+            // no information
+            bb.setInformationExists(false);
+        }
+        if (!imageURL.getText().equals("")) {
+            bb.setPictureExists(true);
+            try {
+                // check if url exists
+                URL urlString = new URL(imageURL.getText());
+                bb.setUrlExists(true);
+                bb.setDataExists(false);
+                bb.setPictureURL(imageURL.getText());
+            } catch (MalformedURLException m) {
+                // fails
+                try {
+                    // if image not already encoded, try to find local file
+                    if (!imageURL.getText().equals("Encoded Image")) {
+                        File f = new File(imageURL.getText());
+                        FileInputStream imageFile = new FileInputStream(f);
+                        byte[] imageData = imageFile.readAllBytes(); // read bytes
+                        bb.setPictureDataString(Base64.getEncoder().encodeToString(imageData)); // set string
+                        bb.setDataExists(true);
+                        bb.setUrlExists(false);
+                    }
+                } catch (IOException fileNotFoundException) {
+                    // if fails no file and error
+                    bb.setPictureExists(false);
+                    bb.setDataExists(false);
+                    bb.setUrlExists(false);
+                    //display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "Can't find image file");
+                    Break = true;
+                }
+            }
+        } else {
+            // no image
+            bb.setPictureExists(false);
+            bb.setDataExists(false);
+            bb.setUrlExists(false);
+        }
+
+        // If all empty, then error as billboard is empty
+        if (!bb.getMessageExists() && !bb.getPictureExists() && !bb.getInformationExists()) {
+            JOptionPane.showMessageDialog(this,
+                    "This billboard is empty");
+            Break = true;
+        }
+
+        return Break;
+    }
+
 
     @Override
     public void windowOpened(WindowEvent e) {
 
     }
 
+    /**
+     * window closing event
+     * @param e closing window
+     */
     @Override
     public void windowClosing(WindowEvent e) {
         int a = showConfirmDialog(null, "Would you like to save changes to the database?");
-        if(a == YES_OPTION)
+        if(a == YES_OPTION) // save and refresh
         {
             //save billboard to database
             boolean Break = saveBillboardToDB();
@@ -857,8 +872,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 refreshFrames();
             }
         }
-        else if(a == NO_OPTION)
+        else if(a == NO_OPTION) // no save
         {
+            // check if control panel is still up
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
@@ -868,16 +884,14 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     }
                 }
             }
-            dispose();
+            dispose(); // close editor
+            // if no control panels update control panel
             if(frameCount == 0){
                 //run Billboard Control Panel GUI
                 String [] user_input = {"List billboards"};
                 //request billboard list and run calendar GUI
                 ControlPanelClient.Run_Client(user_input);
             }
-        }
-        else if(a == CANCEL_OPTION){
-            // do nothing
         }
     }
 
