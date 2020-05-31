@@ -539,7 +539,7 @@ public class ControlPanelClient {
      * Runs client
      * @param args
      */
-    public static void main(String args[]){
+    public static void main(String args[]) {
         SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
     }
 }
