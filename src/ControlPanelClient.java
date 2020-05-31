@@ -325,7 +325,7 @@ public class ControlPanelClient {
             HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
             User userDetails = UserList.getUserInformation(userList, username);
 
-            if(userDetails.Permissions.contains("Schedule Billboards")) {
+            if(userDetails.permissions.contains("Schedule Billboards")) {
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
                     if((fr.getClass().getName().equals("ControlPanelGUI"))){
@@ -441,7 +441,7 @@ public class ControlPanelClient {
             HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
             User userDetails = UserList.getUserInformation(userList, username);
             if(!userInputs[1].equals("Password")) {
-                if (userDetails.Permissions.contains("Edit Users")) {
+                if (userDetails.permissions.contains("Edit Users")) {
                     Frame[] allFrames = Frame.getFrames();
                     for(Frame fr : allFrames){
                         if((fr.getClass().getName().equals("ControlPanelGUI"))){

@@ -61,7 +61,7 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
 
             // Create new user and set permissions, and add to userHashMap
             User newUser = new User(username, password, salt);
-            newUser.Permissions = permissions;
+            newUser.permissions = permissions;
             userHashMap.put(username, newUser);
         }
         //close ResultSet
@@ -108,34 +108,34 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
         for (User user : userHashMap.values() ) {
 
             //Pass the values of each user to the SQL statement.
-            String username = user.Username;
-            String password = user.Password;
-            String salt = user.Salt;
+            String username = user.username;
+            String password = user.password;
+            String salt = user.salt;
             int createBillboard;
             int editBillboards;
             int scheduleBillboards;
             int editUsers;
 
             // Set values based of permissions
-            if(user.Permissions.contains("Create Billboards")){
+            if(user.permissions.contains("Create Billboards")){
                 createBillboard = 1;
             }
             else{
                 createBillboard = 0;
             }
-            if(user.Permissions.contains("Edit All Billboards")){
+            if(user.permissions.contains("Edit All Billboards")){
                 editBillboards = 1;
             }
             else{
                 editBillboards = 0;
             }
-            if(user.Permissions.contains("Schedule Billboards")){
+            if(user.permissions.contains("Schedule Billboards")){
                 scheduleBillboards = 1;
             }
             else{
                 scheduleBillboards = 0;
             }
-            if(user.Permissions.contains("Edit Users")){
+            if(user.permissions.contains("Edit Users")){
                 editUsers = 1;
             }
             else{
@@ -159,12 +159,12 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
     public static void addUserToList(HashMap<String, User> userHashMap,User newUser) throws Exception {
         // Check user doesn't exist
         for(String username : userHashMap.keySet()){
-            if(username.equals(newUser.Username)) {
-                userHashMap.replace(newUser.Username, newUser);
+            if(username.equals(newUser.username)) {
+                userHashMap.replace(newUser.username, newUser);
             }
         }
         // Add user
-        userHashMap.put(newUser.Username, newUser);
+        userHashMap.put(newUser.username, newUser);
     }
 
     /**
@@ -177,14 +177,14 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
         boolean userFound = false;
         // Check user exists
         for(String username : userHashMap.keySet()){
-            if(username.equals(oldUser.Username)) {
+            if(username.equals(oldUser.username)) {
                 userFound = true;
                 break;
             }
         }
         // If user exists remove, otherwise throw exception
         if(userFound){
-            userHashMap.remove(oldUser.Username);
+            userHashMap.remove(oldUser.username);
         }
         else{
             throw new Exception("User with this username doesn't exist");

@@ -116,7 +116,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         }
         else{ // if not, set username to be not editable, and set password to be a change password 'button"
             usernameField.setEditable(false);
-            usernameField.setText(targetUser.Username);
+            usernameField.setText(targetUser.username);
             password.setText("Change Password");
             password.setEditable(false);
         }
@@ -164,25 +164,25 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Create Create Billboards JCheckBox, add to permissions JPanel
         createBillboardsBox = newCheckBox("Create Billboards", permissionsPanel);
-        if(targetUser.Permissions.contains("Create Billboards")){
+        if(targetUser.permissions.contains("Create Billboards")){
             createBillboardsBox.setSelected(true);
         }
 
         // Create Schedule Billboards JCheckBox, add to permissions JPanel
         scheduleBillboardsBox = newCheckBox("Schedule Billboards", permissionsPanel);
-        if(targetUser.Permissions.contains("Schedule Billboards")){
+        if(targetUser.permissions.contains("Schedule Billboards")){
             scheduleBillboardsBox.setSelected(true);
         }
 
         // Create Edit All Billboards JCheckBox, add to permissions JPanel
         editAllBillboardsBox = newCheckBox("Edit All Billboards", permissionsPanel);
-        if(targetUser.Permissions.contains("Edit All Billboards")){
+        if(targetUser.permissions.contains("Edit All Billboards")){
             editAllBillboardsBox.setSelected(true);
         }
 
         // Create Edit Users (Admin) JCheckBox, add to permissions JPanel
         editUsersBox = newCheckBox("Edit Users (Admin)", permissionsPanel);
-        if(targetUser.Permissions.contains("Edit Users")){
+        if(targetUser.permissions.contains("Edit Users")){
             editUsersBox.setSelected(true);
         }
 
@@ -403,7 +403,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         }
         else if (buttonClicked == editUsersBox){
             // check that if user with edit users tries to remove edit user from themselves, it stops them
-            if(targetUser.Permissions.contains("Edit Users") && selfUser){
+            if(targetUser.permissions.contains("Edit Users") && selfUser){
                 editUsersBox.setSelected(true);
                 // Display error pop up
                 JOptionPane.showMessageDialog(this,

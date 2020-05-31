@@ -47,11 +47,11 @@ public class UserManager
      * @throws  Exception throws exception if current user doesn't have Edit User permission
      */
     public HashSet<String> listUsers(HashSet<User> userHashSet) throws Exception {
-        if (current.Permissions.contains("Edit Users")) { // check for Edit Users
+        if (current.permissions.contains("Edit Users")) { // check for Edit Users
             HashSet<String> usernames = new HashSet<>();
 
             for (User username : userHashSet) { // add every username to hashset
-                usernames.add(username.Username);
+                usernames.add(username.username);
             }
             return usernames;
         }
@@ -67,7 +67,7 @@ public class UserManager
      * @throws  Exception throws exception if current user doesn't have Edit User permission
      */
     public void addUser(User newUser, HashSet<User> userHashSet) throws Exception {
-        if(current.Permissions.contains("Edit Users")){ // check for Edit Users
+        if(current.permissions.contains("Edit Users")){ // check for Edit Users
             userHashSet.add(newUser); // add user to hashset
         }
         else{
@@ -80,18 +80,18 @@ public class UserManager
      * @throws  Exception throws exception if current user tries to remove edit user from themselves or user doesn't have edit user permission
      */
     public void setUserPermissions(HashSet<String> permissions) throws Exception {
-        if(current.Permissions.contains("Edit Users")){ // check for Edit Users
+        if(current.permissions.contains("Edit Users")){ // check for Edit Users
             if(current.equals(target)){
                 if(permissions.contains("Edit Users")) // if self change, check Edit Users hasn't been removed
                 {
-                    target.Permissions = permissions;
+                    target.permissions = permissions;
                 }
                 else{
                     throw new Exception("User can't remove Edit Users from themselves");
                 }
             }
             else{
-                target.Permissions = permissions; // if not self change, no check
+                target.permissions = permissions; // if not self change, no check
             }
         }
         else{
@@ -106,15 +106,15 @@ public class UserManager
      */
     public void setUserPassword(String password) throws Exception{
         if(!current.equals(target)){ // check for other user
-            if(current.Permissions.contains("Edit Users")){ // check for Edit Users
-                target.Password = password;
+            if(current.permissions.contains("Edit Users")){ // check for Edit Users
+                target.password = password;
             }
             else{
                 throw new Exception("User needs edit users to set someone else's password");
             }
         }
         else{
-            target.Password = password; // change own password
+            target.password = password; // change own password
         }
     }
 
@@ -124,7 +124,7 @@ public class UserManager
      */
     public boolean deleteUser(){
         if(!current.equals(target)){ // check different user
-            return current.Permissions.contains("Edit Users"); // return true if current user has edit users
+            return current.permissions.contains("Edit Users"); // return true if current user has edit users
         }
         else{
             return false; // can't delete yourself

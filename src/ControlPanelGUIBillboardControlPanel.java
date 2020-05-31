@@ -502,7 +502,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
                 // Get billboard creator, and current username
                 String billboardCreator = billboardObjectSelected.BillboardCreator;
-                String currentUsername = currentUser.Username;
+                String currentUsername = currentUser.username;
 
                 // Check whether user created billboard
                 boolean creatorCheck = billboardCreator.equals(currentUsername);
@@ -518,7 +518,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 }
 
                 // Check if user allowed to edit billboards
-                if((currentUser.Permissions.contains("Edit All Billboards")) || (creatorCheck && !scheduleCheck && currentUser.Permissions.contains("Create Billboards"))){
+                if((currentUser.permissions.contains("Edit All Billboards")) || (creatorCheck && !scheduleCheck && currentUser.permissions.contains("Create Billboards"))){
                     //Retrieve the xml file associated with the name
                     xmlFile = billboardXML;
                     System.out.println("xmlFile: " + xmlFile);
@@ -567,7 +567,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // Checks if the create billboard button has been clicked
         else if (buttonClicked == createBillboardButton) {
             // Open the editor with a new file
-            if (currentUser.Permissions.contains("Create Billboards")) {
+            if (currentUser.permissions.contains("Create Billboards")) {
                 // Print file
                 System.out.println("xmlFile: " + xmlFile);
 
@@ -630,7 +630,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 Billboard billboardObjectSelected = billboardListH.get(billboardSelected);
                 //get billboard creator, and current username
                 String billboardCreator = billboardObjectSelected.BillboardCreator;
-                String currentUsername = currentUser.Username;
+                String currentUsername = currentUser.username;
 
                 // Check whether user created billboard
                 boolean creatorCheck = billboardCreator.equals(currentUsername);
@@ -646,7 +646,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 }
 
                 // Check if user allowed to delete given their permissions
-                if((currentUser.Permissions.contains("Edit All Billboards")) || (creatorCheck && !scheduleCheck && currentUser.Permissions.contains("Create Billboards"))){
+                if((currentUser.permissions.contains("Edit All Billboards")) || (creatorCheck && !scheduleCheck && currentUser.permissions.contains("Create Billboards"))){
                     //Open the editor with a new file
                     try {
                         int a = showConfirmDialog(null, "Are you sure you want to delete this billboard?");
@@ -692,7 +692,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             else
             {
                 // Check user has correct permissions
-                if (currentUser.Permissions.contains("Schedule Billboards")) {
+                if (currentUser.permissions.contains("Schedule Billboards")) {
                     int frameCount = 0;
                     // check no schedule GUIs are open
                     Frame[] allFrames = Frame.getFrames();

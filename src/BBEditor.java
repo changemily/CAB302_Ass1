@@ -613,6 +613,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     }
                     // read string
                     tempXMLString = output.toString();
+                    tempXMLString.replace("\"","'");
                     bufferedReader.close();
 
                     // remove panel
@@ -855,14 +856,6 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             JOptionPane.showMessageDialog(this,
                     "This billboard is empty");
             Break = true;
-        }
-
-        //Test if it worked
-        if (!Break) {
-            String[] user_inputs = {"Create edit billboard", billboardName, username, tempXMLString};
-
-            //Schedule billboard with viewing details given by user
-            ControlPanelClient.runClient(user_inputs);
         }
         return Break;
     }

@@ -196,8 +196,8 @@ public class BillboardServer {
                     case "Edit User Keep Password":
                         userList.retrieveUsersFromDB(connection);
                         User userInformation = UserList.getUserInformation(userList.listUsers(), ois.readObject().toString());
-                        String password = userInformation.Password;
-                        String salt = userInformation.Salt;
+                        String password = userInformation.password;
+                        String salt = userInformation.salt;
                         deleteUser(ois, connection, userList);
                         createUserWithPassword(ois, connection, userList, password, salt);
                         break;
@@ -923,16 +923,16 @@ public class BillboardServer {
         String editUsers = ois.readObject().toString();
         User newUser = new User(username, password, salt);
         if(createBillboard.equals("1")) {
-            newUser.Permissions.add("Create Billboards");
+            newUser.permissions.add("Create Billboards");
         }
         if(scheduleBillboard.equals("1")) {
-            newUser.Permissions.add("Schedule Billboards");
+            newUser.permissions.add("Schedule Billboards");
         }
         if(editBillboard.equals("1")) {
-            newUser.Permissions.add("Edit All Billboards");
+            newUser.permissions.add("Edit All Billboards");
         }
         if(editUsers.equals("1")) {
-            newUser.Permissions.add("Edit Users");
+            newUser.permissions.add("Edit Users");
         }
 
         System.out.println("Received new user from client");
@@ -956,16 +956,16 @@ public class BillboardServer {
         String editUsers = ois.readObject().toString();
         User newUser = new User(username, password, salt);
         if(createBillboard.equals("1")) {
-            newUser.Permissions.add("Create Billboards");
+            newUser.permissions.add("Create Billboards");
         }
         if(scheduleBillboard.equals("1")) {
-            newUser.Permissions.add("Schedule Billboards");
+            newUser.permissions.add("Schedule Billboards");
         }
         if(editBillboard.equals("1")) {
-            newUser.Permissions.add("Edit All Billboards");
+            newUser.permissions.add("Edit All Billboards");
         }
         if(editUsers.equals("1")) {
-            newUser.Permissions.add("Edit Users");
+            newUser.permissions.add("Edit Users");
         }
 
         System.out.println("Received new user from client");

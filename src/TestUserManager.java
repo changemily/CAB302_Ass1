@@ -101,7 +101,7 @@ public class TestUserManager {
         } catch (Exception e) {
             // null
         }
-        assertEquals(adminUser.Permissions, Permissions_List); // assert that new permissions are correct
+        assertEquals(adminUser.permissions, Permissions_List); // assert that new permissions are correct
     }
 
     /**
@@ -116,7 +116,7 @@ public class TestUserManager {
         String[] Permissions = {};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
         admin.setUserPermissions(Permissions_List);
-        assertEquals(otherUser.Permissions, Permissions_List); // assert that new permissions are correct
+        assertEquals(otherUser.permissions, Permissions_List); // assert that new permissions are correct
     }
 
     /**
@@ -130,7 +130,7 @@ public class TestUserManager {
         String[] Permissions = {"Edit Users", "Edit All Billboards", "Schedule Billboards"};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
         admin.setUserPermissions(Permissions_List);
-        assertEquals(adminUser.Permissions, Permissions_List); // assert that new permissions are correct
+        assertEquals(adminUser.permissions, Permissions_List); // assert that new permissions are correct
     }
 
     /**
@@ -158,7 +158,7 @@ public class TestUserManager {
         String[] Permissions = {"Edit Users", "Edit All Billboards"};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
         admin.setUserPermissions(Permissions_List);
-        assertEquals(adminUser.Permissions, Permissions_List); // assert that new permissions are correct
+        assertEquals(adminUser.permissions, Permissions_List); // assert that new permissions are correct
     }
 
     /**
@@ -184,7 +184,7 @@ public class TestUserManager {
         UserManager admin = new UserManager(adminUser, adminUser);
         String password = "4321";
         admin.setUserPassword(password);
-        assertEquals(adminUser.Password, password); // assert that new password is correct
+        assertEquals(adminUser.password, password); // assert that new password is correct
     }
 
     /**
@@ -197,7 +197,7 @@ public class TestUserManager {
         UserManager admin = new UserManager(adminUser, adminUser);
         String password = "4321";
         admin.setUserPassword(password);
-        assertEquals(adminUser.Password, password); // assert that new password is correct
+        assertEquals(adminUser.password, password); // assert that new password is correct
     }
 
     /**
@@ -211,7 +211,7 @@ public class TestUserManager {
         UserManager admin = new UserManager(adminUser, otherUser);
         String password = "4321";
         admin.setUserPassword(password);
-        assertEquals(otherUser.Password, password); // assert that new pass is correct
+        assertEquals(otherUser.password, password); // assert that new pass is correct
     }
 
     /**
