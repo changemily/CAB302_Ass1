@@ -953,7 +953,7 @@ public class BillboardServer {
         UserList.clearUsersFromDB(userList.listUsers(), connection);
 
         //Now that the db is empty remove the user from the user list
-        UserList.deleteUser(userList.listUsers(), user);
+        UserList.deleteUserFromList(userList.listUsers(), user);
 
         //Now that the user has been removed from the list of user
         //Write the updated list to the db
