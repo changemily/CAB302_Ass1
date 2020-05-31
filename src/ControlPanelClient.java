@@ -136,7 +136,7 @@ public class ControlPanelClient {
     /**
      * Sends login request, username and password to server
      * @param oos Object output stream of client
-     * @param buttonClicked Request given by Contol Panel GUI
+     * @param buttonClicked Request given by Control Panel GUI
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
@@ -170,7 +170,7 @@ public class ControlPanelClient {
      * Sends logout request, session token if the user to server
      * @param oos Object output stream of client
      * @param ois Object Input Stream
-     * @param buttonClicked Request given by Contol Panel GUI
+     * @param buttonClicked Request given by Control Panel GUI
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
@@ -227,8 +227,8 @@ public class ControlPanelClient {
     /**
      * Sends a get info request to the server
      * @param oos Object output stream of client
-     * @param buttonClicked Request given by Contol Panel GUI
-     * @param userInputs String array used for recieving information
+     * @param buttonClicked Request given by Control Panel GUI
+     * @param userInputs String array used for receiving information
      * @throws IOException
      */
     private static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String[] userInputs)throws IOException{
@@ -438,7 +438,7 @@ public class ControlPanelClient {
     }
 
     /**
-     * Method thats deletes a user
+     * Method that deletes a user
      * @param oos Object output stream of client
      * @param buttonClicked "Delete User"
      * @param user_inputs username
