@@ -450,7 +450,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                     int frameCount = 0;
                     Frame[] allFrames = Frame.getFrames();
                     for(Frame fr : allFrames){
-                        if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                        if((fr.getClass().getName().equals("GUICreateEditUser"))){
                             if(fr.isVisible()){
                                 frameCount += 1;
                             }
@@ -467,7 +467,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                                 // close all createEditUser GUIs
                                 allFrames = Frame.getFrames();
                                 for (Frame fr : allFrames) {
-                                    if ((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))) {
+                                    if ((fr.getClass().getName().equals("GUICreateEditUser"))) {
                                         fr.dispose();
                                     }
                                 }
@@ -535,7 +535,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                    if((fr.getClass().getName().equals("GUICreateEditUser"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -549,7 +549,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                             // remove all GUIs
                             allFrames = Frame.getFrames();
                             for(Frame fr : allFrames){
-                                if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                                if((fr.getClass().getName().equals("GUICreateEditUser"))){
                                     fr.dispose();
                                 }
                             }

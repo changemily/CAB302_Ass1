@@ -370,7 +370,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))){
+                    if((fr.getClass().getName().equals("GUIUserControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -437,7 +437,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))){
+                    if((fr.getClass().getName().equals("GUIUserControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -531,7 +531,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                         // Close any control panels, before refresh
                         Frame[] allFrames = Frame.getFrames();
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
@@ -600,7 +600,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                     Frame[] allFrames = Frame.getFrames();
                     if (adminUser) { // if full screen editor
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
@@ -654,7 +654,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                     Frame[] allFrames = Frame.getFrames();
                     if (adminUser) { // if full screen editor
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
