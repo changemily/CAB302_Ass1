@@ -160,7 +160,7 @@ public class BillboardServer {
                     case "View schedule":
                         billboardList.RetrieveDBbillboardList(connection);
                         userList.retrieveUsersFromDB(connection);
-                        viewSchedule(oos,billboardSchedule, userList);
+                        viewSchedule(oos,ois,billboardSchedule, userList);
                         break;
 
                     case "Schedule Billboard":
@@ -175,7 +175,7 @@ public class BillboardServer {
                         break;
                     case "List users":
                         userList.retrieveUsersFromDB(connection);
-                        listUsers(oos, userList);
+                        listUsers(oos, ois, userList);
                         break;
                     case "Create User":
                         userList.retrieveUsersFromDB(connection);
@@ -388,7 +388,7 @@ public class BillboardServer {
         String sessionToken = (String) ois.readObject();
 
         //If session token is current
-        if(checkToken(ControlPanelClient.sessionToken))
+        if(checkToken(sessionToken))
         {
             //Output to client
             oos.writeObject(billboardList.listBillboards());
@@ -493,17 +493,34 @@ public class BillboardServer {
      * @param billboardSchedule schedule being sent to Client
      * @throws IOException
      */
-    private static void viewSchedule(ObjectOutputStream oos, ScheduleMultiMap billboardSchedule, UserList userList) throws IOException {
+    private static void viewSchedule(ObjectOutputStream oos, ObjectInputStream ois, ScheduleMultiMap billboardSchedule, UserList userList) throws IOException, ClassNotFoundException {
         MultiMap<String, ScheduleInfo> schedule = billboardSchedule.viewSchedule();
-
-        //send schedule to client
-        oos.writeObject(schedule);
-        oos.writeObject(userList.listUsers());
-
-        //print schedule that was sent to client
-        System.out.println("Sent to client:\n");
-        System.out.println("Schedule: "+schedule+"\n");
-
+        //Get the users session token to validate the action
+        String sessionToken = "(String) ois.readObject()";
+        //If session token is current
+        if(checkToken(sessionToken) == true)
+        {
+            //If valid user then return the schedule
+            //send schedule to client
+            oos.writeObject(schedule);
+            oos.writeObject(userList.listUsers());
+            //print schedule that was sent to client
+            System.out.println("Sent to client:\n");
+            System.out.println("Schedule: "+schedule+"\n");
+        }else {
+            //oos.writeObject("Session not valid");
+            // Display error pop up
+            System.out.println("User session token: "+sessionToken);
+            JOptionPane optionPane = new JOptionPane("Your session has expired," +
+                    " please login and try again.", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Session Expired1");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
+        }
+        oos.writeObject("Session not valid");
+        //force logout the user
+        //String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
+        //ControlPanelClient.Run_Client(user_input);
     }
 
    /**
@@ -902,15 +919,18 @@ public class BillboardServer {
             //If the user token exists in the hashmap then return a true value.
             if(entry.getValue().equals(userToken)) {
                 tokenExists = true;
-                //The token is valid return true
-                return true;
             }else{
                 //Token doesn't exist in the hashmap
                 tokenExists = false;
             }
         }
-        //If not found return false indicating the token is invalid or does not exist
-        return false;
+        if(tokenExists == true){
+            //If not found return false indicating the token is invalid or does not exist
+            return true;
+        }else{
+            //If not found return false indicating the token is invalid or does not exist
+            return false;
+        }
     }
 
 
@@ -1002,8 +1022,24 @@ public class BillboardServer {
         UserList.sendUsersToDB(userList.listUsers(), connection);
     }
 
-    private static void listUsers(ObjectOutputStream oos, UserList userList) throws Exception {
-        oos.writeObject(userList.listUsers());
+    private static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, UserList userList) throws Exception {
+        //Get the users session token to validate the action
+        String sessionToken = (String) ois.readObject();
+        //If session token is current
+        if(checkToken(sessionToken))
+        {
+            //If valid user then return the userlist
+            oos.writeObject(userList.listUsers());
+        }else {
+            // Display error pop up
+            JOptionPane optionPane = new JOptionPane("Users session has expired, please log in again."
+                    , JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Session Token Expired");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
+            //open login screen
+            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        }
     }
 
     /**
