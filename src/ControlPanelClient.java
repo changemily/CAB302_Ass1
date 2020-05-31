@@ -2,11 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -172,7 +169,7 @@ public class ControlPanelClient {
 //        String hashedPassword = hash(passwordBytes);
 //        System.out.println("Hashed pwd : " + hashedPassword);
 
-        String hashedPassword = userManager.hashPassword(pwd);
+        String hashedPassword = UserManager.hashPassword(pwd);
         System.out.println("Hashed Password from control panel in login request: "+hashedPassword);
 
         //send username and hashed password to server

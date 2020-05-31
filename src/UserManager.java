@@ -1,9 +1,6 @@
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -11,14 +8,12 @@ import java.util.Random;
  * User Manager class
  * Class contains methods for creating and controlling billboards.
  * @author - Harry Estreich
- * @version - Draft
- * notes - Current some of the methods are built around a HashSet User array however, once the database is implemented
- * they should be fixed to suit the database
+ * @version - Final
  */
-public class userManager
+public class UserManager
 {
     // Main User Variables
-    public User current;
+    public final User current;
     public User target;
 
 
@@ -28,7 +23,7 @@ public class userManager
      * @param current The Current User
      */
 
-    userManager(User current){
+    UserManager(User current){
         this.current = current;
     }
 
@@ -39,50 +34,52 @@ public class userManager
      * @param target The Target User
      */
 
-    userManager(User current, User target){
+    UserManager(User current, User target){
         this.current = current;
         this.target = target;
 
     }
 
     /**
-     * Method for listing users
-     * @param location (HashSet<User>)
+     * Method for listing the usernames of a HashSet of Users
+     * @param   userHashSet hashset of Users
+     * @return  hashset of usernames
+     * @throws  Exception throws exception if current user doesn't have Edit User permission
      */
-    public HashSet<String> list_users(HashSet<User> location) {
+    public HashSet<String> listUsers(HashSet<User> userHashSet) throws Exception {
         if (current.Permissions.contains("Edit Users")) {
             HashSet<String> usernames = new HashSet<>();
 
-            for (User username : location) {
+            for (User username : userHashSet) {
                 usernames.add(username.Username);
             }
             return usernames;
         }
         else {
-            HashSet<String> error = new HashSet<>();
-            error.add("Error");
-            return error;
+            throw new Exception("User can't list user with Edit Users permission");
         }
     }
 
     /**
-     * Method for creating users
-     * @param newUser (user)
-     * @param location (HashSet<User>)
+     * Method for creating users and adding it to a hashset of other users
+     * @param   newUser new user
+     * @param   userHashSet hashset of users
+     * @throws  Exception throws exception if current user doesn't have Edit User permission
      */
-    public void add_user(User newUser, HashSet<User> location){
+    public void addUser(User newUser, HashSet<User> userHashSet) throws Exception {
         if(current.Permissions.contains("Edit Users")){
-            location.add(newUser);
+            userHashSet.add(newUser);
         }
         else{
-            // null
+            throw new Exception("User can't add user with Edit Users permission");
         }
     }
     /**
-     * Method for setting user permissions
-     * @param permissions (hashset)
+     * Method for setting user permissions for the target user
+     * @param   permissions hashset of permissions that is being set
+     * @throws  Exception throws exception if current user tries to remove edit user from themselves or user doesn't have edit user permission
      */
-    public void set_user_permissions(HashSet<String> permissions) throws Exception {
+    public void setUserPermissions(HashSet<String> permissions) throws Exception {
         if(current.Permissions.contains("Edit Users")){
             if(current.equals(target)){
                 if(permissions.contains("Edit Users"))
@@ -103,16 +100,17 @@ public class userManager
     }
 
     /**
-     * Method for setting user password
-     * @param password (string)
+     * Method for setting user password for the target user
+     * @param   password string of password
+     * @throws  Exception throws exception if user tries to edit someone else's password without Edit Users permission
      */
-    public void set_user_password(String password) throws Exception{
+    public void setUserPassword(String password) throws Exception{
         if(!current.equals(target)){
             if(current.Permissions.contains("Edit Users")){
                 target.Password = password;
             }
             else{
-                throw new Exception("User needs edit users to set someone elses password");
+                throw new Exception("User needs edit users to set someone else's password");
             }
         }
         else{
@@ -121,16 +119,12 @@ public class userManager
     }
 
     /**
-     * Method for deleting user
+     * Method for checking if user has permissions to delete user
+     * @return  boolean that returns true if valid permissions
      */
-    public boolean delete_user(){
+    public boolean deleteUser(){
         if(!current.equals(target)){
-            if(current.Permissions.contains("Edit Users")){
-                return true;
-            }
-            else{
-                return false;
-            }
+            return current.Permissions.contains("Edit Users");
         }
         else{
             return false;
@@ -139,12 +133,12 @@ public class userManager
 
     /**
      * Hashes byte array of password into hexadecimal code
-     * @param password password in the form of array of bytes
-     * @return return hashed password
+     * @param   password password in the form of array of bytes
+     * @return  return hashed password
      */
     private static String hash(byte[] password)
     {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         //for each byte of the password
         for (byte b : password)
         {
@@ -155,10 +149,10 @@ public class userManager
 
     /**
      * Method for hashing passwords
-     * @param password The password entered by the user
-     * @return A string containing the hash product of the hashed password and salt
+     * @param   password The password entered by the user
+     * @return  A string containing the hash product of the hashed password and salt
      */
-    public static String hashPassword(String password) throws NoSuchAlgorithmException, SQLException {
+    public static String hashPassword(String password) throws NoSuchAlgorithmException{
         //turn password into bytes
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         byte[] passwordBytes = messageDigest.digest(password.getBytes());
@@ -170,53 +164,36 @@ public class userManager
         System.out.println("Hashed and salted password : " + hashedPassword);
 
         //create DB connection
-        Connection connection = null;
-        connection = DBconnection.getInstance();
+        Connection connection = DBconnection.getInstance();
 
         return hashedPassword;
     }
 
     /**
      * Method for hashing a salt and a password
-     * @return
+     * @return  A string containing a salt
      */
-    public static String createASalt() throws NoSuchAlgorithmException, SQLException {
+    public static String createASalt()  {
         //Create a salt
         Random rnd = new Random();
         byte[] saltBytes = new byte[32];
         rnd.nextBytes(saltBytes);
-        String saltString = hash(saltBytes);
 
         //Return the salt
-        String userSalt = saltString;
         //System.out.println("Salt String from the method:"+userSalt);
-        return userSalt;
+        return hash(saltBytes);
     }
 
 
     /**
      * Method for hashing a salt and a password
-     * @param hashedPassword The password the user enter after being hashed by hashPassword
-     * @return
+     * @param   hashedPassword The password the user enter after being hashed by hashPassword
+     * @return  A string array containing the user hashed password, and the salt string
      */
-    public static String[] hashPasswordAndSalt(String hashedPassword, String saltString, MessageDigest messageDigest) throws NoSuchAlgorithmException, SQLException {
+    public static String[] hashPasswordAndSalt(String hashedPassword, String saltString, MessageDigest messageDigest) {
         //Add a salt to the user inputted hashed password
-        String inputtedPasswordSalted = hash(messageDigest.digest((hashedPassword + saltString).getBytes()));
-        String userPass = inputtedPasswordSalted;
-
-        //Store the user information in the database(username, hasedsaltedpassword, salt)
-        //final String SELECT = "INSERT INTO users(username, password, salt) VALUES (\""+username+"\",\""+userPass+"\",\""+saltString+"\");";
-
-        //create statement
-        //Statement st = connection.createStatement();
-        //ResultSet rs = st.executeQuery(SELECT);
-
-        //close ResultSet
-        //rs.close();
-        //close statement
-        //st.close();
-        String[] userSet = {userPass, saltString};
-        return userSet;
+        String userPass = hash(messageDigest.digest((hashedPassword + saltString).getBytes()));
+        return new String[]{userPass, saltString};
     }
 
 

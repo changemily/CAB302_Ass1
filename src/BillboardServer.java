@@ -301,9 +301,9 @@ public class BillboardServer {
             saltString = rs.getString(3);
         }
 
-        String createSalt = userManager.createASalt();
-        String[] userInfos = userManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
-        String[] userInfos2 = userManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
+        String createSalt = UserManager.createASalt();
+        String[] userInfos = UserManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
+        String[] userInfos2 = UserManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
 
         System.out.println("Database final product: "+saltedPasswordDB);
         System.out.println("Inputted password hashed: "+hashedPassword);
@@ -903,8 +903,8 @@ public class BillboardServer {
 
 
     private static void createUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
-        String createSalt = userManager.createASalt();
-        String[] userSet = userManager.hashPasswordAndSalt(ois.readObject().toString(), createSalt, messageDigester());
+        String createSalt = UserManager.createASalt();
+        String[] userSet = UserManager.hashPasswordAndSalt(ois.readObject().toString(), createSalt, messageDigester());
         String username = ois.readObject().toString();
         String password = userSet[0];
         String salt = userSet[1];

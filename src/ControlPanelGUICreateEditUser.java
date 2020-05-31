@@ -349,10 +349,8 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                         String newUsername = usernameField.getText();
                         String newPassword = null;
                         try {
-                            newPassword = userManager.hashPassword(password.getText());
+                            newPassword = UserManager.hashPassword(password.getText());
                         } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        } catch (SQLException e) {
                             e.printStackTrace();
                         }
                         String createBillboard;
@@ -532,24 +530,12 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
     public void run() {
         try {
             createGUI();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-    }
+        }
 
     @Override
     public void windowOpened(WindowEvent e) {
@@ -566,8 +552,8 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                     String newUsername = usernameField.getText();
                     String newPassword = null;
                     try {
-                        newPassword = userManager.hashPassword(password.getText());
-                    } catch (NoSuchAlgorithmException | SQLException f) {
+                        newPassword = UserManager.hashPassword(password.getText());
+                    } catch (NoSuchAlgorithmException f){
                         f.printStackTrace();
                     }
                     String createBillboard;
