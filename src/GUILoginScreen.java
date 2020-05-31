@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
  *
  * NOTES: User credentials check to be added
  */
-public class ControlPanelGUILoginScreen extends JFrame implements Runnable, ActionListener {
+public class GUILoginScreen extends JFrame implements Runnable, ActionListener {
     private JButton loginButton;
     private JTextField username;
     private JTextField password;
@@ -19,7 +19,7 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
     /**
      * Method used to create a GUI window for the Login screen
      */
-    public ControlPanelGUILoginScreen() {
+    public GUILoginScreen() {
         // Set window title
         super("Billboard Control Panel Login Screen");
     }
@@ -226,6 +226,6 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
      * @param args This method takes no arguments
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        SwingUtilities.invokeLater(new GUILoginScreen());
     }
 }

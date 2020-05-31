@@ -18,7 +18,7 @@ import java.util.Timer;
  * @version 1 - under development
  */
 
-public class BillboardServer {
+public class Server {
 
     private static final String CREATE_USER_TABLE =
             "CREATE TABLE IF NOT EXISTS Users (username varchar(255) PRIMARY KEY,password varchar(255), salt varchar(225), createBillboard INT, editBillboards INT, scheduleBillboards INT, editUsers INT)";
@@ -290,7 +290,7 @@ public class BillboardServer {
 
         //Compare the two salted and hashed passwords
         if(userInfos[0].equals(saltedPasswordDB)){
-            String sessionToken = BillboardServer.sessionToken("Valid");
+            String sessionToken = Server.sessionToken("Valid");
             System.out.println("Valid user");
             oos.writeBoolean(true);
             oos.writeObject(sessionToken);

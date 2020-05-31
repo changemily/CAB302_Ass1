@@ -12,7 +12,7 @@ import static javax.swing.JOptionPane.showConfirmDialog;
  * @author - Nickhil Nischal
  * @version - Complete
  */
-public class ControlPanelGUI extends JFrame implements Runnable, ActionListener {
+public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
     private JButton logoutButton;
     private JButton editUsersButton;
     private JButton editBillboardButton;
@@ -26,7 +26,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
      * @param username The user's username
      * @param sessionToken The user's session token
      */
-    public ControlPanelGUI(String username, String sessionToken){
+    public GUIMainMenu(String username, String sessionToken){
         // Set window title
         super("Control Panel Menu");
         // The user's username

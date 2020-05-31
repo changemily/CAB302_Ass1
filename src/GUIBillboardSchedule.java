@@ -19,7 +19,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
  *
  *
  */
-public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, ActionListener, WindowListener {
+public class GUIBillboardSchedule extends JFrame implements Runnable, ActionListener, WindowListener {
 
     // Billboard MultiMap
     private MultiMap billboardSchedule;
@@ -45,7 +45,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
      * @param sessionToken The sessionToken associated with the user
      * @param schedule current billboard schedule
      */
-    public ControlPanelGUIBillboardSchedule(String username, String sessionToken, MultiMap schedule) {
+    public GUIBillboardSchedule(String username, String sessionToken, MultiMap schedule) {
         // Set window title
         super("Billboard Schedule");
 
@@ -450,7 +450,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
             forcedClose = true;
 
             // Open new Control Panel GUI screen
-            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
         }
 
         // Checks if the logout button has been clicked
@@ -480,7 +480,7 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
     public void windowClosed(WindowEvent e) {
         // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
         if(!forcedClose) {
-            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
         }
     }
 

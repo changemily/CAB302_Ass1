@@ -19,7 +19,7 @@ import static javax.swing.JOptionPane.showConfirmDialog;
  * @author - Nickhil Nischal (GUI, Buttons), Harry Estreich (Buttons, Permissions)
  * @version - Final
  */
-public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener, WindowListener {
+public class GUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener, WindowListener {
     // Back JButton
     private JButton backButton;
 
@@ -64,7 +64,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
      * @param sessionToken current session token
      * @param userList current list of users
      */
-    public ControlPanelGUIUserControlPanel(String username, String sessionToken, HashMap<String, User> userList) {
+    public GUIUserControlPanel(String username, String sessionToken, HashMap<String, User> userList) {
         // Set window title
         super("User Control Panel");
         this.username = username;
@@ -415,7 +415,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
             dispose();
 
             // Open new Control Panel GUI screen
-            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
         }
 
         // Checks if the logout button has been clicked
@@ -472,16 +472,16 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                                     }
                                 }
                                 // create new one
-                                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
+                                SwingUtilities.invokeLater(new GUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                             }
                         }
                         else{ // no GUIs open, just open a new one
-                            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
+                            SwingUtilities.invokeLater(new GUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                         }
                     }
                     else{
                         // no GUIs open, just open a new one
-                        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
+                        SwingUtilities.invokeLater(new GUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                     }
                     openedUser = usernameSelected;
                     closeable =  false;
@@ -554,17 +554,17 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                                 }
                             }
                             // create new GUI
-                            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
+                            SwingUtilities.invokeLater(new GUICreateEditUser("admin", "1234", userList));
                         }
                     }
                     else{
                         // create new GUI
-                        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
+                        SwingUtilities.invokeLater(new GUICreateEditUser("admin", "1234", userList));
                     }
                 }
                 else{
                     // create new GUI
-                    SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
+                    SwingUtilities.invokeLater(new GUICreateEditUser("admin", "1234", userList));
                 }
                 closeable = false;
             } catch (Exception e) {
@@ -649,7 +649,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
     public void windowClosed(WindowEvent e) {
         // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
         if(closeable) {
-            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
         }
     }
 

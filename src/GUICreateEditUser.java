@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
@@ -13,7 +12,7 @@ import static javax.swing.JOptionPane.*;
  * @author - Nickhil Nischal (GUI), Harry Estreich (buttons & permissions, refreshing)
  * @version - Final
  */
-public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener, WindowListener {
+public class GUICreateEditUser extends JFrame implements Runnable, ActionListener, WindowListener {
     // Components
     private JTextField usernameField;
     private JTextField password;
@@ -43,7 +42,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
      * @param   userList HashMap of users
      * @throws  Exception throws exception when creating user if permissions fail
      */
-    public ControlPanelGUICreateEditUser(String username, String sessionToken, HashMap<String, User> userList) throws Exception {
+    public GUICreateEditUser(String username, String sessionToken, HashMap<String, User> userList) throws Exception {
         // Set window title
         super("Create User");
         this.username = username;
@@ -64,7 +63,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
      * @param   selfUser whether this is a self edit
      * @param   userList HashMap of users
      */
-    public ControlPanelGUICreateEditUser(String username, String sessionToken, User targetUser, boolean adminUser, boolean selfUser, HashMap<String, User> userList){
+    public GUICreateEditUser(String username, String sessionToken, User targetUser, boolean adminUser, boolean selfUser, HashMap<String, User> userList){
         super("Edit User");
         this.username = username;
         this.sessionToken = sessionToken;
@@ -379,12 +378,12 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 }
                 dispose();
                 if(frameCount == 0){
-                    SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken, userList));
+                    SwingUtilities.invokeLater(new GUIUserControlPanel(username, sessionToken, userList));
                 }
             }
             else{ // If only changing password, restart control panel gui
                 dispose();
-                SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
             }
             //run close window
 
@@ -446,12 +445,12 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 }
                 dispose();
                 if(frameCount == 0){
-                    SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken, userList));
+                    SwingUtilities.invokeLater(new GUIUserControlPanel(username, sessionToken, userList));
                 }
             }
             else{
                 dispose();
-                SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
             }
         }
     }
@@ -613,7 +612,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                         forcedExit = false; // set exit to safe
                     } else { // only password screen, go back to gui home
                         dispose();
-                        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                        SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
                     }
                 }
                 else{
@@ -668,7 +667,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                         forcedExit = false; // set exit to safe
                     } else { // only password screen, go back to gui home
                         dispose();
-                        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                        SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
                     }
                 }
             }

@@ -19,7 +19,7 @@ import static javax.swing.JOptionPane.*;
  * @author Emily Chang & Liam Dines
  * @version complete
  */
-public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
+public class GUIBillboardSchedulePopup extends JFrame implements Runnable, ActionListener
 {
     private ScheduleMultiMap billboardSchedule;
     private JButton removeBttn;
@@ -42,7 +42,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
      * @param billboardName current billboard selected in Billboard Control Panel GUI screen
      * @param schedule billboard schedule
      */
-    public BBSchedulePopup(String username, String sessionToken, String billboardName, ScheduleMultiMap schedule)
+    public GUIBillboardSchedulePopup(String username, String sessionToken, String billboardName, ScheduleMultiMap schedule)
     {
         // Set window title
         super("Schedule Billboard");

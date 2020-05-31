@@ -25,7 +25,7 @@ import static javax.swing.JOptionPane.*;
  * @version - Final
  */
 
-public class BBEditor extends JFrame implements Runnable, ActionListener, ChangeListener, WindowListener
+public class GUIBillboardEditor extends JFrame implements Runnable, ActionListener, ChangeListener, WindowListener
 {
     // Main global variables
     private String billboardName;
@@ -74,7 +74,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
      * @param billboardName name of billboard edited
      * @param XMLString billboard xml string
      */
-    public BBEditor(String username, String sessionToken, String billboardName, String XMLString)
+    public GUIBillboardEditor(String username, String sessionToken, String billboardName, String XMLString)
     {
         // Set window title
         super("Billboard Editor");
@@ -93,7 +93,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
      * @param sessionToken session token for user
      * @param billboardList list of billboards, for checking name
      */
-    public BBEditor(String username, String sessionToken, HashMap<String, Billboard> billboardList){
+    public GUIBillboardEditor(String username, String sessionToken, HashMap<String, Billboard> billboardList){
         super("Billboard Creator");
 
         // Set variables

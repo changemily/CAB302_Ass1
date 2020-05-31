@@ -23,7 +23,7 @@ import static javax.swing.JOptionPane.*;
  * @author - Nickhil Nischal (GUI, Buttons), Harry Estreich (Buttons, Permissions)
  * @version - Final
  */
-public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, ListSelectionListener, DocumentListener {
+public class GUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, ListSelectionListener, DocumentListener {
     // Billboard HashMap
     HashMap<String, Billboard> billboardListH;
 
@@ -57,7 +57,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
      * @param currentUser Current user
      * @param schedule Schedule MultiMap
      */
-    public ControlPanelGUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList, User currentUser, ScheduleMultiMap schedule) {
+    public GUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList, User currentUser, ScheduleMultiMap schedule) {
         // Set window title
         super("Billboard Control Panel");
 
@@ -467,7 +467,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             dispose();
             closeable = false;
             // Open new Control Panel GUI screen
-            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
         }
 
         // Checks if the logout button has been clicked
@@ -544,13 +544,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                                 }
                             }
                             // Create new one
-                            SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardName, xmlFile));
+                            SwingUtilities.invokeLater(new GUIBillboardEditor(username, sessionToken, billboardName, xmlFile));
                             closeable = false;
                         }
                     }
                     else{
                         // If none open, just open editor
-                        SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardName, xmlFile));
+                        SwingUtilities.invokeLater(new GUIBillboardEditor(username, sessionToken, billboardName, xmlFile));
                         closeable = false;
                     }
                 }
@@ -589,13 +589,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                             }
                         }
                         // open new editor
-                        SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardListH));
+                        SwingUtilities.invokeLater(new GUIBillboardEditor(username, sessionToken, billboardListH));
                         closeable = false;
                     }
                 }
                 else{
                     // open new editor
-                    SwingUtilities.invokeLater(new BBEditor(username, sessionToken, billboardListH));
+                    SwingUtilities.invokeLater(new GUIBillboardEditor(username, sessionToken, billboardListH));
                     closeable = false;
                 }
             }
@@ -710,13 +710,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                                 }
                             }
                             // new schedule GUI
-                            SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName, schedule));
+                            SwingUtilities.invokeLater(new GUIBillboardSchedulePopup(username, sessionToken, billboardName, schedule));
                             closeable = false;
                         }
                     }
                     else{
                         // new schedule GUI
-                        SwingUtilities.invokeLater(new BBSchedulePopup(username, sessionToken, billboardName, schedule));
+                        SwingUtilities.invokeLater(new GUIBillboardSchedulePopup(username, sessionToken, billboardName, schedule));
                         closeable = false;
                     }
                 }
@@ -814,7 +814,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
         if(closeable) {
             // Open Control Panel GUI (previous screen)
-            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
         }
     }
 
