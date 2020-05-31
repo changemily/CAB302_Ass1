@@ -69,6 +69,9 @@ public class BillboardServer {
 
         connection = DBconnection.getInstance();
 
+        //print message to command line verifying DB connection
+        System.out.println("Successfully connected to the database");
+
         //check if tables exist in DB, if not adds tables
         checkTables(connection);
 
@@ -312,8 +315,6 @@ public class BillboardServer {
         System.out.println("Salt String from method2: "+userInfos2[1]);
         System.out.println("Inputted Final product2: "+userInfos2[0]);
 
-
-
         //Add a salt to the user inputted hashed password
         //String inputtedPasswordSalted = (messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
         String inputtedPasswordSalted = userInfos[0];
@@ -386,28 +387,21 @@ public class BillboardServer {
     private static void listBillboards(ObjectOutputStream oos, ObjectInputStream ois, BillboardList billboardList, UserList userList, ScheduleMultiMap billboardSchedule) throws Exception{
         //Get the users session token to validate the action
         String sessionToken = (String) ois.readObject();
-
+        //String sessionToken = "(String) ois.readObject()";
+        //For testing
+        //String sessionToken = "(String) ois.readObject()";
         //If session token is current
-        if(checkToken(sessionToken))
+        if(checkToken(sessionToken) == true)
         {
-            //Output to client
-            oos.writeObject(billboardList.listBillboards());
-            oos.writeObject(userList.listUsers());
-            oos.writeObject(billboardSchedule);
-
-            //Print billboard list sent to client
-            System.out.println("Sent to client:\n");
-            System.out.println("billboard list: "+ billboardList.listBillboards());
+            oos.writeBoolean(true);
         }else {
-            // Display error pop up
-            JOptionPane optionPane = new JOptionPane("Users session has expired, please log in again."
-                    , JOptionPane.ERROR_MESSAGE);
-            JDialog dialog = optionPane.createDialog("Session Token Expired");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);
-            //open login screen
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            oos.writeBoolean(false);
         }
+
+        //Output to client
+        oos.writeObject(billboardList.listBillboards());
+        oos.writeObject(userList.listUsers());
+        oos.writeObject(billboardSchedule);
     }
 
     /**
@@ -495,7 +489,9 @@ public class BillboardServer {
      */
     private static void viewSchedule(ObjectOutputStream oos, ObjectInputStream ois, ScheduleMultiMap billboardSchedule, UserList userList) throws IOException, ClassNotFoundException {
         MultiMap<String, ScheduleInfo> schedule = billboardSchedule.viewSchedule();
-        String sessionToken = "(String) ois.readObject()";
+        String sessionToken = (String) ois.readObject();
+        //For testing
+        //String sessionToken = "(String) ois.readObject()";
         //If session token is current
         if(checkToken(sessionToken) == true)
         {
@@ -652,13 +648,11 @@ public class BillboardServer {
             //store number of schedule table rows in local int
             rowResultSet.next();
             numDBRows = rowResultSet.getInt(1);
-            System.out.println("rows in DB:" +numDBRows);
         }
         catch (Exception e)
         {
             //if no rows are in DB set numDBRows to 0
             numDBRows = 0;
-            System.out.println("rows in DB:" +numDBRows);
         }
         //create 2D array that stores the contents of each row in the DB
         queue = new String[numDBRows][5];
@@ -1014,20 +1008,16 @@ public class BillboardServer {
         //Get the users session token to validate the action
         String sessionToken = (String) ois.readObject();
         //If session token is current
-        if(checkToken(sessionToken))
+        //String sessionToken = "(String) ois.readObject()";
+        //If session token is current
+        if(checkToken(sessionToken) == true)
         {
-            //If valid user then return the userlist
-            oos.writeObject(userList.listUsers());
+            oos.writeBoolean(true);
         }else {
-            // Display error pop up
-            JOptionPane optionPane = new JOptionPane("Users session has expired, please log in again."
-                    , JOptionPane.ERROR_MESSAGE);
-            JDialog dialog = optionPane.createDialog("Session Token Expired");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);
-            //open login screen
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            oos.writeBoolean(false);
         }
+        //If valid user then return the userlist
+        oos.writeObject(userList.listUsers());
     }
 
     /**
