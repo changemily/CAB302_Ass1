@@ -285,7 +285,8 @@ public class ControlPanelClient {
         oos.writeObject(buttonClicked);
         oos.writeObject(sessionToken);
 
-        if(!ois.readObject().equals("Session not valid")){
+        Boolean validSession = ois.readBoolean();
+        if(validSession == true){
             //read schedule sent by server
             MultiMap schedule = (MultiMap) ois.readObject();
             HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
@@ -296,9 +297,6 @@ public class ControlPanelClient {
                 for(Frame fr : allFrames){
                     if((fr.getClass().getName().equals("ControlPanelGUI"))){
                         fr.dispose();
-                        if((fr.getClass().getName().equals("ControlPanelGUI"))){
-                            fr.dispose();
-                        }
                     }
                 }
                 SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(username, sessionToken, schedule));
@@ -308,13 +306,17 @@ public class ControlPanelClient {
                         "User doesn't have Schedule Billboards permission");
             }
         }else{
+            System.out.println("User session token: "+sessionToken);
+            JOptionPane optionPane = new JOptionPane("Your session has expired," +
+                    " please login and try again.", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Session Expired1");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
+
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
                 if((fr.getClass().getName().equals("ControlPanelGUI"))){
                     fr.dispose();
-                    if((fr.getClass().getName().equals("ControlPanelGUI"))){
-                        fr.dispose();
-                    }
                 }
             }
             SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
@@ -401,27 +403,37 @@ public class ControlPanelClient {
         //Output clients request to the server
         oos.writeObject(sessionToken);
 
-        HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
-        User userDetails = UserList.getUserInformation(userList, username);
-        if(!userInputs[1].equals("Password")) {
-            if (userDetails.Permissions.contains("Edit Users")) {
-                Frame[] allFrames = Frame.getFrames();
-                for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUI"))){
-                        fr.dispose();
+        Boolean validSession = ois.readBoolean();
+        if(validSession == true){
+            HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
+            User userDetails = UserList.getUserInformation(userList, username);
+            if(!userInputs[1].equals("Password")) {
+                if (userDetails.Permissions.contains("Edit Users")) {
+                    Frame[] allFrames = Frame.getFrames();
+                    for(Frame fr : allFrames){
                         if((fr.getClass().getName().equals("ControlPanelGUI"))){
                             fr.dispose();
+                            if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                                fr.dispose();
+                            }
                         }
                     }
+                    SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken, userList));
+                } else {
+                    JOptionPane.showMessageDialog(new JFrame(),
+                            "User doesn't have Edit Users permission");
                 }
-                SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken, userList));
-            } else {
-                JOptionPane.showMessageDialog(new JFrame(),
-                        "User doesn't have Edit Users permission");                
             }
-        }
-        else{
-            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, userDetails, false, true, userList));
+            else{
+                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, userDetails, false, true, userList));
+            }
+        }else{
+            System.out.println("User session token: "+sessionToken);
+            JOptionPane optionPane = new JOptionPane("Your session has expired," +
+                    " please login and try again.", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Session Expired1");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
         }
     }
 
