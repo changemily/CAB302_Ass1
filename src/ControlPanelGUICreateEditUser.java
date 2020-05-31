@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
@@ -10,7 +11,7 @@ import static javax.swing.JOptionPane.*;
  * Create/Edit User class for Control Panel GUI
  * This class contains a Main method and method that creates a GUI window for the Create/Edit User Screen
  * @author - Nickhil Nischal (GUI), Harry Estreich (buttons & permissions, refreshing)
- * @version - final
+ * @version - Final
  */
 public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener, WindowListener {
     // Components
@@ -360,7 +361,18 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Checks if the Save and Exit button has been clicked
         if (buttonClicked == saveExitButton) {
-            saveAndExit(); // runs save and exit method
+            try {
+                if(BillboardServer.checkToken(sessionToken) == false){
+                    SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+                    dispose();
+                }else{
+                    saveAndExit(); // runs save and exit method
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         // Checks if the Exit Without Saving button has been clicked
         else if (buttonClicked == exitWithoutSaving) {
@@ -385,7 +397,6 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 dispose();
                 SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
             }
-            System.out.println("exit without saving clicked");
             //run close window
 
         }
@@ -484,14 +495,6 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
      * Save User and Exit back to control panel
      */
     public void saveAndExit(){
-        // Print information
-        System.out.println("save and exit clicked");
-        System.out.println(usernameField.getText());
-        System.out.println(createBillboardsBox.isSelected());
-        System.out.println(scheduleBillboardsBox.isSelected());
-        System.out.println(editAllBillboardsBox.isSelected());
-        System.out.println(editUsersBox.isSelected());
-
         //run save info, and close window
         if(!usernameField.getText().equals("")) { // check that username has been typed in, else error
             if (newUser) { // check is new user

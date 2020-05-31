@@ -14,8 +14,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 /**
  * Billboard Schedule class for Control Panel GUI
  * This class contains a Main method and method that creates a GUI window for the Billboard Schedule Screen
- * @author - Nickhil Nischal
- * @version - final
+ * @author - Nickhil Nischal (GUI, Buttons), Harry Estreich (Buttons, Permissions), Emily Chang (adding schedule data to table)
+ * @version - Final
  *
  *
  */

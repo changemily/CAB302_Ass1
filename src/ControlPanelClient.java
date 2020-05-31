@@ -10,12 +10,13 @@ import java.util.Properties;
 /**
  * Control Panel class
  * Class contains methods for connecting to, receiving and sending info to a server over a port,
- * @author Emily Chang
- * @version - under development
+ * Hash Method from lecture 9 Q&A
+ * @author Emily Chang (Billboard, Schedule), Jarod Evans (Billboard, Log In / Log Out), Harry Estreich (Users)
+ * @version - Final
  */
 public class ControlPanelClient {
-    public static String username = "AdminUser";
-    public static String sessionToken = "";
+    public static String username;
+    public static String sessionToken;
 
     /**
      * Sends requests to Server
@@ -104,29 +105,15 @@ public class ControlPanelClient {
             //flush output stream
             oos.flush();
 
-            /*//read response from server
-            Object o = ois.readObject();
-
-            //print what was received from server
-            System.out.println("received from server: "+o);*/
-
             //close streams and connection with server
             oos.close();
             ois.close();
             socket.close();
 
-        } catch (
-        FileNotFoundException fnfe) {
+        } catch (FileNotFoundException fnfe) {
             System.err.println(fnfe);
-        } catch (
-        IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -150,7 +137,7 @@ public class ControlPanelClient {
     /**
      * Sends login request, username and password to server
      * @param oos Object output stream of client
-     * @param buttonClicked Request given by Contol Panel GUI
+     * @param buttonClicked Request given by Control Panel GUI
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
@@ -159,17 +146,7 @@ public class ControlPanelClient {
         //retrieve username and password
         String username = userInputs[1];
         String pwd = userInputs[2];
-        System.out.println("pwd in user array: "+pwd);
-//        //turn password into bytes
-//        MessageDigest md = MessageDigest.getInstance("SHA-256");
-//        byte[] passwordBytes = md.digest(pwd.getBytes());
-//
-//        //hash password
-//        String hashedPassword = hash(passwordBytes);
-//        System.out.println("Hashed pwd : " + hashedPassword);
-
         String hashedPassword = UserManager.hashPassword(pwd);
-        System.out.println("Hashed Password from control panel in login request: "+hashedPassword);
 
         //send username and hashed password to server
         oos.writeObject(username);
@@ -178,13 +155,10 @@ public class ControlPanelClient {
 
         Boolean validUser = ois.readBoolean();
         String SessionToken = (String) ois.readObject();
-        //String sessionToken = (String) ois.readObject();
         if(validUser == true){
-
             //If the user is valid set them as the default user in the control panel
             ControlPanelClient.username = username;
             ControlPanelClient.sessionToken = SessionToken;
-            System.out.println("The session token is: "+ SessionToken);
             //Create and return the user a valid session token
             SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
         }else{
@@ -197,7 +171,7 @@ public class ControlPanelClient {
      * Sends logout request, session token if the user to server
      * @param oos Object output stream of client
      * @param ois Object Input Stream
-     * @param buttonClicked Request given by Contol Panel GUI
+     * @param buttonClicked Request given by Control Panel GUI
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
@@ -205,8 +179,6 @@ public class ControlPanelClient {
         oos.writeObject(buttonClicked);
         //retrieve session token
         String sessionToken = userInputs[1];
-        //String sessionToken = "reee";
-        System.out.println("CPC session token: "+sessionToken);
         //send username and hashed password to server
         oos.writeObject(sessionToken);
         //open login screen
@@ -237,7 +209,6 @@ public class ControlPanelClient {
             //Open the billboard control panel using username, session token and the billboard list
             SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel(username, sessionToken, BillboardList, currentUser, schedule));
         }else{
-            System.out.println("User session token: "+sessionToken);
             JOptionPane optionPane = new JOptionPane("Your session has expired," +
                     " please login and try again.", JOptionPane.ERROR_MESSAGE);
             JDialog dialog = optionPane.createDialog("Session Expired");
@@ -257,8 +228,8 @@ public class ControlPanelClient {
     /**
      * Sends a get info request to the server
      * @param oos Object output stream of client
-     * @param buttonClicked Request given by Contol Panel GUI
-     * @param userInputs String array used for recieving information
+     * @param buttonClicked Request given by Control Panel GUI
+     * @param userInputs String array used for receiving information
      * @throws IOException
      */
     private static void createEditBillboard(ObjectOutputStream oos, String buttonClicked, String[] userInputs)throws IOException{
@@ -280,7 +251,7 @@ public class ControlPanelClient {
      * Sends a get info request to the server
      * @param oos Object output stream of client
      * @param buttonClicked Request given by Control Panel GUI
-     * @throws IOException
+     * @throws IOException io error
      */
     private static void getBillboardInfo(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
         //Store the billboard name in a String
@@ -295,7 +266,7 @@ public class ControlPanelClient {
      * Sends a delete request to the server
      * @param oos Object output stream of the client
      * @param buttonClicked Request given by control panel GUI
-     * @throws IOException
+     * @throws IOException io error
      */
     private static void deleteBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs)throws IOException{
         //Store the billboard name in a String
@@ -309,7 +280,7 @@ public class ControlPanelClient {
     /**
      * Sends view schedule request to Server and reads response
      * @param ois Object input stream of client
-     * @throws IOException
+     * @throws IOException io error
      */
     private static void viewSchedule(ObjectOutputStream oos, String buttonClicked,
                                      ObjectInputStream ois, String[] userInputs) throws Exception {
@@ -319,12 +290,14 @@ public class ControlPanelClient {
         oos.writeObject(sessionToken);
 
         Boolean validSession = ois.readBoolean();
-        if(validSession == true){
+        // check valid session
+        if(validSession){
             //read schedule sent by server
             MultiMap schedule = (MultiMap) ois.readObject();
             HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
             User userDetails = UserList.getUserInformation(userList, username);
 
+            // if user has permission to view schedule
             if(userDetails.permissions.contains("Schedule Billboards")) {
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
@@ -334,18 +307,18 @@ public class ControlPanelClient {
                 }
                 SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(username, sessionToken, schedule));
             }
-            else{
+            else{ // fail, error
                 JOptionPane.showMessageDialog(new JFrame(),
                         "User doesn't have Schedule Billboards permission");
             }
-        }else{
-            System.out.println("User session token: "+sessionToken);
+        }else{ // invalid session
             JOptionPane optionPane = new JOptionPane("Your session has expired," +
                     " please login and try again.", JOptionPane.ERROR_MESSAGE);
             JDialog dialog = optionPane.createDialog("Session Expired");
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
 
+            // reset to login screen
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
                 if((fr.getClass().getName().equals("ControlPanelGUI"))){
@@ -360,10 +333,10 @@ public class ControlPanelClient {
      * Sends request to schedule billboard to server, and corresponding schedule information
      * @param oos Object output stream of client
      * @param buttonClicked Request given by Control Panel GUI
-     * @throws IOException
+     * @throws IOException io error
      */
     private static void scheduleBillboard(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
-
+        // read billboard details
         String  billboardName= user_inputs[1];
         String startTime = user_inputs[2];
         String duration = user_inputs[3];
@@ -383,9 +356,10 @@ public class ControlPanelClient {
      * Sends request to remove schedule to server, and corresponding schedule information
      * @param oos Object output stream of client
      * @param buttonClicked Request given by Control Panel GUI
-     * @throws IOException
+     * @throws IOException io error
      */
     private static void removeSchedule(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+        // read schedule details
         String billboardName= user_inputs[1];
         String startTime = user_inputs[2];
         String duration = user_inputs[3];
@@ -402,33 +376,14 @@ public class ControlPanelClient {
         oos.writeObject(recurrence);
     }
 
-//    /**
-//     * checks if billboard exists in schedule
-//     * @param oos Object output stream of client
-//     * @return boolean value - true if billboard exists in schedule, false if not
-//     * @throws IOException
-//     */
-//    private static boolean billboardScheduleCheck (ObjectOutputStream oos, ObjectInputStream ois, String[] user_inputs) throws IOException, ClassNotFoundException {
-//        //send server request
-//        oos.writeObject(user_inputs[0]);
-//        oos.writeObject(user_inputs[1]);
-//
-//        //read server's response
-//        String billboardExists = ois.readObject().toString();
-//
-//        //if billboard exists in schedule
-//        if(billboardExists.equals("true"))
-//        {
-//            return true;
-//        }
-//
-//        //if billboard does not exist in schedule
-//        else
-//        {
-//            return false;
-//        }
-//    }
-
+    /**
+     * Lists all users and produces a new GUI depending on inputs, either user control panel
+     * or edit password screen
+     * @param oos Object output stream of client
+     * @param ois Object input stream of server
+     * @param userInputs user inputs
+     * @throws Exception error
+     */
     private static void listUsersScreen(ObjectOutputStream oos, ObjectInputStream ois, String[] userInputs) throws Exception {
         oos.writeObject(userInputs[0]);
         //Get the users session token to send to the server
@@ -436,13 +391,16 @@ public class ControlPanelClient {
         //Output clients request to the server
         oos.writeObject(sessionToken);
 
+        // if valid session
         Boolean validSession = ois.readBoolean();
-        if(validSession == true){
+        if(validSession){
+            // read userList
             HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
+            // get details of current user
             User userDetails = UserList.getUserInformation(userList, username);
-            if(!userInputs[1].equals("Password")) {
-                if (userDetails.permissions.contains("Edit Users")) {
-                    Frame[] allFrames = Frame.getFrames();
+            if(!userInputs[1].equals("Password")) { // user presses edit users
+                if (userDetails.permissions.contains("Edit Users")) { // checks that user can edit users
+                    Frame[] allFrames = Frame.getFrames(); // remove main menu
                     for(Frame fr : allFrames){
                         if((fr.getClass().getName().equals("ControlPanelGUI"))){
                             fr.dispose();
@@ -451,22 +409,25 @@ public class ControlPanelClient {
                             }
                         }
                     }
+                    // open control panel
                     SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken, userList));
-                } else {
+                } else {  // fails permission check
                     JOptionPane.showMessageDialog(new JFrame(),
                             "User doesn't have Edit Users permission");
                 }
             }
-            else{
+            else{ // users press change password, no permission check
                 SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, userDetails, false, true, userList));
             }
         }else{
-            System.out.println("User session token: "+sessionToken);
+            // Fails session check
+            // Create error
             JOptionPane optionPane = new JOptionPane("Users session has expired, please log in again.", JOptionPane.ERROR_MESSAGE);
             JDialog dialog = optionPane.createDialog("Session Token Expired");
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
 
+            // Reset to login page
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
                 if((fr.getClass().getName().equals("ControlPanelGUI"))){
@@ -477,13 +438,28 @@ public class ControlPanelClient {
         }
     }
 
+    /**
+     * Method that deletes a user
+     * @param oos Object output stream of client
+     * @param buttonClicked "Delete User"
+     * @param user_inputs username
+     * @throws IOException IO error
+     */
     private static void deleteUser(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException{
         String deletedUsername = user_inputs[1];
         oos.writeObject(buttonClicked);
         oos.writeObject(deletedUsername);
     }
 
+    /**
+     * Method for creating a current user
+     * @param oos Object output steam of client
+     * @param buttonClicked "Create User"
+     * @param user_inputs user details
+     * @throws IOException IO error
+     */
     private static void createUser(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+        // user details
         String username = user_inputs[1];
         String password = user_inputs[2];
         String createBillboard = user_inputs[3];
@@ -491,7 +467,10 @@ public class ControlPanelClient {
         String editBillboard = user_inputs[5];
         String editUsers = user_inputs[6];
 
+        // find server method
         oos.writeObject(buttonClicked);
+
+        // write new details
         oos.writeObject(password);
         oos.writeObject(username);
         oos.writeObject(createBillboard);
@@ -500,7 +479,15 @@ public class ControlPanelClient {
         oos.writeObject(editUsers);
     }
 
+    /**
+     * Method for editing a current user
+     * @param oos Object output steam of client
+     * @param buttonClicked "Edit User"
+     * @param user_inputs user details
+     * @throws IOException IO error
+     */
     private static void editUser(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+        // user details
         String username = user_inputs[1];
         String password = user_inputs[2];
         String createBillboard = user_inputs[3];
@@ -508,7 +495,10 @@ public class ControlPanelClient {
         String editBillboard = user_inputs[5];
         String editUsers = user_inputs[6];
 
+        // find server method
         oos.writeObject(buttonClicked);
+
+        //write new details
         oos.writeObject(username);
         oos.writeObject(password);
         oos.writeObject(username);
@@ -518,16 +508,31 @@ public class ControlPanelClient {
         oos.writeObject(editUsers);
     }
 
+    /**
+     * Method for editing a current user but keeps their password
+     * @param oos Object output steam of client
+     * @param buttonClicked "Edit User Keep Password"
+     * @param user_inputs user details
+     * @throws IOException IO error
+     */
     private static void editUserKeepPassword(ObjectOutputStream oos, String buttonClicked, String[] user_inputs) throws IOException {
+        // retrieve inputs for user
         String username = user_inputs[1];
         String createBillboard = user_inputs[2];
         String scheduleBillboard = user_inputs[3];
         String editBillboard = user_inputs[4];
         String editUsers = user_inputs[5];
 
+        // find server method
         oos.writeObject(buttonClicked);
+
+        // delete user
         oos.writeObject(username);
+
+        // record user password
         oos.writeObject(username);
+
+        // write new details
         oos.writeObject(username);
         oos.writeObject(createBillboard);
         oos.writeObject(scheduleBillboard);
@@ -539,7 +544,7 @@ public class ControlPanelClient {
      * Runs client
      * @param args
      */
-    public static void main(String args[]){
-        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+    public static void main(String args[]) {
+        SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
     }
 }

@@ -67,7 +67,7 @@ public class TestUserList {
         UserList userList = new UserList();
         User newUser = new User("admin", "password", "salt");
         UserList.addUserToList(userList.listUsers(), newUser); // add user to list
-        UserList.deleteUser(userList.listUsers(), newUser); // delete same user
+        UserList.deleteUserFromList(userList.listUsers(), newUser); // delete same user
         assertThrows(Exception.class, () -> UserList.getUserInformation(userList.listUsers(), "admin")); // check user doesn't exist
     }
 
@@ -79,6 +79,6 @@ public class TestUserList {
     public void removeUserNonExist() throws Exception {
         UserList userList = new UserList();
         User newUser = new User("admin", "password", "salt");
-        assertThrows(Exception.class, () -> UserList.deleteUser(userList.listUsers(), newUser)); // check user doesn't exist
+        assertThrows(Exception.class, () -> UserList.deleteUserFromList(userList.listUsers(), newUser)); // check user doesn't exist
     }
 }

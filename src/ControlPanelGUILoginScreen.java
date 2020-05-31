@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 /**
  * Login Screen class for Control Panel GUI
  * This class contains a Main method and method that creates a GUI window for the Login Screen
- * @author - Nickhil Nischal
- * @version - under development
+ * @author - Nickhil Nischal (GUI) Jarod Evans (Implementation)
+ * @version - Final
  *
  * NOTES: User credentials check to be added
  */
@@ -205,25 +205,8 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
             //Run control panel with the login request
             String[] user_inputs = {"Login request", userName, password};
             ControlPanelClient.runClient(user_inputs);
-
-
-//            // Check if the provided credentials are correct, then if successful open Control Panel GUI
-//            if (usernameText.equals("user") && passwordText.equals("password")) { // VALUES USED ONLY FOR TESTING
-//
-//                // Open Control Panel GUI Screen
-//                String sessionToken = "123456";
-//                SwingUtilities.invokeLater(new ControlPanelGUI(usernameText, sessionToken));
-            // Close Login Screen
             dispose();
         }
-
-//        // Credentials are incorrect
-//        else {
-//            // Display an Error Message Dialog, alerting the user that the entered credentials are incorrect
-//            JOptionPane.showMessageDialog(this,
-//                    "The entered username or password is incorrect, please try again.",
-//                    "Invalid Credentials", JOptionPane.ERROR_MESSAGE);
-//        }
     }
 
 
@@ -231,19 +214,7 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
     public void run() {
         try {
             createGUI();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);

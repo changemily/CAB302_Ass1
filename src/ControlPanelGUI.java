@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import static javax.swing.JOptionPane.showConfirmDialog;
 
@@ -28,7 +29,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
     public ControlPanelGUI(String username, String sessionToken){
         // Set window title
         super("Control Panel Menu");
-
         // The user's username
         this.username = username;
 
