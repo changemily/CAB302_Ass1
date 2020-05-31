@@ -63,7 +63,7 @@ public class User implements java.io.Serializable {
     /**
      * Method used to delete a specified user
      */
-    public void DeleteUser() {
+    public void deleteUser() {
         String usernameTemp = this.username;
         // Sets specified user's Username, Password, and Permissions to null
         this.username = null;
@@ -77,7 +77,7 @@ public class User implements java.io.Serializable {
      * Method used to change a specified user's username
      * @param newUsername The new username which will replace the old username
      */
-    public void EditUsername(String newUsername) {
+    public void editUsername(String newUsername) {
         String usernameTemp = this.username;
         // Replaces old username with newly inputted username
         this.username = newUsername;
@@ -88,7 +88,7 @@ public class User implements java.io.Serializable {
      * Method used to change a specified user's password
      * @param newPassword The new password which will replace the old password
      */
-    public void EditPassword(String newPassword) {
+    public void editPassword(String newPassword) {
         String passwordTemp = this.password;
         // Replaces old password with newly inputted password
         this.password = newPassword;
@@ -100,7 +100,7 @@ public class User implements java.io.Serializable {
      * @param permission The permission that is to be removed from the specified user's permissions
      * @throws Exception Throws exception when an invalid permission type is entered
      */
-    public void RemovePermissions(String permission) throws Exception {
+    public void removePermissions(String permission) throws Exception {
         // Checks if the entered permission is a valid permission, else permission is not removed from user
         if (PermissionChecker(permission)) {
             // Checks if permission exists in user's HashSet
@@ -119,7 +119,7 @@ public class User implements java.io.Serializable {
      * @param permission The permission that is to be added to the specified user's permissions
      * @throws Exception Throws exception when an invalid permission type is entered
      */
-    public void AddPermissions(String permission) throws Exception {
+    public void addPermissions(String permission) throws Exception {
         // Checks if the entered permission is a valid permission, else permission is not added to user
         if (PermissionChecker(permission)) {
             // Checks if permission already exists in user's HashSet
