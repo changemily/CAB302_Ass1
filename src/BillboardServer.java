@@ -335,6 +335,7 @@ public class BillboardServer {
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
             oos.writeBoolean(false);
+            oos.writeObject("In-valid");
         }
     }
 
