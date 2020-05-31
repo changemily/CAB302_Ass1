@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestScheduleMultiMap {
 
+    //define xml string to use in tests
     public static final String xmlFile = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
             "    <picture url=\"https://cloudstor.aarnet.edu.au/plus/s/vYipYcT3VHa1uNt/download\" />\n" +
@@ -18,25 +19,20 @@ public class TestScheduleMultiMap {
     ScheduleMultiMap billboardSchedule;
     BillboardList billboardList;
 
-    //create billboard list to use in tests
+    //construct billboard list to use in tests
     @BeforeEach
     public void setupBbList()
     {
         billboardList = new BillboardList();
     }
 
-    /**
-     * Test 1: Constructing a schedule HashMap object
-     */
+    //Test 1: Constructing a schedule HashMap object
     @BeforeEach
     @Test public void setUpBbSchedule() {
         billboardSchedule = new ScheduleMultiMap();
     }
 
-    /**
-     * Test 2: Schedule billboard that has not been scheduled
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 2: Schedule billboard that has not been scheduled
     @Test
     public void scheduleBillboardTest() throws Exception
     {
@@ -56,10 +52,7 @@ public class TestScheduleMultiMap {
 
     }
 
-    /**
-     * Test 2.1: Schedule billboard that has previously been scheduled in a vacant time slot
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 2.1: Schedule billboard that has previously been scheduled in a vacant time slot
     @Test
     public void scheduleBillboardTest2() throws Exception
     {
@@ -87,17 +80,14 @@ public class TestScheduleMultiMap {
         assertEquals(Duration.ofMinutes(5), scheduleInfo.get(0).duration);
     }
 
-    /**
-     * Test 2.2: Schedule billboard for 1 viewing in time slot that matches another billboard scheduled- should
-     * take precedence over existing billboard scheduled
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 2.2: Schedule billboard for 1 viewing in time slot that matches another billboard scheduled- should
+    //take precedence over existing billboard scheduled
+    //viewings match
     @Test
     public void matchingSchedules() throws Exception
     {
         //add billboards to billboardList
         billboardList.createEditBillboard("Billboard_1", "jarod", xmlFile);
-
         billboardList.createEditBillboard("Billboard_2", "jarod", xmlFile);
 
         //Schedule billboard 1 in a vacant time slot - 10:00-10:10
@@ -128,20 +118,14 @@ public class TestScheduleMultiMap {
     }
 
 
-    /**
-     * Test 2.3: Schedule billboard for 2 viewings, 1 being in a time slot that matches another billboard scheduled-
-     * should take precedence over existing billboard scheduled
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 2.3: Schedule billboard for 2 viewings, 1 being in a time slot that matches another billboard scheduled-
+    //should take precedence over existing billboard scheduled
     @Test
     public void matchingSchedules2() throws Exception
     {
         //add billboards to billboardList
         billboardList.createEditBillboard("Billboard_1", "jarod", xmlFile);
-
-        //add billboards to billboardList
         billboardList.createEditBillboard("Billboard_1", "jarod", xmlFile);
-
         billboardList.createEditBillboard("Billboard_2", "jarod", xmlFile);
 
         //Schedule billboard 1 twice in vacant time slots
@@ -173,24 +157,19 @@ public class TestScheduleMultiMap {
 
         //extract time scheduled and duration from array list
         LocalDateTime startTimeScheduledB1 = timeDurationB1.get(0).startTimeScheduled;
-        Duration durationB1 = timeDurationB1.get(0).duration;
 
         //check if Billboard 1 is not scheduled for that time
         assertNotEquals(LocalDateTime.parse("2021-05-01T10:00:00.00"),startTimeScheduledB1);
     }
 
-    /**
-     * Test 2.4: Schedule billboard for 2 viewings, 1 being in a time slot that matches another billboard scheduled-
-     * should take precedence over existing billboard scheduled
-     * Start and end time of existing viewing is between start and end of new schedule
-     * @throws Exception if billboard does not exist and start time is invalid
-     */
+    //Test 2.4: Schedule billboard for 2 viewings, 1 being in a time slot that matches another billboard scheduled-
+    //should take precedence over existing billboard scheduled
+    //existing viewing is fully overlapped by new viewing
     @Test
     public void newScheduleFullOverlap() throws Exception
     {
         //add billboards to billboardList
         billboardList.createEditBillboard("Billboard_1","jarod", xmlFile);
-
         billboardList.createEditBillboard("Billboard_2","jarod", xmlFile);
 
         //Schedule billboard 1 - displayed from 10:00 -10:01
@@ -209,24 +188,20 @@ public class TestScheduleMultiMap {
         assertEquals(true, billboardSchedule.scheduleMultiMap.containsKey("Billboard_2"));
     }
 
-    /**
-     * Test 2.5: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
-     * When start times are equal
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 2.5: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
+    //start times of existing and new viewing are equal
     @Test
     public void overlapScheduleStartMatch() throws Exception
     {
         //add billboards to billboardList
         billboardList.createEditBillboard("Billboard_1", "jarod", xmlFile);
-
         billboardList.createEditBillboard("Billboard_2", "jarod", xmlFile);
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
         billboardSchedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-05-01T10:00:00.00"),
                 Duration.ofMinutes(10), 0,billboardList.listBillboards(), "jarod");
 
-        //Schedule billboard 2 in a non-vacant time slot from 10:00-10:05 on 01-05-2021
+        //Schedule billboard 2 in a non-vacant time slot from 10:00-10:05 on 01-05-2021, matching billboard 1 start time
         billboardSchedule.scheduleBillboard("Billboard_2", LocalDateTime.parse("2021-05-01T10:00:00.00"),
                 Duration.ofMinutes(5), 0,billboardList.listBillboards(),"jarod");
 
@@ -255,17 +230,13 @@ public class TestScheduleMultiMap {
         assertEquals(Duration.ofMinutes(5), durationB1);
     }
 
-    /**
-     * Test 2.6: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
-     * Start time between start and end of existing viewing scheduled
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 2.6: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
+    //new start time during duration of existing viewing
     @Test
     public void overlapScheduleStartBetween() throws Exception
     {
         //add billboards to billboardList
         billboardList.createEditBillboard("Billboard_1", "jarod", xmlFile);
-
         billboardList.createEditBillboard("Billboard_2", "jarod", xmlFile);
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
@@ -301,17 +272,13 @@ public class TestScheduleMultiMap {
         assertEquals(Duration.ofMinutes(5), durationB1);
     }
 
-    /**
-     * Test 2.7: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
-     * End time of new viewing is equal to end time of existing viewing
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 2.7: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
+    //End time of new viewing is equal to end time of existing viewing
     @Test
     public void overlapScheduleEndsEqual() throws Exception
     {
         //add billboards to billboardList
         billboardList.createEditBillboard("Billboard_1", "jarod", xmlFile);
-
         billboardList.createEditBillboard("Billboard_2", "jarod", xmlFile);
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
@@ -347,17 +314,13 @@ public class TestScheduleMultiMap {
         assertEquals(Duration.ofMinutes(5), durationB1);
     }
 
-    /**
-     * Test 2.8: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
-     * End time of new billboard during duration of existing viewing
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 2.8: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
+    //End time of new billboard is during the duration of an existing viewing
     @Test
     public void overlapScheduleEndsBetween() throws Exception
     {
         //add billboards to billboardList
         billboardList.createEditBillboard("Billboard_1", "jarod", xmlFile);
-
         billboardList.createEditBillboard("Billboard_2", "jarod", xmlFile);
 
         //Schedule billboard 1 in a vacant time slot from 10:00-10:10 on 01-05-2021
@@ -393,11 +356,8 @@ public class TestScheduleMultiMap {
         assertEquals(Duration.ofMinutes(5), durationB1);
     }
 
-    /**
-     * Test 2.9: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
-     * Start and end time between start and end of existing viewing scheduled
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 2.9: Schedule billboard that overlaps non-vacant time slot - should take precedence over existing billboard scheduled
+    //Start and end time of new viewing is during the duration of an existing viewing
     @Test
     public void overlapScheduleStartEndBetween() throws Exception
     {
@@ -448,19 +408,13 @@ public class TestScheduleMultiMap {
         assertEquals(Duration.ofMinutes(5), durationB1_2);
     }
 
-    /**
-     * Test 2.10: Schedule billboard that overlaps 2 non-vacant time slot - should take precedence over existing billboard scheduled
-     * Start and end time between start and end of existing viewing scheduled
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 2.10: Schedule billboard that overlaps 2 non-vacant time slots - should take precedence over existing billboard scheduled
     @Test
     public void overlap2Viewings() throws Exception
     {
         //add billboards to billboardList
         billboardList.createEditBillboard("Billboard_1", "jarod", xmlFile);
-
         billboardList.createEditBillboard("Billboard_2","jarod", xmlFile);
-
         billboardList.createEditBillboard("Billboard_3","jarod", xmlFile);
 
         //Schedule billboard 1 in a non-vacant time slot from 10:00-10:10 on 01-05-2021
@@ -474,7 +428,6 @@ public class TestScheduleMultiMap {
         //Schedule billboard 2 in a vacant time slot from 10:05-10:15 on 01-05-2021
         billboardSchedule.scheduleBillboard("Billboard_3",LocalDateTime.parse("2021-05-01T10:05:00.00"),
                 Duration.ofMinutes(10), 0,billboardList.listBillboards(), "jarod");
-
 
         //store scheduled time and duration of billboard 2 in an ArrayList
         ArrayList<ScheduleInfo> timeDurationB3 =  billboardSchedule.getSchedule("Billboard_3");
@@ -515,14 +468,13 @@ public class TestScheduleMultiMap {
 
     }
 
-
-    /**
-     * Test 3: Schedule billboard for an invalid time
-     * Date in the past
-     */
+    //Test 3: Schedule billboard for an invalid time
+    //Date in the past
     @Test
-    public void scheduleInvalidTime()
-    {
+    public void scheduleInvalidTime() throws Exception {
+        //add billboard to billboardList
+        billboardList.createEditBillboard("Billboard_1","jarod", xmlFile);
+
         assertThrows(Exception.class,() -> {
             //schedule billboard for date in the past
             billboardSchedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2000-01-01T10:00:00.00"),
@@ -530,15 +482,13 @@ public class TestScheduleMultiMap {
         });
     }
 
-    /**
-     * Test 4: Schedule billboard for an invalid duration
-     * Negative duration
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 4: Schedule billboard for an invalid duration
+    //Negative duration
     @Test
     public void scheduleNegDuration() throws Exception {
         //add billboard to billboardList
         billboardList.createEditBillboard("Billboard_1","jarod", xmlFile);
+
         assertThrows(Exception.class,() -> {
             //schedule billboard for negative duration
             billboardSchedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-01-01T10:00:00.00"),
@@ -546,15 +496,13 @@ public class TestScheduleMultiMap {
         });
     }
 
-    /**
-     * Test 4.1: Schedule billboard for an invalid duration
-     * Zero duratio
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 4.1: Schedule billboard for an invalid duration
+    //Zero duration
     @Test
     public void scheduleZerDuration() throws Exception {
         //add billboard to billboardList
         billboardList.createEditBillboard("Billboard_1","jarod", xmlFile);
+
         assertThrows(Exception.class,() -> {
             //schedule billboard for zero duration
             billboardSchedule.scheduleBillboard("Billboard_1",LocalDateTime.parse("2021-01-01T10:00:00.00"),
@@ -562,9 +510,7 @@ public class TestScheduleMultiMap {
         });
     }
 
-    /**
-     * Test 5: Schedule billboard that does not exist
-     */
+    //Test 5: Schedule billboard that does not exist
     @Test
     public void scheduleInvalidBillboard()
     {
@@ -575,9 +521,7 @@ public class TestScheduleMultiMap {
         });
     }
 
-    /**
-     * Test 6: Checks if exception is thrown when retrieving schedule information from a billboard that does not exist
-     */
+    //Test 6: Checks if exception is thrown when retrieving schedule information from a billboard that does not exist
     @Test
     public void retrieveInvalidBillboard()
     {
@@ -587,11 +531,7 @@ public class TestScheduleMultiMap {
         });
     }
 
-    /**
-     * Test 7: Checks if a billboard can be removed from the schedule.
-     * @throws Exception if billboard does not exist, billboard does not exist in schedule,
-     * start time is invalid or duration is invalid
-     */
+    //Test 7: Checks if a billboard can be removed from the schedule.
     @Test
     public void scheduleRemoveBillboard() throws Exception
     {
@@ -618,11 +558,7 @@ public class TestScheduleMultiMap {
         });
     }
 
-    /**
-     * Test 7.1: Checks if a single viewing of a billboard, scheduled multiple times, can be removed from the schedule.
-     * @throws Exception if billboard does not exist, billboard does not exist in schedule,
-     * start time is invalid or duration is invalid
-     */
+    //Test 7.1: Checks if a single viewing of a billboard, that has been scheduled multiple times, can be removed from the schedule.
     @Test
     public void scheduleRemoveSameBillboard() throws Exception
     {
@@ -653,11 +589,7 @@ public class TestScheduleMultiMap {
 
     }
 
-    /**
-     * Test 7.2: Remove scheduling of billboard that is not in the schedule - nonexistent name
-     * @throws Exception if billboard does not exist, billboard does not exist in schedule,
-     * start time is invalid or duration is invalid
-     */
+    //Test 7.2: Remove scheduling of billboard that is not in the schedule - nonexistent name
     @Test
     public void removeScheduleInvalidBillboardName() throws Exception
     {
@@ -671,11 +603,7 @@ public class TestScheduleMultiMap {
         });
     }
 
-    /**
-     * Test 7.3: Remove scheduling of billboard that is not in the schedule - nonexistent name,time & duration combination
-     * @throws Exception if billboard does not exist, billboard does not exist in schedule,
-     * start time is invalid or duration is invalid
-     */
+    //Test 7.3: Remove scheduling of billboard that is not in the schedule - nonexistent name & schedule info combination
     @Test
     public void removeScheduleInvalidBillboard() throws Exception
     {
@@ -689,7 +617,7 @@ public class TestScheduleMultiMap {
         billboardSchedule.scheduleBillboard("Billboard_1", LocalDateTime.parse("2021-05-11T10:00:00.00"), Duration.ofMinutes(10), 0,
                 billboardList.listBillboards(), "jarod");
 
-        //schedule info that does not match bb scheduled
+        //schedule info that does not match billboard scheduled
         ScheduleInfo scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-04T10:00:00.00"),
                 Duration.ofMinutes(15),0, "jarod");
 
@@ -699,10 +627,7 @@ public class TestScheduleMultiMap {
         });
     }
 
-    /**
-     * Test 8: Test if the billboard schedule can be viewed correctly.
-     * @throws Exception if billboard does not exist, start time is invalid or duration is invalid
-     */
+    //Test 8: Test if the billboard schedule can be viewed correctly.
     @Test
     public void viewSchedule() throws Exception {
         //add billboards to billboardList
@@ -737,5 +662,4 @@ public class TestScheduleMultiMap {
         assertEquals(Duration.ofMinutes(5), viewScheduleList.get("Billboard_3").get(0).duration);
 
     }
-
 }
