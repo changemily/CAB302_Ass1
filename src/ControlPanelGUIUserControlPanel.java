@@ -512,7 +512,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                     if(deleteUser.deleteUser()){ // if valid
                         String[] user_inputs = {"Delete User", intendedUser.Username}; // delete user
                         ControlPanelClient.runClient(user_inputs);
-                        user_inputs = new String[]{"List users", "Admin"}; // refresh user control panel
+                        user_inputs = new String[]{"List users", "Admin", ControlPanelClient.sessionToken}; // refresh user control panel
                         ControlPanelClient.runClient(user_inputs);
                         closeable = false;
                         dispose(); // close
