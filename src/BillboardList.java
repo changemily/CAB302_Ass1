@@ -110,7 +110,7 @@ public class BillboardList implements java.io.Serializable {
 
         try{
             //Get the info from schedule for the billboard
-            ArrayList<ScheduleInfo> viewings = scheduleMultiMap.getSchedule(billboardName);
+            ArrayList<ScheduleInfo> viewings = scheduleMultiMap.getViewings(billboardName);
 
             //for each scheduled viewing of the billboard
             for (ScheduleInfo viewing : viewings ) {
@@ -125,7 +125,7 @@ public class BillboardList implements java.io.Serializable {
                 ScheduleInfo scheduleInfo = new ScheduleInfo(startTimeScheduled,durationMins, recurrenceDelay, billboardCreator);
 
                 //remove viewing of billboard
-                scheduleMultiMap.scheduleRemoveBillboard(billboardName, scheduleInfo);
+                scheduleMultiMap.removeViewing(billboardName, scheduleInfo);
             }
             //The code for removing the billboard info from the billboardList.
             billboardHashMap.remove(billboardName);

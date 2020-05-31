@@ -2,11 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 import static javax.swing.JOptionPane.*;
-import static javax.swing.JOptionPane.CANCEL_OPTION;
 
 /**
  * Create/Edit User class for Control Panel GUI
@@ -537,7 +535,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
                         // set user inputs and run create user in control panel
                         String[] user_inputs = {"Create User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
-                        ControlPanelClient.Run_Client(user_inputs);
+                        ControlPanelClient.runClient(user_inputs);
 
                         // Close any control panels, before refresh
                         Frame[] allFrames = Frame.getFrames();
@@ -551,9 +549,9 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
                         // Refresh user control panel
                         //run Billboard Control Panel GUI
-                        String[] user_input = {"List users", "Admin"};
+                        String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
                         //request schedule and run calendar GUI
-                        ControlPanelClient.Run_Client(user_input);
+                        ControlPanelClient.runClient(user_input);
                     } else { // error, missing password
                         JOptionPane.showMessageDialog(this,
                                 "Missing password");
@@ -605,7 +603,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
                     // Edit user on the database
                     String[] user_inputs = {"Edit User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
-                    ControlPanelClient.Run_Client(user_inputs);
+                    ControlPanelClient.runClient(user_inputs);
 
                     // Close any control panels for refresh
                     Frame[] allFrames = Frame.getFrames();
@@ -618,8 +616,8 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                         dispose();
 
                         //run Billboard Control Panel GUI to refresh
-                        String[] user_input = {"List users", "Admin"};
-                        ControlPanelClient.Run_Client(user_input);
+                        String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
+                        ControlPanelClient.runClient(user_input);
                         forcedExit = false; // set exit to safe
                     } else { // only password screen, go back to gui home
                         dispose();
@@ -659,7 +657,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
                     // Update user, except for password change
                     String[] user_inputs = {"Edit User Keep Password", newUsername, createBillboard, scheduleBillboard, editBillboard, editUsers};
-                    ControlPanelClient.Run_Client(user_inputs);
+                    ControlPanelClient.runClient(user_inputs);
 
                     // Close any user control panel
                     Frame[] allFrames = Frame.getFrames();
@@ -672,9 +670,9 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                         dispose();
 
                         //run Billboard Control Panel GUI
-                        String[] user_input = {"List users", "Admin"};
+                        String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
                         //request schedule and run calendar GUI
-                        ControlPanelClient.Run_Client(user_input);
+                        ControlPanelClient.runClient(user_input);
                         forcedExit = false; // set exit to safe
                     } else { // only password screen, go back to gui home
                         dispose();

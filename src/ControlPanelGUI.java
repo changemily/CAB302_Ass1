@@ -3,15 +3,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static javax.swing.JOptionPane.YES_OPTION;
 import static javax.swing.JOptionPane.showConfirmDialog;
 
 /**
  * Control Panel GUI class
  * This class contains a Main method and method that creates a GUI window for the Control Panel GUI screen
  * @author - Nickhil Nischal
- * @version - under development
- *
+ * @version - Complete
  */
 public class ControlPanelGUI extends JFrame implements Runnable, ActionListener {
     private JButton logoutButton;
@@ -24,11 +22,17 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
     /**
      * Method used to create a GUI window for the Control Panel Menu
+     * @param username The user's username
+     * @param sessionToken The user's session token
      */
     public ControlPanelGUI(String username, String sessionToken){
         // Set window title
         super("Control Panel Menu");
+
+        // The user's username
         this.username = username;
+
+        // The user's session token
         this.sessionToken = sessionToken;
     }
 
@@ -90,7 +94,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         // Add all JLabel and JPanels to content pane
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-        getContentPane().add(Box.createVerticalStrut(20));
+        getContentPane().add(Box.createVerticalStrut(20)); // Border
         getContentPane().add(logoutPanel);
         getContentPane().add(Box.createVerticalStrut(50));
         getContentPane().add(label);
@@ -102,7 +106,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         getContentPane().add(editBillboardSchedulePanel);
         getContentPane().add(Box.createVerticalStrut(25));
         getContentPane().add(editPasswordChangePanel);
-        getContentPane().add(Box.createVerticalStrut(50));
+        getContentPane().add(Box.createVerticalStrut(50)); // Border
 
         // Format window
         pack(); // Pack all contents of the GUI
@@ -110,6 +114,11 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         setVisible(true); // Make GUI visible
     }
 
+    /**
+     * This method creates a JLabel, inside of a JPanel
+     * @param labelText The text of the JLabel
+     * @return Returns a JPanel
+     */
     private JPanel createLabel(String labelText) {
         // Create new JPanel
         JPanel labelPanel = new JPanel();
@@ -133,11 +142,19 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         return labelPanel;
     }
 
+    /**
+     * Creates a JButton, inside of a JPanel
+     * @param button The text displayed o the JButton
+     * @param strut1 The horizontal strut size to add before the JPanel
+     * @param strut2 The horizontal strut size to add after the JPanel
+     * @param horizontalGlue The boolean to specify whether horizontal glue is to be added or not
+     * @return Returns a JPanel
+     */
     private JPanel createButtonJPanel(JButton button, int strut1, int strut2, boolean horizontalGlue) {
         // Create new JPanel to hold button
         JPanel buttonPanel = new JPanel();
 
-        // Set box layout
+        // Set box layout on X Axis
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 
         // Add horizontal strut for formatting
@@ -162,6 +179,11 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         return buttonPanel;
     }
 
+    /**
+     * This method creates a JButton, given text to display inside of it
+     * @param buttonLabel The text to display inside the JButton
+     * @return Returns a JButton
+     */
     private JButton createButton(String buttonLabel) {
         // Create a JButton object and store it in a local variable
         JButton button = new JButton(buttonLabel);
@@ -177,6 +199,10 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
     }
 
 
+    /**
+     * Listens to button presses and performs the appropriate action/s
+     * @param actionEvent JButton pressed
+     */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         // Get button that has been clicked - event source
@@ -186,7 +212,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         if (buttonClicked == logoutButton) {
             // Remove users session token and proceed to the login screen
             String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
-            ControlPanelClient.Run_Client(user_input);
+            ControlPanelClient.runClient(user_input);
             // Close the GUI screen
             dispose();
         }
@@ -195,7 +221,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         else if (buttonClicked == editUsersButton) {
             // Open User Control Panel GUI
             String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
-            ControlPanelClient.Run_Client(user_input);
+            ControlPanelClient.runClient(user_input);
         }
 
         // If edit billboard JButton is clicked
@@ -203,7 +229,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             // Run Billboard Control Panel GUI
             String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
             // Request schedule and run calendar GUI
-            ControlPanelClient.Run_Client(user_input);
+            ControlPanelClient.runClient(user_input);
 
             // Close the GUI screen
             dispose();
@@ -213,39 +239,58 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         else if (buttonClicked == viewBillboardScheduleButton) {
             String [] userInput = {"View schedule", ControlPanelClient.sessionToken};
             //request schedule and run calendar GUI
-            ControlPanelClient.Run_Client(userInput);
+            ControlPanelClient.runClient(userInput);
         }
 
         // If password change JButton is clicked
         else if (buttonClicked == passwordChangeButton) {
             String [] user_input = {"List users", "Password", ControlPanelClient.sessionToken};
             //request schedule and run calendar GUI
-            ControlPanelClient.Run_Client(user_input);
+            ControlPanelClient.runClient(user_input);
 
             // Close the GUI screen
             dispose();
         }
-
     }
 
+    /**
+     * Populates and runs the GUI
+     */
     @Override
     public void run() {
+        // Try to run the GUI
         try {
             createGUI();
-        } catch (ClassNotFoundException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (ClassNotFoundException e) {
             e.printStackTrace();
+
+            // Show message dialog (popup)
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (InstantiationException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (InstantiationException e) {
             e.printStackTrace();
+
+            // Show message dialog (popup)
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalAccessException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (IllegalAccessException e) {
             e.printStackTrace();
+
+            // Show message dialog (popup)
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (UnsupportedLookAndFeelException e) {
+        }
+        // Catches an exception and displays an appropriate error message dialog
+        catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
+
+            // Show message dialog (popup)
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }

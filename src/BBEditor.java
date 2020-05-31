@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
 import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileSystemView;
@@ -534,9 +536,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 // if not, add one
                 if(frameCount == 0){
                     //run Billboard Control Panel GUI
-                    String [] user_input = {"List billboards"};
+                    String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
                     //request billboard list and run calendar GUI
-                    ControlPanelClient.Run_Client(user_input);
+                    ControlPanelClient.runClient(user_input);
                 }
             }
         }
@@ -718,8 +720,8 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         }
         dispose(); // dispose editor
         //run Billboard Control Panel GUI, creating new GUI
-        String [] user_input = {"List billboards"};
-        ControlPanelClient.Run_Client(user_input);
+        String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
+        ControlPanelClient.runClient(user_input);
     }
 
     /**
@@ -847,6 +849,13 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             Break = true;
         }
 
+        //Test if it worked
+        if (!Break) {
+            String[] user_inputs = {"Create edit billboard", billboardName, username, tempXMLString};
+
+            //Schedule billboard with viewing details given by user
+            ControlPanelClient.runClient(user_inputs);
+        }
         return Break;
     }
 
@@ -888,9 +897,9 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             // if no control panels update control panel
             if(frameCount == 0){
                 //run Billboard Control Panel GUI
-                String [] user_input = {"List billboards"};
+                String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
                 //request billboard list and run calendar GUI
-                ControlPanelClient.Run_Client(user_input);
+                ControlPanelClient.runClient(user_input);
             }
         }
     }
