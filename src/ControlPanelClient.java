@@ -211,14 +211,32 @@ public class ControlPanelClient {
         //Output clients request to the server
         oos.writeObject(buttonClicked);
         oos.writeObject(sessionToken);
-        //Read billboard list from server
-        HashMap<String, Billboard> BillboardList = (HashMap) ois.readObject();
-        // Listing billboards also requires a current user details
-        HashMap<String, User> userList = (HashMap) ois.readObject();
-        ScheduleMultiMap schedule = (ScheduleMultiMap) ois.readObject();
-        User currentUser = UserList.getUserInformation(userList, username);
-        //Open the billboard control panel using username, session token and the billboard list
-        SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel(username, sessionToken, BillboardList, currentUser, schedule));
+        Boolean validSession = ois.readBoolean();
+        if(validSession == true){
+            //Read billboard list from server
+            HashMap<String, Billboard> BillboardList = (HashMap) ois.readObject();
+            // Listing billboards also requires a current user details
+            HashMap<String, User> userList = (HashMap) ois.readObject();
+            ScheduleMultiMap schedule = (ScheduleMultiMap) ois.readObject();
+            User currentUser = UserList.getUserInformation(userList, username);
+            //Open the billboard control panel using username, session token and the billboard list
+            SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel(username, sessionToken, BillboardList, currentUser, schedule));
+        }else{
+            System.out.println("User session token: "+sessionToken);
+            JOptionPane optionPane = new JOptionPane("Your session has expired," +
+                    " please login and try again.", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Session Expired");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
+
+            Frame[] allFrames = Frame.getFrames();
+            for(Frame fr : allFrames){
+                if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                    fr.dispose();
+                }
+            }
+            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        }
     }
 
     /**
@@ -309,7 +327,7 @@ public class ControlPanelClient {
             System.out.println("User session token: "+sessionToken);
             JOptionPane optionPane = new JOptionPane("Your session has expired," +
                     " please login and try again.", JOptionPane.ERROR_MESSAGE);
-            JDialog dialog = optionPane.createDialog("Session Expired1");
+            JDialog dialog = optionPane.createDialog("Session Expired");
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
 
@@ -429,11 +447,18 @@ public class ControlPanelClient {
             }
         }else{
             System.out.println("User session token: "+sessionToken);
-            JOptionPane optionPane = new JOptionPane("Your session has expired," +
-                    " please login and try again.", JOptionPane.ERROR_MESSAGE);
-            JDialog dialog = optionPane.createDialog("Session Expired1");
+            JOptionPane optionPane = new JOptionPane("Users session has expired, please log in again.", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Session Token Expired");
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
+
+            Frame[] allFrames = Frame.getFrames();
+            for(Frame fr : allFrames){
+                if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                    fr.dispose();
+                }
+            }
+            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
         }
     }
 

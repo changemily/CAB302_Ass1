@@ -386,28 +386,21 @@ public class BillboardServer {
     private static void listBillboards(ObjectOutputStream oos, ObjectInputStream ois, BillboardList billboardList, UserList userList, ScheduleMultiMap billboardSchedule) throws Exception{
         //Get the users session token to validate the action
         String sessionToken = (String) ois.readObject();
-
+        //String sessionToken = "(String) ois.readObject()";
+        //For testing
+        //String sessionToken = "(String) ois.readObject()";
         //If session token is current
-        if(checkToken(sessionToken))
+        if(checkToken(sessionToken) == true)
         {
-            //Output to client
-            oos.writeObject(billboardList.listBillboards());
-            oos.writeObject(userList.listUsers());
-            oos.writeObject(billboardSchedule);
-
-            //Print billboard list sent to client
-            System.out.println("Sent to client:\n");
-            System.out.println("billboard list: "+ billboardList.listBillboards());
+            oos.writeBoolean(true);
         }else {
-            // Display error pop up
-            JOptionPane optionPane = new JOptionPane("Users session has expired, please log in again."
-                    , JOptionPane.ERROR_MESSAGE);
-            JDialog dialog = optionPane.createDialog("Session Token Expired");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);
-            //open login screen
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            oos.writeBoolean(false);
         }
+
+        //Output to client
+        oos.writeObject(billboardList.listBillboards());
+        oos.writeObject(userList.listUsers());
+        oos.writeObject(billboardSchedule);
     }
 
     /**
@@ -495,7 +488,9 @@ public class BillboardServer {
      */
     private static void viewSchedule(ObjectOutputStream oos, ObjectInputStream ois, ScheduleMultiMap billboardSchedule, UserList userList) throws IOException, ClassNotFoundException {
         MultiMap<String, ScheduleInfo> schedule = billboardSchedule.viewSchedule();
-        String sessionToken = "(String) ois.readObject()";
+        String sessionToken = (String) ois.readObject();
+        //For testing
+        //String sessionToken = "(String) ois.readObject()";
         //If session token is current
         if(checkToken(sessionToken) == true)
         {
@@ -1014,20 +1009,16 @@ public class BillboardServer {
         //Get the users session token to validate the action
         String sessionToken = (String) ois.readObject();
         //If session token is current
-        if(checkToken(sessionToken))
+        //String sessionToken = "(String) ois.readObject()";
+        //If session token is current
+        if(checkToken(sessionToken) == true)
         {
-            //If valid user then return the userlist
-            oos.writeObject(userList.listUsers());
+            oos.writeBoolean(true);
         }else {
-            // Display error pop up
-            JOptionPane optionPane = new JOptionPane("Users session has expired, please log in again."
-                    , JOptionPane.ERROR_MESSAGE);
-            JDialog dialog = optionPane.createDialog("Session Token Expired");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);
-            //open login screen
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            oos.writeBoolean(false);
         }
+        //If valid user then return the userlist
+        oos.writeObject(userList.listUsers());
     }
 
     /**
