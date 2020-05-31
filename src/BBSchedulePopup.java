@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -365,7 +364,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         //if schedule button is selected
         if (buttonClicked== scheduleBttn) {
             //store GUI inputs in user inputs array
-            String [] user_inputs = {"Schedule Billboard", billboardName,startTimeString, duration, recurrenceDelay};
+            String [] userInputs = {"Schedule Billboard", billboardName,startTimeString, duration, recurrenceDelay};
 
             //get current time
             LocalDateTime currentTime = LocalDateTime.now();
@@ -381,7 +380,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
             //if start time is valid
             else{
                 //schedule billboard
-                ControlPanelClient.Run_Client(user_inputs);
+                ControlPanelClient.runClient(userInputs);
 
                 //display confirmation message
                 showMessageDialog(null, "Billboard Successfully Scheduled");
@@ -417,7 +416,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                     boolean validSchedule = false;
                     //try retrieving schedule info of billboard
                     try {
-                        ArrayList<ScheduleInfo> viewings = billboardSchedule.getSchedule(billboardName);
+                        ArrayList<ScheduleInfo> viewings = billboardSchedule.getViewings(billboardName);
                         //for all viewings of the billboard
                         for(ScheduleInfo viewing : viewings)
                         {
@@ -433,10 +432,10 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                                 showMessageDialog(null, "Billboard Successfully Removed From Schedule");
 
                                 //store GUI inputs in user inputs array
-                                String [] user_inputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
+                                String [] userInputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
 
                                 //remove viewing from schedule
-                                ControlPanelClient.Run_Client(user_inputs);
+                                ControlPanelClient.runClient(userInputs);
 
                                 //dispose pop up and reopen billboard control panel
                                 frameRefresh();
@@ -483,9 +482,9 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
         }
         //dispose schedule infor pop up
         dispose();
-        String [] user_input = {"List billboards"};
+        String [] userInput = {"List billboards"};
         //request billboard list and run Billboard Control Panel GUI
-        ControlPanelClient.Run_Client(user_input);
+        ControlPanelClient.runClient(userInput);
     }
 
     /**

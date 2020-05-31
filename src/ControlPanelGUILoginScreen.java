@@ -204,7 +204,7 @@ public class ControlPanelGUILoginScreen extends JFrame implements Runnable, Acti
         if (buttonClicked == loginButton) {
             //Run control panel with the login request
             String[] user_inputs = {"Login request", userName, password};
-            ControlPanelClient.Run_Client(user_inputs);
+            ControlPanelClient.runClient(user_inputs);
 
 
 //            // Check if the provided credentials are correct, then if successful open Control Panel GUI

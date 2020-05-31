@@ -583,7 +583,7 @@ public class BillboardServer {
         billboardSchedule.clearDBschedule(connection);
 
         //remove viewing from schedule
-        billboardSchedule.scheduleRemoveBillboard(billboardName,scheduleInfo);
+        billboardSchedule.removeViewing(billboardName,scheduleInfo);
 
         //write schedule to DB
         billboardSchedule.writeToDBschedule(connection);
@@ -716,7 +716,7 @@ public class BillboardServer {
                 billboardSchedule.clearDBschedule(connection);
 
                 //Remove viewing from schedule
-                billboardSchedule.scheduleRemoveBillboard(billboardName, displayedSchedule);
+                billboardSchedule.removeViewing(billboardName, displayedSchedule);
 
                 //Write schedule changes to DB
                 billboardSchedule.writeToDBschedule(connection);
@@ -761,7 +761,7 @@ public class BillboardServer {
                 if(recurrenceDelay != 0)
                 {
                     //retrieve all viewings of billboard
-                    ArrayList<ScheduleInfo> billboardViewings = billboardSchedule.getSchedule(billboardName);
+                    ArrayList<ScheduleInfo> billboardViewings = billboardSchedule.getViewings(billboardName);
 
                     //convert recurrence delay to duration
                     Duration durationRecurrenceDelay = Duration.ofMinutes(recurrenceDelay);
