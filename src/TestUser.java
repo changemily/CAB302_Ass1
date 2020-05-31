@@ -68,28 +68,28 @@ class TestUser {
     @Test
     public void testDeleteUser() throws Exception {
         User john9 = new User("john9", "password1", "Create Billboards");
-        john9.DeleteUser();
+        john9.deleteUser();
     }
 
     //Test 6.1 Editing a username
     @Test
     public void testEditUsername() throws Exception {
         User john10 = new User("john10", "password1", "Create Billboards");
-        john10.EditUsername("john11");
+        john10.editUsername("john11");
     }
 
     //Test 7.1 Editing a password
     @Test
     public void testEditPassword() throws Exception {
         User john12 = new User("john12", "password1", "Create Billboards");
-        john12.EditPassword("password2");
+        john12.editPassword("password2");
     }
 
     //Test 8.1 Removing a permission
     @Test
     public void testRemovePermission() throws Exception {
         User john13 = new User("john13", "password1", "Create Billboards", "Edit All Billboards");
-        john13.RemovePermissions("Edit All Billboards");
+        john13.removePermissions("Edit All Billboards");
     }
 
     //Test 8.2 Removing a permission - invalid permission
@@ -97,7 +97,7 @@ class TestUser {
     public void testRemovePermissionInvalid1() throws Exception {
         assertThrows(Exception.class, () -> {
             User john14 = new User("john14", "password1", "Create Billboards", "Edit All Billboards");
-            john14.RemovePermissions("Edit Any Billboards");
+            john14.removePermissions("Edit Any Billboards");
         });
     }
 
@@ -105,7 +105,7 @@ class TestUser {
     @Test
     public void testAddPermission() throws Exception {
         User john15 = new User("john15", "password1", "Create Billboards");
-        john15.AddPermissions("Edit All Billboards");
+        john15.addPermissions("Edit All Billboards");
     }
 
     //Test 9.2 Adding a permission - invalid permission
@@ -113,7 +113,7 @@ class TestUser {
     public void testAddPermissionInvalid1() throws Exception {
         assertThrows(Exception.class, () -> {
             User john16 = new User("john16", "password1", "Create Billboards");
-            john16.AddPermissions("Edit Any Billboards");
+            john16.addPermissions("Edit Any Billboards");
         });
     }
 }
