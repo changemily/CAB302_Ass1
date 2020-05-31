@@ -160,7 +160,7 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
         // Check user doesn't exist
         for(String username : userHashMap.keySet()){
             if(username.equals(newUser.Username)) {
-                throw new Exception("Username already exists, pick a new one.");
+                userHashMap.replace(newUser.Username, newUser);
             }
         }
         // Add user
