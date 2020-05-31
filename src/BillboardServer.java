@@ -143,7 +143,7 @@ public class BillboardServer {
                         billboardSchedule.retrieveDBschedule(connection);
                         billboardList.RetrieveDBbillboardList(connection);
                         userList.retrieveUsersFromDB(connection);
-                        listBillboards(oos, billboardList, userList, billboardSchedule);
+                        listBillboards(oos, ois, billboardList, userList, billboardSchedule);
                         break;
                     case "Get Billboard info":
                         //write billboard info to client
@@ -383,15 +383,31 @@ public class BillboardServer {
      * @param billboardList the list being sent to the client
      * @throws Exception
      */
-    private static void listBillboards(ObjectOutputStream oos, BillboardList billboardList, UserList userList, ScheduleMultiMap billboardSchedule) throws Exception{
-        //Output to client
-        oos.writeObject(billboardList.listBillboards());
-        oos.writeObject(userList.listUsers());
-        oos.writeObject(billboardSchedule);
+    private static void listBillboards(ObjectOutputStream oos, ObjectInputStream ois, BillboardList billboardList, UserList userList, ScheduleMultiMap billboardSchedule) throws Exception{
+        //Get the users session token to validate the action
+        String sessionToken = (String) ois.readObject();
 
-        //Print billboard list sent to client
-        System.out.println("Sent to client:\n");
-        System.out.println("billboard list: "+ billboardList.listBillboards());
+        //If session token is current
+        if(checkToken(ControlPanelClient.sessionToken))
+        {
+            //Output to client
+            oos.writeObject(billboardList.listBillboards());
+            oos.writeObject(userList.listUsers());
+            oos.writeObject(billboardSchedule);
+
+            //Print billboard list sent to client
+            System.out.println("Sent to client:\n");
+            System.out.println("billboard list: "+ billboardList.listBillboards());
+        }else {
+            // Display error pop up
+            JOptionPane optionPane = new JOptionPane("Users session has expired, please log in again."
+                    , JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Session Token Expired");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
+            //open login screen
+            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        }
     }
 
     /**
@@ -876,31 +892,25 @@ public class BillboardServer {
 
     /**
      * Checks the Hashmap of Tokens for the users token
-     * @param oos Object Output stream of Server
-     * @param oois ObjectInputStream
      * @throws IOException
      */
-    private void checkToken(ObjectOutputStream oos, ObjectInputStream oois) throws IOException, ClassNotFoundException {
-        //Get the user inputted token
-        String userToken = oois.readObject().toString();
-
+    private static boolean checkToken(String userToken) throws IOException, ClassNotFoundException {
         //Boolean for checking existance of session token
         Boolean tokenExists = false;
         //Check the user inputted token
         for(Map.Entry<Integer, String> entry : SessionTokenListHashmap.entrySet()){
             //If the user token exists in the hashmap then return a true value.
-            if(entry.getValue() == userToken) {
+            if(entry.getValue().equals(userToken)) {
                 tokenExists = true;
-                oos.writeChars("Valid Token");
+                //The token is valid return true
+                return true;
             }else{
                 //Token doesn't exist in the hashmap
                 tokenExists = false;
             }
         }
-        //If the token wasn't found in the hashmap then it has expired
-        if(tokenExists == false){
-            oos.writeChars("Token has expired.");
-        }
+        //If not found return false indicating the token is invalid or does not exist
+        return false;
     }
 
 

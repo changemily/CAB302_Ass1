@@ -11,12 +11,13 @@ import static javax.swing.JOptionPane.CANCEL_OPTION;
 /**
  * Create/Edit User class for Control Panel GUI
  * This class contains a Main method and method that creates a GUI window for the Create/Edit User Screen
- * @author - Nickhil Nischal
+ * @author - Nickhil Nischal (GUI), Harry Estreich (buttons & permissions)
  * @version - under development
  *
  * NOTES: Some functionality still needs to be added
  */
 public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener, WindowListener {
+    // Components
     private JTextField usernameField;
     private JTextField password;
     private JButton saveExitButton;
@@ -25,31 +26,49 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
     private JCheckBox scheduleBillboardsBox;
     private JCheckBox editAllBillboardsBox;
     private JCheckBox editUsersBox;
+
+    // Global variables
     String username;
     String sessionToken;
-    boolean adminUser;
-    boolean newUser;
-    boolean selfUser;
     User targetUser;
     HashMap<String, User> userList;
-    boolean forcedExit = true;
+
+    // Global booleans
+    boolean adminUser; // true if user has Edit Users
+    boolean newUser; // true if creating a user
+    boolean selfUser; // true if editing own user
+    boolean forcedExit = true; // true if exits without set plan, not when button pressed
 
     /**
-     * Method used to create a GUI window for the Create/Edit User Screen
+     * First of two constructors for this class, this one is for creating new user, only log in user and list of users are required3
+     * @param   username username of logged in user
+     * @param   sessionToken sessionToken of logged in user
+     * @param   userList HashMap of users
+     * @throws  Exception throws exception when creating user if permissions fail
      */
-    public ControlPanelGUICreateEditUser(String username, String sessionToken, boolean newUser, HashMap<String, User> userList) throws Exception {
+    public ControlPanelGUICreateEditUser(String username, String sessionToken, HashMap<String, User> userList) throws Exception {
         // Set window title
-        super("Create/Edit User");
+        super("Create User");
         this.username = username;
         this.sessionToken = sessionToken;
         this.adminUser = true;
-        this.newUser = newUser;
+        this.newUser = true;
         this.targetUser = new User("", "", "");
         this.userList = userList;
     }
 
+    /**
+     * Second of two constructors for this class, this one is for editing a user, along with username and sessionToken, the
+     * target user, whether it is a adminUser, whether it is on the logged in user, and the list of users are required
+     * @param   username username of logged in user
+     * @param   sessionToken sessionToken of logged in user
+     * @param   targetUser target user of edit
+     * @param   adminUser whether user has/requires Edit Users
+     * @param   selfUser whether this is a self edit
+     * @param   userList HashMap of users
+     */
     public ControlPanelGUICreateEditUser(String username, String sessionToken, User targetUser, boolean adminUser, boolean selfUser, HashMap<String, User> userList){
-        super("Create/Edit User");
+        super("Edit User");
         this.username = username;
         this.sessionToken = sessionToken;
         this.adminUser = adminUser;
@@ -93,15 +112,18 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         password = newTextField(leftPanel);
         password.setEditable(false);
 
+        // If new user
         if(newUser) {
             usernameField.setEditable(true);
             password.setText("");
+            password.setEditable(true);
         }
         else{
             usernameField.setEditable(false);
             usernameField.setText(targetUser.Username);
             password.setText("Click to Change");
         }
+
         password.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -345,7 +367,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
             //run save info, and close window
             if(!usernameField.getText().equals("")) {
                 if (newUser) {
-                    if(password.getText().equals("")) {
+                    if(!password.getText().equals("")) {
                         String newUsername = usernameField.getText();
                         String newPassword = null;
                         try {
