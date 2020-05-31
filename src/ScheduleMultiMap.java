@@ -382,7 +382,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
      * @param scheduleInfo schedule info of viewing being removed
      * @throws Exception throws exception if the billboard does not exist in the schedule or if the viewing does not exist
      */
-    public void scheduleRemoveBillboard(String billboardName, ScheduleInfo scheduleInfo) throws Exception
+    public void removeViewing(String billboardName, ScheduleInfo scheduleInfo) throws Exception
     {
         //boolean variable to track whether billboard is in schedule
         boolean billboardExists = false;
@@ -450,7 +450,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
      * @return an array list of the schedule information, for each of the billboard's viewing
      * @throws Exception throws exception if the billboard does not exist in the schedule
      */
-    public ArrayList<ScheduleInfo> getSchedule(String billboardName) throws Exception
+    public ArrayList<ScheduleInfo> getViewings(String billboardName) throws Exception
     {
         //array list to store scheduled times of single billboard
         ArrayList<ScheduleInfo> singleBBschedule = new ArrayList<>();

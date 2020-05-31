@@ -4,7 +4,8 @@ import java.util.*;
 /**
  * Sourced from https://www.techiedelight.com/implement-multimap-java/
  * MultiMap class
- * This class implements a multimap object and methods which retrieve information and manipulate the multimap
+ * This class allows you to create a multimap object that is serializable and contains methods
+ * which retrieve information and manipulate the multimap.
  * @author Emily Chang
  * @param <K> MultiMap key
  * @param <V> MultiMap Value

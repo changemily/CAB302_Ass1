@@ -459,7 +459,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 boolean creatorCheck = billboardCreator.equals(currentUsername);
                 boolean scheduleCheck;
                 try {
-                    schedule.getSchedule(billboardName);
+                    schedule.getViewings(billboardName);
                     scheduleCheck = true;
                 }
                 catch (Exception e) {
@@ -586,7 +586,7 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 boolean creatorCheck = billboardCreator.equals(currentUsername);
                 boolean scheduleCheck;
                 try {
-                    schedule.getSchedule(billboardName);
+                    schedule.getViewings(billboardName);
                     scheduleCheck = true;
                 }
                 catch (Exception e) {
@@ -601,10 +601,10 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                             //adjust user inputs to delete given billboard
                             String[] user_inputs = {"Delete billboard", billboardName};
                             //Delete billboard with viewing details given by user
-                            ControlPanelClient.Run_Client(user_inputs);
+                            ControlPanelClient.runClient(user_inputs);
                             //Refresh control panel
                             user_inputs = new String[]{"List billboards"};
-                            ControlPanelClient.Run_Client(user_inputs);
+                            ControlPanelClient.runClient(user_inputs);
                             closeable = false;
                             dispose();
                             //JOptionPane.showMessageDialog(this,

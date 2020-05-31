@@ -21,7 +21,7 @@ public class ControlPanelClient {
     /**
      * Sends requests to Server
      */
-    public static void Run_Client(String [] userInputs){
+    public static void runClient(String [] userInputs){
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
