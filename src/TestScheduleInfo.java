@@ -40,7 +40,7 @@ public class TestScheduleInfo {
         assertEquals(MINUTES_IN_HOUR, scheduleInfo.recurrenceDelay);
     }
 
-    //Test 4: construct schedule info object that recurs every 3 mins
+    //Test 4: construct a schedule info object that recurs every 3 mins
     @Test
     public void recurrenceMin() throws Exception {
         scheduleInfo = new ScheduleInfo(LocalDateTime.parse("2021-05-26T10:00:00"), Duration.ofMinutes(1),
