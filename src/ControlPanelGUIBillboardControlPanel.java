@@ -472,11 +472,13 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
 
         // Checks if the logout button has been clicked
         else if (buttonClicked == logoutButton) {
-            // Closes current GUI screen
-            dispose();
             closeable = false;
             // Open new Login screen
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            // Remove users session token and proceed to the login screen
+            String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
+            ControlPanelClient.runClient(user_input);
+            // Close the GUI screen
+            dispose();
         }
 
         // Checks if the edit billboard button has been clicked
