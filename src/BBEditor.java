@@ -12,7 +12,6 @@ import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
 import javax.swing.filechooser.FileSystemView;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -480,7 +479,22 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             }
             else if(a == NO_OPTION)
             {
+                int frameCount = 0;
+                Frame[] allFrames = Frame.getFrames();
+                for(Frame fr : allFrames){
+                    if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
+                        if(fr.isVisible()){
+                            frameCount += 1;
+                        }
+                    }
+                }
                 dispose();
+                if(frameCount == 0){
+                    //run Billboard Control Panel GUI
+                    String [] user_input = {"List billboards"};
+                    //request billboard list and run calendar GUI
+                    ControlPanelClient.Run_Client(user_input);
+                }
             }
         }
 
@@ -845,7 +859,22 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         }
         else if(a == NO_OPTION)
         {
+            int frameCount = 0;
+            Frame[] allFrames = Frame.getFrames();
+            for(Frame fr : allFrames){
+                if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
+                    if(fr.isVisible()){
+                        frameCount += 1;
+                    }
+                }
+            }
             dispose();
+            if(frameCount == 0){
+                //run Billboard Control Panel GUI
+                String [] user_input = {"List billboards"};
+                //request billboard list and run calendar GUI
+                ControlPanelClient.Run_Client(user_input);
+            }
         }
         else if(a == CANCEL_OPTION){
             // do nothing
