@@ -69,6 +69,9 @@ public class BillboardServer {
 
         connection = DBconnection.getInstance();
 
+        //print message to command line verifying DB connection
+        System.out.println("Successfully connected to the database");
+
         //check if tables exist in DB, if not adds tables
         checkTables(connection);
 
@@ -311,8 +314,6 @@ public class BillboardServer {
         System.out.println("Inputted Final product: "+userInfos[0]);
         System.out.println("Salt String from method2: "+userInfos2[1]);
         System.out.println("Inputted Final product2: "+userInfos2[0]);
-
-
 
         //Add a salt to the user inputted hashed password
         //String inputtedPasswordSalted = (messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
@@ -647,13 +648,11 @@ public class BillboardServer {
             //store number of schedule table rows in local int
             rowResultSet.next();
             numDBRows = rowResultSet.getInt(1);
-            System.out.println("rows in DB:" +numDBRows);
         }
         catch (Exception e)
         {
             //if no rows are in DB set numDBRows to 0
             numDBRows = 0;
-            System.out.println("rows in DB:" +numDBRows);
         }
         //create 2D array that stores the contents of each row in the DB
         queue = new String[numDBRows][5];
