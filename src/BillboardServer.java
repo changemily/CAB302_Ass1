@@ -495,32 +495,20 @@ public class BillboardServer {
      */
     private static void viewSchedule(ObjectOutputStream oos, ObjectInputStream ois, ScheduleMultiMap billboardSchedule, UserList userList) throws IOException, ClassNotFoundException {
         MultiMap<String, ScheduleInfo> schedule = billboardSchedule.viewSchedule();
-        //Get the users session token to validate the action
         String sessionToken = "(String) ois.readObject()";
         //If session token is current
         if(checkToken(sessionToken) == true)
         {
-            //If valid user then return the schedule
-            //send schedule to client
-            oos.writeObject(schedule);
-            oos.writeObject(userList.listUsers());
-            //print schedule that was sent to client
-            System.out.println("Sent to client:\n");
-            System.out.println("Schedule: "+schedule+"\n");
+            oos.writeBoolean(true);
         }else {
-            //oos.writeObject("Session not valid");
-            // Display error pop up
-            System.out.println("User session token: "+sessionToken);
-            JOptionPane optionPane = new JOptionPane("Your session has expired," +
-                    " please login and try again.", JOptionPane.ERROR_MESSAGE);
-            JDialog dialog = optionPane.createDialog("Session Expired1");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);
+            oos.writeBoolean(false);
         }
-        oos.writeObject("Session not valid");
-        //force logout the user
-        //String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
-        //ControlPanelClient.Run_Client(user_input);
+        //send schedule to client
+        oos.writeObject(schedule);
+        oos.writeObject(userList.listUsers());
+        //print schedule that was sent to client
+        System.out.println("Sent to client:\n");
+        System.out.println("Schedule: "+schedule+"\n");
     }
 
    /**
