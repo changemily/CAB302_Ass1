@@ -74,11 +74,11 @@ public class BillboardViewerClient {
                 //flush output stream
                 oos.flush();
 
-                //retrieve name of currently displayed billboard
+                //retrieve xml file of currently displayed billboard
                 String xmlFile = ois.readObject().toString();
 
                 //display billboard on viewer
-                ViewerGUI(billboardGUI, billboardPanel, xmlFile);
+                viewerGUI(billboardGUI, billboardPanel, xmlFile);
                 billboardGUI.pack();
                 billboardGUI.setVisible(true);
 
@@ -90,7 +90,7 @@ public class BillboardViewerClient {
             catch(ConnectException e) //unable to establish connection with server
             {
                 //display "unable to connect to server" error screen
-                ViewerGUI(billboardGUI, billboardPanel, serverErrorXML);
+                viewerGUI(billboardGUI, billboardPanel, serverErrorXML);
                 billboardGUI.pack();
                 billboardGUI.setVisible(true);
             }
@@ -113,7 +113,7 @@ public class BillboardViewerClient {
      * @throws SAXException Thrown if xml string is invalid
      * @throws ParserConfigurationException Thrown if xml string is invalid
      */
-    private static void ViewerGUI(JFrame billboardGUI, JPanel billboardPanel, String xmlString) throws IOException, SAXException, ParserConfigurationException {
+    private static void viewerGUI(JFrame billboardGUI, JPanel billboardPanel, String xmlString) throws IOException, SAXException, ParserConfigurationException {
         //if panel contains a display
         if(billboardPanel != null){
             //clear panel

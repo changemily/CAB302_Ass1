@@ -26,7 +26,7 @@ public class TestScheduleMultiMap {
         billboardList = new BillboardList();
     }
 
-    //Test 1: Constructing a schedule HashMap object
+    //Test 1: Constructing a schedule ScheduleMultiMap object
     @BeforeEach
     @Test public void setUpBbSchedule() {
         billboardSchedule = new ScheduleMultiMap();

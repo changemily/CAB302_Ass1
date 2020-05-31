@@ -9,15 +9,9 @@ public class TestBillboard {
             "    <information>Billboard with picture (with URL attribute) and information text only. The picture is now centred within the top 2/3 of the image and the information text is centred in the remaining space below the image.</information>\n" +
             "</billboard>";
 
-    //Test 1: Constructing a Billboard object with an image
+    //Test 1: Constructing a Billboard object
     @BeforeEach @Test
     public void setUpBillboard() {
         new Billboard("Billboard 1",  "jarod", xmlFile);
-    }
-
-    @Test
-    //Test 2: Constructing a Billboard object without image
-    public void setUpBillboardImg() {
-        //new Billboard("Billboard 2", "Hello World", "red", "No Image","jarod");
     }
 }
