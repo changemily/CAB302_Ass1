@@ -160,14 +160,6 @@ public class ControlPanelClient {
         String username = userInputs[1];
         String pwd = userInputs[2];
         System.out.println("pwd in user array: "+pwd);
-//        //turn password into bytes
-//        MessageDigest md = MessageDigest.getInstance("SHA-256");
-//        byte[] passwordBytes = md.digest(pwd.getBytes());
-//
-//        //hash password
-//        String hashedPassword = hash(passwordBytes);
-//        System.out.println("Hashed pwd : " + hashedPassword);
-
         String hashedPassword = UserManager.hashPassword(pwd);
         System.out.println("Hashed Password from control panel in login request: "+hashedPassword);
 
@@ -178,9 +170,7 @@ public class ControlPanelClient {
 
         Boolean validUser = ois.readBoolean();
         String SessionToken = (String) ois.readObject();
-        //String sessionToken = (String) ois.readObject();
         if(validUser == true){
-
             //If the user is valid set them as the default user in the control panel
             ControlPanelClient.username = username;
             ControlPanelClient.sessionToken = SessionToken;

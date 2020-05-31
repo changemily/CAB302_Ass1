@@ -119,26 +119,10 @@ public class BillboardServer {
                 switch(clientRequest)
                 {
                     case "Login request":
-                        //retrieve username
-                        //String username = ois.readObject().toString();
-                        //retrieve hashed pwd from client
-                        //String password = ois.readObject().toString();
-
-                        //System.out.println("Username: " +username);
-                        //System.out.println("Password: " +password);
-
                         saltAndCheckUserCredentials(ois, oos, connection);
-
-                        //retrieve salted pwd from DB
-                        //unsalt pwd
-                        //check if hashed pwd match
-                        //if match return session token
-                        //else returns error to client
                         break;
                     case "Logout request":
                         //retrieve sessionToken
-                        //String sessionToken = ois.readObject().toString();
-                        //System.out.println("Username: " +sessionToken);
                         logoutRequest(oos, ois);
                         break;
                     case "List billboards":
@@ -282,9 +266,6 @@ public class BillboardServer {
      * @throws Exception
      */
     private static void saltAndCheckUserCredentials(ObjectInputStream ois, ObjectOutputStream oos, Connection connection) throws SQLException, IOException, ClassNotFoundException, NoSuchAlgorithmException {
-        //Setup ready for hashing
-        //MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-
         //Get the inputted username hashed password
         String userName = ois.readObject().toString();
         String hashedPassword = ois.readObject().toString();
@@ -304,29 +285,14 @@ public class BillboardServer {
             saltString = rs.getString(3);
         }
 
-        String createSalt = UserManager.createASalt();
+        //String createSalt = UserManager.createASalt();
         String[] userInfos = UserManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
-        String[] userInfos2 = UserManager.hashPasswordAndSalt(hashedPassword, saltString, messageDigester());
-
-        System.out.println("Database final product: "+saltedPasswordDB);
-        System.out.println("Inputted password hashed: "+hashedPassword);
-        System.out.println("Salt String from method: "+userInfos[1]);
-        System.out.println("Inputted Final product: "+userInfos[0]);
-        System.out.println("Salt String from method2: "+userInfos2[1]);
-        System.out.println("Inputted Final product2: "+userInfos2[0]);
-
-        //Add a salt to the user inputted hashed password
-        //String inputtedPasswordSalted = (messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
-        String inputtedPasswordSalted = userInfos[0];
-                //(messageDigest.digest((hashedPassword + saltString).getBytes())).toString();
-        String userPass = inputtedPasswordSalted;
 
         //Compare the two salted and hashed passwords
         if(userInfos[0].equals(saltedPasswordDB)){
             String sessionToken = BillboardServer.sessionToken("Valid");
             oos.writeBoolean(true);
             oos.writeObject(sessionToken);
-            //oos.writeObject(SessionToken);
         }else{
             // Display an Error Message Dialog, alerting the user that the entered credentials are incorrect
             JOptionPane optionPane = new JOptionPane("The entered username or password is incorrect," +
@@ -348,7 +314,6 @@ public class BillboardServer {
     private static void logoutRequest(ObjectOutputStream oos, ObjectInputStream ois) throws IOException, ClassNotFoundException {
         //Get the users token
         String userToken = (String) ois.readObject();
-        //String userToken = "reee";
         System.out.println("Token passed to the server: "+userToken);
         System.out.println("Token in token list: "+ SessionTokenListHashmap.get(1));
 
@@ -383,9 +348,6 @@ public class BillboardServer {
     private static void listBillboards(ObjectOutputStream oos, ObjectInputStream ois, BillboardList billboardList, UserList userList, ScheduleMultiMap billboardSchedule) throws Exception{
         //Get the users session token to validate the action
         String sessionToken = (String) ois.readObject();
-        //String sessionToken = "(String) ois.readObject()";
-        //For testing
-        //String sessionToken = "(String) ois.readObject()";
         //If session token is current
         if(checkToken(sessionToken) == true)
         {
@@ -486,8 +448,6 @@ public class BillboardServer {
     private static void viewSchedule(ObjectOutputStream oos, ObjectInputStream ois, ScheduleMultiMap billboardSchedule, UserList userList) throws IOException, ClassNotFoundException {
         MultiMap<String, ScheduleInfo> schedule = billboardSchedule.viewSchedule();
         String sessionToken = (String) ois.readObject();
-        //For testing
-        //String sessionToken = "(String) ois.readObject()";
         //If session token is current
         if(checkToken(sessionToken) == true)
         {
