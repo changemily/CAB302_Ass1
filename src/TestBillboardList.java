@@ -20,9 +20,7 @@ public class TestBillboardList<E> {
             "</billboard>";
 
 
-    //ArrayList<E> billboardValues;
     BillboardList billboardList = new BillboardList();
-    ScheduleMultiMap Billboard_Schedule = new ScheduleMultiMap();
 
     //Test 1: Creating an object for testing.
     @BeforeEach
@@ -33,7 +31,7 @@ public class TestBillboardList<E> {
 
     //Test 2: Checks if a billboard can be created and added to HashMap.
     @Test
-    public void add_Billboard() throws Exception
+    public void addBillboard() throws Exception
     {
         //Billboard with no scheduled viewing
         billboardList.createEditBillboard("Billboard1", "jarod", xmlFile);
@@ -47,9 +45,9 @@ public class TestBillboardList<E> {
 
     }
 
-    //Test 4: Checks if a billboard can be edited.
+    //Test 3: Checks if a billboard can be edited.
     @Test
-    public void Edit_Billboard() throws Exception {
+    public void editBillboard() throws Exception {
 
         //Create Billboard1
         billboardList.createEditBillboard("Billboard1", "jarod", xmlFile);
@@ -65,9 +63,9 @@ public class TestBillboardList<E> {
 
     }
 
-    //Test 5: Checks if all current billboards can be listed. Check for alphabetical order.
+    //Test 4: Checks if all current billboards can be listed. Check for alphabetical order.
     @Test
-    public void List_Billboards()
+    public void listBillboards()
     {
         //store billboard schedule in temp HashMap
         HashMap<String, Billboard> temp_list = billboardList.listBillboards();
@@ -79,9 +77,9 @@ public class TestBillboardList<E> {
         }
     }
 
-    //Test 6: Checks if all information pertaining to a specified billboard can be obtained.
+    //Test 5: Checks if all information pertaining to a specified billboard can be obtained.
     @Test
-    public void Get_billboard_info() throws Exception
+    public void getBillboardInfo() throws Exception
     {
         //Create a billboard to check
         billboardList.createEditBillboard("Billboard2", "jarod", xmlFile);
@@ -95,18 +93,18 @@ public class TestBillboardList<E> {
         assertEquals(xmlFile, temp_billboard.XMLFile);
     }
 
-    //Test 7: If Get_billboard_info attempts to retrieve information from a billboard that doesn't exist.
+    //Test 6: If Get_billboard_info attempts to retrieve information from a billboard that doesn't exist.
     @Test
-    public void no_info()
+    public void noInfo()
     {
         assertThrows(Exception.class, () -> {
             billboardList.getBillboardInfo("Billboard_1");
         });
     }
 
-    //Test 8: Checks if a specified billboard can be deleted.
+    //Test 7: Checks if a specified billboard can be deleted.
     @Test
-    public void Delete_billboard() throws Exception
+    public void deleteBillboard() throws Exception
     {
         //Create Billboard1
         billboardList.createEditBillboard("Billboard1", "jarod", xmlFile);
@@ -120,17 +118,15 @@ public class TestBillboardList<E> {
 
         //Check if the billboard was deleted
         assertFalse(billboardList.billboardHashMap.containsKey("Billboard1"));
-
     }
 
-    //Test 9: If Delete_billboard attempts to delete a billboard that doesn't exist.
+    //Test 8: If Delete_billboard attempts to delete a billboard that doesn't exist.
     @Test
-    public void no_billboard()
+    public void noBillboard()
     {
         assertThrows(Exception.class, () -> {
             billboardList.deleteBillboard("Billboard_1");
         });
     }
-
 }
 
