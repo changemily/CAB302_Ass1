@@ -296,9 +296,6 @@ public class ControlPanelClient {
                 for(Frame fr : allFrames){
                     if((fr.getClass().getName().equals("ControlPanelGUI"))){
                         fr.dispose();
-                        if((fr.getClass().getName().equals("ControlPanelGUI"))){
-                            fr.dispose();
-                        }
                     }
                 }
                 SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(username, sessionToken, schedule));
@@ -312,9 +309,6 @@ public class ControlPanelClient {
             for(Frame fr : allFrames){
                 if((fr.getClass().getName().equals("ControlPanelGUI"))){
                     fr.dispose();
-                    if((fr.getClass().getName().equals("ControlPanelGUI"))){
-                        fr.dispose();
-                    }
                 }
             }
             SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
