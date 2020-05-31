@@ -20,7 +20,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
  */
 public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, ActionListener, WindowListener {
 
-    // Billboard HashMap
+    // Billboard MultiMap
     private MultiMap billboardSchedule;
 
     // Number of days in each week
@@ -29,21 +29,23 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
     // Boolean for controlling whether a new instance of Control Panel GUI is opened when window is closed
     private boolean forcedClose = false;
 
-    // User's username
+    // current user's username
     String username;
 
-    // User's sessions token
+    // current user's sessions token
     String sessionToken;
 
-    // Clickable buttons
     private JButton backButton;
     private JButton logoutButton;
 
+    // Create int array that stores number of entries per row
+    int[][] numEntriesPerRow = new int[24][1];
+
     /**
      * Method used to create a GUI window for the Billboard Schedule Screen
-     * @param username Used for setting the username
+     * @param username current username of user logged in
      * @param sessionToken The sessionToken associated with the user
-     * @param schedule A list of billboards passed in
+     * @param schedule current billboard schedule
      */
 
     public ControlPanelGUIBillboardSchedule(String username, String sessionToken, MultiMap schedule) {
@@ -293,6 +295,9 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
 
                     // Populate cell with new string
                     data[billboardHour][dayInt] = cellString; // Change this line to "BillboardName by User"
+
+                    //add to number of lines entered in row of cell
+                    numEntriesPerRow[billboardHour][0]++;
                 }
             }
         }
@@ -319,6 +324,12 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         // Populate string array with times in a day (24 hours)
         String[] times = tableTimes();
 
+        //fill array with 1 as minimum row height is 1
+        for (int row_no = 0; row_no<24 ; row_no++)
+        {
+            numEntriesPerRow[row_no][0] = 1;
+        }
+
         // Populate string array with billboard data
         String[][] data = tableData();
 
@@ -332,6 +343,21 @@ public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable
         // Create and populate This Week JTable
         JTable thisWeek = new JTable(data, days);
 
+        //get row height of 1 text line
+        int textLineSize = thisWeek.getRowHeight();
+
+        //for every row in numEntriesPerRow table
+        for (int row_no = 0; row_no<24 ; row_no++)
+        {
+            //get number of lines in row
+            int numLines = numEntriesPerRow[row_no][0];
+            //calculate row height
+            int rowHeight = textLineSize * numLines;
+            //set row height to number of lines in cell
+            thisWeek.setRowHeight(row_no, rowHeight);
+            row_no ++;
+        }
+        
         // Makes cells uneditable by user
         thisWeek.setEnabled(false);
 
