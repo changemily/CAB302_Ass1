@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * Billboard Manager class
+ * Billboard List Class
  * Class contains methods for creating and controlling billboards.
  * @author - Jarod Evans
  * @version - Final
@@ -86,6 +86,9 @@ public class BillboardList implements java.io.Serializable {
      * @param billboardName Name of billboard being deleted
      */
     public void deleteBillboard(String billboardName) throws Exception {
+        //boolean variable to track whether billboard exists in schedule
+        boolean billboardExists = false;
+        Billboard billboardInfo = null;
         //The code for deleting the billboard info from the schedule.
         try{
             //Get the info from schedule for the billboard
@@ -106,8 +109,14 @@ public class BillboardList implements java.io.Serializable {
                 scheduleMultiMap.removeViewing(billboardName, scheduleInfo);
             }
             billboardHashMap.remove(billboardName);
+            billboardExists = true;
         }catch(Exception e){
             billboardHashMap.remove(billboardName);
+        }
+        //if billboard is not in list
+        if (billboardExists == false)
+        {
+            throw new Exception("The billboard does not exist in the billboard list");
         }
     }
 

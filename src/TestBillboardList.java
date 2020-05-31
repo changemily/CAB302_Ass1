@@ -1,13 +1,17 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Billboard List test class
+ * Class contains methods for testing the methods billboards.
+ * @author - Jarod Evans
+ * @version - Final
+ */
 public class TestBillboardList<E> {
     public static final String xmlFile = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
@@ -16,7 +20,7 @@ public class TestBillboardList<E> {
             "</billboard>";
 
 
-    ArrayList<E> billboardValues;
+    //ArrayList<E> billboardValues;
     BillboardList billboardList = new BillboardList();
     ScheduleMultiMap Billboard_Schedule = new ScheduleMultiMap();
 

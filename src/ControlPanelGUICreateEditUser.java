@@ -361,18 +361,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
 
         // Checks if the Save and Exit button has been clicked
         if (buttonClicked == saveExitButton) {
-            try {
-                if(BillboardServer.checkToken(sessionToken) == false){
-                    SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
-                    dispose();
-                }else{
                     saveAndExit(); // runs save and exit method
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
         }
         // Checks if the Exit Without Saving button has been clicked
         else if (buttonClicked == exitWithoutSaving) {
