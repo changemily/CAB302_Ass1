@@ -13,11 +13,10 @@ import java.util.Timer;
 
 /**
  * Billboard server class
- * Class contains methods for connecting to, receiving and sending info to a client over a port,
- * @author Emily Chang
- * @version 1 - under development
+ * Class contains methods for connecting to, receiving and sending info to a client over a port.
+ * @author Emily Chang & Jarod Evans
+ * @version Final
  */
-
 public class BillboardServer {
 
     private static final String CREATE_USER_TABLE =
@@ -121,29 +120,30 @@ public class BillboardServer {
                     case "Login request":
                         saltAndCheckUserCredentials(ois, oos, connection);
                         break;
+
                     case "Logout request":
-                        //retrieve sessionToken
                         logoutRequest(oos, ois);
                         break;
+
                     case "List billboards":
-                        //write billboard list to client
                         billboardSchedule.retrieveDBschedule(connection);
                         billboardList.retrieveDBbillboardList(connection);
                         userList.retrieveUsersFromDB(connection);
                         listBillboards(oos, ois, billboardList, userList, billboardSchedule);
                         break;
+
                     case "Get Billboard info":
-                        //write billboard info to client
                         getBillboardInfo(oos, ois, billboardList);
                         break;
+
                     case "Create edit billboard":
-                        //Write the new billboard to the DB
                         createEditBillboard(ois, connection, billboardList);
                         break;
+
                     case "Delete billboard":
-                        //Write the delete to the db
                         deleteBillboard(ois, connection, billboardList);
                         break;
+
                     case "View schedule":
                         billboardList.retrieveDBbillboardList(connection);
                         userList.retrieveUsersFromDB(connection);
@@ -151,32 +151,35 @@ public class BillboardServer {
                         break;
 
                     case "Schedule Billboard":
-                        //schedule billboard
                         scheduleBillboard(ois, connection, billboardList, billboardSchedule);
                         billboardSchedule.retrieveDBschedule(connection);
                         break;
 
                     case "Remove Schedule":
-                        //remove viewing from schedule
                         removeSchedule(ois,connection,billboardSchedule, billboardList);
                         break;
+
                     case "List users":
                         userList.retrieveUsersFromDB(connection);
                         listUsers(oos, ois, userList);
                         break;
+
                     case "Create User":
                         userList.retrieveUsersFromDB(connection);
                         createUser(ois, connection, userList);
                         break;
+
                     case "Delete User":
                         userList.retrieveUsersFromDB(connection);
                         deleteUser(ois, connection, userList);
                         break;
+
                     case "Edit User":
                         userList.retrieveUsersFromDB(connection);
                         deleteUser(ois, connection, userList);
                         createUser(ois, connection, userList);
                         break;
+
                     case "Edit User Keep Password":
                         userList.retrieveUsersFromDB(connection);
                         User userInformation = UserList.getUserInformation(userList.listUsers(), ois.readObject().toString());
@@ -185,15 +188,13 @@ public class BillboardServer {
                         deleteUser(ois, connection, userList);
                         createUserWithPassword(ois, connection, userList, password, salt);
                         break;
+
                     case "Run Billboard Viewer":
                         Connection finalConnection = connection;
-
                         //send details of currently displayed billboard to Viewer client
                         runViewer(oos, billboardList, billboardSchedule, finalConnection);
-
                     default:
                 }
-
                 oos.close();
                 ois.close();
                 socket.close();
@@ -205,11 +206,13 @@ public class BillboardServer {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        //close connection to client
         connection.close();
     }
 
+    /**
+     * Method used to instantiate a message digester.
+     * @return message digester
+     */
     public static MessageDigest messageDigester() throws NoSuchAlgorithmException {
         //Message digest for the password salting
         //Setup ready for hashing
@@ -306,7 +309,7 @@ public class BillboardServer {
     }
 
     /**
-     * Uses the users session token to remove session token in the event the user logs out
+     * Uses the users session token to remove session token in the event the user logs out.
      * @param oos Object Output stream of Server
      * @param ois ObjectInputStream
      * @throws IOException
@@ -340,9 +343,12 @@ public class BillboardServer {
     }
 
     /**
-     * Sends a list of billboards to the client
+     * Sends a list of billboards to the client.
      * @param oos Object output stream of the server
+     * @param ois Object output stream of the server
      * @param billboardList the list being sent to the client
+     * @param userList A list of users
+     * @param billboardSchedule a multimap of the billboard schedules
      * @throws Exception
      */
     private static void listBillboards(ObjectOutputStream oos, ObjectInputStream ois, BillboardList billboardList, UserList userList, ScheduleMultiMap billboardSchedule) throws Exception{
@@ -385,10 +391,10 @@ public class BillboardServer {
     }
 
     /**
-     * Sends a get info request to the server
+     * Sends a get info request to the server.
      * @param ois Object input stream of server
      * @param connection connection to the db
-     * @param billboardList
+     * @param billboardList A list of billboards
      * @throws IOException
      */
     private static void createEditBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList) throws Exception {
@@ -442,7 +448,8 @@ public class BillboardServer {
     /**
      * Sends schedule to client as a MultiMap
      * @param oos Object Output stream of Server
-     * @param billboardSchedule schedule being sent to Client
+     * @param ois Object Input stream of server
+     * @param userList schedule being sent to Client
      * @throws IOException
      */
     private static void viewSchedule(ObjectOutputStream oos, ObjectInputStream ois, ScheduleMultiMap billboardSchedule, UserList userList) throws IOException, ClassNotFoundException {
@@ -472,7 +479,6 @@ public class BillboardServer {
      * @throws Exception IOException, ClassNotFoundException, SQLException,
      * Exception - billboard does not exist, viewing does not exist
      */
-
    private static void scheduleBillboard(ObjectInputStream ois, Connection connection, BillboardList billboardList
             , ScheduleMultiMap billboardSchedule) throws Exception {
         //read parameters sent by client
@@ -522,13 +528,6 @@ public class BillboardServer {
         String startTime = ois.readObject().toString();
         String duration = ois.readObject().toString();
         String recurrenceDelay = ois.readObject().toString();
-
-        //print schedule variables received from client
-        System.out.println("Received to client:\n");
-        System.out.println("Billboard Name: "+billboardName+"\n");
-        System.out.println("Start Time: "+startTime+"\n");
-        System.out.println("Duration (mins): "+duration+"\n");
-        System.out.println("Recurrence delay (mins): "+recurrenceDelay+"\n");
 
         //retrieve billboard object
         Billboard billboard = billboardList.getBillboardInfo(billboardName);
@@ -581,7 +580,7 @@ public class BillboardServer {
 //    }
 
     /**
-     * populates queue with schedule from database
+     * Populates queue with schedule from database
      * @param connection database connection
      * @throws SQLException invalid SQL query
      */
@@ -789,6 +788,11 @@ public class BillboardServer {
 
     //Static int for counting which session has expired.
     private static int i = 0;
+
+    /**
+     * Inner class gets called when a timer expires and removes the related session token.
+     * @throws Exception
+     */
     //Inner class called when a timer expires.
     static class RemoveFromList extends TimerTask{
         public void run(){
@@ -801,7 +805,9 @@ public class BillboardServer {
 
     /**
      * If the user is valid this creates a session token and sends it back to the control panel.
+     * @param validity Accepts a string showing if the user is valid or not.
      * @throws Exception
+     * @return either returns a session token or a string saying the user is in-valid.
      */
     static String sessionToken(String validity) throws IOException, ClassNotFoundException {
         //Setup for the random token
@@ -820,7 +826,6 @@ public class BillboardServer {
             String sessionToken = base64En.encodeToString(randomBytes);
             String thisSessionToken = sessionToken;
             //Send the randomised Session Token back to the control panel
-            //oos.writeObject(thisSessionToken);
 
             //Create a new timer to be stored in an hashmap with the session token
             Timer timer = new Timer();
@@ -846,8 +851,9 @@ public class BillboardServer {
     }
 
     /**
-     * Checks the Hashmap of Tokens for the users token
+     * Checks the Hashmap of Tokens for the users token.
      * @throws IOException
+     * @param userToken The user token
      */
     static boolean checkToken(String userToken) throws IOException, ClassNotFoundException {
         //Boolean for checking existance of session token
@@ -872,6 +878,13 @@ public class BillboardServer {
     }
 
 
+    /**
+     * Method that creates a user.
+     * @throws IOException
+     * @param ois ObjectInputStream
+     * @param connection A connection
+     * @param userList A list of users
+     */
     private static void createUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
         String createSalt = UserManager.createASalt();
         String[] userSet = UserManager.hashPasswordAndSalt(ois.readObject().toString(), createSalt, messageDigester());
@@ -909,6 +922,16 @@ public class BillboardServer {
         UserList.sendUsersToDB(userList.listUsers(), connection);
     }
 
+
+    /**
+     * Method creating a user with a password
+     * @throws IOException
+     * @param ois ObjectInputStream
+     * @param connection A connection
+     * @param userList A list of users
+     * @param password The user inputted password
+     * @param salt The salt used to has the password associated to the user
+     */
     private static void createUserWithPassword(ObjectInputStream ois, Connection connection, UserList userList, String password, String salt) throws Exception {
         String username = ois.readObject().toString();
         String createBillboard = ois.readObject().toString();
@@ -942,6 +965,13 @@ public class BillboardServer {
         UserList.sendUsersToDB(userList.listUsers(), connection);
     }
 
+    /**
+     * Method for deleting a user
+     * @throws IOException
+     * @param ois ObjectInputStream
+     * @param connection A connection
+     * @param userList A list of users
+     */
     private static void deleteUser(ObjectInputStream ois, Connection connection, UserList userList) throws Exception {
         //Read the parameters given by the client
         String username = ois.readObject().toString();
@@ -960,6 +990,12 @@ public class BillboardServer {
         UserList.sendUsersToDB(userList.listUsers(), connection);
     }
 
+    /**
+     * Method for listing a user
+     * @throws IOException
+     * @param oos ObjectOnputStream
+     * @param userList A list of users
+     */
     private static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, UserList userList) throws Exception {
         //Get the users session token to validate the action
         String sessionToken = (String) ois.readObject();
