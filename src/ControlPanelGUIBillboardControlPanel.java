@@ -20,8 +20,8 @@ import static javax.swing.JOptionPane.*;
 /**
  * Billboard Control Panel class for Control Panel GUI
  * This class contains a Main method and method that creates a GUI window for the Billboard Control Panel
- * @author - Nickhil Nischal
- * @version - Complete
+ * @author - Nickhil Nischal (GUI, Buttons), Harry Estreich (Buttons, Permissions)
+ * @version - Final
  */
 public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, ListSelectionListener, DocumentListener {
     // Billboard HashMap
@@ -429,9 +429,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
             mainPanel.add(billboardPreview);
             mainPanel.add(buttonPanel);
             mainPanel.add(createBillboardPanel);
-
-            System.out.println("bb xml: " + billboardXML);
-            System.out.println("bb name: " + billboardName);
         }
         // Catch exception
         catch (Exception e){
@@ -521,7 +518,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                 if((currentUser.permissions.contains("Edit All Billboards")) || (creatorCheck && !scheduleCheck && currentUser.permissions.contains("Create Billboards"))){
                     //Retrieve the xml file associated with the name
                     xmlFile = billboardXML;
-                    System.out.println("xmlFile: " + xmlFile);
 
                     // Check that editor isn't already open
                     int frameCount = 0;
@@ -568,9 +564,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
         else if (buttonClicked == createBillboardButton) {
             // Open the editor with a new file
             if (currentUser.permissions.contains("Create Billboards")) {
-                // Print file
-                System.out.println("xmlFile: " + xmlFile);
-
                 // Check that editor isn't already open
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
@@ -669,7 +662,6 @@ public class ControlPanelGUIBillboardControlPanel extends JFrame implements Runn
                         JOptionPane.showMessageDialog(getContentPane(), e,
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
-                    System.out.println("xmlFile: " + xmlFile);
                 }
                 else{
                     //display error pop up

@@ -173,7 +173,7 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
      * @param   oldUser User being remove from HashMap
      * @throws  Exception throws an exception if user doesn't exist
      */
-    public static void deleteUser(HashMap<String, User> userHashMap,User oldUser) throws Exception {
+    public static void deleteUserFromList(HashMap<String, User> userHashMap, User oldUser) throws Exception {
         boolean userFound = false;
         // Check user exists
         for(String username : userHashMap.keySet()){

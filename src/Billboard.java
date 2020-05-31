@@ -1,7 +1,7 @@
 
 /**
  * Billboard class
- * This class contains methods that construct and edit billboards
+ * This class contains a constructor that constructs Billboard objects
  * @author — Emily Chang
  * @version - complete
  */

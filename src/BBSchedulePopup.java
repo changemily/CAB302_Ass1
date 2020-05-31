@@ -480,7 +480,7 @@ public class BBSchedulePopup extends JFrame implements Runnable, ActionListener
                 fr.dispose();
             }
         }
-        //dispose schedule infor pop up
+        //dispose schedule info pop up
         dispose();
         String [] userInput = {"List billboards", ControlPanelClient.sessionToken};
         //request billboard list and run Billboard Control Panel GUI

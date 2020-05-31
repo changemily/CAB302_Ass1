@@ -953,7 +953,7 @@ public class BillboardServer {
         UserList.clearUsersFromDB(userList.listUsers(), connection);
 
         //Now that the db is empty remove the user from the user list
-        UserList.deleteUser(userList.listUsers(), user);
+        UserList.deleteUserFromList(userList.listUsers(), user);
 
         //Now that the user has been removed from the list of user
         //Write the updated list to the db
@@ -963,8 +963,6 @@ public class BillboardServer {
     private static void listUsers(ObjectOutputStream oos, ObjectInputStream ois, UserList userList) throws Exception {
         //Get the users session token to validate the action
         String sessionToken = (String) ois.readObject();
-        //If session token is current
-        //String sessionToken = "(String) ois.readObject()";
         //If session token is current
         if(checkToken(sessionToken) == true)
         {
