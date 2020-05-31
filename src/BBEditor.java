@@ -733,55 +733,54 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
 
     private boolean saveBillboardToDB() {
         boolean Break = false;
-        if(createdBillboard) {
+        if (createdBillboard) {
             billboardName = nameField.getText();
-            System.out.println("billboardNameInput: "+billboardName);
+            System.out.println("billboardNameInput: " + billboardName);
             //if name has NOT been inputted in text field
-            if (billboardName.equals("")||billboardName.equals(" ")) {
+            if (nameField.getText().contains("'") || nameField.getText().contains("\"")) {
+                //display error pop up
+                JOptionPane.showMessageDialog(this,
+                        "Billboard contains invalid character");
+                Break = true;
+            }
+            if (billboardName.equals("") || billboardName.equals(" ")) {
                 //display error pop up
                 JOptionPane.showMessageDialog(this,
                         "You must select a name for the billboard");
                 Break = true;
             }
-            if(billboardList.containsKey(billboardName)){
+            if (billboardList.containsKey(billboardName)) {
                 JOptionPane.showMessageDialog(this,
                         "This billboard name is already in use");
                 Break = true;
             }
-        }
-        else {
+        } else {
             System.out.println(billboardName);
         }
-
-        if(!messageField.getText().equals(""))
-        {
+        if (!messageField.getText().equals("")) {
             bb.setMessageText(messageField.getText());
             bb.setMessageExists(true);
-        }
-        else{
+        } else {
             bb.setMessageExists(false);
         }
 
-        if(!extraInfoText.getText().equals(""))
-        {
+        if (!extraInfoText.getText().equals("")) {
             bb.setInformationText(extraInfoText.getText());
             bb.setInformationExists(true);
-        }
-        else{
+        } else {
             bb.setInformationExists(false);
         }
 
-        if(!imageURL.getText().equals(""))
-        {
+        if (!imageURL.getText().equals("")) {
             bb.setPictureExists(true);
-            try{
+            try {
                 URL urlString = new URL(imageURL.getText());
                 bb.setUrlExists(true);
                 bb.setDataExists(false);
                 bb.setPictureURL(imageURL.getText());
-            } catch(MalformedURLException m){
+            } catch (MalformedURLException m) {
                 try {
-                    if(!imageURL.getText().equals("Encoded Image")) {
+                    if (!imageURL.getText().equals("Encoded Image")) {
                         File f = new File(imageURL.getText());
                         FileInputStream imageFile = new FileInputStream(f);
                         byte[] imageData = imageFile.readAllBytes();
@@ -796,12 +795,16 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     bb.setPictureExists(false);
                 }
             }
-        }
-        else{
+        } else {
             bb.setPictureExists(false);
         }
 
-        if(!Break) {
+        if (!bb.getMessageExists() && !bb.getPictureExists() && !bb.getInformationExists()) {
+            JOptionPane.showMessageDialog(this,
+                    "This billboard is empty");
+            Break = true;
+        }
+        if (!Break) {
             try {
                 tempXMLString = bb.updateXMLString();
                 JOptionPane.showMessageDialog(getContentPane(), "Billboard Successfully Saved to Database");
@@ -813,7 +816,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         }
 
         //Test if it worked
-        if(!Break) {
+        if (!Break) {
             String[] user_inputs = {"Create edit billboard", billboardName, username, tempXMLString};
 
             //Schedule billboard with viewing details given by user
@@ -821,6 +824,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         }
         return Break;
     }
+
 
     @Override
     public void windowOpened(WindowEvent e) {
