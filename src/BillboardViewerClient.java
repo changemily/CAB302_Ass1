@@ -15,36 +15,34 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Control Panel class
- * Class contains methods for connecting to, sending a request for the name of the
+ * Billboard Viewer Client
+ * Class contains methods for running the viewer. These include connecting to the server, sending a request for the name of the
  * currently displayed billboard and retrieving the name of the
- * currently displayed billboard from the server over a port,
- * @author Emily Chang
- * @version - under development
+ * currently displayed billboard from the server over a port.
+ * @author Emily Chang & Harry Estreich
+ * @version - complete
  */
 public class BillboardViewerClient {
     private static boolean firstTime = true;
     private static JFrame billboardGUI = new JFrame();
     private static JPanel billboardPanel = new JPanel();
+    //define xml string for unable to connect to server error
     private final static String serverErrorXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<billboard>\n" +
             "<message>The viewer cannot connect to the server</message>\n" +
             "</billboard>\n";
 
-
-    private final static String TestFIle = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<billboard>\n" +
-            "<message>Billboard displaying</message>\n" +
-            "</billboard>\n";
     /**
-     * Sends request to server for currently displayed billboard
+     * Sends request to server for currently displayed billboard, retrieves it and displays the billboard
      */
     private static void runClient(){
         Properties props = new Properties();
         FileInputStream fileIn = null;
         int portNumber;
         try {
+            //if initial running of viewer
             if(firstTime){
+                //set frame with no decorations
                 billboardGUI.setUndecorated(true);
                 firstTime = false;
             }
@@ -66,7 +64,9 @@ public class BillboardViewerClient {
                 Socket socket = new Socket(hostname,portNumber);
                 //Create Object input and output streams for server
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());//String request sent to server
+                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+
+                //String request sent to server
                 String request = "Run Billboard Viewer";
 
                 //request billboard currently displayed from server
@@ -76,9 +76,6 @@ public class BillboardViewerClient {
 
                 //retrieve name of currently displayed billboard
                 String xmlFile = ois.readObject().toString();
-
-                //print what was received from server
-                System.out.println("billboard xml: "+ xmlFile);
 
                 //display billboard on viewer
                 ViewerGUI(billboardGUI, billboardPanel, xmlFile);
@@ -90,7 +87,7 @@ public class BillboardViewerClient {
                 ois.close();
                 socket.close();
             }
-            catch(ConnectException e)
+            catch(ConnectException e) //unable to establish connection with server
             {
                 //display "unable to connect to server" error screen
                 ViewerGUI(billboardGUI, billboardPanel, serverErrorXML);
@@ -108,21 +105,23 @@ public class BillboardViewerClient {
     }
 
     /**
-     *
-     * @param billboardGUI
-     * @param billboardPanel
-     * @param xmlString
-     * @throws IOException
-     * @throws SAXException
-     * @throws ParserConfigurationException
+     * populates JPanel with JFrame of billboard xml
+     * @param billboardGUI JFrame Billboard Viewer frame
+     * @param billboardPanel JPanel that holds xml display
+     * @param xmlString xml string being displayed
+     * @throws IOException Thrown if xml string is invalid
+     * @throws SAXException Thrown if xml string is invalid
+     * @throws ParserConfigurationException Thrown if xml string is invalid
      */
     private static void ViewerGUI(JFrame billboardGUI, JPanel billboardPanel, String xmlString) throws IOException, SAXException, ParserConfigurationException {
+        //if panel contains a display
         if(billboardPanel != null){
+            //clear panel
             billboardGUI.remove(billboardPanel);
         }
         // Find screen size
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        // Create new billboard
+        // Create new billboard viewer of xml
         BillboardViewer billboard = new BillboardViewer(xmlString, screenSize);
 
         // Get Panel
@@ -197,7 +196,7 @@ public class BillboardViewerClient {
             }
         }
 
-        //request current billboard every 15 seconds & update viewer
+        //request current billboard every 15 seconds & updates viewer
         timer.schedule(new runViewer(), 0, 15000);
     }
 }
