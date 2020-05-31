@@ -10,8 +10,7 @@ import static javax.swing.JOptionPane.showConfirmDialog;
  * Control Panel GUI class
  * This class contains a Main method and method that creates a GUI window for the Control Panel GUI screen
  * @author - Nickhil Nischal
- * @version - under development
- *
+ * @version - Complete
  */
 public class ControlPanelGUI extends JFrame implements Runnable, ActionListener {
     private JButton logoutButton;
@@ -24,11 +23,17 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
     /**
      * Method used to create a GUI window for the Control Panel Menu
+     * @param username The user's username
+     * @param sessionToken The user's session token
      */
     public ControlPanelGUI(String username, String sessionToken){
         // Set window title
         super("Control Panel Menu");
+
+        // The user's username
         this.username = username;
+
+        // The user's session token
         this.sessionToken = sessionToken;
     }
 
@@ -90,7 +95,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
 
         // Add all JLabel and JPanels to content pane
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-        getContentPane().add(Box.createVerticalStrut(20));
+        getContentPane().add(Box.createVerticalStrut(20)); // Border
         getContentPane().add(logoutPanel);
         getContentPane().add(Box.createVerticalStrut(50));
         getContentPane().add(label);
@@ -102,7 +107,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         getContentPane().add(editBillboardSchedulePanel);
         getContentPane().add(Box.createVerticalStrut(25));
         getContentPane().add(editPasswordChangePanel);
-        getContentPane().add(Box.createVerticalStrut(50));
+        getContentPane().add(Box.createVerticalStrut(50)); // Border
 
         // Format window
         pack(); // Pack all contents of the GUI
