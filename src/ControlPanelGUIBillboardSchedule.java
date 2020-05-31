@@ -19,22 +19,38 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * NOTES: Some button functionality still needs to be added; further refinement required
  */
 public class ControlPanelGUIBillboardSchedule extends JFrame implements Runnable, ActionListener, WindowListener {
+
+    // Billboard HashMap
     private MultiMap billboardSchedule;
+
+    // Number of days in each week
     private final int DAYS_IN_WEEK = 7;
+
+    // Boolean for controlling whether a new instance of Control Panel GUI is opened when window is closed
     private boolean forcedClose = false;
+
+    // User's username
     String username;
+
+    // User's sessions token
     String sessionToken;
 
+    // Clickable buttons
     private JButton backButton;
     private JButton logoutButton;
 
     /**
      * Method used to create a GUI window for the Billboard Schedule Screen
+     * @param username Used for setting the username
+     * @param sessionToken The sessionToken associated with the user
+     * @param schedule A list of billboards passed in
      */
+
     public ControlPanelGUIBillboardSchedule(String username, String sessionToken, MultiMap schedule) {
         // Set window title
         super("Billboard Schedule");
 
+        // set internal variables to given values
         billboardSchedule = schedule;
         this.username = username;
         this.sessionToken = sessionToken;
