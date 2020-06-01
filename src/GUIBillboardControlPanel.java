@@ -42,6 +42,10 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
     // Boolean to specify whether closeable or not
     boolean closeable = true;
 
+    // Currently open billboard
+    String openBillboard;
+    String openSchedule;
+
     /**
      * Method used to create a GUI window for the Billboard Control Panel Screen
      * @param username Used for setting the username
@@ -491,6 +495,12 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     closeable = false;
                 }
             }
+            else{
+                // Go back to menu
+                SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+                dispose();
+                closeable = false;
+            }
         }
 
         // Checks if the logout button has been clicked
@@ -524,6 +534,14 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     // Close the GUI screen
                     dispose();
                 }
+            }
+            else{
+                // Open new Login screen
+                // Remove users session token and proceed to the login screen
+                String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
+                ControlPanelClient.runClient(user_input);
+                // Close the GUI screen
+                dispose();
             }
         }
 
@@ -590,12 +608,14 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                                 }
                             }
                             // Create new one
+                            openBillboard = billboardName;
                             SwingUtilities.invokeLater(new GUIBillboardEditor(username, sessionToken, billboardName, xmlFile));
                             closeable = false;
                         }
                     }
                     else{
                         // If none open, just open editor
+                        openBillboard = billboardName;
                         SwingUtilities.invokeLater(new GUIBillboardEditor(username, sessionToken, billboardName, xmlFile));
                         closeable = false;
                     }
@@ -654,14 +674,40 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
 
         // Checks if the delete billboard button has been clicked
         else if (buttonClicked == deleteBillboardButton) {
+            // Check that editor isn't already open
+            int frameCount = 0;
+            Frame[] allFrames = Frame.getFrames();
+            for(Frame fr : allFrames){
+                if((fr.getClass().getName().equals("GUIBillboardEditor")) || (fr.getClass().getName().equals("GUIBillboardSchedulePopup"))){
+                    if(fr.isVisible()){
+                        frameCount += 1;
+                    }
+                }
+            }
+
+            boolean Break = false;
+            if(frameCount > 0)
+            {
+                //get string stored in current cell of list
+                String cellSelected = billboardList.getSelectedValue().toString();
+                //remove creator from list
+                String billboardSelected = cellSelected.replaceAll(",.*", "");
+                if(billboardSelected.equals(openBillboard) || (billboardSelected.equals(openSchedule))){
+                    //display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "You can't delete open billboard");
+                    Break = true;
+                }
+            }
+
             // if no billboard selected, error
-            if(billboardName == null)
+            if(billboardName == null && !Break)
             {
                 //display error pop up
                 JOptionPane.showMessageDialog(this,
                         "You must select a billboard in the list to delete");
             }
-            else{
+            else if(!Break){
                 //get string stored in current cell of list
                 String cellSelected = billboardList.getSelectedValue().toString();
 
@@ -756,12 +802,14 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                                 }
                             }
                             // new schedule GUI
+                            openSchedule = billboardName;
                             SwingUtilities.invokeLater(new GUIBillboardSchedulePopup(username, sessionToken, billboardName, schedule));
                             closeable = false;
                         }
                     }
                     else{
                         // new schedule GUI
+                        openSchedule = billboardName;
                         SwingUtilities.invokeLater(new GUIBillboardSchedulePopup(username, sessionToken, billboardName, schedule));
                         closeable = false;
                     }

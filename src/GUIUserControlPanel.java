@@ -10,8 +10,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.HashMap;
 
-import static javax.swing.JOptionPane.YES_OPTION;
-import static javax.swing.JOptionPane.showConfirmDialog;
+import static javax.swing.JOptionPane.*;
 
 /**
  * User Control Panel class for Control Panel GUI
@@ -438,6 +437,14 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                     SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
                 }
             }
+            else{
+                // Closes current GUI screen
+                closeable = false; // safe exit
+                dispose();
+
+                // Open new Control Panel GUI screen
+                SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+            }
         }
 
         // Checks if the logout button has been clicked
@@ -473,15 +480,15 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                     dispose();
                 }
             }
-
-            closeable = false; // safe exit
-
-            // Open new Login screen
-            // Remove users session token and proceed to the login screen
-            String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
-            ControlPanelClient.runClient(user_input);
-            // Close the GUI screen
-            dispose();
+            else{
+                closeable = false; // safe exit
+                // Open new Login screen
+                // Remove users session token and proceed to the login screen
+                String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
+                ControlPanelClient.runClient(user_input);
+                // Close the GUI screen
+                dispose();
+            }
         }
 
         // Checks if the login button has been clicked
