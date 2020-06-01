@@ -149,7 +149,6 @@ public class Server {
                         userList.retrieveUsersFromDB(connection);
                         viewSchedule(oos,ois,billboardSchedule, userList);
                         break;
-
                     case "Schedule Billboard":
                         //schedule billboard
                         scheduleBillboard(ois, connection, billboardList, billboardSchedule);
@@ -190,7 +189,7 @@ public class Server {
 
                         //send details of currently displayed billboard to Viewer client
                         runViewer(oos, billboardList, billboardSchedule, finalConnection);
-
+                        break;
                     default:
                 }
 

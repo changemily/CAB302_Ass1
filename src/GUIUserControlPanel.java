@@ -410,16 +410,70 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
 
         // Checks if the back button has been clicked
         if (buttonClicked == backButton) {
-            // Closes current GUI screen
-            closeable = false; // safe exit
-            dispose();
+            int frameCount = 0;
+            Frame[] allFrames = Frame.getFrames();
+            for (Frame fr : allFrames) {
+                if ((fr.getClass().getName().equals("GUICreateEditUser"))) {
+                    if (fr.isVisible()) {
+                        frameCount += 1;
+                    }
+                }
+            }
 
-            // Open new Control Panel GUI screen
-            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+            if(frameCount > 0) {
+                int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
+                if (a == YES_OPTION) {
+                    // close all createEditUser GUIs
+                    allFrames = Frame.getFrames();
+                    for (Frame fr : allFrames) {
+                        if ((fr.getClass().getName().equals("GUICreateEditUser"))) {
+                            fr.dispose();
+                        }
+                    }
+                    // Closes current GUI screen
+                    closeable = false; // safe exit
+                    dispose();
+
+                    // Open new Control Panel GUI screen
+                    SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+                }
+            }
         }
 
         // Checks if the logout button has been clicked
         else if (buttonClicked == logoutButton) {
+            int frameCount = 0;
+            Frame[] allFrames = Frame.getFrames();
+            for (Frame fr : allFrames) {
+                if ((fr.getClass().getName().equals("GUICreateEditUser"))) {
+                    if (fr.isVisible()) {
+                        frameCount += 1;
+                    }
+                }
+            }
+
+            if(frameCount > 0) {
+                int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
+                if (a == YES_OPTION) {
+                    // close all createEditUser GUIs
+                    allFrames = Frame.getFrames();
+                    for (Frame fr : allFrames) {
+                        if ((fr.getClass().getName().equals("GUICreateEditUser"))) {
+                            fr.dispose();
+                        }
+                    }
+
+                    closeable = false; // safe exit
+
+                    // Open new Login screen
+                    // Remove users session token and proceed to the login screen
+                    String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
+                    ControlPanelClient.runClient(user_input);
+                    // Close the GUI screen
+                    dispose();
+                }
+            }
+
             closeable = false; // safe exit
 
             // Open new Login screen
