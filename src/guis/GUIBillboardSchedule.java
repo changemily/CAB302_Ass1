@@ -33,6 +33,10 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
     // Number of days in each week
     private final int DAYS_IN_WEEK = 7;
 
+    //initialize final variables that store the number of minutes in a day and hour
+    private final int MINUTES_IN_DAY = 1440;
+    private final int MINUTES_IN_HOUR = 60;
+
     // Boolean for controlling whether a new instance of Control Panel GUI is opened when window is closed
     private boolean forcedClose = false;
 
@@ -300,12 +304,18 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
                     durationUnformatted = durationUnformatted.replaceAll("PT","");
                     String duration = durationUnformatted.replaceAll("M","");
 
+                    //get recurrence delay
+                    int recurrenceDelay = viewing.recurrenceDelay;
+
+                    //get recurrence delay as string
+                    String recurrenceDelayString = getRecurrenceString(recurrenceDelay);
+
                     //if cell is empty
                     if(tempCellString == null)
                     {
                         // Add billboard name and creator to string in cell with no new line
                         tempCellString = " "+billboardName + " by\n " + viewing.billboardCreator +"\n duration: "
-                                +duration +" min/s\n start time: " +startTime;
+                                +duration +" min/s\n start time: " +startTime +"\n recurrence delay: " +recurrenceDelayString;
                     }
 
                     //if cell is already populated
@@ -313,7 +323,7 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
                     {
                         // Add billboard name and creator to string in cell with new lines
                         tempCellString += "\n\n "+ billboardName + " by \n " + viewing.billboardCreator +"\n duration: "
-                                +duration +" min/s\n start time: " +startTime;
+                                +duration +" min/s\n start time: " +startTime +"\n recurrence delay: " +recurrenceDelayString;
                     }
 
                     // Replace all instances of null with empty string
@@ -326,6 +336,43 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
         }
         // Returns a two-dimensional array for use in the JTable
         return data;
+    }
+
+    /**
+     * Returns recurrence delay as a string value
+     * @param recurrenceDelay recurrence delay in int(minutes)
+     * @return recurrence delay as a string value
+     */
+    private String getRecurrenceString(int recurrenceDelay) {
+        String recurrenceDelayString;
+
+        //no recurrence
+        if (recurrenceDelay == 0)
+        {
+            recurrenceDelayString = "No recurrence";
+            return recurrenceDelayString;
+        }
+
+        //if recurrence delay is every x minutes
+        else if(recurrenceDelay>0 && recurrenceDelay<60)
+        {
+            recurrenceDelayString = "Every " + recurrenceDelay + " minutes";
+            return recurrenceDelayString;
+        }
+
+        //if recurrence delay is every hour
+        else if(recurrenceDelay == MINUTES_IN_HOUR)
+        {
+            recurrenceDelayString = "Every hour";
+            return recurrenceDelayString;
+        }
+
+        //if recurrence delay is every day
+        else
+        {
+            recurrenceDelayString = "Every day";
+            return recurrenceDelayString;
+        }
     }
 
     /**
@@ -364,6 +411,7 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
             }
             //set size of JTextArea
             setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+            
             //if row height cannot display all text
             if (table.getRowHeight(row) != getPreferredSize().height) {
                 //set row height to display all text in the cell
@@ -417,12 +465,11 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
         // Makes columns fixed, columns cannot be rearranged by user
         thisWeek.getTableHeader().setReorderingAllowed(false);
 
-        // Make columns fixed, column widths cannot be changed by user
-        // For loop iterates through each day
+        // For all columns in the table
         for (int columnNum = 0; columnNum <= days.length - 1; columnNum++) {
-            //set all columns to non resizable
+            //set column to non resizable
             thisWeek.getColumnModel().getColumn(columnNum).setResizable(false);
-            //set column renderer to wrap text in cell
+            //set cell renderer for column to wrap text in cell
             thisWeek.getColumnModel().getColumn(columnNum).setCellRenderer(new WordWrapCellRenderer());
         }
 
