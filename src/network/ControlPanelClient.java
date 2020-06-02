@@ -210,7 +210,7 @@ public class ControlPanelClient {
 
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                if((fr.getClass().getName().equals("guis.GUIMainMenu"))){
                     fr.dispose();
                 }
             }
@@ -294,7 +294,7 @@ public class ControlPanelClient {
             if(userDetails.permissions.contains("Schedule Billboards")) {
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                    if((fr.getClass().getName().equals("guis.GUIMainMenu"))){
                         fr.dispose();
                     }
                 }
@@ -314,7 +314,7 @@ public class ControlPanelClient {
             // reset to login screen
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                if((fr.getClass().getName().equals("guis.GUIMainMenu"))){
                     fr.dispose();
                 }
             }
@@ -395,11 +395,8 @@ public class ControlPanelClient {
                 if (userDetails.permissions.contains("Edit Users")) { // checks that user can edit users
                     Frame[] allFrames = Frame.getFrames(); // remove main menu
                     for(Frame fr : allFrames){
-                        if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                        if((fr.getClass().getName().equals("guis.GUIMainMenu"))){
                             fr.dispose();
-                            if((fr.getClass().getName().equals("ControlPanelGUI"))){
-                                fr.dispose();
-                            }
                         }
                     }
                     // open control panel
@@ -423,7 +420,7 @@ public class ControlPanelClient {
             // Reset to login page
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                if((fr.getClass().getName().equals("guis.GUIMainMenu"))){
                     fr.dispose();
                 }
             }

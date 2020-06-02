@@ -216,7 +216,6 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
             // Remove users session token and proceed to the login screen
             String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
             ControlPanelClient.runClient(user_input);
-            // Close the GUI screen
             dispose();
         }
 
@@ -225,7 +224,6 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
             // Open User Control Panel GUI
             String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
             ControlPanelClient.runClient(user_input);
-            dispose();
         }
 
         // If edit billboard JButton is clicked
@@ -234,8 +232,6 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
             String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
             // Request schedule and run calendar GUI
             ControlPanelClient.runClient(user_input);
-
-            // Close the GUI screen
             dispose();
         }
 
@@ -244,8 +240,6 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
             String [] userInput = {"View schedule", ControlPanelClient.sessionToken};
             //request schedule and run calendar GUI
             ControlPanelClient.runClient(userInput);
-            // Close the gui screne
-            dispose();
         }
 
         // If user details JButton is clicked
