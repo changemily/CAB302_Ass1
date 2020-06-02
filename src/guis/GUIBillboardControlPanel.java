@@ -907,10 +907,39 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
      */
     @Override
     public void windowClosed(WindowEvent e) {
-        // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
-        if(closeable) {
-            // Open Control Panel GUI (previous screen)
+        // Check that editor isn't open
+        int frameCount = 0;
+        Frame[] allFrames = Frame.getFrames();
+        for(Frame fr : allFrames){
+            if((fr.getClass().getName().equals("guis.GUIBillboardEditor"))){
+                if(fr.isVisible()){
+                    frameCount += 1;
+                }
+            }
+        }
+
+        // If editor is open, check if user is sure
+        if(frameCount > 0) {
+            int a = showConfirmDialog(null, "This will close your current billboard editor screen and you will lose any changes");
+            if (a == YES_OPTION) {
+                // Close all editors
+                allFrames = Frame.getFrames();
+                for (Frame fr : allFrames) {
+                    if ((fr.getClass().getName().equals("guis.GUIBillboardEditor"))) {
+                        fr.dispose();
+                    }
+                }
+                // Go back to menu
+                SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+                dispose();
+                closeable = false;
+            }
+        }
+        else{
+            // Go back to menu
             SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+            dispose();
+            closeable = false;
         }
     }
 

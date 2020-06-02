@@ -715,8 +715,42 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
      */
     @Override
     public void windowClosed(WindowEvent e) {
-        // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
-        if(closeable) {
+        // Count open edit users frames
+        int frameCount = 0;
+        Frame[] allFrames = Frame.getFrames();
+        for (Frame fr : allFrames) {
+            if ((fr.getClass().getName().equals("guis.GUICreateEditUser"))) {
+                if (fr.isVisible()) {
+                    frameCount += 1;
+                }
+            }
+        }
+
+        // If edit users frames open, check if user wants to close them
+        if(frameCount > 0) {
+            int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
+            if (a == YES_OPTION) {
+                // close all createEditUser GUIs
+                allFrames = Frame.getFrames();
+                for (Frame fr : allFrames) {
+                    if ((fr.getClass().getName().equals("guis.GUICreateEditUser"))) {
+                        fr.dispose();
+                    }
+                }
+                // Closes current GUI screen
+                closeable = false; // safe exit
+                dispose();
+
+                // Open new Control Panel GUI screen
+                SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+            }
+        }
+        else{
+            // Closes current GUI screen
+            closeable = false; // safe exit
+            dispose();
+
+            // Open new Control Panel GUI screen
             SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
         }
     }
