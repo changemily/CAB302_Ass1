@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import users.User;
 import users.UserList;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -21,7 +19,7 @@ public class TestUserList {
      */
     @Test
     public void createUserList() {
-        UserList userList = new UserList();
+        new UserList();
     }
 
     /**
@@ -52,7 +50,7 @@ public class TestUserList {
     }
 
     /**
-     * Add user with the same name and check exception is thrown
+     * Add user with the same name and new user overwrites old user
      */
     @Test
     public void addUserSameName() throws Exception {
@@ -60,7 +58,8 @@ public class TestUserList {
         User newUser = new User("admin", "password", "salt");
         User newUser2 = new User("admin", "password", "salt");
         UserList.addUserToList(userList.listUsers(), newUser); // add first user to list
-        assertThrows(Exception.class, () -> UserList.addUserToList(userList.listUsers(), newUser2)); // add same username, exception thrown
+        UserList.addUserToList(userList.listUsers(), newUser2); // add first user to list
+        Assertions.assertEquals(UserList.getUserInformation(userList.listUsers(), "admin"), newUser2);
     }
 
     /**

@@ -10,9 +10,9 @@ package billboard;
 public class Billboard implements java.io.Serializable{
 
     //class attributes
-    public String BillboardName;
-    public String BillboardCreator;
-    public String XMLFile;
+    public final String BillboardName;
+    public final String BillboardCreator;
+    public final String XMLFile;
 
     /**
      * Constructor that is used to create Billboard object, Billboard has an assigned a name, text,

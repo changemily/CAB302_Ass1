@@ -22,7 +22,7 @@ public class TestUserManager {
     @Test
     public void createUserManager() throws Exception {
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
-        UserManager admin = new UserManager(adminUser);
+        new UserManager(adminUser);
     }
 
     /**
@@ -33,7 +33,7 @@ public class TestUserManager {
     public void createUserManagerTarget() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
-        UserManager admin = new UserManager(adminUser, otherUser);
+        new UserManager(adminUser, otherUser);
     }
 
     /**
@@ -64,7 +64,7 @@ public class TestUserManager {
     }
 
     /**
-     * Test 2.3 - Show tha list_usres creates a string[] of usernames after adding a user
+     * Test 2.3 - Show tha list_users creates a string[] of usernames after adding a user
      * @throws  Exception throws exception if invalid permission
      */
     @Test

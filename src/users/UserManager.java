@@ -1,10 +1,7 @@
 package users;
 
-import network.DBconnection;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -162,12 +159,8 @@ public class UserManager
         byte[] passwordBytes = messageDigest.digest(password.getBytes());
 
         //hash password
-        String hashedPassword = hash(passwordBytes);
 
-        //create DB connection
-        Connection connection = DBconnection.getInstance();
-
-        return hashedPassword;
+        return hash(passwordBytes);
     }
 
     /**
