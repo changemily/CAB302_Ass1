@@ -471,7 +471,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))){
+                if((fr.getClass().getName().equals("guis.GUIBillboardEditor"))){
                     if(fr.isVisible()){
                         frameCount += 1;
                     }
@@ -485,7 +485,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     // Close all editors
                     allFrames = Frame.getFrames();
                     for (Frame fr : allFrames) {
-                        if ((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))) {
+                        if ((fr.getClass().getName().equals("guis.GUIBillboardEditor"))) {
                             fr.dispose();
                         }
                     }
@@ -509,7 +509,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor")) || (fr.getClass().getName().equals("gui_classes.GUIBillboardSchedulePopup"))){
+                if((fr.getClass().getName().equals("guis.GUIBillboardEditor")) || (fr.getClass().getName().equals("guis.GUIBillboardSchedulePopup"))){
                     if(fr.isVisible()){
                         frameCount += 1;
                     }
@@ -523,7 +523,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     // Close all editors
                     allFrames = Frame.getFrames();
                     for (Frame fr : allFrames) {
-                        if ((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor")) || (fr.getClass().getName().equals("gui_classes.GUIBillboardSchedulePopup"))) {
+                        if ((fr.getClass().getName().equals("guis.GUIBillboardEditor")) || (fr.getClass().getName().equals("guis.GUIBillboardSchedulePopup"))) {
                             fr.dispose();
                         }
                     }
@@ -532,6 +532,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
                     ControlPanelClient.runClient(user_input);
                     // Close the GUI screen
+                    closeable = false;
                     dispose();
                 }
             }
@@ -541,6 +542,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                 String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
                 ControlPanelClient.runClient(user_input);
                 // Close the GUI screen
+                closeable = false;
                 dispose();
             }
         }
@@ -589,7 +591,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     int frameCount = 0;
                     Frame[] allFrames = Frame.getFrames();
                     for(Frame fr : allFrames){
-                        if((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))){
+                        if((fr.getClass().getName().equals("guis.GUIBillboardEditor"))){
                             if(fr.isVisible()){
                                 frameCount += 1;
                             }
@@ -603,7 +605,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                             // Close all editors
                             allFrames = Frame.getFrames();
                             for (Frame fr : allFrames) {
-                                if ((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))) {
+                                if ((fr.getClass().getName().equals("guis.GUIBillboardEditor"))) {
                                     fr.dispose();
                                 }
                             }
@@ -636,7 +638,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))){
+                    if((fr.getClass().getName().equals("guis.GUIBillboardEditor"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -650,7 +652,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                         // close all editors
                         allFrames = Frame.getFrames();
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))) {
+                            if ((fr.getClass().getName().equals("guis.GUIBillboardEditor"))) {
                                 fr.dispose();
                             }
                         }
@@ -678,7 +680,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor")) || (fr.getClass().getName().equals("gui_classes.GUIBillboardSchedulePopup"))){
+                if((fr.getClass().getName().equals("guis.GUIBillboardEditor")) || (fr.getClass().getName().equals("guis.GUIBillboardSchedulePopup"))){
                     if(fr.isVisible()){
                         frameCount += 1;
                     }
@@ -783,7 +785,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     // check no schedule GUIs are open
                     Frame[] allFrames = Frame.getFrames();
                     for(Frame fr : allFrames){
-                        if((fr.getClass().getName().equals("gui_classes.GUIBillboardSchedulePopup"))){
+                        if((fr.getClass().getName().equals("guis.GUIBillboardSchedulePopup"))){
                             if(fr.isVisible()){
                                 frameCount += 1;
                             }
@@ -797,7 +799,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                             // close all schedule screens
                             allFrames = Frame.getFrames();
                             for (Frame fr : allFrames) {
-                                if ((fr.getClass().getName().equals("gui_classes.GUIBillboardSchedulePopup"))) {
+                                if ((fr.getClass().getName().equals("guis.GUIBillboardSchedulePopup"))) {
                                     fr.dispose();
                                 }
                             }

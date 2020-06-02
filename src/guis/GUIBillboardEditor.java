@@ -531,7 +531,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("gui_classes.GUIBillboardControlPanel"))){
+                    if((fr.getClass().getName().equals("guis.GUIBillboardControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -728,7 +728,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
         // Close all current billboard control panels
         Frame[] allFrames = Frame.getFrames();
         for(Frame fr : allFrames){
-            if((fr.getClass().getName().equals("gui_classes.GUIBillboardControlPanel"))){
+            if((fr.getClass().getName().equals("guis.GUIBillboardControlPanel"))){
                 fr.dispose();
             }
         }
@@ -893,7 +893,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("gui_classes.GUIBillboardControlPanel"))){
+                if((fr.getClass().getName().equals("guis.GUIBillboardControlPanel"))){
                     if(fr.isVisible()){
                         frameCount += 1;
                     }
