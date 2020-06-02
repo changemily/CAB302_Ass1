@@ -182,6 +182,8 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
                                 .addContainerGap())
         );
 
+        //do NOT make minute selection visible
+        recurrenceMinutes.setVisible(false);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);

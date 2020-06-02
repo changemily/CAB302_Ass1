@@ -412,7 +412,7 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
             setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
             
             //if row height cannot display all text
-            if (table.getRowHeight(row) != getPreferredSize().height) {
+            if (table.getRowHeight(row) < getPreferredSize().height) {
                 //set row height to display all text in the cell
                 table.setRowHeight(row, getPreferredSize().height);
             }
