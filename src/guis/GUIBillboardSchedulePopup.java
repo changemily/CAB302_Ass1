@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -360,12 +361,17 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
 
         //get duration from spinner
         String duration = durationSpinner.getValue().toString();
+        //convert duration to type int
+        int durationInt = Integer.parseInt(duration);
 
         //get recurrence option from spinner
         String recurrenceOption = recurrencePicker.getSelectedItem().toString();
 
         //get recurrence delay for users' recurrence choice as a string
         String recurrenceDelay = getRecurrenceDelay(recurrenceOption);
+
+        //convert recurrenceDelay to type int
+        int recurrenceDelayInt = Integer.parseInt(recurrenceDelay);
 
         //if schedule button is selected
         if (buttonClicked== scheduleBttn) {
@@ -375,15 +381,28 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
             //get current time
             LocalDateTime currentTime = LocalDateTime.now();
 
-            //if start time is in the past
-            if(startTime.isBefore(currentTime))
+            //if start time or recurrence delay are invalid
+            if((recurrenceDelayInt < durationInt && recurrenceDelayInt!= 0)|| startTime.isBefore(currentTime))
             {
-                //display error pop up
-                JOptionPane.showMessageDialog(this,
-                        "You cannot schedule a billboard to display in the past");
+                //check if recurrence delay is valid
+                //if duration of recurrence delay is smaller than duration and not no recurrence
+                if(recurrenceDelayInt < durationInt && recurrenceDelayInt!= 0)
+                {
+                    //display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "You cannot schedule a billboard to recur more frequently than its duration");
+                }
+
+                //if start time is in the past
+                if(startTime.isBefore(currentTime))
+                {
+                    //display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "You cannot schedule a billboard to display in the past");
+                }
             }
 
-            //if start time is valid
+            //if start time and recurrence delay are valid
             else{
                 //schedule billboard
                 ControlPanelClient.runClient(userInputs);

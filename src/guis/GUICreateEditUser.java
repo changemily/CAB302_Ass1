@@ -741,7 +741,6 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                     "Missing username");
         }
 
-
     }
 }
 

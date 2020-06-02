@@ -225,11 +225,4 @@ public class GUILoginScreen extends JFrame implements Runnable, ActionListener {
         }
     }
 
-    /**
-     * Main method which creates a GUI window for the Login Screen
-     * @param args This method takes no arguments
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new GUILoginScreen());
-    }
 }
