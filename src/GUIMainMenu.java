@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import static javax.swing.JOptionPane.showConfirmDialog;
 
@@ -17,7 +16,7 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
     private JButton editUsersButton;
     private JButton editBillboardButton;
     private JButton viewBillboardScheduleButton;
-    private JButton passwordChangeButton;
+    private JButton userDetailsButton;
     String username;
     String sessionToken;
 
@@ -86,11 +85,11 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
         // Create view billboard schedule JPanel that holds the view billboard schedule JButton
         JPanel editBillboardSchedulePanel = createButtonJPanel(viewBillboardScheduleButton,150,150,false);
 
-        // Create edit password JButton
-        passwordChangeButton = createButton("Edit Password");
+        // Create user details JButton
+        userDetailsButton = createButton("My Details");
 
         // Create edit password JPanel that holds the edit password JButton
-        JPanel editPasswordChangePanel = createButtonJPanel(passwordChangeButton,150,150,false);
+        JPanel editPasswordChangePanel = createButtonJPanel(userDetailsButton,150,150,false);
 
         // Add all JLabel and JPanels to content pane
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -222,6 +221,7 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
             // Open User Control Panel GUI
             String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
             ControlPanelClient.runClient(user_input);
+            dispose();
         }
 
         // If edit billboard JButton is clicked
@@ -240,10 +240,12 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
             String [] userInput = {"View schedule", ControlPanelClient.sessionToken};
             //request schedule and run calendar GUI
             ControlPanelClient.runClient(userInput);
+            // Close the gui screne
+            dispose();
         }
 
-        // If password change JButton is clicked
-        else if (buttonClicked == passwordChangeButton) {
+        // If user details JButton is clicked
+        else if (buttonClicked == userDetailsButton) {
             String [] user_input = {"List users", "Password", ControlPanelClient.sessionToken};
             //request schedule and run calendar GUI
             ControlPanelClient.runClient(user_input);

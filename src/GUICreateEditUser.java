@@ -193,20 +193,14 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
         rightPanel.add(spacer);
         rightPanel.add(Box.createVerticalStrut(50));
 
-        // Window formatting, if adminUser is true, add permissions section, otherwise just username/password, it is resized due to this aswell
+        // Window formatting
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
-        if(adminUser) { // resizing
-            getContentPane().add(Box.createHorizontalStrut(100)); // boundary
-        }
-        else{
-            getContentPane().add(Box.createHorizontalStrut(40)); // boundary
-        }
+        getContentPane().add(Box.createHorizontalStrut(100)); // boundary
+        getContentPane().add(Box.createHorizontalStrut(40)); // boundary
         getContentPane().add(leftPanel);
         getContentPane().add(Box.createHorizontalStrut(40));
-        if(adminUser) {
-            getContentPane().add(rightPanel); // add permissions
-            getContentPane().add(Box.createHorizontalStrut(100)); // boundary
-        }
+        getContentPane().add(rightPanel); // add permissions
+        getContentPane().add(Box.createHorizontalStrut(100)); // boundary }
 
         // Add Window Listener, used for when window is closed
         addWindowListener(this);
@@ -370,7 +364,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))){
+                    if((fr.getClass().getName().equals("GUIUserControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -395,6 +389,70 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                 // Display error pop up
                 JOptionPane.showMessageDialog(this,
                         "User can't remove 'Edit Users' from themselves");
+            }
+            else if(!adminUser){
+                if(editUsersBox.isSelected()) {
+                    editUsersBox.setSelected(false);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+                else if(!editUsersBox.isSelected()){
+                    editUsersBox.setSelected(true);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+            }
+        }
+        else if (buttonClicked == createBillboardsBox){
+
+            if(!(targetUser.permissions.contains("Edit Users")) && selfUser && (!adminUser)){
+                if(createBillboardsBox.isSelected()) {
+                    createBillboardsBox.setSelected(false);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+
+                }
+                else if(!createBillboardsBox.isSelected()){
+                    createBillboardsBox.setSelected(true);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+            }
+        }
+        else if (buttonClicked == scheduleBillboardsBox){
+            if(!(targetUser.permissions.contains("Edit Users")) && selfUser && (!adminUser)){
+                if(scheduleBillboardsBox.isSelected()) {
+                    scheduleBillboardsBox.setSelected(false);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+                else if(!scheduleBillboardsBox.isSelected()){
+                    scheduleBillboardsBox.setSelected(true);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+            }
+        }
+        else if (buttonClicked == editAllBillboardsBox){
+            if(!(targetUser.permissions.contains("Edit Users")) && selfUser && (!adminUser)){
+                if(editAllBillboardsBox.isSelected()) {
+                    editAllBillboardsBox.setSelected(false);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+                else if(!editAllBillboardsBox.isSelected()){
+                    editAllBillboardsBox.setSelected(true);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
             }
         }
     }
@@ -437,7 +495,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))){
+                    if((fr.getClass().getName().equals("GUIUserControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -531,7 +589,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                         // Close any control panels, before refresh
                         Frame[] allFrames = Frame.getFrames();
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
@@ -600,7 +658,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                     Frame[] allFrames = Frame.getFrames();
                     if (adminUser) { // if full screen editor
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
@@ -654,7 +712,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                     Frame[] allFrames = Frame.getFrames();
                     if (adminUser) { // if full screen editor
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }

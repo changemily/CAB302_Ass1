@@ -476,7 +476,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         //for every frame
         for (Frame fr : allFrames) {
             //if GUI screen is Billboard Control Panel
-            if ((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))) {
+            if ((fr.getClass().getName().equals("GUIBillboardControlPanel"))) {
                 fr.dispose();
             }
         }
