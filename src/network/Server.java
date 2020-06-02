@@ -88,7 +88,7 @@ public class Server {
 
         //populate schedule, billboard list and user list with data from database
         billboardSchedule.retrieveDBschedule(connection);
-        billboardList.retrieveDBbillboardList(connection);
+        billboardList.retrieveDBBillboardList(connection);
         userList.retrieveUsersFromDB(connection);
 
         //populate queue with schedule
@@ -139,7 +139,7 @@ public class Server {
                     case "List billboards":
                         //write billboard list to client
                         billboardSchedule.retrieveDBschedule(connection);
-                        billboardList.retrieveDBbillboardList(connection);
+                        billboardList.retrieveDBBillboardList(connection);
                         userList.retrieveUsersFromDB(connection);
                         listBillboards(oos, ois, billboardList, userList, billboardSchedule);
                         break;
@@ -156,7 +156,7 @@ public class Server {
                         deleteBillboard(ois, connection, billboardList);
                         break;
                     case "View schedule":
-                        billboardList.retrieveDBbillboardList(connection);
+                        billboardList.retrieveDBBillboardList(connection);
                         userList.retrieveUsersFromDB(connection);
                         viewSchedule(oos,ois,billboardSchedule, userList);
                         break;
@@ -415,13 +415,13 @@ public class Server {
                 "xml file: "+xmlFile+"\n");
 
         //Clear the db with the billboard information
-        billboardList.clearDBbillboardList(connection);
+        billboardList.clearDBBillboardList(connection);
 
         //Create the billboard
         billboardList.createEditBillboard(billboardName, billboardCreator, xmlFile);
 
         //Write the new billboard to the DB
-        billboardList.writeToDBbillboard(connection);
+        billboardList.writeToDBBillboard(connection);
     }
 
     /**
@@ -440,14 +440,14 @@ public class Server {
         System.out.println("billboard name: "+ billboardName);
 
         //Clear the db with the billboard information
-        billboardList.clearDBbillboardList(connection);
+        billboardList.clearDBBillboardList(connection);
 
         //Now that the db is empty remove the billboard from the billboard list
         billboardList.deleteBillboard(billboardName);
 
         //Now that the billboard has been removed from the list of billboards
         //Write the updated list to the db
-        billboardList.writeToDBbillboard(connection);
+        billboardList.writeToDBBillboard(connection);
     }
 
     /**

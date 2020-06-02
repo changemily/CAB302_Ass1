@@ -13,8 +13,6 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileSystemView;
@@ -618,7 +616,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                     }
                     // read string
                     tempXMLString = output.toString();
-                    tempXMLString.replace("\"","'");
+                    tempXMLString = tempXMLString.replace("\"","'");
                     bufferedReader.close();
 
                     // remove panel
@@ -734,7 +732,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
         }
         dispose(); // dispose editor
         //run Billboard Control Panel GUI, creating new GUI
-        String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
+        String [] user_input = {"List billboards", sessionToken};
         ControlPanelClient.runClient(user_input);
     }
 
@@ -796,7 +794,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
     }
 
     /**
-     * update billbaord details
+     * update billboard details
      * @param currentBreak set true if fails
      * @return break at end of method
      */
@@ -822,7 +820,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
             bb.setPictureExists(true);
             try {
                 // check if url exists
-                URL urlString = new URL(imageURL.getText());
+                new URL(imageURL.getText());
                 bb.setUrlExists(true);
                 bb.setDataExists(false);
                 bb.setPictureURL(imageURL.getText());
@@ -903,7 +901,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
             // if no control panels update control panel
             if(frameCount == 0){
                 //run Billboard Control Panel GUI
-                String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
+                String [] user_input = {"List billboards", sessionToken};
                 //request billboard list and run calendar GUI
                 ControlPanelClient.runClient(user_input);
             }

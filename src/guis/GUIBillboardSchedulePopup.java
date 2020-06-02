@@ -18,7 +18,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 import javax.swing.*;
-import javax.swing.GroupLayout;
 import static javax.swing.JOptionPane.*;
 
 /**
@@ -28,19 +27,17 @@ import static javax.swing.JOptionPane.*;
  */
 public class GUIBillboardSchedulePopup extends JFrame implements Runnable, ActionListener
 {
-    private ScheduleMultiMap billboardSchedule;
-    private JButton removeBttn;
-    private JButton scheduleBttn;
-    private JButton closeBttn;
+    private final ScheduleMultiMap billboardSchedule;
+    private JButton removeButton;
+    private JButton scheduleButton;
+    private JButton closeButton;
     private JSpinner durationSpinner;
     private JSpinner dateTimePicker;
-    private JComboBox recurrencePicker;
-    private JSpinner recurrenceMins;
-    private String billboardName;
-    private final String MINUTES_IN_DAY = "1440";
-    private final String MINUTES_IN_HOUR = "60";
-    private String username;
-    private String sessionToken;
+    private JComboBox<? extends String> recurrencePicker;
+    private JSpinner recurrenceMinutes;
+    private final String billboardName;
+    private final String username;
+    private final String sessionToken;
 
     /**
      * Constructor that creates an instance of a JFrame GUI window
@@ -101,37 +98,37 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         String[] recurrenceOptions = { "No Recurrence","Every X Minute(s)", "Every Hour", "Every Day" };
 
         // Create frequencySpinner for every x minutes
-        recurrenceMins = createNumberJSpinner(0,0,59);
+        recurrenceMinutes = createNumberJSpinner(0,0,59);
 
         // Create recurrence picker
-        recurrencePicker = new JComboBox(recurrenceOptions);
+        recurrencePicker = new JComboBox<>(recurrenceOptions);
 
         //add listener to recurrencePicker
         recurrencePicker.addItemListener(e -> {
             //if "Every X Minute(s)" option is selected
             if(recurrencePicker.getSelectedIndex() == 1) {
-                //resize GUI to fit recurrenceMins spinner
+                //resize GUI to fit recurrenceMinutes spinner
                 pack();
                 //make minute selection visible
-                recurrenceMins.setVisible(true);
+                recurrenceMinutes.setVisible(true);
             }
             else
             {
                 //do NOT make minute selection visible
-                recurrenceMins.setVisible(false);
+                recurrenceMinutes.setVisible(false);
             }
         });
 
         // Create Remove Button
-        removeBttn = createButton("Remove From Schedule");
+        removeButton = createButton("Remove From Schedule");
         //format Remove Button
-        removeBttn.setMargin(new Insets(0, 0, 0, 0));
+        removeButton.setMargin(new Insets(0, 0, 0, 0));
 
         // Create Schedule Button
-        scheduleBttn = createButton("Schedule Billboard");
+        scheduleButton = createButton("Schedule Billboard");
 
         // Create Back Button
-        closeBttn = createButton("Close");
+        closeButton = createButton("Close");
 
         // Set Group Layout
         GroupLayout contentPaneLayout = new GroupLayout(getContentPane());
@@ -153,10 +150,10 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
                                                 .addGroup(contentPaneLayout.createParallelGroup()
                                                         .addComponent(recurrenceOptionLabel)
                                                         .addComponent(datePickerLabel)))
-                                        .addComponent(closeBttn, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(removeBttn, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(scheduleBttn, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(recurrenceMins, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(closeButton, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(removeButton, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(scheduleButton, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(recurrenceMinutes, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
@@ -175,13 +172,13 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
                                         .addComponent(recurrencePicker, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(recurrenceOptionLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(recurrenceMins, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(recurrenceMinutes, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(scheduleBttn, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(scheduleButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(removeBttn, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(removeButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(closeBttn, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(closeButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
 
@@ -319,13 +316,14 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         else if (recurrenceOption == "Every X Minute(s)")
         {
             //retrieve X minutes and set X as the recurrence delay
-            recurrenceDelay = recurrenceMins.getValue().toString();
+            recurrenceDelay = recurrenceMinutes.getValue().toString();
         }
 
         //if billboard viewing recurs every hour
         else if (recurrenceOption == "Every Hour")
         {
             //set recurrence delay to minutes in an hour
+            String MINUTES_IN_HOUR = "60";
             recurrenceDelay = MINUTES_IN_HOUR;
         }
 
@@ -333,6 +331,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         else if (recurrenceOption == "Every Day")
         {
             //set recurrence delay to minutes in a day
+            String MINUTES_IN_DAY = "1440";
             recurrenceDelay = MINUTES_IN_DAY;
         }
 
@@ -374,7 +373,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         int recurrenceDelayInt = Integer.parseInt(recurrenceDelay);
 
         //if schedule button is selected
-        if (buttonClicked== scheduleBttn) {
+        if (buttonClicked== scheduleButton) {
             //store GUI inputs in user inputs array
             String [] userInputs = {"Schedule Billboard", billboardName,startTimeString, duration, recurrenceDelay};
 
@@ -417,7 +416,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         }
 
         //if remove schedule button is selected
-        else if (buttonClicked== removeBttn) {
+        else if (buttonClicked== removeButton) {
 
             //get current time
             LocalDateTime currentTime = LocalDateTime.now();
@@ -486,7 +485,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
                 }
             }
         }
-        else if(buttonClicked == closeBttn){
+        else if(buttonClicked == closeButton){
             //dispose pop up and reopen billboard control panel
             frameRefresh();
         }
@@ -507,7 +506,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         }
         //dispose schedule info pop up
         dispose();
-        String [] userInput = {"List billboards", ControlPanelClient.sessionToken};
+        String [] userInput = {"List billboards", sessionToken};
         //request billboard list and run Billboard Control Panel GUI
         ControlPanelClient.runClient(userInput);
     }
@@ -521,22 +520,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         try
         {
             createGUI();
-        } catch (ClassNotFoundException e)
-        {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (InstantiationException e)
-        {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalAccessException e)
-        {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (UnsupportedLookAndFeelException e)
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e)
         {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e,

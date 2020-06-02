@@ -28,10 +28,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class GUIBillboardSchedule extends JFrame implements Runnable, ActionListener, WindowListener {
 
     // Billboard MultiMap
-    private MultiMap billboardSchedule;
-
-    // Number of days in each week
-    private final int DAYS_IN_WEEK = 7;
+    private final MultiMap billboardSchedule;
 
     //initialize final variables that store the number of minutes in a day and hour
     private final int MINUTES_IN_DAY = 1440;
@@ -41,10 +38,10 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
     private boolean forcedClose = false;
 
     // current user's username
-    String username;
+    final String username;
 
     // current user's sessions token
-    String sessionToken;
+    final String sessionToken;
 
     private JButton backButton;
     private JButton logoutButton;
@@ -247,7 +244,7 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
         for (Object billboardName : billboardSchedule.keySet() ) {
 
             // Create array list to store viewings of billboard
-            ArrayList<ScheduleInfo> viewings = billboardSchedule.get(billboardName);
+            ArrayList<ScheduleInfo> viewings = new ArrayList<ScheduleInfo>(billboardSchedule.get(billboardName));
 
             // For every viewing of billboard
             for ( ScheduleInfo viewing : viewings ) {
@@ -274,6 +271,8 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
                 int intCurrentDay = currentDay.getValue();
 
                 // Calculate time till end of the week (Sunday)
+                // Number of days in each week
+                int DAYS_IN_WEEK = 7;
                 int timeEndWk = DAYS_IN_WEEK - intCurrentDay;
 
                 // If viewing is in the current week
@@ -390,8 +389,8 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
          * Returns JTextArea for cell
          * @param table table being formatted
          * @param value text value of cell
-         * @param isSelected
-         * @param hasFocus
+         * @param isSelected cell selected
+         * @param hasFocus focus selected
          * @param row row of cell
          * @param column column of cell
          * @return returns JTextArea
@@ -563,19 +562,7 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
     public void run() {
         try {
             createGUI();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e,
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);

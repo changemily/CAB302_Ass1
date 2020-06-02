@@ -32,19 +32,19 @@ import static javax.swing.JOptionPane.*;
  */
 public class GUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, ListSelectionListener, DocumentListener {
     // Billboard HashMap
-    HashMap<String, Billboard> billboardListH;
+    final HashMap<String, Billboard> billboardListH;
 
     // Current user
-    User currentUser;
+    final User currentUser;
 
     // Schedule MultiMap
-    ScheduleMultiMap schedule;
+    final ScheduleMultiMap schedule;
 
     // User's username
-    String username;
+    final String username;
 
     // User's sessions token
-    String sessionToken;
+    final String sessionToken;
 
     // Boolean to specify whether closeable or not
     boolean closeable = true;
@@ -93,12 +93,11 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
     private JTextField search;
 
     // Interactive JList for displaying billboards
-    private JList billboardList;
+    private JList<String> billboardList;
 
     // String elements
     private String billboardXML = null;
     private String billboardName;
-    private String xmlFile;
 
     // JPanels used throughout GUI
     private JPanel mainPanel;
@@ -116,19 +115,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
     String[] billboardListWithCreatorArray;
 
     // Variable list used to populate JList when user is searching
-    DefaultListModel billboardWithCreatorListModel = new DefaultListModel();
-
-    // Xml string used when there was no selection made
-    private final String NO_SELECTION_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<billboard>\n" +
-            "    <message>Select a billboard to preview</message>\n" +
-            "</billboard>";
-
-    // Xml string used when the list of billboards in empty
-    private final String EMPTY_LIST_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<billboard>\n" +
-            "    <message>No billboards stored in the database</message>\n" +
-            "</billboard>";
+    final DefaultListModel<String> billboardWithCreatorListModel = new DefaultListModel<>();
 
     /**
      * Method used to create a GUI window for the Billboard Control Panel
@@ -169,12 +156,22 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
         if(billboardListH.size() == 0)
         {
             // Create new billboard preview with empty billboard list message
+            // Xml string used when the list of billboards in empty
+            String EMPTY_LIST_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                    "<billboard>\n" +
+                    "    <message>No billboards stored in the database</message>\n" +
+                    "</billboard>";
             Billboard = new BillboardViewer(EMPTY_LIST_XML_STRING, DIMENSION);
         }
         // Else billboard list is not empty
         else
         {
             // Create new billboard preview with empty xml
+            // Xml string used when there was no selection made
+            String NO_SELECTION_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                    "<billboard>\n" +
+                    "    <message>Select a billboard to preview</message>\n" +
+                    "</billboard>";
             Billboard = new BillboardViewer(NO_SELECTION_XML_STRING, DIMENSION);
         }
 
@@ -352,14 +349,14 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
      * @param panel The JPanel that the created JList is to be added to
      * @return Returns JList
      */
-    private JList createJList(DefaultListModel listModel, String[] array, JPanel panel) {
+    private JList<String> createJList(DefaultListModel<String> listModel, String[] array, JPanel panel) {
 
         // Create new JPanel for spacing and formatting
         JPanel panel2 = new JPanel();
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS)); // Add box layout
 
         // Create new JList
-        JList list = new JList(billboardWithCreatorListModel);
+        JList<String> list = new JList<>(billboardWithCreatorListModel);
 
         // For each element in the provided array, add the element to the list model
         for (String a : array) {
@@ -377,7 +374,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
         panel2.add(Box.createVerticalStrut(50));
 
         // Add list selection listener, so billboard preview changes when different billboard is clicked
-        list.addListSelectionListener(this::valueChanged);
+        list.addListSelectionListener(this);
 
         // Add JPanel 2, to JPanel
         panel.add(panel2);
@@ -394,7 +391,8 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
     public void valueChanged(ListSelectionEvent event) {
         // Get string stored in current cell of list
         try {
-            String cellSelected = billboardList.getSelectedValue().toString();
+            String cellSelected;
+            cellSelected = billboardList.getSelectedValue();
 
             // Remove creator from list
             String billboardSelected = cellSelected.replaceAll(",.*", "");
@@ -558,7 +556,8 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             // If billboard has been selected
             else {
                 // Get string stored in current cell of list
-                String cellSelected = billboardList.getSelectedValue().toString();
+                String cellSelected;
+                cellSelected = billboardList.getSelectedValue();
 
                 // Remove creator from list
                 String billboardSelected = cellSelected.replaceAll(",.*", "");
@@ -585,7 +584,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                 // Check if user allowed to edit billboards
                 if((currentUser.permissions.contains("Edit All Billboards")) || (creatorCheck && !scheduleCheck && currentUser.permissions.contains("Create Billboards"))){
                     //Retrieve the xml file associated with the name
-                    xmlFile = billboardXML;
+                    String xmlFile = billboardXML;
 
                     // Check that editor isn't already open
                     int frameCount = 0;
@@ -691,7 +690,8 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             if(frameCount > 0)
             {
                 //get string stored in current cell of list
-                String cellSelected = billboardList.getSelectedValue().toString();
+                String cellSelected;
+                cellSelected = billboardList.getSelectedValue();
                 //remove creator from list
                 String billboardSelected = cellSelected.replaceAll(",.*", "");
                 if(billboardSelected.equals(openBillboard) || (billboardSelected.equals(openSchedule))){
@@ -711,7 +711,8 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             }
             else if(!Break){
                 //get string stored in current cell of list
-                String cellSelected = billboardList.getSelectedValue().toString();
+                String cellSelected;
+                cellSelected = billboardList.getSelectedValue();
 
                 //remove creator from list
                 String billboardSelected = cellSelected.replaceAll(",.*", "");
@@ -831,7 +832,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
      * @param model The model list to be changed, translates to the JList
      * @param array The master array to be checked against
      */
-    private void listSearch(DefaultListModel model, String[] array) {
+    private void listSearch(DefaultListModel<String> model, String[] array) {
         // Try executing the search
         try {
             // Converts any input by the user to lowercase characters (making the check case insensitive)
@@ -907,39 +908,40 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
      */
     @Override
     public void windowClosed(WindowEvent e) {
-        // Check that editor isn't open
-        int frameCount = 0;
-        Frame[] allFrames = Frame.getFrames();
-        for(Frame fr : allFrames){
-            if((fr.getClass().getName().equals("guis.GUIBillboardEditor"))){
-                if(fr.isVisible()){
-                    frameCount += 1;
-                }
-            }
-        }
-
-        // If editor is open, check if user is sure
-        if(frameCount > 0) {
-            int a = showConfirmDialog(null, "This will close your current billboard editor screen and you will lose any changes");
-            if (a == YES_OPTION) {
-                // Close all editors
-                allFrames = Frame.getFrames();
-                for (Frame fr : allFrames) {
-                    if ((fr.getClass().getName().equals("guis.GUIBillboardEditor"))) {
-                        fr.dispose();
+        if(closeable) {
+            // Check that editor isn't open
+            int frameCount = 0;
+            Frame[] allFrames = Frame.getFrames();
+            for (Frame fr : allFrames) {
+                if ((fr.getClass().getName().equals("guis.GUIBillboardEditor"))) {
+                    if (fr.isVisible()) {
+                        frameCount += 1;
                     }
                 }
+            }
+
+            // If editor is open, check if user is sure
+            if (frameCount > 0) {
+                int a = showConfirmDialog(null, "This will close your current billboard editor screen and you will lose any changes");
+                if (a == YES_OPTION) {
+                    // Close all editors
+                    allFrames = Frame.getFrames();
+                    for (Frame fr : allFrames) {
+                        if ((fr.getClass().getName().equals("guis.GUIBillboardEditor"))) {
+                            fr.dispose();
+                        }
+                    }
+                    // Go back to menu
+                    SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+                    dispose();
+                    closeable = false;
+                }
+            } else {
                 // Go back to menu
                 SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
                 dispose();
                 closeable = false;
             }
-        }
-        else{
-            // Go back to menu
-            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
-            dispose();
-            closeable = false;
         }
     }
 

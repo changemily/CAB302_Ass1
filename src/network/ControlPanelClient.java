@@ -420,9 +420,7 @@ public class ControlPanelClient {
             // Reset to login page
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("guis.GUIMainMenu"))){
-                    fr.dispose();
-                }
+                fr.dispose();
             }
             SwingUtilities.invokeLater(new GUILoginScreen());
         }

@@ -23,7 +23,7 @@ public class BillboardList implements java.io.Serializable {
     public static HashMap<String, Billboard> billboardHashMap;
 
     //Setup a schedule multimap
-    public ScheduleMultiMap scheduleMultiMap = new ScheduleMultiMap();
+    public final ScheduleMultiMap scheduleMultiMap = new ScheduleMultiMap();
 
     //constructor that creates HashMap
     public BillboardList() {
@@ -39,7 +39,7 @@ public class BillboardList implements java.io.Serializable {
      * @param  billboardCreator The billboard creators name
      * @param xmlFile String xml file
      */
-    public void createEditBillboard(String billboardName, String billboardCreator, String xmlFile) throws Exception {
+    public void createEditBillboard(String billboardName, String billboardCreator, String xmlFile){
             //Create a new billboard object
             billboardNew = new Billboard(billboardName, billboardCreator, xmlFile);
 
@@ -78,7 +78,7 @@ public class BillboardList implements java.io.Serializable {
             }
         }
         //if billboard is not in list
-        if (billboardExists == false)
+        if (!billboardExists)
         {
             throw new Exception("The billboard does not exist in the billboard list");
         }
@@ -93,7 +93,6 @@ public class BillboardList implements java.io.Serializable {
     public void deleteBillboard(String billboardName) throws Exception {
         //boolean variable to track whether billboard exists in schedule
         boolean billboardExists = false;
-        Billboard billboardInfo = null;
         //The code for deleting the billboard info from the schedule.
         try{
             //Get the info from schedule for the billboard
@@ -103,12 +102,12 @@ public class BillboardList implements java.io.Serializable {
 
                 //store schedule info in local vars
                 LocalDateTime startTimeScheduled = viewing.startTimeScheduled;
-                Duration durationMins = viewing.duration;
+                Duration durationMinutes = viewing.duration;
                 int recurrenceDelay = viewing.recurrenceDelay;
                 String billboardCreator = viewing.billboardCreator;
 
                 //create schedule info with viewing details
-                ScheduleInfo scheduleInfo = new ScheduleInfo(startTimeScheduled,durationMins, recurrenceDelay, billboardCreator);
+                ScheduleInfo scheduleInfo = new ScheduleInfo(startTimeScheduled, durationMinutes, recurrenceDelay, billboardCreator);
 
                 //remove viewing of billboard
                 scheduleMultiMap.removeViewing(billboardName, scheduleInfo);
@@ -117,10 +116,9 @@ public class BillboardList implements java.io.Serializable {
             billboardExists = true;
         }catch(Exception e){
             billboardHashMap.remove(billboardName);
-            billboardExists = true;
         }
         //if billboard is not in list
-        if (billboardExists == false)
+        if (!billboardExists)
         {
             throw new Exception("The billboard does not exist in the billboard list");
         }
@@ -130,7 +128,7 @@ public class BillboardList implements java.io.Serializable {
      * Method for retrieving a list of billboards from the database
      * @param connection A connection for accessing the database
      */
-    public void retrieveDBbillboardList(Connection connection) throws Exception {
+    public void retrieveDBBillboardList(Connection connection) throws Exception {
 
         final String SELECT = "SELECT * FROM Billboards ORDER BY billboardName desc";
         Statement st = connection.createStatement();
@@ -156,7 +154,7 @@ public class BillboardList implements java.io.Serializable {
      * Method for clearing a list of billboards in the database
      * @param connection A connection for accessing the database
      */
-    public void clearDBbillboardList(Connection connection) throws SQLException {
+    public void clearDBBillboardList(Connection connection) throws SQLException {
         Statement st = connection.createStatement();
         //for all entries in billboardHashMap
 
@@ -171,7 +169,7 @@ public class BillboardList implements java.io.Serializable {
      * Method for writing an updated list of billboards from the database
      * @param connection A connection for accessing the database
      */
-    public void writeToDBbillboard(Connection connection) throws SQLException {
+    public void writeToDBBillboard(Connection connection) throws SQLException {
         Statement st = connection.createStatement();
         //for every billboard name in billboardHashMap
 
