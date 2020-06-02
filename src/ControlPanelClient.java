@@ -11,7 +11,7 @@ import java.util.Properties;
  * Control Panel class
  * Class contains methods for connecting to, receiving and sending info to a server over a port,
  * Hash Method from lecture 9 Q&A
- * @author Emily Chang (Billboard, Schedule), Jarod Evans (Billboard, Log In / Log Out), Harry Estreich (Users)
+ * @author Emily Chang (Schedule), Jarod Evans (Billboard, Log In / Log Out), Harry Estreich (Users)
  * @version - Final
  */
 public class ControlPanelClient {
@@ -115,23 +115,6 @@ public class ControlPanelClient {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    /**
-     * Sourced from lecture 9 Q&A
-     * Hashes byte array of password into hexadecimal code
-     * @param password password in the form of array of bytes
-     * @return return hashed password
-     */
-    private static String hash(byte[] password)
-    {
-        StringBuffer sb = new StringBuffer();
-        //for each byte of the password
-        for (byte b : password)
-        {
-            sb.append(String.format("%02x",b &0xFF));
-        }
-        return sb.toString();
     }
 
     /**

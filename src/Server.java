@@ -14,8 +14,8 @@ import java.util.Timer;
 /**
  * Billboard server class
  * Class contains methods for connecting to, receiving and sending info to a client over a port,
- * @author Emily Chang
- * @version 1 - under development
+ * @author Emily Chang (Schedule, Billboard viewer), Jarod Evans (Billboard, Log In / Log Out), Harry Estreich (Users)
+ * @version Final
  */
 
 public class Server {
