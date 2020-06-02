@@ -1,20 +1,22 @@
+package user_classes;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
 /**
- * User class
+ * user_classes.User class
  * This class contains methods that create new users and modify existing users
  * @author - Nickhil Nischal
  * @version - Complete
  */
 public class User implements java.io.Serializable {
-    // Variables used for each User
-    String username;
-    String password;
-    String salt;
-    HashSet<String> permissions = new HashSet<>();
+    // Variables used for each user_classes.User
+    public String username;
+    public String password;
+    public String salt;
+    public HashSet<String> permissions = new HashSet<>();
 
-    // Creates an array with valid User Permissions
+    // Creates an array with valid user_classes.User Permissions
     final String[] PERMISSIONS_CHECK_LIST_1 = {"Create Billboards", "Edit All Billboards", "Schedule Billboards", "Edit Users"};
 
     // Populates a HashSet with permissions from PERMISSIONS_CHECK_LIST_1 array
@@ -35,13 +37,13 @@ public class User implements java.io.Serializable {
     /**
      * Constructor used to create a new user. Each user is assigned a username, password, and one to four permissions
      * (using variable arguments).
-     * @param username The User's username
-     * @param password The User's password
-     * @param salt The User's specific salt
-     * @param permissions The User's assigned permission/s
+     * @param username The user_classes.User's username
+     * @param password The user_classes.User's password
+     * @param salt The user_classes.User's specific salt
+     * @param permissions The user_classes.User's assigned permission/s
      * @throws Exception Throws exception when an invalid permission type is entered
      */
-    User(String username, String password, String salt, String ... permissions) throws Exception {
+    public User(String username, String password, String salt, String... permissions) throws Exception {
         // For loop that iterates over each permission that is entered, to check if each permission is valid
         for (String permission: permissions) {
             // Checks if the entered permission is a valid permission, else user is not created

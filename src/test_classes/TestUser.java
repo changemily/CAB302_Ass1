@@ -1,9 +1,13 @@
+package test_classes;
+
 import org.junit.jupiter.api.Test;
+import user_classes.User;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * User test class
- * This class contains methods which test the methods within the User class
+ * user_classes.User test class
+ * This class contains methods which test the methods within the user_classes.User class
  * @author - Nickhil Nischal
  * @version - Complete
  */

@@ -1,3 +1,13 @@
+package network_classes;
+
+import billboard_classes.Billboard;
+import gui_classes.*;
+import schedule_classes.MultiMap;
+import schedule_classes.ScheduleMultiMap;
+import user_classes.User;
+import user_classes.UserList;
+import user_classes.UserManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -11,7 +21,7 @@ import java.util.Properties;
  * Control Panel class
  * Class contains methods for connecting to, receiving and sending info to a server over a port,
  * Hash Method from lecture 9 Q&A
- * @author Emily Chang (Schedule), Jarod Evans (Billboard, Log In / Log Out), Harry Estreich (Users)
+ * @author Emily Chang (Schedule), Jarod Evans (billboard_classes.Billboard, Log In / Log Out), Harry Estreich (Users)
  * @version - Final
  */
 public class ControlPanelClient {
@@ -19,7 +29,7 @@ public class ControlPanelClient {
     public static String sessionToken;
 
     /**
-     * Sends requests to Server
+     * Sends requests to network_classes.Server
      */
     public static void runClient(String [] userInputs){
         Properties props = new Properties();
@@ -62,7 +72,7 @@ public class ControlPanelClient {
                     listBillboardDetails(oos, ois, request, userInputs);
                     break;
 
-                case "Get Billboard info":
+                case "Get billboard_classes.Billboard info":
                     getBillboardInfo(oos, request, userInputs);
                     break;
 
@@ -78,7 +88,7 @@ public class ControlPanelClient {
                 case "View schedule":
                     viewSchedule(oos,request,ois,userInputs);
                     break;
-                case "Schedule Billboard":
+                case "Schedule billboard_classes.Billboard":
                     //Send details of billboard wanting to be scheduled to server
                     scheduleBillboard(oos, request, userInputs);
                     break;
@@ -90,15 +100,15 @@ public class ControlPanelClient {
                 case "List users":
                     listUsersScreen(oos, ois, userInputs);
                     break;
-                case "Delete User":
+                case "Delete user_classes.User":
                     deleteUser(oos, request, userInputs);
                     break;
-                case "Create User":
+                case "Create user_classes.User":
                     createUser(oos, request, userInputs);
                     break;
-                case "Edit User":
+                case "Edit user_classes.User":
                     editUser(oos, request, userInputs);
-                case "Edit User Keep Password":
+                case "Edit user_classes.User Keep Password":
                     editUserKeepPassword(oos, request, userInputs);
             }
 
@@ -261,7 +271,7 @@ public class ControlPanelClient {
     }
 
     /**
-     * Sends view schedule request to Server and reads response
+     * Sends view schedule request to network_classes.Server and reads response
      * @param ois Object input stream of client
      * @throws IOException io error
      */
@@ -292,7 +302,7 @@ public class ControlPanelClient {
             }
             else{ // fail, error
                 JOptionPane.showMessageDialog(new JFrame(),
-                        "User doesn't have Schedule Billboards permission");
+                        "user_classes.User doesn't have Schedule Billboards permission");
             }
         }else{ // invalid session
             JOptionPane optionPane = new JOptionPane("Your session has expired," +
@@ -396,7 +406,7 @@ public class ControlPanelClient {
                     SwingUtilities.invokeLater(new GUIUserControlPanel(username, sessionToken, userList));
                 } else {  // fails permission check
                     JOptionPane.showMessageDialog(new JFrame(),
-                            "User doesn't have Edit Users permission");
+                            "user_classes.User doesn't have Edit Users permission");
                 }
             }
             else{ // users press change password, no permission check
@@ -424,7 +434,7 @@ public class ControlPanelClient {
     /**
      * Method that deletes a user
      * @param oos Object output stream of client
-     * @param buttonClicked "Delete User"
+     * @param buttonClicked "Delete user_classes.User"
      * @param user_inputs username
      * @throws IOException IO error
      */
@@ -437,7 +447,7 @@ public class ControlPanelClient {
     /**
      * Method for creating a current user
      * @param oos Object output steam of client
-     * @param buttonClicked "Create User"
+     * @param buttonClicked "Create user_classes.User"
      * @param user_inputs user details
      * @throws IOException IO error
      */
@@ -465,7 +475,7 @@ public class ControlPanelClient {
     /**
      * Method for editing a current user
      * @param oos Object output steam of client
-     * @param buttonClicked "Edit User"
+     * @param buttonClicked "Edit user_classes.User"
      * @param user_inputs user details
      * @throws IOException IO error
      */
@@ -494,7 +504,7 @@ public class ControlPanelClient {
     /**
      * Method for editing a current user but keeps their password
      * @param oos Object output steam of client
-     * @param buttonClicked "Edit User Keep Password"
+     * @param buttonClicked "Edit user_classes.User Keep Password"
      * @param user_inputs user details
      * @throws IOException IO error
      */

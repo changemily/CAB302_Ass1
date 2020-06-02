@@ -1,3 +1,8 @@
+package billboard_classes;
+
+import schedule_classes.ScheduleInfo;
+import schedule_classes.ScheduleMultiMap;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * Billboard List Class
+ * billboard_classes.Billboard List Class
  * Class contains methods for creating and controlling billboards.
  * @author - Jarod Evans
  * @version - Final
@@ -15,13 +20,13 @@ import java.util.*;
 public class BillboardList implements java.io.Serializable {
 
     //Setup a hashmap for tracking billboards.
-    static HashMap<String, Billboard> billboardHashMap;
+    public static HashMap<String, Billboard> billboardHashMap;
 
     //Setup a schedule multimap
-    ScheduleMultiMap scheduleMultiMap = new ScheduleMultiMap();
+    public ScheduleMultiMap scheduleMultiMap = new ScheduleMultiMap();
 
     //constructor that creates HashMap
-    BillboardList() {
+    public BillboardList() {
         billboardHashMap = new HashMap<>();
     }
 
@@ -52,7 +57,7 @@ public class BillboardList implements java.io.Serializable {
 
     /**
      * Method for retrieving billboard information from database
-     * @param billboardName Return type Billboard
+     * @param billboardName Return type billboard_classes.Billboard
      * @return returns HashMap of billboard names and objects
      */
     public Billboard getBillboardInfo(String billboardName) throws Exception {

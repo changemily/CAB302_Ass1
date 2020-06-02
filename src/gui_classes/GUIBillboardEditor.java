@@ -1,3 +1,8 @@
+package gui_classes;
+
+import billboard_classes.Billboard;
+import billboard_classes.BillboardViewer;
+import network_classes.ControlPanelClient;
 import org.xml.sax.SAXException;
 
 import java.awt.*;
@@ -19,8 +24,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import static javax.swing.JOptionPane.*;
 /**
- * Create/Edit User class for Control Panel GUI
- * This class contains a Main method and method that creates a GUI window for the Billboard Editor Screen
+ * Create/Edit user_classes.User class for Control Panel GUI
+ * This class contains a Main method and method that creates a GUI window for the billboard_classes.Billboard Editor Screen
  * @author - Liam Dines (GUI), Harry Estreich (buttons, preview screen methods)
  * @version - Final
  */
@@ -38,10 +43,10 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
     private Dimension d;
 
     // Java Swing Components
-    // Billboard Viewer class
+    // billboard_classes.Billboard Viewer class
     private BillboardViewer bb = null;
 
-    // Billboard panel
+    // billboard_classes.Billboard panel
     private JPanel previewPanel;
 
     // Text fields
@@ -77,7 +82,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
     public GUIBillboardEditor(String username, String sessionToken, String billboardName, String XMLString)
     {
         // Set window title
-        super("Billboard Editor");
+        super("billboard_classes.Billboard Editor");
 
         // Set variables
         this.billboardName = billboardName;
@@ -94,7 +99,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
      * @param billboardList list of billboards, for checking name
      */
     public GUIBillboardEditor(String username, String sessionToken, HashMap<String, Billboard> billboardList){
-        super("Billboard Creator");
+        super("billboard_classes.Billboard Creator");
 
         // Set variables
         this.billboardName = null;
@@ -126,10 +131,10 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
         // Create mainPanel
         JPanel mainPanel = new JPanel();
 
-        // Create Billboard Preview Panel
+        // Create billboard_classes.Billboard Preview Panel
         previewPanel = new JPanel();
 
-        // Initialise and add Billboard to Preview Panel
+        // Initialise and add billboard_classes.Billboard to Preview Panel
         d = new Dimension(600, 350);
         bb = new BillboardViewer(tempXMLString, d);
         JPanel billboardPreview = bb.getSizedBillboard();
@@ -167,7 +172,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
         JLabel informationLabel = createLabel("Information Text");
 
         // Create nameLabel
-        JLabel nameLabel = createLabel("Billboard Name");
+        JLabel nameLabel = createLabel("billboard_classes.Billboard Name");
         nameLabel.setVisible(createBillboard);
 
         // Create messageField
@@ -526,7 +531,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("GUIBillboardControlPanel"))){
+                    if((fr.getClass().getName().equals("gui_classes.GUIBillboardControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -535,7 +540,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                 dispose();
                 // if not, add one
                 if(frameCount == 0){
-                    //run Billboard Control Panel GUI
+                    //run billboard_classes.Billboard Control Panel GUI
                     String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
                     //request billboard list and run calendar GUI
                     ControlPanelClient.runClient(user_input);
@@ -647,7 +652,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                     messageTextColourDisplay.setBackground(bb.getMessageColour());
                     informationColourDisplay.setBackground(bb.getInformationColour());
                     // successful import
-                    JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Imported");
+                    JOptionPane.showMessageDialog(getContentPane(),"billboard_classes.Billboard Successfully Imported");
                 } catch (IOException fileNotFoundException) {
                     fileNotFoundException.printStackTrace();
                     JOptionPane.showMessageDialog(getContentPane(),"File could not be found, please check the filepath and try again. ", "Error", JOptionPane.ERROR_MESSAGE);
@@ -671,7 +676,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                 }
                 try {
                     bb.writeFile(o);
-                    JOptionPane.showMessageDialog(getContentPane(), "Billboard Successfully Exported");
+                    JOptionPane.showMessageDialog(getContentPane(), "billboard_classes.Billboard Successfully Exported");
                 } catch (ParserConfigurationException | TransformerException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(getContentPane(), ex,
@@ -723,12 +728,12 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
         // Close all current billboard control panels
         Frame[] allFrames = Frame.getFrames();
         for(Frame fr : allFrames){
-            if((fr.getClass().getName().equals("GUIBillboardControlPanel"))){
+            if((fr.getClass().getName().equals("gui_classes.GUIBillboardControlPanel"))){
                 fr.dispose();
             }
         }
         dispose(); // dispose editor
-        //run Billboard Control Panel GUI, creating new GUI
+        //run billboard_classes.Billboard Control Panel GUI, creating new GUI
         String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
         ControlPanelClient.runClient(user_input);
     }
@@ -747,7 +752,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
             if (nameField.getText().contains("'") || nameField.getText().contains("\"")) {
                 //display error pop up
                 JOptionPane.showMessageDialog(this,
-                        "Billboard contains invalid character");
+                        "billboard_classes.Billboard contains invalid character");
                 Break = true;
             }
             if (billboardName.equals("") || billboardName.equals(" ")) { // no name
@@ -772,7 +777,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
             try {
                 // update xml string
                 tempXMLString = bb.updateXMLString();
-                JOptionPane.showMessageDialog(getContentPane(), "Billboard Successfully Saved to Database");
+                JOptionPane.showMessageDialog(getContentPane(), "billboard_classes.Billboard Successfully Saved to Database");
             } catch (ParserConfigurationException | TransformerException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(getContentPane(), ex,
@@ -888,7 +893,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("GUIBillboardControlPanel"))){
+                if((fr.getClass().getName().equals("gui_classes.GUIBillboardControlPanel"))){
                     if(fr.isVisible()){
                         frameCount += 1;
                     }
@@ -897,7 +902,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
             dispose(); // close editor
             // if no control panels update control panel
             if(frameCount == 0){
-                //run Billboard Control Panel GUI
+                //run billboard_classes.Billboard Control Panel GUI
                 String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
                 //request billboard list and run calendar GUI
                 ControlPanelClient.runClient(user_input);

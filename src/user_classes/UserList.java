@@ -1,3 +1,5 @@
+package user_classes;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,7 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * This class contains method for return a hashmap of users with their usernames, as well as many static that ControlPanelClient
+ * This class contains method for return a hashmap of users with their usernames, as well as many static that network_classes.ControlPanelClient
  * uses to manipulate a list of users
  * @author - Harry Estreich
  * @version - Final
@@ -153,7 +155,7 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
     /**
      * Adds a new user to the HashMap
      * @param   userHashMap HashMap of all users
-     * @param   newUser User being added to HashMap
+     * @param   newUser user_classes.User being added to HashMap
      * @throws  Exception throws an exception if user already exists
      */
     public static void addUserToList(HashMap<String, User> userHashMap,User newUser) throws Exception {
@@ -170,7 +172,7 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
     /**
      * Removes a user from the HashMap
      * @param   userHashMap HashMap of all users
-     * @param   oldUser User being remove from HashMap
+     * @param   oldUser user_classes.User being remove from HashMap
      * @throws  Exception throws an exception if user doesn't exist
      */
     public static void deleteUserFromList(HashMap<String, User> userHashMap, User oldUser) throws Exception {
@@ -187,17 +189,17 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
             userHashMap.remove(oldUser.username);
         }
         else{
-            throw new Exception("User with this username doesn't exist");
+            throw new Exception("user_classes.User with this username doesn't exist");
         }
 
 
     }
 
     /**
-     * Retrieves a User from the userList given a username
+     * Retrieves a user_classes.User from the userList given a username
      * @param   userHashMap HashMap of all users
      * @param   userName Username of user being retrieved
-     * @return  Full User for username given
+     * @return  Full user_classes.User for username given
      * @throws  Exception throws an exception if user doesn't exist
      */
     public static User getUserInformation(HashMap<String, User> userHashMap, String userName) throws Exception {
@@ -208,7 +210,7 @@ public class UserList extends HashMap<String, User> implements java.io.Serializa
             }
         }
         // If can't find throw exception
-        throw new Exception("User with this username doesn't exist");
+        throw new Exception("user_classes.User with this username doesn't exist");
     }
 }
 

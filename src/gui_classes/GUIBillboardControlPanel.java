@@ -1,4 +1,11 @@
+package gui_classes;
+
+import billboard_classes.Billboard;
+import billboard_classes.BillboardViewer;
+import network_classes.ControlPanelClient;
 import org.xml.sax.SAXException;
+import schedule_classes.ScheduleMultiMap;
+import user_classes.User;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -18,13 +25,13 @@ import java.util.Map;
 import static javax.swing.JOptionPane.*;
 
 /**
- * Billboard Control Panel class for Control Panel GUI
- * This class contains a Main method and method that creates a GUI window for the Billboard Control Panel
+ * billboard_classes.Billboard Control Panel class for Control Panel GUI
+ * This class contains a Main method and method that creates a GUI window for the billboard_classes.Billboard Control Panel
  * @author - Nickhil Nischal (GUI, Buttons), Harry Estreich (Buttons, Permissions)
  * @version - Final
  */
 public class GUIBillboardControlPanel extends JFrame implements Runnable, ActionListener, WindowListener, ListSelectionListener, DocumentListener {
-    // Billboard HashMap
+    // billboard_classes.Billboard HashMap
     HashMap<String, Billboard> billboardListH;
 
     // Current user
@@ -33,10 +40,10 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
     // Schedule MultiMap
     ScheduleMultiMap schedule;
 
-    // User's username
+    // user_classes.User's username
     String username;
 
-    // User's sessions token
+    // user_classes.User's sessions token
     String sessionToken;
 
     // Boolean to specify whether closeable or not
@@ -47,23 +54,23 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
     String openSchedule;
 
     /**
-     * Method used to create a GUI window for the Billboard Control Panel Screen
+     * Method used to create a GUI window for the billboard_classes.Billboard Control Panel Screen
      * @param username Used for setting the username
      * @param sessionToken The sessionToken associated with the user
-     * @param BillboardList A list of billboards passed in
+     * @param billboard_classes.BillboardList A list of billboards passed in
      */
 
     /**
-     * Method used to create a GUI window for the Billboard Control Panel Screen
+     * Method used to create a GUI window for the billboard_classes.Billboard Control Panel Screen
      * @param username Used for setting the username
      * @param sessionToken The sessionToken associated with the user
      * @param BillboardList A list of billboards passed in
      * @param currentUser Current user
      * @param schedule Schedule MultiMap
      */
-    public GUIBillboardControlPanel(String username, String sessionToken, HashMap<String, Billboard> BillboardList, User currentUser, ScheduleMultiMap schedule) {
+    public GUIBillboardControlPanel(String username, String sessionToken, HashMap<String, billboard_classes.Billboard> BillboardList, User currentUser, ScheduleMultiMap schedule) {
         // Set window title
-        super("Billboard Control Panel");
+        super("billboard_classes.Billboard Control Panel");
 
         // The user's username
         this.username = username;
@@ -74,7 +81,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
         // Current user
         this.currentUser = currentUser;
 
-        // Billboard list HashMap
+        // billboard_classes.Billboard list HashMap
         billboardListH = BillboardList;
 
         // Schedule MultiMap
@@ -109,7 +116,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
     // Set dimension size for billboard preview
     private final Dimension DIMENSION = new Dimension(400,200);
 
-    // Billboard viewer
+    // billboard_classes.Billboard viewer
     private BillboardViewer Billboard;
 
     // Master Array of billboards (and creators), used in billboard search checking
@@ -131,7 +138,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             "</billboard>";
 
     /**
-     * Method used to create a GUI window for the Billboard Control Panel
+     * Method used to create a GUI window for the billboard_classes.Billboard Control Panel
      * @throws ClassNotFoundException Exception thrown by setLookAndFeel: when an application tries to load in a class
      * through its string name but no definition for the class with the specified name could be found.
      * @throws UnsupportedLookAndFeelException Exception thrown by setLookAndFeel: an IllegalAccessException is thrown
@@ -191,8 +198,8 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             // Create search JPanel, with X axis Box Layout
             JPanel searchPanel = new JPanel();
 
-            // Create Search Billboard JLabel
-            JLabel label = new JLabel("Search Billboard");
+            // Create Search billboard_classes.Billboard JLabel
+            JLabel label = new JLabel("Search billboard_classes.Billboard");
 
             // Add JLabel to specified JPanel
             searchPanel.add(label);
@@ -220,11 +227,11 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1,2)); // Set grid layout of button JPanel
 
-        // Create and add Edit Billboard button, inside button JPanel
-        editBillboardButton = createButton("Edit Billboard");
+        // Create and add Edit billboard_classes.Billboard button, inside button JPanel
+        editBillboardButton = createButton("Edit billboard_classes.Billboard");
         buttonPanel.add(editBillboardButton); // Add JButton to button JPanel
 
-        // Create and add Schedule Billboard button, inside button JPanel
+        // Create and add Schedule billboard_classes.Billboard button, inside button JPanel
         scheduleBillboardButton = createButton("Manage Schedule");
         buttonPanel.add(scheduleBillboardButton); // Add JButton to button JPanel
         mainPanel.add(buttonPanel); // Add button JPanel to billboard preview JPanel
@@ -233,14 +240,14 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
         createBillboardPanel = new JPanel();
         createBillboardPanel.setLayout(new BoxLayout(createBillboardPanel, BoxLayout.X_AXIS)); // Set box layout
 
-        // Create and add Create Billboard button, inside billboard create billboard JPanel; and add formatting
-        createBillboardButton = createButton("Create Billboard");
+        // Create and add Create billboard_classes.Billboard button, inside billboard create billboard JPanel; and add formatting
+        createBillboardButton = createButton("Create billboard_classes.Billboard");
         createBillboardPanel.add(Box.createVerticalStrut(30)); // Add vertical strut
         createBillboardPanel.add(createBillboardButton); // Add JButton to JPanel
         createBillboardPanel.add(Box.createVerticalStrut(100)); // Add vertical strut
 
         // Create and add Create Delete button
-        deleteBillboardButton = createButton("Delete Billboard");
+        deleteBillboardButton = createButton("Delete billboard_classes.Billboard");
         createBillboardPanel.add(Box.createVerticalStrut(30)); // Add vertical strut
         createBillboardPanel.add(deleteBillboardButton); // Add JButton to JPanel
         createBillboardPanel.add(Box.createVerticalStrut(100)); // Add vertical strut
@@ -471,7 +478,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("GUIBillboardEditor"))){
+                if((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))){
                     if(fr.isVisible()){
                         frameCount += 1;
                     }
@@ -485,7 +492,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     // Close all editors
                     allFrames = Frame.getFrames();
                     for (Frame fr : allFrames) {
-                        if ((fr.getClass().getName().equals("GUIBillboardEditor"))) {
+                        if ((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))) {
                             fr.dispose();
                         }
                     }
@@ -509,7 +516,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("GUIBillboardEditor")) || (fr.getClass().getName().equals("GUIBillboardSchedulePopup"))){
+                if((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor")) || (fr.getClass().getName().equals("gui_classes.GUIBillboardSchedulePopup"))){
                     if(fr.isVisible()){
                         frameCount += 1;
                     }
@@ -523,7 +530,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     // Close all editors
                     allFrames = Frame.getFrames();
                     for (Frame fr : allFrames) {
-                        if ((fr.getClass().getName().equals("GUIBillboardEditor")) || (fr.getClass().getName().equals("GUIBillboardSchedulePopup"))) {
+                        if ((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor")) || (fr.getClass().getName().equals("gui_classes.GUIBillboardSchedulePopup"))) {
                             fr.dispose();
                         }
                     }
@@ -589,7 +596,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     int frameCount = 0;
                     Frame[] allFrames = Frame.getFrames();
                     for(Frame fr : allFrames){
-                        if((fr.getClass().getName().equals("GUIBillboardEditor"))){
+                        if((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))){
                             if(fr.isVisible()){
                                 frameCount += 1;
                             }
@@ -603,7 +610,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                             // Close all editors
                             allFrames = Frame.getFrames();
                             for (Frame fr : allFrames) {
-                                if ((fr.getClass().getName().equals("GUIBillboardEditor"))) {
+                                if ((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))) {
                                     fr.dispose();
                                 }
                             }
@@ -636,7 +643,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("GUIBillboardEditor"))){
+                    if((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -650,7 +657,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                         // close all editors
                         allFrames = Frame.getFrames();
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("GUIBillboardEditor"))) {
+                            if ((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor"))) {
                                 fr.dispose();
                             }
                         }
@@ -678,7 +685,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("GUIBillboardEditor")) || (fr.getClass().getName().equals("GUIBillboardSchedulePopup"))){
+                if((fr.getClass().getName().equals("gui_classes.GUIBillboardEditor")) || (fr.getClass().getName().equals("gui_classes.GUIBillboardSchedulePopup"))){
                     if(fr.isVisible()){
                         frameCount += 1;
                     }
@@ -748,7 +755,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                             closeable = false;
                             dispose();
                             //JOptionPane.showMessageDialog(this,
-                            //        "Billboard Successfully Deleted");
+                            //        "billboard_classes.Billboard Successfully Deleted");
                         }
 
                     } catch (Exception e) {
@@ -783,7 +790,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     // check no schedule GUIs are open
                     Frame[] allFrames = Frame.getFrames();
                     for(Frame fr : allFrames){
-                        if((fr.getClass().getName().equals("GUIBillboardSchedulePopup"))){
+                        if((fr.getClass().getName().equals("gui_classes.GUIBillboardSchedulePopup"))){
                             if(fr.isVisible()){
                                 frameCount += 1;
                             }
@@ -797,7 +804,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                             // close all schedule screens
                             allFrames = Frame.getFrames();
                             for (Frame fr : allFrames) {
-                                if ((fr.getClass().getName().equals("GUIBillboardSchedulePopup"))) {
+                                if ((fr.getClass().getName().equals("gui_classes.GUIBillboardSchedulePopup"))) {
                                     fr.dispose();
                                 }
                             }

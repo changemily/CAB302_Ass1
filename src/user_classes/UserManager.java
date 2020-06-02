@@ -1,3 +1,7 @@
+package user_classes;
+
+import network_classes.DBconnection;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -5,36 +9,36 @@ import java.util.HashSet;
 import java.util.Random;
 
 /**
- * User Manager class
+ * user_classes.User Manager class
  * Class contains methods for creating and controlling billboards.
  * @author - Harry Estreich
  * @version - Final
  */
 public class UserManager
 {
-    // Main User Variables
+    // Main user_classes.User Variables
     public final User current;
     public User target;
 
 
     /**
-     * Constructor used to create a userManager relation. When attempted to use UserManager methods that don't require it
+     * Constructor used to create a userManager relation. When attempted to use user_classes.UserManager methods that don't require it
      * a target user like list_users, create_user, log_out, it is not necessary to have a target user in the constructor.
-     * @param current The Current User
+     * @param current The Current user_classes.User
      */
 
-    UserManager(User current){
+    public UserManager(User current){
         this.current = current;
     }
 
     /**
-     * Overloaded Constructor used to create a directed userManager relation. Each userManager is assigned a current User, and a target user,
-     * where the current User is managing the target user, the current user can also be the target user if modifying itself.
-     * @param current The Current User
-     * @param target The Target User
+     * Overloaded Constructor used to create a directed userManager relation. Each userManager is assigned a current user_classes.User, and a target user,
+     * where the current user_classes.User is managing the target user, the current user can also be the target user if modifying itself.
+     * @param current The Current user_classes.User
+     * @param target The Target user_classes.User
      */
 
-    UserManager(User current, User target){
+    public UserManager(User current, User target){
         this.current = current;
         this.target = target;
 
@@ -44,7 +48,7 @@ public class UserManager
      * Method for listing the usernames of a HashSet of Users
      * @param   userHashSet hashset of Users
      * @return  hashset of usernames
-     * @throws  Exception throws exception if current user doesn't have Edit User permission
+     * @throws  Exception throws exception if current user doesn't have Edit user_classes.User permission
      */
     public HashSet<String> listUsers(HashSet<User> userHashSet) throws Exception {
         if (current.permissions.contains("Edit Users")) { // check for Edit Users
@@ -56,7 +60,7 @@ public class UserManager
             return usernames;
         }
         else {
-            throw new Exception("User can't list user with Edit Users permission");
+            throw new Exception("user_classes.User can't list user with Edit Users permission");
         }
     }
 
@@ -64,14 +68,14 @@ public class UserManager
      * Method for creating users and adding it to a hashset of other users
      * @param   newUser new user
      * @param   userHashSet hashset of users
-     * @throws  Exception throws exception if current user doesn't have Edit User permission
+     * @throws  Exception throws exception if current user doesn't have Edit user_classes.User permission
      */
     public void addUser(User newUser, HashSet<User> userHashSet) throws Exception {
         if(current.permissions.contains("Edit Users")){ // check for Edit Users
             userHashSet.add(newUser); // add user to hashset
         }
         else{
-            throw new Exception("User can't add user with Edit Users permission");
+            throw new Exception("user_classes.User can't add user with Edit Users permission");
         }
     }
     /**
@@ -87,7 +91,7 @@ public class UserManager
                     target.permissions = permissions;
                 }
                 else{
-                    throw new Exception("User can't remove Edit Users from themselves");
+                    throw new Exception("user_classes.User can't remove Edit Users from themselves");
                 }
             }
             else{
@@ -95,7 +99,7 @@ public class UserManager
             }
         }
         else{
-            throw new Exception("User needs Edit Users to edit permissions");
+            throw new Exception("user_classes.User needs Edit Users to edit permissions");
         }
     }
 
@@ -110,7 +114,7 @@ public class UserManager
                 target.password = password;
             }
             else{
-                throw new Exception("User needs edit users to set someone else's password");
+                throw new Exception("user_classes.User needs edit users to set someone else's password");
             }
         }
         else{

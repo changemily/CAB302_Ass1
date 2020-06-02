@@ -1,3 +1,10 @@
+package gui_classes;
+
+import network_classes.ControlPanelClient;
+import user_classes.User;
+import user_classes.UserList;
+import user_classes.UserManager;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -412,7 +419,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for (Frame fr : allFrames) {
-                if ((fr.getClass().getName().equals("GUICreateEditUser"))) {
+                if ((fr.getClass().getName().equals("gui_classes.GUICreateEditUser"))) {
                     if (fr.isVisible()) {
                         frameCount += 1;
                     }
@@ -425,7 +432,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                     // close all createEditUser GUIs
                     allFrames = Frame.getFrames();
                     for (Frame fr : allFrames) {
-                        if ((fr.getClass().getName().equals("GUICreateEditUser"))) {
+                        if ((fr.getClass().getName().equals("gui_classes.GUICreateEditUser"))) {
                             fr.dispose();
                         }
                     }
@@ -452,7 +459,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for (Frame fr : allFrames) {
-                if ((fr.getClass().getName().equals("GUICreateEditUser"))) {
+                if ((fr.getClass().getName().equals("gui_classes.GUICreateEditUser"))) {
                     if (fr.isVisible()) {
                         frameCount += 1;
                     }
@@ -465,7 +472,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                     // close all createEditUser GUIs
                     allFrames = Frame.getFrames();
                     for (Frame fr : allFrames) {
-                        if ((fr.getClass().getName().equals("GUICreateEditUser"))) {
+                        if ((fr.getClass().getName().equals("gui_classes.GUICreateEditUser"))) {
                             fr.dispose();
                         }
                     }
@@ -511,7 +518,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                     int frameCount = 0;
                     Frame[] allFrames = Frame.getFrames();
                     for(Frame fr : allFrames){
-                        if((fr.getClass().getName().equals("GUICreateEditUser"))){
+                        if((fr.getClass().getName().equals("gui_classes.GUICreateEditUser"))){
                             if(fr.isVisible()){
                                 frameCount += 1;
                             }
@@ -528,7 +535,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                                 // close all createEditUser GUIs
                                 allFrames = Frame.getFrames();
                                 for (Frame fr : allFrames) {
-                                    if ((fr.getClass().getName().equals("GUICreateEditUser"))) {
+                                    if ((fr.getClass().getName().equals("gui_classes.GUICreateEditUser"))) {
                                         fr.dispose();
                                     }
                                 }
@@ -596,7 +603,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("GUICreateEditUser"))){
+                    if((fr.getClass().getName().equals("gui_classes.GUICreateEditUser"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -610,7 +617,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                             // remove all GUIs
                             allFrames = Frame.getFrames();
                             for(Frame fr : allFrames){
-                                if((fr.getClass().getName().equals("GUICreateEditUser"))){
+                                if((fr.getClass().getName().equals("gui_classes.GUICreateEditUser"))){
                                     fr.dispose();
                                 }
                             }

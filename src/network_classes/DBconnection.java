@@ -1,3 +1,5 @@
+package network_classes;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,7 +10,7 @@ import java.util.Properties;
 
 /**
  * Sourced from Week 7 lecture demonstrations
- * DBconnection class
+ * network_classes.DBconnection class
  * Class contains methods for connecting to the database
  * @author Jarod Evans & Emily Chang
  * @version - complete
@@ -42,7 +44,7 @@ public class DBconnection {
                     username, password);
         } catch (SQLException sqle) { //if connection to DB cannot be established
             //print error message
-            System.err.println("Server could not connect to Database");
+            System.err.println("network_classes.Server could not connect to Database");
             //terminate server
             System.exit(1);
         } catch (FileNotFoundException fnfe) {

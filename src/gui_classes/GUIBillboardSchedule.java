@@ -1,3 +1,9 @@
+package gui_classes;
+
+import network_classes.ControlPanelClient;
+import schedule_classes.MultiMap;
+import schedule_classes.ScheduleInfo;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -12,8 +18,8 @@ import java.util.ArrayList;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
- * Billboard Schedule class for Control Panel GUI
- * This class contains a Main method and method that creates a GUI window for the Billboard Schedule Screen
+ * billboard_classes.Billboard Schedule class for Control Panel GUI
+ * This class contains a Main method and method that creates a GUI window for the billboard_classes.Billboard Schedule Screen
  * @author - Nickhil Nischal (GUI, Buttons), Harry Estreich (Buttons, Permissions), Emily Chang (adding schedule data to table)
  * @version - Final
  *
@@ -21,7 +27,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
  */
 public class GUIBillboardSchedule extends JFrame implements Runnable, ActionListener, WindowListener {
 
-    // Billboard MultiMap
+    // billboard_classes.Billboard MultiMap
     private MultiMap billboardSchedule;
 
     // Number of days in each week
@@ -40,14 +46,14 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
     private JButton logoutButton;
 
     /**
-     * Method used to create a GUI window for the Billboard Schedule Screen
+     * Method used to create a GUI window for the billboard_classes.Billboard Schedule Screen
      * @param username current username of user logged in
      * @param sessionToken The sessionToken associated with the user
      * @param schedule current billboard schedule
      */
     public GUIBillboardSchedule(String username, String sessionToken, MultiMap schedule) {
         // Set window title
-        super("Billboard Schedule");
+        super("billboard_classes.Billboard Schedule");
 
         // set internal variables to given values
         this.billboardSchedule = schedule;
@@ -56,7 +62,7 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
     }
 
     /**
-     * Method used to create a GUI window for the Billboard Schedule screen
+     * Method used to create a GUI window for the billboard_classes.Billboard Schedule screen
      * @throws ClassNotFoundException Thrown by setLookAndFeel - when an application tries to load in a class through its string name but no definition
      * for the class with the specified name could be found.
      * @throws UnsupportedLookAndFeelException Thrown by setLookAndFeel - An exception that indicates the requested look & feel management classes
@@ -314,7 +320,7 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
                     String cellString = tempCellString.replaceAll("null", "");
 
                     // Populate cell with string
-                    data[billboardHour][dayInt] = cellString; // Change this line to "BillboardName by User"
+                    data[billboardHour][dayInt] = cellString; // Change this line to "BillboardName by user_classes.User"
                 }
             }
         }

@@ -1,3 +1,7 @@
+package gui_classes;
+
+import network_classes.ControlPanelClient;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +13,7 @@ import java.awt.event.ActionListener;
  * @author - Nickhil Nischal (GUI) Jarod Evans (Implementation)
  * @version - Final
  *
- * NOTES: User credentials check to be added
+ * NOTES: user_classes.User credentials check to be added
  */
 public class GUILoginScreen extends JFrame implements Runnable, ActionListener {
     private JButton loginButton;
@@ -21,7 +25,7 @@ public class GUILoginScreen extends JFrame implements Runnable, ActionListener {
      */
     public GUILoginScreen() {
         // Set window title
-        super("Billboard Control Panel Login Screen");
+        super("billboard_classes.Billboard Control Panel Login Screen");
     }
 
     /**
@@ -44,7 +48,7 @@ public class GUILoginScreen extends JFrame implements Runnable, ActionListener {
         setResizable(false);
 
         // Create title label, inside of a JPanel
-        JPanel titlePanel = newLabel("Welcome to the Billboard Control Panel", true, true);
+        JPanel titlePanel = newLabel("Welcome to the billboard_classes.Billboard Control Panel", true, true);
         titlePanel.add(Box.createHorizontalStrut(100));
 
         // Create subtitle label, inside of a JPanel

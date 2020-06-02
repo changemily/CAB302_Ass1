@@ -1,3 +1,7 @@
+package gui_classes;
+
+import network_classes.ControlPanelClient;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -80,7 +84,7 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
         JPanel editBillboardPanel = createButtonJPanel(editBillboardButton,150,150,false);
 
         // Create view billboard schedule JButton
-        viewBillboardScheduleButton = createButton("View Billboard Schedule");
+        viewBillboardScheduleButton = createButton("View billboard_classes.Billboard Schedule");
 
         // Create view billboard schedule JPanel that holds the view billboard schedule JButton
         JPanel editBillboardSchedulePanel = createButtonJPanel(viewBillboardScheduleButton,150,150,false);
@@ -218,7 +222,7 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
 
         // If edit users JButton is clicked
         else if (buttonClicked == editUsersButton) {
-            // Open User Control Panel GUI
+            // Open user_classes.User Control Panel GUI
             String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
             ControlPanelClient.runClient(user_input);
             dispose();
@@ -226,7 +230,7 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
 
         // If edit billboard JButton is clicked
         else if (buttonClicked == editBillboardButton) {
-            // Run Billboard Control Panel GUI
+            // Run billboard_classes.Billboard Control Panel GUI
             String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
             // Request schedule and run calendar GUI
             ControlPanelClient.runClient(user_input);

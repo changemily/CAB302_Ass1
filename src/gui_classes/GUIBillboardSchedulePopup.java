@@ -1,3 +1,9 @@
+package gui_classes;
+
+import network_classes.ControlPanelClient;
+import schedule_classes.ScheduleInfo;
+import schedule_classes.ScheduleMultiMap;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,13 +45,13 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
      * Constructor that creates an instance of a JFrame GUI window
      * @param username current user's username
      * @param sessionToken current session token of user
-     * @param billboardName current billboard selected in Billboard Control Panel GUI screen
+     * @param billboardName current billboard selected in billboard_classes.Billboard Control Panel GUI screen
      * @param schedule billboard schedule
      */
     public GUIBillboardSchedulePopup(String username, String sessionToken, String billboardName, ScheduleMultiMap schedule)
     {
         // Set window title
-        super("Schedule Billboard");
+        super("Schedule billboard_classes.Billboard");
 
         //set values for current billboardName, username, sessionToken & schedule
         this.billboardName = billboardName;
@@ -121,7 +127,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         removeBttn.setMargin(new Insets(0, 0, 0, 0));
 
         // Create Schedule Button
-        scheduleBttn = createButton("Schedule Billboard");
+        scheduleBttn = createButton("Schedule billboard_classes.Billboard");
 
         // Create Back Button
         closeBttn = createButton("Close");
@@ -364,7 +370,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         //if schedule button is selected
         if (buttonClicked== scheduleBttn) {
             //store GUI inputs in user inputs array
-            String [] userInputs = {"Schedule Billboard", billboardName,startTimeString, duration, recurrenceDelay};
+            String [] userInputs = {"Schedule billboard_classes.Billboard", billboardName,startTimeString, duration, recurrenceDelay};
 
             //get current time
             LocalDateTime currentTime = LocalDateTime.now();
@@ -383,7 +389,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
                 ControlPanelClient.runClient(userInputs);
 
                 //display confirmation message
-                showMessageDialog(null, "Billboard Successfully Scheduled");
+                showMessageDialog(null, "billboard_classes.Billboard Successfully Scheduled");
 
                 //dispose of pop up and reopen billboard control panel
                 frameRefresh();
@@ -429,7 +435,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
                                 validSchedule = true;
 
                                 //display confirmation message
-                                showMessageDialog(null, "Billboard Successfully Removed From Schedule");
+                                showMessageDialog(null, "billboard_classes.Billboard Successfully Removed From Schedule");
 
                                 //store GUI inputs in user inputs array
                                 String [] userInputs = {"Remove Schedule", billboardName, startTimeString, duration, recurrenceDelay};
@@ -475,15 +481,15 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
         Frame[] allFrames = Frame.getFrames();
         //for every frame
         for (Frame fr : allFrames) {
-            //if GUI screen is Billboard Control Panel
-            if ((fr.getClass().getName().equals("GUIBillboardControlPanel"))) {
+            //if GUI screen is billboard_classes.Billboard Control Panel
+            if ((fr.getClass().getName().equals("gui_classes.GUIBillboardControlPanel"))) {
                 fr.dispose();
             }
         }
         //dispose schedule info pop up
         dispose();
         String [] userInput = {"List billboards", ControlPanelClient.sessionToken};
-        //request billboard list and run Billboard Control Panel GUI
+        //request billboard list and run billboard_classes.Billboard Control Panel GUI
         ControlPanelClient.runClient(userInput);
     }
 

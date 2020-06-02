@@ -1,3 +1,7 @@
+package schedule_classes;
+
+import billboard_classes.Billboard;
+
 import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -15,7 +19,7 @@ import java.util.Map;
 public class ScheduleMultiMap implements java.io.Serializable  {
 
     //Multimap that stores billboard name as the key and schedule information as the values
-    MultiMap<String, ScheduleInfo> scheduleMultiMap;
+    public MultiMap<String, ScheduleInfo> scheduleMultiMap;
 
     /**
      * constructor that creates a scheduleMultiMap object
@@ -25,7 +29,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
     }
 
     /**
-     * Retrieves schedule data from database and stores it in the MultiMap of the scheduleMultiMap object
+     * Retrieves schedule data from database and stores it in the schedule_classes.MultiMap of the scheduleMultiMap object
      * @param connection Database Connection
      * @throws SQLException throws exception if SQL query is invalid, billboard does not exist or combination of billboard &
      * schedule information does not exist
@@ -123,7 +127,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
 
     /**
      * Returns array of all viewings that have been scheduled
-     * @return MultiMap containing billboard name as the key and schedule info as the value
+     * @return schedule_classes.MultiMap containing billboard name as the key and schedule info as the value
      */
 
     public MultiMap<String, ScheduleInfo> viewSchedule()
@@ -134,12 +138,12 @@ public class ScheduleMultiMap implements java.io.Serializable  {
     /**
      * Schedules billboards, accounting for overlapping viewings
      * @param newBillboardName name of billboard being scheduled
-     * @param newBBStartTime start time (date) Billboard is scheduled for showing
-     * @param newBBDuration Duration (minutes) Billboard is displayed for
+     * @param newBBStartTime start time (date) billboard_classes.Billboard is scheduled for showing
+     * @param newBBDuration Duration (minutes) billboard_classes.Billboard is displayed for
      * @param recurrenceDelay recurrence delay (minutes) of billboard being scheduled
      * @param billboardList list that contains all billboards created
      * @param billboardCreator creator of billboard being scheduled
-     * @throws Exception if Billboard does not exist & if duration is out of range or the time scheduled is in the past
+     * @throws Exception if billboard_classes.Billboard does not exist & if duration is out of range or the time scheduled is in the past
      */
     public void scheduleBillboard(String newBillboardName, LocalDateTime newBBStartTime, Duration newBBDuration,
                                   int recurrenceDelay, HashMap<String, Billboard> billboardList, String billboardCreator) throws Exception{
@@ -341,7 +345,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
      * @param newBillboardName name of billboard being scheduled
      * @param newBBStartTime start time (minutes) of billboard being scheduled
      * @param billboardList list that contains all billboards created
-     * @throws Exception if Billboard does not exist, if duration is out of range or if the start time given is in the past
+     * @throws Exception if billboard_classes.Billboard does not exist, if duration is out of range or if the start time given is in the past
      */
     private void checkValidSchedule(String newBillboardName, LocalDateTime newBBStartTime, HashMap<String, Billboard> billboardList) throws Exception {
         //CHECK FOR VALID START TIME
@@ -419,7 +423,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
                     {
                         viewingExists = true;
 
-                        //remove scheduled viewing value from Billboard key
+                        //remove scheduled viewing value from billboard_classes.Billboard key
                         scheduleMultiMap.remove(billboardName,viewing);
                         break outerloop;
                     }

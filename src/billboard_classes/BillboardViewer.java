@@ -1,3 +1,5 @@
+package billboard_classes;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -15,8 +17,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 /**
- * Billboard Viewer Gui
- * This class contains a Main method and method that creates a GUI window for the Billboard Viewer
+ * billboard_classes.Billboard Viewer Gui
+ * This class contains a Main method and method that creates a GUI window for the billboard_classes.Billboard Viewer
  * @author - Harry Estreich
  * @version - Final
  */
@@ -32,12 +34,12 @@ public class BillboardViewer extends JFrame{
     private final String colourBlack = "#000000";
     private final String colourWhite = "#FFFFFF";
 
-    // Billboard Details
+    // billboard_classes.Billboard Details
     private Document parsedFile;
     private final Dimension screenSize;
     private final int billboardVariation;
 
-    // Billboard Details
+    // billboard_classes.Billboard Details
     private String billboardColourString;
     private Color billboardColourCode;
 

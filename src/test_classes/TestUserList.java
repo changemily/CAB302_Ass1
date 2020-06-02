@@ -1,10 +1,15 @@
+package test_classes;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import user_classes.User;
+import user_classes.UserList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * This class contains tests for testing the User List class, it tests all those change the UserList[], not the database,
+ * This class contains tests for testing the user_classes.User List class, it tests all those change the user_classes.UserList[], not the database,
  * have two versions, one to change the list, one to change the database
  * @author - Harry Estreich
  * @version - Final
@@ -28,7 +33,7 @@ public class TestUserList {
         UserList userList = new UserList();
         User newUser = new User("admin", "password", "salt");
         UserList.addUserToList(userList.listUsers(), newUser); // add user
-        assertEquals(UserList.getUserInformation(userList.listUsers(), "admin"), newUser); // check user now exists
+        Assertions.assertEquals(UserList.getUserInformation(userList.listUsers(), "admin"), newUser); // check user now exists
     }
 
     /**
@@ -42,8 +47,8 @@ public class TestUserList {
         User newUser2 = new User("admin2", "password", "salt");
         UserList.addUserToList(userList.listUsers(), newUser); // add multiple users
         UserList.addUserToList(userList.listUsers(), newUser2);
-        assertEquals(UserList.getUserInformation(userList.listUsers(), "admin"), newUser); // check both users exist
-        assertEquals(UserList.getUserInformation(userList.listUsers(), "admin2"), newUser2);
+        Assertions.assertEquals(UserList.getUserInformation(userList.listUsers(), "admin"), newUser); // check both users exist
+        Assertions.assertEquals(UserList.getUserInformation(userList.listUsers(), "admin2"), newUser2);
     }
 
     /**

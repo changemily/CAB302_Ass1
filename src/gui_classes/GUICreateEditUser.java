@@ -1,3 +1,9 @@
+package gui_classes;
+
+import network_classes.ControlPanelClient;
+import user_classes.User;
+import user_classes.UserManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -364,7 +370,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("GUIUserControlPanel"))){
+                    if((fr.getClass().getName().equals("gui_classes.GUIUserControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -495,7 +501,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("GUIUserControlPanel"))){
+                    if((fr.getClass().getName().equals("gui_classes.GUIUserControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -589,7 +595,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                         // Close any control panels, before refresh
                         Frame[] allFrames = Frame.getFrames();
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("GUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("gui_classes.GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
@@ -597,7 +603,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                         dispose(); // close panel
 
                         // Refresh user control panel
-                        //run Billboard Control Panel GUI
+                        //run billboard_classes.Billboard Control Panel GUI
                         String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
                         //request schedule and run calendar GUI
                         ControlPanelClient.runClient(user_input);
@@ -658,13 +664,13 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                     Frame[] allFrames = Frame.getFrames();
                     if (adminUser) { // if full screen editor
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("GUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("gui_classes.GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
                         dispose();
 
-                        //run Billboard Control Panel GUI to refresh
+                        //run billboard_classes.Billboard Control Panel GUI to refresh
                         String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
                         ControlPanelClient.runClient(user_input);
                         forcedExit = false; // set exit to safe
@@ -712,13 +718,13 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                     Frame[] allFrames = Frame.getFrames();
                     if (adminUser) { // if full screen editor
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("GUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("gui_classes.GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
                         dispose();
 
-                        //run Billboard Control Panel GUI
+                        //run billboard_classes.Billboard Control Panel GUI
                         String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
                         //request schedule and run calendar GUI
                         ControlPanelClient.runClient(user_input);

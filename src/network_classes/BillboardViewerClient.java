@@ -1,3 +1,6 @@
+package network_classes;
+
+import billboard_classes.BillboardViewer;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
@@ -15,7 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Billboard Viewer Client
+ * billboard_classes.Billboard Viewer Client
  * Class contains methods for running the viewer. These include connecting to the server, sending a request for the name of the
  * currently displayed billboard and retrieving the name of the
  * currently displayed billboard from the server over a port.
@@ -67,7 +70,7 @@ public class BillboardViewerClient {
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
                 //String request sent to server
-                String request = "Run Billboard Viewer";
+                String request = "Run billboard_classes.Billboard Viewer";
 
                 //request billboard currently displayed from server
                 oos.writeObject(request);
@@ -106,7 +109,7 @@ public class BillboardViewerClient {
 
     /**
      * populates JPanel with JFrame of billboard xml
-     * @param billboardGUI JFrame Billboard Viewer frame
+     * @param billboardGUI JFrame billboard_classes.Billboard Viewer frame
      * @param billboardPanel JPanel that holds xml display
      * @param xmlString xml string being displayed
      * @throws IOException Thrown if xml string is invalid
