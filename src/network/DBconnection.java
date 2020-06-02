@@ -44,7 +44,7 @@ public class DBconnection {
                     username, password);
         } catch (SQLException sqle) { //if connection to DB cannot be established
             //print error message
-            System.err.println("network_classes.Server could not connect to Database");
+            System.err.println("Server could not connect to Database");
             //terminate server
             System.exit(1);
         } catch (FileNotFoundException fnfe) {

@@ -318,7 +318,7 @@ public class Server {
 
     /**
      * Uses the users session token to remove session token in the event the user logs out
-     * @param oos Object Output stream of network_classes.Server
+     * @param oos Object Output stream of Server
      * @param ois ObjectInputStream
      * @throws IOException
      */
@@ -452,7 +452,7 @@ public class Server {
 
     /**
      * Sends schedule to client as a schedule_classes.MultiMap
-     * @param oos Object Output stream of network_classes.Server
+     * @param oos Object Output stream of Server
      * @param billboardSchedule schedule being sent to Client
      * @throws IOException
      */
@@ -476,7 +476,7 @@ public class Server {
 
    /**
      * schedules Billboard sent by client and stores in DB
-     * @param ois Object Input stream of network_classes.Server
+     * @param ois Object Input stream of Server
      * @param connection Database connection
      * @param billboardList list of created billboards
      * @param billboardSchedule schedule of billboard viewings

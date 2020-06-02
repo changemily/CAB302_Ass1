@@ -29,7 +29,7 @@ public class ControlPanelClient {
     public static String sessionToken;
 
     /**
-     * Sends requests to network_classes.Server
+     * Sends requests to Server
      */
     public static void runClient(String [] userInputs){
         Properties props = new Properties();
@@ -271,7 +271,7 @@ public class ControlPanelClient {
     }
 
     /**
-     * Sends view schedule request to network_classes.Server and reads response
+     * Sends view schedule request to Server and reads response
      * @param ois Object input stream of client
      * @throws IOException io error
      */
