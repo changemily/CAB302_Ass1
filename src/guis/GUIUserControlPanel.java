@@ -578,12 +578,15 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                     User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
                     UserManager deleteUser = new UserManager(baseUser, intendedUser); // userManager to test if valid delete
                     if(deleteUser.deleteUser()){ // if valid
-                        String[] user_inputs = {"Delete User", intendedUser.username}; // delete user
-                        ControlPanelClient.runClient(user_inputs);
-                        user_inputs = new String[]{"List users", "Admin", ControlPanelClient.sessionToken}; // refresh user control panel
-                        ControlPanelClient.runClient(user_inputs);
-                        closeable = false;
-                        dispose(); // close
+                        int a = showConfirmDialog(null, "Are you sure you want to delete this user?");
+                        if(a == YES_OPTION) {
+                            String[] user_inputs = {"Delete User", intendedUser.username}; // delete user
+                            ControlPanelClient.runClient(user_inputs);
+                            user_inputs = new String[]{"List users", "Admin", ControlPanelClient.sessionToken}; // refresh user control panel
+                            ControlPanelClient.runClient(user_inputs);
+                            closeable = false;
+                            dispose(); // close
+                        }
                     }
                     else{
                         JOptionPane.showMessageDialog(this,
