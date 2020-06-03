@@ -116,6 +116,7 @@ public class BillboardList implements java.io.Serializable {
             billboardExists = true;
         }catch(Exception e){
             billboardHashMap.remove(billboardName);
+            billboardExists = true;
         }
         //if billboard is not in list
         if (!billboardExists)
