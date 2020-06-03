@@ -55,6 +55,8 @@ public class ControlPanelClient {
 
             //request given by button clicked on GUI screen
             String request = userInputs[0];
+            //print control panel message
+            System.out.println("Request sent to server: "+request +"\n");
 
             switch(request)
             {
@@ -146,8 +148,18 @@ public class ControlPanelClient {
         oos.writeObject(hashedPassword);
         oos.writeObject(userInputs);
 
+        //print control panel message
+        System.out.println("Sent to server: \n");
+        System.out.println("Username: " +username +"\n");
+        System.out.println("Hashed Password: " +hashedPassword +"\n");
+
         Boolean validUser = ois.readBoolean();
         String SessionToken = (String) ois.readObject();
+
+        //print control panel message
+        System.out.println("Retrieved from server: \n");
+        System.out.println("Session Token: " +SessionToken +"\n");
+
         if(validUser == true){
             //If the user is valid set them as the default user in the control panel
             ControlPanelClient.username = username;
@@ -174,6 +186,11 @@ public class ControlPanelClient {
         String sessionToken = userInputs[1];
         //send username and hashed password to server
         oos.writeObject(sessionToken);
+
+        //print control panel message
+        System.out.println("Sent to server: \n");
+        System.out.println("Session Token removed: " +sessionToken +"\n");
+
         //open login screen
         SwingUtilities.invokeLater(new GUILoginScreen());
     }
@@ -191,6 +208,11 @@ public class ControlPanelClient {
         //Output clients request to the server
         oos.writeObject(buttonClicked);
         oos.writeObject(sessionToken);
+
+        //print control panel message
+        System.out.println("Sent to server: \n");
+        System.out.println("Session Token: " +sessionToken +"\n");
+
         Boolean validSession = ois.readBoolean();
         if(validSession == true){
             //Read billboard list from server
@@ -198,6 +220,13 @@ public class ControlPanelClient {
             // Listing billboards also requires a current user details
             HashMap<String, User> userList = (HashMap) ois.readObject();
             ScheduleMultiMap schedule = (ScheduleMultiMap) ois.readObject();
+
+            //print control panel message
+            System.out.println("Retrieved from server: \n");
+            System.out.println("Billboard List: "+BillboardList +"\n");
+            System.out.println("User List: "+userList +"\n");
+            System.out.println("Schedule: " +schedule +"\n");
+
             User currentUser = UserList.getUserInformation(userList, username);
             //Open the billboard control panel using username, session token and the billboard list
             SwingUtilities.invokeLater(new GUIBillboardControlPanel(username, sessionToken, BillboardList, currentUser, schedule));
@@ -238,6 +267,12 @@ public class ControlPanelClient {
         oos.writeObject(billboardName);
         oos.writeObject(billboardCreator);
         oos.writeObject(xmlFile);
+
+        //print control panel message
+        System.out.println("Sent to server: \n");
+        System.out.println("Billboard Name: " +billboardName +"\n");
+        System.out.println("Billboard Creator: " +billboardCreator +"\n");
+        System.out.println("Xml File: " +xmlFile +"\n");
     }
 
     /**
@@ -253,6 +288,10 @@ public class ControlPanelClient {
         oos.writeObject(buttonClicked);
         //Write the billboardName to the server
         oos.writeObject(billboardName);
+
+        //print control panel message
+        System.out.println("Sent to server: \n");
+        System.out.println("Billboard Name: " +billboardName +"\n");
     }
 
     /**
@@ -268,6 +307,10 @@ public class ControlPanelClient {
         oos.writeObject(buttonClicked);
         //Write the billboardName to the server
         oos.writeObject(billboardName);
+
+        //print control panel message
+        System.out.println("Sent to server: \n");
+        System.out.println("Billboard Name: " +billboardName +"\n");
     }
 
     /**
@@ -282,6 +325,10 @@ public class ControlPanelClient {
         oos.writeObject(buttonClicked);
         oos.writeObject(sessionToken);
 
+        //print control panel message
+        System.out.println("Sent to server: \n");
+        System.out.println("Session Token: " +sessionToken +"\n");
+
         Boolean validSession = ois.readBoolean();
         // check valid session
         if(validSession){
@@ -289,6 +336,11 @@ public class ControlPanelClient {
             MultiMap schedule = (MultiMap) ois.readObject();
             HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
             User userDetails = UserList.getUserInformation(userList, username);
+
+            //print control panel message
+            System.out.println("Retrieved from server: \n");
+            System.out.println("User List: "+userList +"\n");
+            System.out.println("Schedule: " +schedule +"\n");
 
             // if user has permission to view schedule
             if(userDetails.permissions.contains("Schedule Billboards")) {
@@ -343,6 +395,13 @@ public class ControlPanelClient {
         oos.writeObject(startTime);
         oos.writeObject(duration);
         oos.writeObject(recurrence);
+
+        //print control panel message
+        System.out.println("Sent to server: \n");
+        System.out.println("Billboard Name: " +billboardName +"\n");
+        System.out.println("Start Time: " +startTime +"\n");
+        System.out.println("Duration: " +duration +"\n");
+        System.out.println("Recurrence delay: " +recurrence +"\n");
     }
 
     /**
@@ -367,6 +426,13 @@ public class ControlPanelClient {
         oos.writeObject(startTime);
         oos.writeObject(duration);
         oos.writeObject(recurrence);
+
+        //print control panel message
+        System.out.println("Sent to server: \n");
+        System.out.println("Billboard Name: " +billboardName +"\n");
+        System.out.println("Start Time: " +startTime +"\n");
+        System.out.println("Duration: " +duration +"\n");
+        System.out.println("Recurrence delay: " +recurrence +"\n");
     }
 
     /**
@@ -384,11 +450,20 @@ public class ControlPanelClient {
         //Output clients request to the server
         oos.writeObject(sessionToken);
 
+        //print control panel message
+        System.out.println("Sent to server: \n");
+        System.out.println("Session Token: " +sessionToken +"\n");
+
         // if valid session
         Boolean validSession = ois.readBoolean();
         if(validSession){
             // read userList
             HashMap<String, User> userList = (HashMap<String, User>) ois.readObject();
+
+            //print control panel message
+            System.out.println("Retrieved from server: \n");
+            System.out.println("User List: "+userList +"\n");
+
             // get details of current user
             User userDetails = UserList.getUserInformation(userList, username);
             if(!userInputs[1].equals("Password")) { // user presses edit users
@@ -437,6 +512,10 @@ public class ControlPanelClient {
         String deletedUsername = user_inputs[1];
         oos.writeObject(buttonClicked);
         oos.writeObject(deletedUsername);
+
+        System.out.println("Sent to server: \n");
+        System.out.println("Username: " + deletedUsername +"\n");
+
     }
 
     /**
@@ -465,6 +544,16 @@ public class ControlPanelClient {
         oos.writeObject(scheduleBillboard);
         oos.writeObject(editBillboard);
         oos.writeObject(editUsers);
+
+        System.out.println("Sent to server: \n");
+        System.out.println("Username: " + username +"\n");
+        System.out.println("Password: " + password +"\n");
+        System.out.println("Permissions - 1 if granted, 0 if not\n");
+        System.out.println("Create Billboard Permission: " + createBillboard +"\n");
+        System.out.println("Schedule Billboard Permission: " + scheduleBillboard +"\n");
+        System.out.println("Edit Billboard Permission: " + editBillboard +"\n");
+        System.out.println("Edit Users Permission: " + editUsers +"\n");
+
     }
 
     /**
@@ -494,6 +583,15 @@ public class ControlPanelClient {
         oos.writeObject(scheduleBillboard);
         oos.writeObject(editBillboard);
         oos.writeObject(editUsers);
+
+        System.out.println("Sent to server: \n");
+        System.out.println("Username: " + username +"\n");
+        System.out.println("Password: " + password +"\n");
+        System.out.println("Permissions - 1 if granted, 0 if not\n");
+        System.out.println("Create Billboard Permission: " + createBillboard +"\n");
+        System.out.println("Schedule Billboard Permission: " + scheduleBillboard +"\n");
+        System.out.println("Edit Billboard Permission: " + editBillboard +"\n");
+        System.out.println("Edit Users Permission: " + editUsers +"\n");
     }
 
     /**
@@ -526,6 +624,14 @@ public class ControlPanelClient {
         oos.writeObject(scheduleBillboard);
         oos.writeObject(editBillboard);
         oos.writeObject(editUsers);
+
+        System.out.println("Sent to server: \n");
+        System.out.println("Username: " + username +"\n");
+        System.out.println("Permissions - 1 if granted, 0 if not\n");
+        System.out.println("Create Billboard Permission: " + createBillboard +"\n");
+        System.out.println("Schedule Billboard Permission: " + scheduleBillboard +"\n");
+        System.out.println("Edit Billboard Permission: " + editBillboard +"\n");
+        System.out.println("Edit Users Permission: " + editUsers +"\n");
 
     }
     /**
