@@ -124,7 +124,7 @@ public class Server {
                 String clientRequest = ois.readObject().toString();
 
                 //print what was received from client in server command line
-                System.out.println("request received from client: "+clientRequest);
+                System.out.println("Request received from client: "+clientRequest);
 
                 //save return message, based on what request was received from the client
                 switch(clientRequest)
@@ -280,6 +280,11 @@ public class Server {
         String userName = ois.readObject().toString();
         String hashedPassword = ois.readObject().toString();
 
+        //Server messages
+        System.out.println("Received from Client: \n");
+        System.out.println("Username: \n" +userName);
+        System.out.println("Password: \n" +hashedPassword);
+
         //SQL statement for retrieving user details
         final String SELECT = "select * from users where username = "+ "'" +userName+ "'" + ";";
 
@@ -304,6 +309,11 @@ public class Server {
             System.out.println("Valid user");
             oos.writeBoolean(true);
             oos.writeObject(sessionToken);
+
+            //Server messages
+            System.out.println("Sent to Client: \n");
+            System.out.println("Session Token: \n" +sessionToken);
+
         }else{
             // Display an Error Message Dialog, alerting the user that the entered credentials are incorrect
             JOptionPane optionPane = new JOptionPane("The entered username or password is incorrect," +
@@ -313,6 +323,7 @@ public class Server {
             dialog.setVisible(true);
             oos.writeBoolean(false);
             oos.writeObject("In-valid");
+            System.out.println("Sent to Client: In-valid session token");
         }
     }
 
@@ -325,8 +336,8 @@ public class Server {
     private static void logoutRequest(ObjectOutputStream oos, ObjectInputStream ois) throws IOException, ClassNotFoundException {
         //Get the users token
         String userToken = (String) ois.readObject();
-        System.out.println("Token passed to the server: "+userToken);
-        System.out.println("Token in token list: "+ SessionTokenListHashmap.get(1));
+        System.out.println("Received from Client: \n");
+        System.out.println("Session Token to expire: \n" +userToken);
 
         //Boolean for checking existance of session token
         Boolean tokenExists = false;
@@ -337,7 +348,9 @@ public class Server {
                 tokenExists = true;
                 SessionTokenListHashmap.remove(1);
                 oos.writeChars("Removed");
-                System.out.println("Token Removed");
+                //Server messages
+                System.out.println("Sent to Client: \n");
+                System.out.println("Token Removed, logout successful");
             }else{
                 //Token doesn't exist in the hashmap
                 tokenExists = false;
@@ -346,7 +359,9 @@ public class Server {
         //If the token wasn't found in the hashmap then it has expired
         if(tokenExists == false){
             oos.writeChars("Token has already expired.");
-            System.out.println("No session token existed, completed properly.");
+            //Server messages
+            System.out.println("Sent to Client: \n");
+            System.out.println("Session token does not exist, logout successful");
         }
     }
 
@@ -360,10 +375,14 @@ public class Server {
         //Get the users session token to validate the action
         String sessionToken = (String) ois.readObject();
         //If session token is current
+        System.out.println("Sent to Client: \n");
         if(checkToken(sessionToken) == true)
         {
+            System.out.println("Session token exists:" +checkToken(sessionToken)+ "\n");
+
             oos.writeBoolean(true);
         }else {
+            System.out.println("Session token exists:" +checkToken(sessionToken) +"\n");
             oos.writeBoolean(false);
         }
 
@@ -371,6 +390,11 @@ public class Server {
         oos.writeObject(billboardList.listBillboards());
         oos.writeObject(userList.listUsers());
         oos.writeObject(billboardSchedule);
+
+        //Server messages
+        System.out.println("Billboard List: "+billboardList.listBillboards()+ "\n");
+        System.out.println("User List:"+userList.listUsers()+"\n");
+        System.out.println("Schedule:"+billboardSchedule+"\n");
     }
 
     /**
@@ -388,11 +412,15 @@ public class Server {
 
         Billboard BillboardInfo = billboardList.getBillboardInfo(billboardName);
 
-        //Print billboard variables received from client
+        //Print billboard name received from client
+        System.out.println("Received from client:\n");
+        System.out.println("Billboard name: "+billboardName + "\n");
+
+        //Print billboard int sent to client
         System.out.println("Sent to client:\n");
-        System.out.println("billboard name: "+BillboardInfo.BillboardName + "\n");
-        System.out.println("billboard creator: "+BillboardInfo.BillboardCreator + "\n");
-        System.out.println("billboard xml: "+BillboardInfo.XMLFile + "\n");
+        System.out.println("Billboard name: "+BillboardInfo.BillboardName + "\n");
+        System.out.println("Billboard creator: "+BillboardInfo.BillboardCreator + "\n");
+        System.out.println("Billboard xml: "+BillboardInfo.XMLFile + "\n");
     }
 
     /**
@@ -410,9 +438,9 @@ public class Server {
 
         //Print billboard variables received from client
         System.out.println("Received from client:\n");
-        System.out.println("billboard name : "+ billboardName + "\n" +
-                "billboard creator: "+billboardCreator+"\n"+
-                "xml file: "+xmlFile+"\n");
+        System.out.println("billboard name : "+ billboardName + "\n");
+        System.out.println("billboard creator: "+billboardCreator+"\n");
+        System.out.println("xml file: "+xmlFile+"\n");
 
         //Clear the db with the billboard information
         billboardList.clearDBBillboardList(connection);
@@ -493,7 +521,7 @@ public class Server {
         String recurrenceDelay = ois.readObject().toString();
 
         //print schedule variables received from client
-        System.out.println("Received to client:\n");
+        System.out.println("Received from client:\n");
         System.out.println("Billboard Name: "+billboardName+"\n");
         System.out.println("Start Time: "+startTime+"\n");
         System.out.println("Duration (mins): "+duration+"\n");
@@ -535,7 +563,7 @@ public class Server {
         String recurrenceDelay = ois.readObject().toString();
 
         //print schedule variables received from client
-        System.out.println("Received to client:\n");
+        System.out.println("Received from client:\n");
         System.out.println("Billboard Name: "+billboardName+"\n");
         System.out.println("Start Time: "+startTime+"\n");
         System.out.println("Duration (mins): "+duration+"\n");
@@ -690,11 +718,14 @@ public class Server {
 
                 //Send billboard xml to client
                 oos.writeObject(xmlFile);
-                oos.flush();;
+                oos.flush();
+
+                //print info sent to client
+                System.out.println("Sent to Viewer Client:\n");
 
                 //print currently displaying billboard
                 System.out.println("Currently displayed billboard: "+billboardName);
-
+                System.out.println("Xml File: "+xmlFile+ "\n");
 
                 //clear DB
                 billboardSchedule.clearDBschedule(connection);
@@ -749,7 +780,14 @@ public class Server {
 
                 //send details of "no billboard to display" xml
                 oos.writeObject(noViewingXML);
-                oos.flush();;
+                oos.flush();
+
+                //print info sent to client
+                System.out.println("Sent to Viewer Client:\n");
+
+                //print currently displaying billboard
+                System.out.println("Currently displayed billboard: no viewing");
+                System.out.println("Xml File: "+noViewingXML+ "\n");
             }
 
         }
@@ -764,6 +802,13 @@ public class Server {
             //send details of "no billboard to display" xml
             oos.writeObject(noViewingXML);
             oos.flush();;
+
+            //print info sent to client
+            System.out.println("Sent to Viewer Client:\n");
+
+            //print currently displaying billboard
+            System.out.println("Currently displayed billboard: no viewing");
+            System.out.println("Xml File: "+noViewingXML+ "\n");
 
         }
     }
@@ -877,8 +922,9 @@ public class Server {
             newUser.permissions.add("Edit Users");
         }
 
-        System.out.println("Received new user from client");
-        System.out.println("username = " + username + ", password = " + password);
+        //print info received from client
+        System.out.println("Received from client:\n");
+        System.out.println("Username: " + username + "\n Password: " + password+"\n");
 
         //Clear the db with the user information
         UserList.clearUsersFromDB(userList.listUsers(), connection);
@@ -910,8 +956,9 @@ public class Server {
             newUser.permissions.add("Edit Users");
         }
 
-        System.out.println("Received new user from client");
-        System.out.println("username = " + username + ", password = " + password);
+        //print info received from client
+        System.out.println("Received from client:\n");
+        System.out.println("Username: " + username + "\n Password: " + password+"\n");
 
         //Clear the db with the user information
         UserList.clearUsersFromDB(userList.listUsers(), connection);
@@ -928,7 +975,9 @@ public class Server {
         String username = ois.readObject().toString();
         User user = UserList.getUserInformation(userList.listUsers(), username);
         //Display the name of the user for ease of testing
-        System.out.println("delete user: "+ username);
+        //print info received from client
+        System.out.println("Received from client:\n");
+        System.out.println("Username: " + username);
 
         //Clear the db with the user information
         UserList.clearUsersFromDB(userList.listUsers(), connection);
@@ -948,11 +997,19 @@ public class Server {
         if(checkToken(sessionToken) == true)
         {
             oos.writeBoolean(true);
+            //print server message
+            System.out.println("Session Token valid: true");
         }else {
             oos.writeBoolean(false);
+            //print server message
+            System.out.println("Session Token valid: false");
         }
         //If valid user then return the userlist
         oos.writeObject(userList.listUsers());
+
+        //print server messages
+        System.out.println("Sent to client:\n");
+        System.out.println("User List: " + userList.listUsers());
     }
 
     /**
