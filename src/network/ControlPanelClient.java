@@ -1,3 +1,13 @@
+package network;
+
+import billboard.Billboard;
+import guis.*;
+import schedule.MultiMap;
+import schedule.ScheduleMultiMap;
+import users.User;
+import users.UserList;
+import users.UserManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -11,7 +21,7 @@ import java.util.Properties;
  * Control Panel class
  * Class contains methods for connecting to, receiving and sending info to a server over a port,
  * Hash Method from lecture 9 Q&A
- * @author Emily Chang (Billboard, Schedule), Jarod Evans (Billboard, Log In / Log Out), Harry Estreich (Users)
+ * @author Emily Chang (Schedule), Jarod Evans (Billboard, Log In / Log Out), Harry Estreich (Users)
  * @version - Final
  */
 public class ControlPanelClient {
@@ -118,23 +128,6 @@ public class ControlPanelClient {
     }
 
     /**
-     * Sourced from lecture 9 Q&A
-     * Hashes byte array of password into hexadecimal code
-     * @param password password in the form of array of bytes
-     * @return return hashed password
-     */
-    private static String hash(byte[] password)
-    {
-        StringBuffer sb = new StringBuffer();
-        //for each byte of the password
-        for (byte b : password)
-        {
-            sb.append(String.format("%02x",b &0xFF));
-        }
-        return sb.toString();
-    }
-
-    /**
      * Sends login request, username and password to server
      * @param oos Object output stream of client
      * @param buttonClicked Request given by Control Panel GUI
@@ -160,9 +153,9 @@ public class ControlPanelClient {
             ControlPanelClient.username = username;
             ControlPanelClient.sessionToken = SessionToken;
             //Create and return the user a valid session token
-            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
         }else{
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            SwingUtilities.invokeLater(new GUILoginScreen());
         }
 
     }
@@ -182,7 +175,7 @@ public class ControlPanelClient {
         //send username and hashed password to server
         oos.writeObject(sessionToken);
         //open login screen
-        SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        SwingUtilities.invokeLater(new GUILoginScreen());
     }
 
     /**
@@ -207,7 +200,7 @@ public class ControlPanelClient {
             ScheduleMultiMap schedule = (ScheduleMultiMap) ois.readObject();
             User currentUser = UserList.getUserInformation(userList, username);
             //Open the billboard control panel using username, session token and the billboard list
-            SwingUtilities.invokeLater(new ControlPanelGUIBillboardControlPanel(username, sessionToken, BillboardList, currentUser, schedule));
+            SwingUtilities.invokeLater(new GUIBillboardControlPanel(username, sessionToken, BillboardList, currentUser, schedule));
         }else{
             JOptionPane optionPane = new JOptionPane("Your session has expired," +
                     " please login and try again.", JOptionPane.ERROR_MESSAGE);
@@ -217,11 +210,11 @@ public class ControlPanelClient {
 
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                if((fr.getClass().getName().equals("guis.GUIMainMenu"))){
                     fr.dispose();
                 }
             }
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            SwingUtilities.invokeLater(new GUILoginScreen());
         }
     }
 
@@ -301,11 +294,11 @@ public class ControlPanelClient {
             if(userDetails.permissions.contains("Schedule Billboards")) {
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                    if((fr.getClass().getName().equals("guis.GUIMainMenu"))){
                         fr.dispose();
                     }
                 }
-                SwingUtilities.invokeLater(new ControlPanelGUIBillboardSchedule(username, sessionToken, schedule));
+                SwingUtilities.invokeLater(new GUIBillboardSchedule(username, sessionToken, schedule));
             }
             else{ // fail, error
                 JOptionPane.showMessageDialog(new JFrame(),
@@ -321,11 +314,11 @@ public class ControlPanelClient {
             // reset to login screen
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                if((fr.getClass().getName().equals("guis.GUIMainMenu"))){
                     fr.dispose();
                 }
             }
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            SwingUtilities.invokeLater(new GUILoginScreen());
         }
     }
 
@@ -402,22 +395,19 @@ public class ControlPanelClient {
                 if (userDetails.permissions.contains("Edit Users")) { // checks that user can edit users
                     Frame[] allFrames = Frame.getFrames(); // remove main menu
                     for(Frame fr : allFrames){
-                        if((fr.getClass().getName().equals("ControlPanelGUI"))){
+                        if((fr.getClass().getName().equals("guis.GUIMainMenu"))){
                             fr.dispose();
-                            if((fr.getClass().getName().equals("ControlPanelGUI"))){
-                                fr.dispose();
-                            }
                         }
                     }
                     // open control panel
-                    SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken, userList));
+                    SwingUtilities.invokeLater(new GUIUserControlPanel(username, sessionToken, userList));
                 } else {  // fails permission check
                     JOptionPane.showMessageDialog(new JFrame(),
                             "User doesn't have Edit Users permission");
                 }
             }
             else{ // users press change password, no permission check
-                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, sessionToken, userDetails, false, true, userList));
+                SwingUtilities.invokeLater(new GUICreateEditUser(username, sessionToken, userDetails, false, true, userList));
             }
         }else{
             // Fails session check
@@ -430,11 +420,9 @@ public class ControlPanelClient {
             // Reset to login page
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("ControlPanelGUI"))){
-                    fr.dispose();
-                }
+                fr.dispose();
             }
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            SwingUtilities.invokeLater(new GUILoginScreen());
         }
     }
 
@@ -545,6 +533,6 @@ public class ControlPanelClient {
      * @param args
      */
     public static void main(String args[]) {
-        SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+        SwingUtilities.invokeLater(new GUILoginScreen());
     }
 }

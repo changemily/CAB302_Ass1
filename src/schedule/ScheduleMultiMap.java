@@ -1,3 +1,7 @@
+package schedule;
+
+import billboard.Billboard;
+
 import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -15,7 +19,7 @@ import java.util.Map;
 public class ScheduleMultiMap implements java.io.Serializable  {
 
     //Multimap that stores billboard name as the key and schedule information as the values
-    MultiMap<String, ScheduleInfo> scheduleMultiMap;
+    public MultiMap<String, ScheduleInfo> scheduleMultiMap;
 
     /**
      * constructor that creates a scheduleMultiMap object
@@ -25,7 +29,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
     }
 
     /**
-     * Retrieves schedule data from database and stores it in the MultiMap of the scheduleMultiMap object
+     * Retrieves schedule data from database and stores it in the schedule_classes.MultiMap of the scheduleMultiMap object
      * @param connection Database Connection
      * @throws SQLException throws exception if SQL query is invalid, billboard does not exist or combination of billboard &
      * schedule information does not exist
@@ -123,7 +127,7 @@ public class ScheduleMultiMap implements java.io.Serializable  {
 
     /**
      * Returns array of all viewings that have been scheduled
-     * @return MultiMap containing billboard name as the key and schedule info as the value
+     * @return schedule_classes.MultiMap containing billboard name as the key and schedule info as the value
      */
 
     public MultiMap<String, ScheduleInfo> viewSchedule()

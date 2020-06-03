@@ -1,8 +1,11 @@
+package guis;
+
+import network.ControlPanelClient;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import static javax.swing.JOptionPane.showConfirmDialog;
 
@@ -12,12 +15,12 @@ import static javax.swing.JOptionPane.showConfirmDialog;
  * @author - Nickhil Nischal
  * @version - Complete
  */
-public class ControlPanelGUI extends JFrame implements Runnable, ActionListener {
+public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
     private JButton logoutButton;
     private JButton editUsersButton;
     private JButton editBillboardButton;
     private JButton viewBillboardScheduleButton;
-    private JButton passwordChangeButton;
+    private JButton userDetailsButton;
     String username;
     String sessionToken;
 
@@ -26,7 +29,7 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
      * @param username The user's username
      * @param sessionToken The user's session token
      */
-    public ControlPanelGUI(String username, String sessionToken){
+    public GUIMainMenu(String username, String sessionToken){
         // Set window title
         super("Control Panel Menu");
         // The user's username
@@ -86,11 +89,11 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
         // Create view billboard schedule JPanel that holds the view billboard schedule JButton
         JPanel editBillboardSchedulePanel = createButtonJPanel(viewBillboardScheduleButton,150,150,false);
 
-        // Create edit password JButton
-        passwordChangeButton = createButton("Edit Password");
+        // Create user details JButton
+        userDetailsButton = createButton("My Details");
 
         // Create edit password JPanel that holds the edit password JButton
-        JPanel editPasswordChangePanel = createButtonJPanel(passwordChangeButton,150,150,false);
+        JPanel editPasswordChangePanel = createButtonJPanel(userDetailsButton,150,150,false);
 
         // Add all JLabel and JPanels to content pane
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -213,7 +216,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             // Remove users session token and proceed to the login screen
             String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
             ControlPanelClient.runClient(user_input);
-            // Close the GUI screen
             dispose();
         }
 
@@ -230,8 +232,6 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
             // Request schedule and run calendar GUI
             ControlPanelClient.runClient(user_input);
-
-            // Close the GUI screen
             dispose();
         }
 
@@ -242,8 +242,8 @@ public class ControlPanelGUI extends JFrame implements Runnable, ActionListener 
             ControlPanelClient.runClient(userInput);
         }
 
-        // If password change JButton is clicked
-        else if (buttonClicked == passwordChangeButton) {
+        // If user details JButton is clicked
+        else if (buttonClicked == userDetailsButton) {
             String [] user_input = {"List users", "Password", ControlPanelClient.sessionToken};
             //request schedule and run calendar GUI
             ControlPanelClient.runClient(user_input);

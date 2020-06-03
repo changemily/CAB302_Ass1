@@ -1,3 +1,5 @@
+package billboard;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -30,7 +32,6 @@ public class BillboardViewer extends JFrame{
 
     // Colour strings
     private final String colourBlack = "#000000";
-    private final String colourWhite = "#FFFFFF";
 
     // Billboard Details
     private Document parsedFile;
@@ -263,7 +264,7 @@ public class BillboardViewer extends JFrame{
         }
         else{ // no attribute
             // Colour variables
-            billboardColourString = colourWhite;
+            billboardColourString = "#FFFFFF";
         }
         billboardColourCode = Color.decode(billboardColourString); // decode colour string to colour code which java swing uses
     }

@@ -1,3 +1,8 @@
+package guis;
+
+import billboard.Billboard;
+import billboard.BillboardViewer;
+import network.ControlPanelClient;
 import org.xml.sax.SAXException;
 
 import java.awt.*;
@@ -8,8 +13,6 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileSystemView;
@@ -25,7 +28,7 @@ import static javax.swing.JOptionPane.*;
  * @version - Final
  */
 
-public class BBEditor extends JFrame implements Runnable, ActionListener, ChangeListener, WindowListener
+public class GUIBillboardEditor extends JFrame implements Runnable, ActionListener, ChangeListener, WindowListener
 {
     // Main global variables
     private String billboardName;
@@ -74,7 +77,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
      * @param billboardName name of billboard edited
      * @param XMLString billboard xml string
      */
-    public BBEditor(String username, String sessionToken, String billboardName, String XMLString)
+    public GUIBillboardEditor(String username, String sessionToken, String billboardName, String XMLString)
     {
         // Set window title
         super("Billboard Editor");
@@ -93,7 +96,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
      * @param sessionToken session token for user
      * @param billboardList list of billboards, for checking name
      */
-    public BBEditor(String username, String sessionToken, HashMap<String, Billboard> billboardList){
+    public GUIBillboardEditor(String username, String sessionToken, HashMap<String, Billboard> billboardList){
         super("Billboard Creator");
 
         // Set variables
@@ -526,7 +529,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
+                    if((fr.getClass().getName().equals("guis.GUIBillboardControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -613,7 +616,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
                     }
                     // read string
                     tempXMLString = output.toString();
-                    tempXMLString.replace("\"","'");
+                    tempXMLString = tempXMLString.replace("\"","'");
                     bufferedReader.close();
 
                     // remove panel
@@ -723,13 +726,13 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
         // Close all current billboard control panels
         Frame[] allFrames = Frame.getFrames();
         for(Frame fr : allFrames){
-            if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
+            if((fr.getClass().getName().equals("guis.GUIBillboardControlPanel"))){
                 fr.dispose();
             }
         }
         dispose(); // dispose editor
         //run Billboard Control Panel GUI, creating new GUI
-        String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
+        String [] user_input = {"List billboards", sessionToken};
         ControlPanelClient.runClient(user_input);
     }
 
@@ -791,7 +794,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
     }
 
     /**
-     * update billbaord details
+     * update billboard details
      * @param currentBreak set true if fails
      * @return break at end of method
      */
@@ -817,7 +820,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             bb.setPictureExists(true);
             try {
                 // check if url exists
-                URL urlString = new URL(imageURL.getText());
+                new URL(imageURL.getText());
                 bb.setUrlExists(true);
                 bb.setDataExists(false);
                 bb.setPictureURL(imageURL.getText());
@@ -888,7 +891,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             int frameCount = 0;
             Frame[] allFrames = Frame.getFrames();
             for(Frame fr : allFrames){
-                if((fr.getClass().getName().equals("ControlPanelGUIBillboardControlPanel"))){
+                if((fr.getClass().getName().equals("guis.GUIBillboardControlPanel"))){
                     if(fr.isVisible()){
                         frameCount += 1;
                     }
@@ -898,7 +901,7 @@ public class BBEditor extends JFrame implements Runnable, ActionListener, Change
             // if no control panels update control panel
             if(frameCount == 0){
                 //run Billboard Control Panel GUI
-                String [] user_input = {"List billboards", ControlPanelClient.sessionToken};
+                String [] user_input = {"List billboards", sessionToken};
                 //request billboard list and run calendar GUI
                 ControlPanelClient.runClient(user_input);
             }

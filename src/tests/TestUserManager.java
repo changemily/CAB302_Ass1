@@ -1,4 +1,10 @@
+package tests;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import users.User;
+import users.UserManager;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +22,7 @@ public class TestUserManager {
     @Test
     public void createUserManager() throws Exception {
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
-        UserManager admin = new UserManager(adminUser);
+        new UserManager(adminUser);
     }
 
     /**
@@ -27,7 +33,7 @@ public class TestUserManager {
     public void createUserManagerTarget() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
-        UserManager admin = new UserManager(adminUser, otherUser);
+        new UserManager(adminUser, otherUser);
     }
 
     /**
@@ -58,7 +64,7 @@ public class TestUserManager {
     }
 
     /**
-     * Test 2.3 - Show tha list_usres creates a string[] of usernames after adding a user
+     * Test 2.3 - Show tha list_users creates a string[] of usernames after adding a user
      * @throws  Exception throws exception if invalid permission
      */
     @Test
@@ -70,7 +76,7 @@ public class TestUserManager {
         admin.addUser(otherUser, UserList);
         String[] Usernames = {"Other"}; // expected user list
         HashSet<String> UsernameList = new HashSet<>(Arrays.asList(Usernames));
-        assertEquals(admin.listUsers(UserList), UsernameList); // assert that list contains usernames
+        Assertions.assertEquals(admin.listUsers(UserList), UsernameList); // assert that list contains usernames
     }
 
     /**
@@ -101,7 +107,7 @@ public class TestUserManager {
         } catch (Exception e) {
             // null
         }
-        assertEquals(adminUser.permissions, Permissions_List); // assert that new permissions are correct
+        Assertions.assertEquals(adminUser.permissions, Permissions_List); // assert that new permissions are correct
     }
 
     /**
@@ -116,7 +122,7 @@ public class TestUserManager {
         String[] Permissions = {};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
         admin.setUserPermissions(Permissions_List);
-        assertEquals(otherUser.permissions, Permissions_List); // assert that new permissions are correct
+        Assertions.assertEquals(otherUser.permissions, Permissions_List); // assert that new permissions are correct
     }
 
     /**
@@ -130,7 +136,7 @@ public class TestUserManager {
         String[] Permissions = {"Edit Users", "Edit All Billboards", "Schedule Billboards"};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
         admin.setUserPermissions(Permissions_List);
-        assertEquals(adminUser.permissions, Permissions_List); // assert that new permissions are correct
+        Assertions.assertEquals(adminUser.permissions, Permissions_List); // assert that new permissions are correct
     }
 
     /**
@@ -158,7 +164,7 @@ public class TestUserManager {
         String[] Permissions = {"Edit Users", "Edit All Billboards"};
         HashSet<String> Permissions_List = new HashSet<>(Arrays.asList(Permissions));
         admin.setUserPermissions(Permissions_List);
-        assertEquals(adminUser.permissions, Permissions_List); // assert that new permissions are correct
+        Assertions.assertEquals(adminUser.permissions, Permissions_List); // assert that new permissions are correct
     }
 
     /**
@@ -184,7 +190,7 @@ public class TestUserManager {
         UserManager admin = new UserManager(adminUser, adminUser);
         String password = "4321";
         admin.setUserPassword(password);
-        assertEquals(adminUser.password, password); // assert that new password is correct
+        Assertions.assertEquals(adminUser.password, password); // assert that new password is correct
     }
 
     /**
@@ -197,7 +203,7 @@ public class TestUserManager {
         UserManager admin = new UserManager(adminUser, adminUser);
         String password = "4321";
         admin.setUserPassword(password);
-        assertEquals(adminUser.password, password); // assert that new password is correct
+        Assertions.assertEquals(adminUser.password, password); // assert that new password is correct
     }
 
     /**
@@ -211,7 +217,7 @@ public class TestUserManager {
         UserManager admin = new UserManager(adminUser, otherUser);
         String password = "4321";
         admin.setUserPassword(password);
-        assertEquals(otherUser.password, password); // assert that new pass is correct
+        Assertions.assertEquals(otherUser.password, password); // assert that new pass is correct
     }
 
     /**
@@ -235,7 +241,7 @@ public class TestUserManager {
     public void deleteOwnUser() throws Exception{
         User adminUser = new User("Admin", "1234", "Salt","Edit Users", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, adminUser);
-        assertFalse(admin.deleteUser()); // assert that user can't delete
+        Assertions.assertFalse(admin.deleteUser()); // assert that user can't delete
     }
 
     /**
@@ -247,7 +253,7 @@ public class TestUserManager {
         User adminUser = new User("Admin", "1234", "Salt", "Edit Users", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, otherUser);
-        assertTrue(admin.deleteUser()); // assert that user can delete
+        Assertions.assertTrue(admin.deleteUser()); // assert that user can delete
     }
 
     /**
@@ -259,7 +265,7 @@ public class TestUserManager {
         User adminUser = new User("Admin", "1234", "Salt", "Edit All Billboards");
         User otherUser = new User("Other", "5678", "Salt", "Edit All Billboards");
         UserManager admin = new UserManager(adminUser, otherUser);
-        assertFalse(admin.deleteUser()); // assert that user can't delete
+        Assertions.assertFalse(admin.deleteUser()); // assert that user can't delete
     }
 }
 

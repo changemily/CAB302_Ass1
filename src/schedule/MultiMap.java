@@ -1,17 +1,19 @@
+package schedule;
+
 import java.io.Serializable;
 import java.util.*;
 
 /**
  * Sourced from https://www.techiedelight.com/implement-multimap-java/
- * MultiMap class
+ * schedule_classes.MultiMap class
  * This class allows you to create a multimap object that is serializable and contains methods
  * which retrieve information and manipulate the multimap.
  * @author Emily Chang
- * @param <K> MultiMap key
- * @param <V> MultiMap Value
+ * @param <K> schedule_classes.MultiMap key
+ * @param <V> schedule_classes.MultiMap Value
  * @version complete
  */
-class MultiMap<K, V> implements Serializable
+public class MultiMap<K, V> implements Serializable
 {
     private Map<K, ArrayList<V>> map = new HashMap<>();
 

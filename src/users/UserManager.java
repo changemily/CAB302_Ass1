@@ -1,6 +1,7 @@
+package users;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -23,7 +24,7 @@ public class UserManager
      * @param current The Current User
      */
 
-    UserManager(User current){
+    public UserManager(User current){
         this.current = current;
     }
 
@@ -34,7 +35,7 @@ public class UserManager
      * @param target The Target User
      */
 
-    UserManager(User current, User target){
+    public UserManager(User current, User target){
         this.current = current;
         this.target = target;
 
@@ -158,12 +159,8 @@ public class UserManager
         byte[] passwordBytes = messageDigest.digest(password.getBytes());
 
         //hash password
-        String hashedPassword = hash(passwordBytes);
 
-        //create DB connection
-        Connection connection = DBconnection.getInstance();
-
-        return hashedPassword;
+        return hash(passwordBytes);
     }
 
     /**

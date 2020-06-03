@@ -1,10 +1,12 @@
+package schedule;
+
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
- * ScheduleInfo class
- * This class contains methods that construct ScheduleInfo objects
+ * schedule_classes.ScheduleInfo class
+ * This class contains methods that construct schedule_classes.ScheduleInfo objects
  * @author Emily Chang
  * @version complete
  */
@@ -14,13 +16,13 @@ public class ScheduleInfo implements Serializable {
     private final int MINUTES_IN_HOUR = 60;
 
     //class attributes
-    LocalDateTime startTimeScheduled;
-    Duration duration;
-    int recurrenceDelay;
-    String billboardCreator;
+    public LocalDateTime startTimeScheduled;
+    public Duration duration;
+    public int recurrenceDelay;
+    public String billboardCreator;
 
     /**
-     * Constructor that is used to create a ScheduleInfo object. ScheduleInfo object is assigned a start time scheduled,
+     * Constructor that is used to create a schedule_classes.ScheduleInfo object. schedule_classes.ScheduleInfo object is assigned a start time scheduled,
      * duration (mins), recurrence delay(mins) and the creator of the billboard scheduled
      * @param startTimeScheduled start time billboard is scheduled for
      * @param durationMins duration billboard is scheduled for

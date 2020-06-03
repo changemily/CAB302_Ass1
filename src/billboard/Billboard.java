@@ -1,3 +1,4 @@
+package billboard;
 
 /**
  * Billboard class
@@ -9,17 +10,17 @@
 public class Billboard implements java.io.Serializable{
 
     //class attributes
-    String BillboardName;
-    String BillboardCreator;
-    String XMLFile;
+    public final String BillboardName;
+    public final String BillboardCreator;
+    public final String XMLFile;
 
     /**
-     * Constructor that is used to create Billboard object. Billboard has an assigned a name, text,
+     * Constructor that is used to create Billboard object, Billboard has an assigned a name, text,
      * background colour, image file and creator
      * @param billboardName Billboard's name
      * @param billboardCreator Username of the person who has created the billboard
      */
-    Billboard(String billboardName, String billboardCreator, String xmlFile)
+    public Billboard(String billboardName, String billboardCreator, String xmlFile)
     {
         //set billboard properties
         this.BillboardName = billboardName;

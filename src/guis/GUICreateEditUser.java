@@ -1,7 +1,12 @@
+package guis;
+
+import network.ControlPanelClient;
+import users.User;
+import users.UserManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
@@ -13,7 +18,7 @@ import static javax.swing.JOptionPane.*;
  * @author - Nickhil Nischal (GUI), Harry Estreich (buttons & permissions, refreshing)
  * @version - Final
  */
-public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, ActionListener, WindowListener {
+public class GUICreateEditUser extends JFrame implements Runnable, ActionListener, WindowListener {
     // Components
     private JTextField usernameField;
     private JTextField password;
@@ -43,7 +48,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
      * @param   userList HashMap of users
      * @throws  Exception throws exception when creating user if permissions fail
      */
-    public ControlPanelGUICreateEditUser(String username, String sessionToken, HashMap<String, User> userList) throws Exception {
+    public GUICreateEditUser(String username, String sessionToken, HashMap<String, User> userList) throws Exception {
         // Set window title
         super("Create User");
         this.username = username;
@@ -64,7 +69,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
      * @param   selfUser whether this is a self edit
      * @param   userList HashMap of users
      */
-    public ControlPanelGUICreateEditUser(String username, String sessionToken, User targetUser, boolean adminUser, boolean selfUser, HashMap<String, User> userList){
+    public GUICreateEditUser(String username, String sessionToken, User targetUser, boolean adminUser, boolean selfUser, HashMap<String, User> userList){
         super("Edit User");
         this.username = username;
         this.sessionToken = sessionToken;
@@ -194,20 +199,14 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
         rightPanel.add(spacer);
         rightPanel.add(Box.createVerticalStrut(50));
 
-        // Window formatting, if adminUser is true, add permissions section, otherwise just username/password, it is resized due to this aswell
+        // Window formatting
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
-        if(adminUser) { // resizing
-            getContentPane().add(Box.createHorizontalStrut(100)); // boundary
-        }
-        else{
-            getContentPane().add(Box.createHorizontalStrut(40)); // boundary
-        }
+        getContentPane().add(Box.createHorizontalStrut(100)); // boundary
+        getContentPane().add(Box.createHorizontalStrut(40)); // boundary
         getContentPane().add(leftPanel);
         getContentPane().add(Box.createHorizontalStrut(40));
-        if(adminUser) {
-            getContentPane().add(rightPanel); // add permissions
-            getContentPane().add(Box.createHorizontalStrut(100)); // boundary
-        }
+        getContentPane().add(rightPanel); // add permissions
+        getContentPane().add(Box.createHorizontalStrut(100)); // boundary }
 
         // Add Window Listener, used for when window is closed
         addWindowListener(this);
@@ -371,7 +370,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))){
+                    if((fr.getClass().getName().equals("guis.GUIUserControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -379,12 +378,12 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 }
                 dispose();
                 if(frameCount == 0){
-                    SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken, userList));
+                    SwingUtilities.invokeLater(new GUIUserControlPanel(username, sessionToken, userList));
                 }
             }
             else{ // If only changing password, restart control panel gui
                 dispose();
-                SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
             }
             //run close window
 
@@ -396,6 +395,70 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 // Display error pop up
                 JOptionPane.showMessageDialog(this,
                         "User can't remove 'Edit Users' from themselves");
+            }
+            else if(!adminUser){
+                if(editUsersBox.isSelected()) {
+                    editUsersBox.setSelected(false);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+                else if(!editUsersBox.isSelected()){
+                    editUsersBox.setSelected(true);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+            }
+        }
+        else if (buttonClicked == createBillboardsBox){
+
+            if(!(targetUser.permissions.contains("Edit Users")) && selfUser && (!adminUser)){
+                if(createBillboardsBox.isSelected()) {
+                    createBillboardsBox.setSelected(false);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+
+                }
+                else if(!createBillboardsBox.isSelected()){
+                    createBillboardsBox.setSelected(true);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+            }
+        }
+        else if (buttonClicked == scheduleBillboardsBox){
+            if(!(targetUser.permissions.contains("Edit Users")) && selfUser && (!adminUser)){
+                if(scheduleBillboardsBox.isSelected()) {
+                    scheduleBillboardsBox.setSelected(false);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+                else if(!scheduleBillboardsBox.isSelected()){
+                    scheduleBillboardsBox.setSelected(true);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+            }
+        }
+        else if (buttonClicked == editAllBillboardsBox){
+            if(!(targetUser.permissions.contains("Edit Users")) && selfUser && (!adminUser)){
+                if(editAllBillboardsBox.isSelected()) {
+                    editAllBillboardsBox.setSelected(false);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
+                else if(!editAllBillboardsBox.isSelected()){
+                    editAllBillboardsBox.setSelected(true);
+                    // Display error pop up
+                    JOptionPane.showMessageDialog(this,
+                            "User not allowed to change permissions");
+                }
             }
         }
     }
@@ -438,7 +501,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))){
+                    if((fr.getClass().getName().equals("guis.GUIUserControlPanel"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -446,12 +509,12 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                 }
                 dispose();
                 if(frameCount == 0){
-                    SwingUtilities.invokeLater(new ControlPanelGUIUserControlPanel(username, sessionToken, userList));
+                    SwingUtilities.invokeLater(new GUIUserControlPanel(username, sessionToken, userList));
                 }
             }
             else{
                 dispose();
-                SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
             }
         }
     }
@@ -532,7 +595,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                         // Close any control panels, before refresh
                         Frame[] allFrames = Frame.getFrames();
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("guis.GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
@@ -601,7 +664,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                     Frame[] allFrames = Frame.getFrames();
                     if (adminUser) { // if full screen editor
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("guis.GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
@@ -613,7 +676,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                         forcedExit = false; // set exit to safe
                     } else { // only password screen, go back to gui home
                         dispose();
-                        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                        SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
                     }
                 }
                 else{
@@ -655,7 +718,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                     Frame[] allFrames = Frame.getFrames();
                     if (adminUser) { // if full screen editor
                         for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("ControlPanelGUIUserControlPanel"))) {
+                            if ((fr.getClass().getName().equals("guis.GUIUserControlPanel"))) {
                                 fr.dispose();
                             }
                         }
@@ -668,7 +731,7 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
                         forcedExit = false; // set exit to safe
                     } else { // only password screen, go back to gui home
                         dispose();
-                        SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+                        SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
                     }
                 }
             }
@@ -677,7 +740,6 @@ public class ControlPanelGUICreateEditUser extends JFrame implements Runnable, A
             JOptionPane.showMessageDialog(this,
                     "Missing username");
         }
-
 
     }
 }

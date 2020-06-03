@@ -1,3 +1,5 @@
+package users;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,7 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * This class contains method for return a hashmap of users with their usernames, as well as many static that ControlPanelClient
+ * This class contains method for return a hashmap of users with their usernames, as well as many static that network_classes.ControlPanelClient
  * uses to manipulate a list of users
  * @author - Harry Estreich
  * @version - Final

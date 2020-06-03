@@ -1,3 +1,5 @@
+package users;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -9,10 +11,10 @@ import java.util.HashSet;
  */
 public class User implements java.io.Serializable {
     // Variables used for each User
-    String username;
-    String password;
-    String salt;
-    HashSet<String> permissions = new HashSet<>();
+    public String username;
+    public String password;
+    public String salt;
+    public HashSet<String> permissions = new HashSet<>();
 
     // Creates an array with valid User Permissions
     final String[] PERMISSIONS_CHECK_LIST_1 = {"Create Billboards", "Edit All Billboards", "Schedule Billboards", "Edit Users"};
@@ -41,7 +43,7 @@ public class User implements java.io.Serializable {
      * @param permissions The User's assigned permission/s
      * @throws Exception Throws exception when an invalid permission type is entered
      */
-    User(String username, String password, String salt, String ... permissions) throws Exception {
+    public User(String username, String password, String salt, String... permissions) throws Exception {
         // For loop that iterates over each permission that is entered, to check if each permission is valid
         for (String permission: permissions) {
             // Checks if the entered permission is a valid permission, else user is not created

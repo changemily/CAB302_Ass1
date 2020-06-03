@@ -1,8 +1,12 @@
+package tests;
+
+import billboard.Billboard;
+import billboard.BillboardList;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,12 +40,12 @@ public class TestBillboardList<E> {
         //Billboard with no scheduled viewing
         billboardList.createEditBillboard("Billboard1", "jarod", xmlFile);
 
-        assertEquals(true, billboardList.billboardHashMap.containsKey("Billboard1"));
+        Assertions.assertEquals(true, billboardList.billboardHashMap.containsKey("Billboard1"));
 
         //Billboard with scheduled viewing and image
         billboardList.createEditBillboard("Billboard2", "jarod", xmlFile);
 
-        assertEquals(true, billboardList.billboardHashMap.containsKey("Billboard2"));
+        Assertions.assertEquals(true, billboardList.billboardHashMap.containsKey("Billboard2"));
 
     }
 
@@ -88,9 +92,9 @@ public class TestBillboardList<E> {
 
         //Test if retrieved Billboard variables equal the original requested_billboard info.
         //If the billboards are the same it means the correct billboard info requested is being displayed.
-        assertEquals("Billboard2", temp_billboard.BillboardName);
-        assertEquals("jarod", temp_billboard.BillboardCreator);
-        assertEquals(xmlFile, temp_billboard.XMLFile);
+        Assertions.assertEquals("Billboard2", temp_billboard.BillboardName);
+        Assertions.assertEquals("jarod", temp_billboard.BillboardCreator);
+        Assertions.assertEquals(xmlFile, temp_billboard.XMLFile);
     }
 
     //Test 6: If Get_billboard_info attempts to retrieve information from a billboard that doesn't exist.
@@ -117,7 +121,7 @@ public class TestBillboardList<E> {
         billboardList.deleteBillboard("Billboard1");
 
         //Check if the billboard was deleted
-        assertFalse(billboardList.billboardHashMap.containsKey("Billboard1"));
+        Assertions.assertFalse(billboardList.billboardHashMap.containsKey("Billboard1"));
     }
 
     //Test 8: If Delete_billboard attempts to delete a billboard that doesn't exist.

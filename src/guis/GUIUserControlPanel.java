@@ -1,3 +1,10 @@
+package guis;
+
+import network.ControlPanelClient;
+import users.User;
+import users.UserList;
+import users.UserManager;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -10,8 +17,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.HashMap;
 
-import static javax.swing.JOptionPane.YES_OPTION;
-import static javax.swing.JOptionPane.showConfirmDialog;
+import static javax.swing.JOptionPane.*;
 
 /**
  * User Control Panel class for Control Panel GUI
@@ -19,7 +25,7 @@ import static javax.swing.JOptionPane.showConfirmDialog;
  * @author - Nickhil Nischal (GUI, Buttons), Harry Estreich (Buttons, Permissions)
  * @version - Final
  */
-public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener, WindowListener {
+public class GUIUserControlPanel extends JFrame implements Runnable, ActionListener, ListSelectionListener, DocumentListener, WindowListener {
     // Back JButton
     private JButton backButton;
 
@@ -64,7 +70,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
      * @param sessionToken current session token
      * @param userList current list of users
      */
-    public ControlPanelGUIUserControlPanel(String username, String sessionToken, HashMap<String, User> userList) {
+    public GUIUserControlPanel(String username, String sessionToken, HashMap<String, User> userList) {
         // Set window title
         super("User Control Panel");
         this.username = username;
@@ -410,22 +416,86 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
 
         // Checks if the back button has been clicked
         if (buttonClicked == backButton) {
-            // Closes current GUI screen
-            dispose();
-            closeable = false; // safe exit
+            int frameCount = 0;
+            Frame[] allFrames = Frame.getFrames();
+            for (Frame fr : allFrames) {
+                if ((fr.getClass().getName().equals("guis.GUICreateEditUser"))) {
+                    if (fr.isVisible()) {
+                        frameCount += 1;
+                    }
+                }
+            }
 
-            // Open new Control Panel GUI screen
-            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            if(frameCount > 0) {
+                int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
+                if (a == YES_OPTION) {
+                    // close all createEditUser GUIs
+                    allFrames = Frame.getFrames();
+                    for (Frame fr : allFrames) {
+                        if ((fr.getClass().getName().equals("guis.GUICreateEditUser"))) {
+                            fr.dispose();
+                        }
+                    }
+                    // Closes current GUI screen
+                    closeable = false; // safe exit
+                    dispose();
+
+                    // Open new Control Panel GUI screen
+                    SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+                }
+            }
+            else{
+                // Closes current GUI screen
+                closeable = false; // safe exit
+                dispose();
+
+                // Open new Control Panel GUI screen
+                SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+            }
         }
 
         // Checks if the logout button has been clicked
         else if (buttonClicked == logoutButton) {
-            // Closes current GUI screen
-            dispose();
-            closeable = false; // safe exit
+            int frameCount = 0;
+            Frame[] allFrames = Frame.getFrames();
+            for (Frame fr : allFrames) {
+                if ((fr.getClass().getName().equals("guis.GUICreateEditUser"))) {
+                    if (fr.isVisible()) {
+                        frameCount += 1;
+                    }
+                }
+            }
 
-            // Open new Login screen
-            SwingUtilities.invokeLater(new ControlPanelGUILoginScreen());
+            if(frameCount > 0) {
+                int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
+                if (a == YES_OPTION) {
+                    // close all createEditUser GUIs
+                    allFrames = Frame.getFrames();
+                    for (Frame fr : allFrames) {
+                        if ((fr.getClass().getName().equals("guis.GUICreateEditUser"))) {
+                            fr.dispose();
+                        }
+                    }
+
+                    closeable = false; // safe exit
+
+                    // Open new Login screen
+                    // Remove users session token and proceed to the login screen
+                    String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
+                    ControlPanelClient.runClient(user_input);
+                    // Close the GUI screen
+                    dispose();
+                }
+            }
+            else{
+                closeable = false; // safe exit
+                // Open new Login screen
+                // Remove users session token and proceed to the login screen
+                String[] user_input = {"Logout request", ControlPanelClient.sessionToken};
+                ControlPanelClient.runClient(user_input);
+                // Close the GUI screen
+                dispose();
+            }
         }
 
         // Checks if the login button has been clicked
@@ -448,7 +518,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                     int frameCount = 0;
                     Frame[] allFrames = Frame.getFrames();
                     for(Frame fr : allFrames){
-                        if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                        if((fr.getClass().getName().equals("guis.GUICreateEditUser"))){
                             if(fr.isVisible()){
                                 frameCount += 1;
                             }
@@ -465,21 +535,21 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                                 // close all createEditUser GUIs
                                 allFrames = Frame.getFrames();
                                 for (Frame fr : allFrames) {
-                                    if ((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))) {
+                                    if ((fr.getClass().getName().equals("guis.GUICreateEditUser"))) {
                                         fr.dispose();
                                     }
                                 }
                                 // create new one
-                                SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
+                                SwingUtilities.invokeLater(new GUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                             }
                         }
                         else{ // no GUIs open, just open a new one
-                            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
+                            SwingUtilities.invokeLater(new GUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                         }
                     }
                     else{
                         // no GUIs open, just open a new one
-                        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
+                        SwingUtilities.invokeLater(new GUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
                     }
                     openedUser = usernameSelected;
                     closeable =  false;
@@ -533,7 +603,7 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                 int frameCount = 0;
                 Frame[] allFrames = Frame.getFrames();
                 for(Frame fr : allFrames){
-                    if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                    if((fr.getClass().getName().equals("guis.GUICreateEditUser"))){
                         if(fr.isVisible()){
                             frameCount += 1;
                         }
@@ -547,22 +617,22 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
                             // remove all GUIs
                             allFrames = Frame.getFrames();
                             for(Frame fr : allFrames){
-                                if((fr.getClass().getName().equals("ControlPanelGUICreateEditUser"))){
+                                if((fr.getClass().getName().equals("guis.GUICreateEditUser"))){
                                     fr.dispose();
                                 }
                             }
                             // create new GUI
-                            SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
+                            SwingUtilities.invokeLater(new GUICreateEditUser("admin", "1234", userList));
                         }
                     }
                     else{
                         // create new GUI
-                        SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
+                        SwingUtilities.invokeLater(new GUICreateEditUser("admin", "1234", userList));
                     }
                 }
                 else{
                     // create new GUI
-                    SwingUtilities.invokeLater(new ControlPanelGUICreateEditUser("admin", "1234", userList));
+                    SwingUtilities.invokeLater(new GUICreateEditUser("admin", "1234", userList));
                 }
                 closeable = false;
             } catch (Exception e) {
@@ -645,9 +715,42 @@ public class ControlPanelGUIUserControlPanel extends JFrame implements Runnable,
      */
     @Override
     public void windowClosed(WindowEvent e) {
-        // When this window is being closed, a new Control Panel GUI is opened (simulates going back to previous screen)
         if(closeable) {
-            SwingUtilities.invokeLater(new ControlPanelGUI(username, sessionToken));
+            // Count open edit users frames
+            int frameCount = 0;
+            Frame[] allFrames = Frame.getFrames();
+            for (Frame fr : allFrames) {
+                if ((fr.getClass().getName().equals("guis.GUICreateEditUser"))) {
+                    if (fr.isVisible()) {
+                        frameCount += 1;
+                    }
+                }
+            }
+
+            // If edit users frames open, check if user wants to close them
+            if (frameCount > 0) {
+                int a = showConfirmDialog(null, "This will close your current edit user screen and you will lose any changes");
+                if (a == YES_OPTION) {
+                    // close all createEditUser GUIs
+                    allFrames = Frame.getFrames();
+                    for (Frame fr : allFrames) {
+                        if ((fr.getClass().getName().equals("guis.GUICreateEditUser"))) {
+                            fr.dispose();
+                        }
+                    }
+                    // Closes current GUI screen
+                    dispose();
+
+                    // Open new Control Panel GUI screen
+                    SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+                }
+            } else {
+                // Closes current GUI screen
+                dispose();
+
+                // Open new Control Panel GUI screen
+                SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+            }
         }
     }
 
