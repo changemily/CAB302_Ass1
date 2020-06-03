@@ -591,7 +591,9 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // Show a pop up with the error that was caught
+                    JOptionPane.showMessageDialog(this, e,
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -636,7 +638,9 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                 }
                 closeable = false;
             } catch (Exception e) {
-                e.printStackTrace();
+                // Show a pop up with the error that was caught
+                JOptionPane.showMessageDialog(this, e,
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -693,7 +697,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
         try {
             createGUI();
         } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }

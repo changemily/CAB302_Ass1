@@ -281,7 +281,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
             //add date time of viewing to it
             cal.setTime(sdf.parse(dateTime));
         } catch (ParseException e) {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(getContentPane(), e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
@@ -524,7 +524,7 @@ public class GUIBillboardSchedulePopup extends JFrame implements Runnable, Actio
             createGUI();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e)
         {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
