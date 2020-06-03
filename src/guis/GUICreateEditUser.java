@@ -360,7 +360,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
 
         // Checks if the Save and Exit button has been clicked
         if (buttonClicked == saveExitButton) {
-                    saveAndExit(); // runs save and exit method
+            saveAndExit(); // runs save and exit method
         }
         // Checks if the Exit Without Saving button has been clicked
         else if (buttonClicked == exitWithoutSaving) {
@@ -549,12 +549,81 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
     public void saveAndExit(){
         //run save info, and close window
         if(!usernameField.getText().equals("")) { // check that username has been typed in, else error
-            if (newUser) { // check is new user
-                if(!userList.containsKey(usernameField.getText())){ // Check if username already exists, else error
-                    if (!password.getText().equals("")) { // check that password has been typed in, else error
-                        String newUsername = usernameField.getText(); // get new username
+            if(!((usernameField.getText().contains("'") || usernameField.getText().contains("\"")) || (password.getText().contains("'") || password.getText().contains("\"")))){
+                if (newUser) { // check is new user
+                    if (!userList.containsKey(usernameField.getText())) { // Check if username already exists, else error
+                        if (!password.getText().equals("")) { // check that password has been typed in, else error
+                            String newUsername = usernameField.getText(); // get new username
+                            String newPassword = null;
+                            // get password and hash
+                            try {
+                                newPassword = UserManager.hashPassword(password.getText());
+                            } catch (NoSuchAlgorithmException e) {
+                                // Show a pop up with the error that was caught
+                                JOptionPane.showMessageDialog(this, e,
+                                        "ERROR", JOptionPane.ERROR_MESSAGE);
+                            }
+                            // initialise permission variables
+                            String createBillboard;
+                            String scheduleBillboard;
+                            String editBillboard;
+                            String editUsers;
+
+                            // set permission variables
+                            if (createBillboardsBox.isSelected()) {
+                                createBillboard = "1";
+                            } else {
+                                createBillboard = "0";
+                            }
+                            if (scheduleBillboardsBox.isSelected()) {
+                                scheduleBillboard = "1";
+                            } else {
+                                scheduleBillboard = "0";
+                            }
+                            if (editAllBillboardsBox.isSelected()) {
+                                editBillboard = "1";
+                            } else {
+                                editBillboard = "0";
+                            }
+                            if (editUsersBox.isSelected()) {
+                                editUsers = "1";
+                            } else {
+                                editUsers = "0";
+                            }
+
+                            // set user inputs and run create user in control panel
+                            String[] user_inputs = {"Create User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
+                            ControlPanelClient.runClient(user_inputs);
+
+                            // Close any control panels, before refresh
+                            Frame[] allFrames = Frame.getFrames();
+                            for (Frame fr : allFrames) {
+                                if ((fr.getClass().getName().equals("guis.GUIUserControlPanel"))) {
+                                    fr.dispose();
+                                }
+                            }
+                            forcedExit = false; // set exit to safe
+                            dispose(); // close panel
+
+                            // Refresh user control panel
+                            //run Billboard Control Panel GUI
+                            String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
+                            //request schedule and run calendar GUI
+                            ControlPanelClient.runClient(user_input);
+                        } else { // error, missing password
+                            JOptionPane.showMessageDialog(this,
+                                    "Missing password");
+                        }
+                    } else { // error, username already exists
+                        JOptionPane.showMessageDialog(this,
+                                "User with this username already exists");
+                    }
+                } else {
+                    // If editing user, check if password has changed
+                    if (!password.getText().equals("Change Password")) { // password change
+                        String newUsername = usernameField.getText(); // get username
                         String newPassword = null;
-                        // get password and hash
+                        // Get password and hash
                         try {
                             newPassword = UserManager.hashPassword(password.getText());
                         } catch (NoSuchAlgorithmException e) {
@@ -562,13 +631,14 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                             JOptionPane.showMessageDialog(this, e,
                                     "ERROR", JOptionPane.ERROR_MESSAGE);
                         }
-                        // initialise permission variables
+
+                        // Initialise permission variables
                         String createBillboard;
                         String scheduleBillboard;
                         String editBillboard;
                         String editUsers;
 
-                        // set permission variables
+                        // Get permission variables
                         if (createBillboardsBox.isSelected()) {
                             createBillboard = "1";
                         } else {
@@ -590,159 +660,92 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                             editUsers = "0";
                         }
 
-                        // set user inputs and run create user in control panel
-                        String[] user_inputs = {"Create User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
+                        // Edit user on the database
+                        String[] user_inputs = {"Edit User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
                         ControlPanelClient.runClient(user_inputs);
 
-                        // Close any control panels, before refresh
+                        // Close any control panels for refresh
                         Frame[] allFrames = Frame.getFrames();
-                        for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("guis.GUIUserControlPanel"))) {
-                                fr.dispose();
+                        if (adminUser) { // if full screen editor
+                            for (Frame fr : allFrames) {
+                                if ((fr.getClass().getName().equals("guis.GUIUserControlPanel"))) {
+                                    fr.dispose();
+                                }
                             }
+                            dispose();
+
+                            //run Billboard Control Panel GUI to refresh
+                            String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
+                            ControlPanelClient.runClient(user_input);
+                            forcedExit = false; // set exit to safe
+                        } else { // only password screen, go back to gui home
+                            dispose();
+                            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
                         }
-                        forcedExit = false; // set exit to safe
-                        dispose(); // close panel
-
-                        // Refresh user control panel
-                        //run Billboard Control Panel GUI
-                        String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
-                        //request schedule and run calendar GUI
-                        ControlPanelClient.runClient(user_input);
-                    } else { // error, missing password
-                        JOptionPane.showMessageDialog(this,
-                                "Missing password");
-                    }
-                }
-                else{ // error, username already exists
-                    JOptionPane.showMessageDialog(this,
-                            "User with this username already exists");
-                }
-            } else {
-                // If editing user, check if password has changed
-                if(!password.getText().equals("Change Password")) { // password change
-                    String newUsername = usernameField.getText(); // get username
-                    String newPassword = null;
-                    // Get password and hash
-                    try {
-                        newPassword = UserManager.hashPassword(password.getText());
-                    } catch (NoSuchAlgorithmException e) {
-                        // Show a pop up with the error that was caught
-                        JOptionPane.showMessageDialog(this, e,
-                                "ERROR", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                    // Initialise permission variables
-                    String createBillboard;
-                    String scheduleBillboard;
-                    String editBillboard;
-                    String editUsers;
-
-                    // Get permission variables
-                    if (createBillboardsBox.isSelected()) {
-                        createBillboard = "1";
                     } else {
-                        createBillboard = "0";
-                    }
-                    if (scheduleBillboardsBox.isSelected()) {
-                        scheduleBillboard = "1";
-                    } else {
-                        scheduleBillboard = "0";
-                    }
-                    if (editAllBillboardsBox.isSelected()) {
-                        editBillboard = "1";
-                    } else {
-                        editBillboard = "0";
-                    }
-                    if (editUsersBox.isSelected()) {
-                        editUsers = "1";
-                    } else {
-                        editUsers = "0";
-                    }
+                        String newUsername = usernameField.getText(); // get username
 
-                    // Edit user on the database
-                    String[] user_inputs = {"Edit User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
-                    ControlPanelClient.runClient(user_inputs);
+                        // initialise permission variables
+                        String createBillboard;
+                        String scheduleBillboard;
+                        String editBillboard;
+                        String editUsers;
 
-                    // Close any control panels for refresh
-                    Frame[] allFrames = Frame.getFrames();
-                    if (adminUser) { // if full screen editor
-                        for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("guis.GUIUserControlPanel"))) {
-                                fr.dispose();
+                        // get permission variables
+                        if (createBillboardsBox.isSelected()) {
+                            createBillboard = "1";
+                        } else {
+                            createBillboard = "0";
+                        }
+                        if (scheduleBillboardsBox.isSelected()) {
+                            scheduleBillboard = "1";
+                        } else {
+                            scheduleBillboard = "0";
+                        }
+                        if (editAllBillboardsBox.isSelected()) {
+                            editBillboard = "1";
+                        } else {
+                            editBillboard = "0";
+                        }
+                        if (editUsersBox.isSelected()) {
+                            editUsers = "1";
+                        } else {
+                            editUsers = "0";
+                        }
+
+                        // Update user, except for password change
+                        String[] user_inputs = {"Edit User Keep Password", newUsername, createBillboard, scheduleBillboard, editBillboard, editUsers};
+                        ControlPanelClient.runClient(user_inputs);
+
+                        // Close any user control panel
+                        Frame[] allFrames = Frame.getFrames();
+                        if (adminUser) { // if full screen editor
+                            for (Frame fr : allFrames) {
+                                if ((fr.getClass().getName().equals("guis.GUIUserControlPanel"))) {
+                                    fr.dispose();
+                                }
                             }
-                        }
-                        dispose();
+                            dispose();
 
-                        //run Billboard Control Panel GUI to refresh
-                        String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
-                        ControlPanelClient.runClient(user_input);
-                        forcedExit = false; // set exit to safe
-                    } else { // only password screen, go back to gui home
-                        dispose();
-                        SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+                            //run Billboard Control Panel GUI
+                            String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
+                            //request schedule and run calendar GUI
+                            ControlPanelClient.runClient(user_input);
+                            forcedExit = false; // set exit to safe
+                        } else { // only password screen, go back to gui home
+                            dispose();
+                            SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
+                        }
                     }
                 }
-                else{
-                    String newUsername = usernameField.getText(); // get username
-
-                    // initialise permission variables
-                    String createBillboard;
-                    String scheduleBillboard;
-                    String editBillboard;
-                    String editUsers;
-
-                    // get permission variables
-                    if (createBillboardsBox.isSelected()) {
-                        createBillboard = "1";
-                    } else {
-                        createBillboard = "0";
-                    }
-                    if (scheduleBillboardsBox.isSelected()) {
-                        scheduleBillboard = "1";
-                    } else {
-                        scheduleBillboard = "0";
-                    }
-                    if (editAllBillboardsBox.isSelected()) {
-                        editBillboard = "1";
-                    } else {
-                        editBillboard = "0";
-                    }
-                    if (editUsersBox.isSelected()) {
-                        editUsers = "1";
-                    } else {
-                        editUsers = "0";
-                    }
-
-                    // Update user, except for password change
-                    String[] user_inputs = {"Edit User Keep Password", newUsername, createBillboard, scheduleBillboard, editBillboard, editUsers};
-                    ControlPanelClient.runClient(user_inputs);
-
-                    // Close any user control panel
-                    Frame[] allFrames = Frame.getFrames();
-                    if (adminUser) { // if full screen editor
-                        for (Frame fr : allFrames) {
-                            if ((fr.getClass().getName().equals("guis.GUIUserControlPanel"))) {
-                                fr.dispose();
-                            }
-                        }
-                        dispose();
-
-                        //run Billboard Control Panel GUI
-                        String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
-                        //request schedule and run calendar GUI
-                        ControlPanelClient.runClient(user_input);
-                        forcedExit = false; // set exit to safe
-                    } else { // only password screen, go back to gui home
-                        dispose();
-                        SwingUtilities.invokeLater(new GUIMainMenu(username, sessionToken));
-                    }
-                }
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Username or password contains invalid characters");
             }
         }
         else{ // error, Missing Username
             JOptionPane.showMessageDialog(this,
-                    "Missing username");
+                    "Missing username or password");
         }
 
     }
