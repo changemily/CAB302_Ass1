@@ -562,12 +562,23 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
 
         // Checks if the delete user button has been clicked
         else if (buttonClicked == deleteUserButton) {
+            // Check that editor isn't already open
+            int frameCount = 0;
+            Frame[] allFrames = Frame.getFrames();
+            for(Frame fr : allFrames){
+                if(fr.getClass().getName().equals("guis.GUICreateEditUser")){
+                    if(fr.isVisible()){
+                        frameCount += 1;
+                    }
+                }
+            }
+
             // Check user selected
             if (userSelectionLabel.getText().equals("No User Selected")) {
                 JOptionPane.showMessageDialog(this,
                         "You have not selected a user");
             }
-            else if(userSelectionLabel.getText().equals(openedUser)){ // check not deleting self
+            else if((frameCount > 0) && (userSelectionLabel.getText().equals(openedUser))){ // check not deleting self
                 JOptionPane.showMessageDialog(this,
                         "You can't delete a user that you are currently editing");
             }
@@ -582,6 +593,9 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                         if(a == YES_OPTION) {
                             String[] user_inputs = {"Delete User", intendedUser.username}; // delete user
                             ControlPanelClient.runClient(user_inputs);
+                            JOptionPane.showMessageDialog(this,
+                                    "User Successfully Deleted");
+                            dispose();
                             user_inputs = new String[]{"List users", "Admin", ControlPanelClient.sessionToken}; // refresh user control panel
                             ControlPanelClient.runClient(user_inputs);
                             closeable = false;
