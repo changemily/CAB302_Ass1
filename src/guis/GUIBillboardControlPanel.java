@@ -417,7 +417,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
             }
             // Catch exception
             catch (ParserConfigurationException | IOException | SAXException ex) {
-                ex.printStackTrace();
+                // Show a pop up with the error that was caught
                 JOptionPane.showMessageDialog(getContentPane(), ex,
                         "ERROR", JOptionPane.ERROR_MESSAGE);
             }
@@ -755,7 +755,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                         }
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        // Show a pop up with the error that was caught
                         JOptionPane.showMessageDialog(getContentPane(), e,
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
@@ -877,12 +877,11 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
         }
         // Catches an exception and displays an appropriate error message dialog
         catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException | IOException | ParserConfigurationException | SAXException e) {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 
     /**
      * Window opened event
