@@ -448,37 +448,37 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
             createGUI();
         } catch (ClassNotFoundException e)
         {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (InstantiationException e)
         {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalAccessException e)
         {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (UnsupportedLookAndFeelException e)
         {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (SAXException e)
         {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (ParserConfigurationException e)
         {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e)
         {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
@@ -627,7 +627,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                     try {
                         bb = new BillboardViewer(tempXMLString, d);
                     } catch (ParserConfigurationException | IOException | SAXException ex) {
-                        ex.printStackTrace();
+                        // Show a pop up with the error that was caught
                         JOptionPane.showMessageDialog(getContentPane(), ex,
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
@@ -652,7 +652,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                     // successful import
                     JOptionPane.showMessageDialog(getContentPane(),"Billboard Successfully Imported");
                 } catch (IOException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
+                    // Show a pop up with the error that was caught
                     JOptionPane.showMessageDialog(getContentPane(),"File could not be found, please check the filepath and try again. ", "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
@@ -668,7 +668,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                 try {
                     bb = new BillboardViewer(tempXMLString, d);
                 } catch (ParserConfigurationException | IOException | SAXException ex) {
-                    ex.printStackTrace();
+                    // Show a pop up with the error that was caught
                     JOptionPane.showMessageDialog(getContentPane(), ex,
                             "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
@@ -676,7 +676,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                     bb.writeFile(o);
                     JOptionPane.showMessageDialog(getContentPane(), "Billboard Successfully Exported");
                 } catch (ParserConfigurationException | TransformerException ex) {
-                    ex.printStackTrace();
+                    // Show a pop up with the error that was caught
                     JOptionPane.showMessageDialog(getContentPane(), ex,
                             "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
@@ -691,7 +691,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                 try {
                     tempXMLString = bb.updateXMLString();
                 } catch (ParserConfigurationException | TransformerException ex) {
-                    ex.printStackTrace();
+                    // Show a pop up with the error that was caught
                     JOptionPane.showMessageDialog(getContentPane(), ex,
                             "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
@@ -705,7 +705,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                 try {
                     bb = new BillboardViewer(tempXMLString, d);
                 } catch (ParserConfigurationException | IOException | SAXException ex) {
-                    ex.printStackTrace();
+                    // Show a pop up with the error that was caught
                     JOptionPane.showMessageDialog(getContentPane(), ex,
                             "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
@@ -777,7 +777,7 @@ public class GUIBillboardEditor extends JFrame implements Runnable, ActionListen
                 tempXMLString = bb.updateXMLString();
                 JOptionPane.showMessageDialog(getContentPane(), "Billboard Successfully Saved to Database");
             } catch (ParserConfigurationException | TransformerException ex) {
-                ex.printStackTrace();
+                // Show a pop up with the error that was caught
                 JOptionPane.showMessageDialog(getContentPane(), ex,
                         "ERROR", JOptionPane.ERROR_MESSAGE);
             }

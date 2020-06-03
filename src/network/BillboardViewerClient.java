@@ -13,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -77,8 +78,16 @@ public class BillboardViewerClient {
                 //flush output stream
                 oos.flush();
 
+                //print client messages
+                System.out.println("Sent to server: \n");
+                System.out.println("Request: Run Billboard Viewer");
+
                 //retrieve xml file of currently displayed billboard
                 String xmlFile = ois.readObject().toString();
+
+                //print xml received from server
+                System.out.println("Received from server: \n");
+                System.out.println("Xml File: " +xmlFile+ "\n");
 
                 //display billboard on viewer
                 viewerGUI(billboardGUI, billboardPanel, xmlFile);
@@ -193,6 +202,9 @@ public class BillboardViewerClient {
             public void run() {
                 try {
                     runClient();
+                    //print current time
+                    System.out.println("Retrieve current billboard displayed \n");
+                    System.out.println("Current time: " + LocalDateTime.now() + "\n");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

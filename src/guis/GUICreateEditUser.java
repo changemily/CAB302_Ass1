@@ -471,7 +471,7 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
         try {
             createGUI();
         } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
@@ -558,7 +558,9 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                         try {
                             newPassword = UserManager.hashPassword(password.getText());
                         } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
+                            // Show a pop up with the error that was caught
+                            JOptionPane.showMessageDialog(this, e,
+                                    "ERROR", JOptionPane.ERROR_MESSAGE);
                         }
                         // initialise permission variables
                         String createBillboard;
@@ -621,20 +623,22 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                 if(!password.getText().equals("Change Password")) { // password change
                     String newUsername = usernameField.getText(); // get username
                     String newPassword = null;
-                    // get password and hash
+                    // Get password and hash
                     try {
                         newPassword = UserManager.hashPassword(password.getText());
                     } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
+                        // Show a pop up with the error that was caught
+                        JOptionPane.showMessageDialog(this, e,
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
 
-                    // initialise permission variables
+                    // Initialise permission variables
                     String createBillboard;
                     String scheduleBillboard;
                     String editBillboard;
                     String editUsers;
 
-                    // get permission variables
+                    // Get permission variables
                     if (createBillboardsBox.isSelected()) {
                         createBillboard = "1";
                     } else {
