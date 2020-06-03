@@ -123,7 +123,11 @@ public class ControlPanelClient {
         } catch (FileNotFoundException fnfe) {
             System.err.println(fnfe);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            JOptionPane optionPane = new JOptionPane("Could not connect. Please try again.", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Connection Error");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
+            SwingUtilities.invokeLater(new GUILoginScreen());
         }
     }
 
