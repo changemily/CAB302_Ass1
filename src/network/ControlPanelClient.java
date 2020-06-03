@@ -125,7 +125,7 @@ public class ControlPanelClient {
         } catch (FileNotFoundException fnfe) {
             System.err.println(fnfe);
         } catch (Exception ex) {
-            JOptionPane optionPane = new JOptionPane("Could not connect. Please try again.", JOptionPane.ERROR_MESSAGE);
+            JOptionPane optionPane = new JOptionPane("Could not connect to Server. Please try again.", JOptionPane.ERROR_MESSAGE);
             JDialog dialog = optionPane.createDialog("Connection Error");
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
