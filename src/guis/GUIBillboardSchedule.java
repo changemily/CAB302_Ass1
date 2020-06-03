@@ -563,7 +563,7 @@ public class GUIBillboardSchedule extends JFrame implements Runnable, ActionList
         try {
             createGUI();
         } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
