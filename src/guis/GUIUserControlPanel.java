@@ -540,16 +540,16 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                                     }
                                 }
                                 // create new one
-                                SwingUtilities.invokeLater(new GUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
+                                SwingUtilities.invokeLater(new GUICreateEditUser(username, sessionToken, intendedUser, true, selfEdit, userList));
                             }
                         }
                         else{ // no GUIs open, just open a new one
-                            SwingUtilities.invokeLater(new GUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
+                            SwingUtilities.invokeLater(new GUICreateEditUser(username, sessionToken, intendedUser, true, selfEdit, userList));
                         }
                     }
                     else{
                         // no GUIs open, just open a new one
-                        SwingUtilities.invokeLater(new GUICreateEditUser(username, "1234", intendedUser, true, selfEdit, userList));
+                        SwingUtilities.invokeLater(new GUICreateEditUser(username, sessionToken, intendedUser, true, selfEdit, userList));
                     }
                     openedUser = usernameSelected;
                     closeable =  false;
@@ -624,17 +624,17 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
                                 }
                             }
                             // create new GUI
-                            SwingUtilities.invokeLater(new GUICreateEditUser("admin", "1234", userList));
+                            SwingUtilities.invokeLater(new GUICreateEditUser(username, sessionToken, userList));
                         }
                     }
                     else{
                         // create new GUI
-                        SwingUtilities.invokeLater(new GUICreateEditUser("admin", "1234", userList));
+                        SwingUtilities.invokeLater(new GUICreateEditUser(username, sessionToken, userList));
                     }
                 }
                 else{
                     // create new GUI
-                    SwingUtilities.invokeLater(new GUICreateEditUser("admin", "1234", userList));
+                    SwingUtilities.invokeLater(new GUICreateEditUser(username, sessionToken, userList));
                 }
                 closeable = false;
             } catch (Exception e) {
