@@ -761,7 +761,7 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                     }
                 }
                 else{
-                    if(!(currentUser.permissions.contains("Edit All Billboards"))) {
+                    if(!(currentUser.permissions.contains("Create Billboards"))) {
                         //display error pop up
                         JOptionPane.showMessageDialog(this,
                                 "You do not have permission to delete this billboards");
