@@ -264,33 +264,25 @@ public class GUIMainMenu extends JFrame implements Runnable, ActionListener {
         }
         // Catches an exception and displays an appropriate error message dialog
         catch (ClassNotFoundException e) {
-            e.printStackTrace();
-
-            // Show message dialog (popup)
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         // Catches an exception and displays an appropriate error message dialog
         catch (InstantiationException e) {
-            e.printStackTrace();
-
-            // Show message dialog (popup)
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         // Catches an exception and displays an appropriate error message dialog
         catch (IllegalAccessException e) {
-            e.printStackTrace();
-
-            // Show message dialog (popup)
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         // Catches an exception and displays an appropriate error message dialog
         catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-
-            // Show message dialog (popup)
+            // Show a pop up with the error that was caught
             JOptionPane.showMessageDialog(this, e,
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
