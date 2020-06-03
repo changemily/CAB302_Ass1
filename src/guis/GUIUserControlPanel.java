@@ -574,7 +574,7 @@ public class GUIUserControlPanel extends JFrame implements Runnable, ActionListe
             else {
                 try {
                     // get users
-                    User baseUser = UserList.getUserInformation(userList, "AdminUser");
+                    User baseUser = UserList.getUserInformation(userList, username);
                     User intendedUser = UserList.getUserInformation(userList, userSelectionLabel.getText());
                     UserManager deleteUser = new UserManager(baseUser, intendedUser); // userManager to test if valid delete
                     if(deleteUser.deleteUser()){ // if valid
