@@ -745,13 +745,13 @@ public class GUIBillboardControlPanel extends JFrame implements Runnable, Action
                             String[] userInputs = {"Delete billboard", billboardName};
                             //Delete billboard with viewing details given by user
                             ControlPanelClient.runClient(userInputs);
+                            JOptionPane.showMessageDialog(this,
+                            "Billboard Successfully Deleted");
+                            dispose();
                             //Refresh control panel
                             userInputs = new String[]{"List billboards", ControlPanelClient.sessionToken};
                             ControlPanelClient.runClient(userInputs);
                             closeable = false;
-                            JOptionPane.showMessageDialog(this,
-                            "Billboard Successfully Deleted");
-                            dispose();
                         }
 
                     } catch (Exception e) {

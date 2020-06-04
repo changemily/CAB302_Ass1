@@ -594,6 +594,9 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                             // set user inputs and run create user in control panel
                             String[] user_inputs = {"Create User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
                             ControlPanelClient.runClient(user_inputs);
+                            JOptionPane.showMessageDialog(this,
+                                    "User Successfully Created");
+                            dispose();
 
                             // Close any control panels, before refresh
                             Frame[] allFrames = Frame.getFrames();
@@ -663,6 +666,9 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                         // Edit user on the database
                         String[] user_inputs = {"Edit User", newUsername, newPassword, createBillboard, scheduleBillboard, editBillboard, editUsers};
                         ControlPanelClient.runClient(user_inputs);
+                        JOptionPane.showMessageDialog(this,
+                                "User Successfully Edited");
+                        dispose();
 
                         // Close any control panels for refresh
                         Frame[] allFrames = Frame.getFrames();
@@ -717,6 +723,9 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                         // Update user, except for password change
                         String[] user_inputs = {"Edit User Keep Password", newUsername, createBillboard, scheduleBillboard, editBillboard, editUsers};
                         ControlPanelClient.runClient(user_inputs);
+                        JOptionPane.showMessageDialog(this,
+                                "User Successfully Edited");
+                        dispose();
 
                         // Close any user control panel
                         Frame[] allFrames = Frame.getFrames();
