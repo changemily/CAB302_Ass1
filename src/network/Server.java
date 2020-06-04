@@ -659,7 +659,7 @@ public class Server {
     }
 
     /**
-     * Sends name of current billboard displayed to viewer
+     * Sends xml file string of current billboard displayed to viewer
      * @param oos Object output stream
      * @param billboardList list of created billboards
      * @param billboardSchedule schedule of billboard viewings
