@@ -606,9 +606,9 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                             dispose(); // close panel
 
                             // Refresh user control panel
-                            //run Billboard Control Panel GUI
+                            //run user Control Panel GUI
                             String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
-                            //request schedule and run calendar GUI
+                            //request user list and run user Control Panel GUI
                             ControlPanelClient.runClient(user_input);
                         } else { // error, missing password
                             JOptionPane.showMessageDialog(this,
@@ -674,8 +674,9 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                             }
                             dispose();
 
-                            //run Billboard Control Panel GUI to refresh
+                            //run user Control Panel GUI to refresh
                             String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
+                            //request user list and run user Control Panel GUI
                             ControlPanelClient.runClient(user_input);
                             forcedExit = false; // set exit to safe
                         } else { // only password screen, go back to gui home
@@ -727,9 +728,9 @@ public class GUICreateEditUser extends JFrame implements Runnable, ActionListene
                             }
                             dispose();
 
-                            //run Billboard Control Panel GUI
+                            //run User Control Panel GUI
                             String[] user_input = {"List users", "Admin", ControlPanelClient.sessionToken};
-                            //request schedule and run calendar GUI
+                            //request user list and run user Control Panel GUI
                             ControlPanelClient.runClient(user_input);
                             forcedExit = false; // set exit to safe
                         } else { // only password screen, go back to gui home

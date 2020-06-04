@@ -83,8 +83,8 @@ public class Server {
         //print message to command line verifying DB connection
         System.out.println("Successfully connected to the database");
 
-        //check if tables exist in DB, if not adds tables
-        checkTables(connection);
+        //check if tables and default user exist in DB, if not adds tables/default user
+        setupDB(connection);
 
         //populate schedule, billboard list and user list with data from database
         billboardSchedule.retrieveDBschedule(connection);
@@ -234,10 +234,10 @@ public class Server {
 
 
     /**
-     * Creates tables if they do not exist in DB
+     * Creates tables and default user if they do not exist in DB
      * @param connection Database connection
      */
-    private static void checkTables(Connection connection) {
+    private static void setupDB(Connection connection) {
         //Adds tables to database if they do not exist
 
         try {
