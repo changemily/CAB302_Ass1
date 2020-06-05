@@ -123,14 +123,5 @@ public class TestBillboardList<E> {
         //Check if the billboard was deleted
         Assertions.assertFalse(billboardList.billboardHashMap.containsKey("Billboard1"));
     }
-
-    //Test 8: If Delete_billboard attempts to delete a billboard that doesn't exist.
-    @Test
-    public void noBillboard()
-    {
-        assertThrows(Exception.class, () -> {
-            billboardList.deleteBillboard("Billboard_1");
-        });
-    }
 }
 
